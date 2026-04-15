@@ -153,7 +153,16 @@
             </div>`;
         });
 
-        document.getElementById('cart-trigger').style.display = cart.length > 0 ? 'block' : 'none';
+        document.getElementById    #cart-trigger { 
+        display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+        background: #27ae60; color: white; padding: 18px 40px; border-radius: 50px; 
+        font-weight: 800; cursor: pointer; box-shadow: 0 8px 25px rgba(0,0,0,0.3); z-index: 200; 
+        width: 85%; max-width: 320px; text-align: center; font-size: 18px;
+        border: 2px solid rgba(255,255,255,0.2);
+        animation: pop 0.3s ease-out;
+    }
+    @keyframes pop { 0% { transform: translateX(-50%) scale(0.9); } 100% { transform: translateX(-50%) scale(1); } }
+
         document.getElementById('cart-total-top').innerText = total.toFixed(2) + "€";
         document.getElementById('final-price').innerText = "Totale: " + total.toFixed(2) + "€";
         document.getElementById('cart-items-list').innerHTML = listHtml || "Il carrello è vuoto";
@@ -161,7 +170,21 @@
 
     function openCart() { document.getElementById('modalCart').style.display = 'flex'; }
     function showAddress() { document.getElementById('modalAddress').style.display = 'flex'; }
-    function showPay() { document.getElementById('modalPay').style.display = 'flex'; }
+    function showPay()     function showPay() { 
+        if(cart.length === 0) return;
+        let riepilogo = cart.map(i => `${i.q}x ${i.n}`).join(", ");
+        if(confirm("Confermi il tuo ordine di: " + riepilogo + "?")) {
+            document.getElementById('modalPay').style.display = 'flex'; 
+        }
+    }
+
+    function finish(m) {
+        alert("✅ ORDINE INVIATO!\nMetodo: " + m + "\n\nGrazie per aver scelto Spesina!");
+        cart = [];
+        updateUI();
+        closeModals();
+    }
+
     function closeModals() { 
         document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); 
     }
