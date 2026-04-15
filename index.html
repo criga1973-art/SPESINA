@@ -3,35 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spesina - La tua spesa</title>
+    <title>Spesina</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header>
     <h1 style="margin:0; color:var(--primary)">Spesina 🛒</h1>
-   <div class="top-nav">
-    <a onclick="alert('Servizio veloce')">Come funziona</a> 
-    <a onclick="showAddress()">Dove consegniamo</a> 
-    <a onclick="showAddress()" style="background: var(--primary); color: white;">Fai la spesa</a>
-</div>
-
+    <div class="top-nav">
+        <a onclick="alert('Spesa veloce a domicilio')">Come funziona</a> 
+        <a onclick="showAddress()">Dove consegniamo</a> 
+        <a onclick="showAddress()" style="background:var(--primary); color:white;">Fai la spesa</a>
+    </div>
 </header>
 
 <div class="categories-bar">
-    <button class="cat-btn">Pasta</button>
-    <button class="cat-btn">Bevande</button>
-    <button class="cat-btn">Sughi</button>
-    <button class="cat-btn">Riso</button>
-    <button class="cat-btn">Frutta e Verdura</button>
-    <button class="cat-btn">Carne e Pesce</button>
-    <button class="cat-btn">Latticini e Uova</button>
-    <button class="cat-btn">Pane</button>
-    <button class="cat-btn">Vegano</button>
-    <button class="cat-btn">Scatolame</button>
-    <button class="cat-btn">Farine e preparati</button>
-    <button class="cat-btn">Colazione dolcumi e snack</button>
-    <button class="cat-btn">Cura della persona</button>
-    <button class="cat-btn">Amici animali</button>
-    <button class="cat-btn">Cartoleria</button>
+    <button class="cat-btn" onclick="filter('Tutti')">Tutti</button>
+    <button class="cat-btn" onclick="filter('Pasta')">Pasta</button>
+    <button class="cat-btn" onclick="filter('Bevande')">Bevande</button>
+    <button class="cat-btn" onclick="filter('Frutta e Verdura')">Frutta</button>
+    <button class="cat-btn" onclick="filter('Carne e Pesce')">Carne/Pesce</button>
 </div>
+
+<div class="main-content">
+    <div class="catalog" id="catalog-list"></div>
+    <div class="sidebar">
+        <h3>🛒 Carrello</h3>
+        <div id="cart-list" class="cart-items"></div>
+        <div class="total-box">
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px">
+                <span>Totale:</span>
+                <span id="price-total">0.00€</span>
+            </div>
+            <button class="btn-buy" onclick="showPay()">CONFERMA</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modals -->
+<div class="modal" id="addressModal">
+    <div class="modal-content">
+        <h3>📍 Dove consegniamo?</h3>
+        <div class="pay-option" onclick="hideAddress()">📍 Usa posizione</div>
+        <div class="pay-option" onclick="hideAddress()">✍️ Inserisci indirizzo</div>
+        <button class="btn-buy" onclick="hideAddress()">INIZIA AD ACQUISTARE</button>
+        <p>Hai un account? <a href="#">Accedi</a></p>
+    </div>
+</div>
+
+<div class="modal" id="payModal">
+    <div class="modal-content">
+        <h3>Pagamento</h3>
+        <div class="pay-option" onclick="doOrder('Contanti')">💵 Cash</div>
+        <div class="pay-option" onclick="doOrder('Bancomat')">💳 Bancomat</div>
+        <button onclick="hidePay()">Annulla</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
+
