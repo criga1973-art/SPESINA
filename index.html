@@ -4,48 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spesina - La tua spesa</title>
- <style>
-    :root { --primary: #2ecc71; --dark: #2c3e50; --gray: #f8fafc; --red: #ff7675; }
-    body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--gray); padding-bottom: 80px; }
-    
-    header { background: white; padding: 15px; border-bottom: 1px solid #eee; text-align: center; position: sticky; top: 0; z-index: 100; }
-    .top-nav { display: flex; justify-content: center; gap: 15px; margin-bottom: 10px; }
-    .top-nav a { text-decoration: none; color: var(--dark); font-size: 13px; font-weight: 600; cursor: pointer; }
-    
-    /* Bottone Carrello più lungo e centrato in basso */
-    #cart-trigger { 
-        display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-        background: var(--primary); color: white; padding: 15px 40px; border-radius: 50px; 
-        font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 200; 
-        width: 80%; max-width: 300px; text-align: center; font-size: 16px;
-    }
+    <style>
+        :root { --primary: #2ecc71; --dark: #2c3e50; --gray: #f8fafc; --red: #ff7675; --dark-green: #27ae60; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--gray); padding-bottom: 100px; }
+        
+        header { background: white; padding: 15px; border-bottom: 1px solid #eee; text-align: center; position: sticky; top: 0; z-index: 100; }
+        .top-nav { display: flex; justify-content: center; gap: 15px; margin-bottom: 10px; }
+        .top-nav a { text-decoration: none; color: var(--dark); font-size: 13px; font-weight: 600; cursor: pointer; }
+        
+        /* Barra Carrello super visibile in basso */
+        #cart-trigger { 
+            display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: var(--dark-green); color: white; padding: 18px 30px; border-radius: 50px; 
+            font-weight: 800; cursor: pointer; box-shadow: 0 8px 25px rgba(0,0,0,0.3); z-index: 200; 
+            width: 85%; max-width: 320px; text-align: center; font-size: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            animation: pop 0.3s ease-out;
+        }
+        @keyframes pop { 0% { transform: translateX(-50%) scale(0.9); } 100% { transform: translateX(-50%) scale(1); } }
 
-    /* Categorie centrate */
-    .categories-bar { 
-        background: white; padding: 12px; display: flex; gap: 8px; 
-        justify-content: center; flex-wrap: wrap; border-bottom: 1px solid #eee; 
-    }
-    .cat-btn { background: #e2e8f0; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 12px; font-weight: bold; transition: 0.2s; }
-    .cat-btn:hover { background: #cbd5e1; }
-    .cat-btn:active { background: var(--primary); color: white; }
+        /* Categorie centrate */
+        .categories-bar { 
+            background: white; padding: 12px; display: flex; gap: 8px; 
+            justify-content: center; flex-wrap: wrap; border-bottom: 1px solid #eee; 
+        }
+        .cat-btn { background: #e2e8f0; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 11px; font-weight: bold; }
+        .cat-btn:active { background: var(--primary); color: white; }
 
-    .catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; padding: 20px; }
-    .card { background: white; border-radius: 12px; padding: 15px; text-align: center; border: 1px solid #eee; position: relative; }
-    .add-btn { position: absolute; top: 8px; right: 8px; background: var(--primary); color: white; border: none; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-weight: bold; }
-    .card img { width: 50px; margin-bottom: 10px; opacity: 0.3; }
+        .catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; padding: 20px; }
+        .card { background: white; border-radius: 12px; padding: 15px; text-align: center; border: 1px solid #eee; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .add-btn { position: absolute; top: 8px; right: 8px; background: var(--primary); color: white; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-weight: bold; font-size: 18px; }
+        .card img { width: 50px; margin-bottom: 10px; opacity: 0.4; }
 
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 1000; }
-    .modal-content { background: white; padding: 20px; border-radius: 15px; width: 90%; max-width: 350px; text-align: center; max-height: 80vh; overflow-y: auto; }
-    .cart-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
-    .btn-remove { background: var(--red); color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; }
-    .pay-option { border: 2px solid #eee; margin: 10px 0; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: bold; }
-    .btn-confirm { background: var(--primary); color: white; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; margin-top: 10px; cursor: pointer; }
-</style>
-
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); align-items: center; justify-content: center; z-index: 1000; }
+        .modal-content { background: white; padding: 25px; border-radius: 20px; width: 90%; max-width: 350px; text-align: center; max-height: 80vh; overflow-y: auto; }
+        .cart-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee; }
+        .btn-remove { background: var(--red); color: white; border: none; border-radius: 50%; width: 26px; height: 26px; cursor: pointer; font-weight: bold; }
+        .pay-option { border: 2px solid #eee; margin: 12px 0; padding: 15px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 16px; }
+        .btn-confirm { background: var(--primary); color: white; border: none; padding: 16px; width: 100%; border-radius: 12px; font-weight: bold; margin-top: 15px; cursor: pointer; font-size: 16px; }
+    </style>
 </head>
 <body>
 
-<div id="cart-trigger" onclick="openCart()">🛒 <span id="cart-total-top">0.00€</span></div>
+<div id="cart-trigger" onclick="openCart()">
+    VEDI CARRELLO: <span id="cart-total-top">0.00€</span>
+</div>
 
 <header>
     <h2 style="margin:0; color:var(--primary)">Spesina 🛒</h2>
@@ -73,44 +76,47 @@
 <!-- Modal Carrello -->
 <div class="modal" id="modalCart">
     <div class="modal-content">
-        <h3>Il tuo Carrello</h3>
-        <div id="cart-items-list"></div>
-        <h4 id="final-price">Totale: 0.00€</h4>
-        <button class="btn-confirm" onclick="showPay()">VAI AL PAGAMENTO</button>
-        <button onclick="closeModals()" style="border:none; background:none; color:gray; margin-top:10px; cursor:pointer">Chiudi</button>
+        <h3 style="margin-top:0">🛒 Il tuo Carrello</h3>
+        <div id="cart-items-list" style="margin-bottom: 20px;"></div>
+        <h3 id="final-price" style="border-top: 2px solid #eee; padding-top: 10px;">Totale: 0.00€</h3>
+        <button class="btn-confirm" onclick="showPay()">PROSEGUI ALL'ORDINE</button>
+        <button onclick="closeModals()" style="border:none; background:none; color:gray; margin-top:15px; cursor:pointer">Continua la spesa</button>
     </div>
 </div>
 
-<!-- Altri Modal -->
-<div class="modal" id="modalAddress">
-    <div class="modal-content">
-        <h3>📍 Consegna</h3>
-        <div class="pay-option" onclick="closeModals()">Usa posizione attuale</div>
-        <div class="pay-option" onclick="closeModals()">Inserisci indirizzo</div>
-        <button class="btn-confirm" onclick="closeModals()">CONFERMA</button>
-    </div>
-</div>
-
+<!-- Modal Pagamento -->
 <div class="modal" id="modalPay">
     <div class="modal-content">
-        <h3>Pagamento</h3>
-        <div class="pay-option" onclick="finish('Contanti')">💵 Contanti</div>
-        <div class="pay-option" onclick="finish('Bancomat')">💳 Bancomat</div>
+        <h3>Metodo di Pagamento</h3>
+        <p>Come preferisci pagare?</p>
+        <div class="pay-option" onclick="finish('Contanti')">💵 Contanti alla consegna</div>
+        <div class="pay-option" onclick="finish('Bancomat')">💳 Bancomat / Carta</div>
+        <button onclick="closeModals()" style="border:none; background:none; color:gray; margin-top:10px; cursor:pointer">Annulla</button>
+    </div>
+</div>
+
+<!-- Modal Indirizzo -->
+<div class="modal" id="modalAddress">
+    <div class="modal-content">
+        <h3>📍 Servizio Consegna</h3>
+        <div class="pay-option" onclick="closeModals()">Usa la mia posizione</div>
+        <div class="pay-option" onclick="closeModals()">Inserisci un indirizzo</div>
+        <button class="btn-confirm" onclick="closeModals()">CONFERMA</button>
     </div>
 </div>
 
 <script>
     const PRODS = [
-        { id: 1, n: "Penne Rigate", p: 0.95, c: "Pasta" },
+        { id: 1, n: "Penne Rigate 500g", p: 0.95, c: "Pasta" },
         { id: 2, n: "Acqua Naturale 1.5L", p: 0.45, c: "Bevande" },
-        { id: 3, n: "Banane (kg)", p: 1.20, c: "Frutta e Verdura" },
-        { id: 4, n: "Hamburger Bovino", p: 3.50, c: "Carne e Pesce" },
-        { id: 5, n: "Latte 1L", p: 1.30, c: "Latticini" },
-        { id: 6, n: "Uova x6", p: 1.80, c: "Uova" },
-        { id: 7, n: "Fili sfilatini", p: 0.80, c: "Pane" },
-        { id: 8, n: "Tofu Bio", p: 2.50, c: "Vegano" },
-        { id: 9, n: "Tonno in scatola", p: 2.90, c: "Scatolame" },
-        { id: 10, n: "Birra 66cl", p: 1.10, c: "Bevande" }
+        { id: 3, n: "Mele Golden (kg)", p: 1.20, c: "Frutta e Verdura" },
+        { id: 4, n: "Fettine di Bovino", p: 5.50, c: "Carne e Pesce" },
+        { id: 5, n: "Latte Intero 1L", p: 1.30, c: "Latticini" },
+        { id: 6, n: "Uova Bio x6", p: 2.10, c: "Uova" },
+        { id: 7, n: "Pane di segale", p: 1.50, c: "Pane" },
+        { id: 8, n: "Burger Vegano", p: 2.99, c: "Vegano" },
+        { id: 9, n: "Tonno Olio Oliva", p: 3.20, c: "Scatolame" },
+        { id: 10, n: "Coca Cola 1.5L", p: 1.90, c: "Bevande" }
     ];
 
     let cart = [];
@@ -127,6 +133,7 @@
             </div>`;
         });
         document.getElementById('catalog').innerHTML = html;
+        window.scrollTo(0,0);
     }
 
     function addToCart(id) {
@@ -148,41 +155,27 @@
         cart.forEach(i => {
             total += (i.p * i.q);
             listHtml += `<div class="cart-row">
-                <span><b>${i.q}x</b> ${i.n}</span>
-                <span>${(i.p*i.q).toFixed(2)}€ <button class="btn-remove" onclick="remove(${i.id})">✕</button></span>
+                <div style="text-align:left"><b>${i.q}x</b> ${i.n}</div>
+                <div>${(i.p*i.q).toFixed(2)}€ <button class="btn-remove" onclick="remove(${i.id})" style="margin-left:10px">✕</button></div>
             </div>`;
         });
 
-        document.getElementById    #cart-trigger { 
-        display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-        background: #27ae60; color: white; padding: 18px 40px; border-radius: 50px; 
-        font-weight: 800; cursor: pointer; box-shadow: 0 8px 25px rgba(0,0,0,0.3); z-index: 200; 
-        width: 85%; max-width: 320px; text-align: center; font-size: 18px;
-        border: 2px solid rgba(255,255,255,0.2);
-        animation: pop 0.3s ease-out;
-    }
-    @keyframes pop { 0% { transform: translateX(-50%) scale(0.9); } 100% { transform: translateX(-50%) scale(1); } }
-
+        const trigger = document.getElementById('cart-trigger');
+        trigger.style.display = cart.length > 0 ? 'block' : 'none';
         document.getElementById('cart-total-top').innerText = total.toFixed(2) + "€";
         document.getElementById('final-price').innerText = "Totale: " + total.toFixed(2) + "€";
-        document.getElementById('cart-items-list').innerHTML = listHtml || "Il carrello è vuoto";
+        document.getElementById('cart-items-list').innerHTML = listHtml;
     }
 
     function openCart() { document.getElementById('modalCart').style.display = 'flex'; }
     function showAddress() { document.getElementById('modalAddress').style.display = 'flex'; }
-    function showPay()     function showPay() { 
+    
+    function showPay() { 
         if(cart.length === 0) return;
-        let riepilogo = cart.map(i => `${i.q}x ${i.n}`).join(", ");
-        if(confirm("Confermi il tuo ordine di: " + riepilogo + "?")) {
+        if(confirm("Confermi di voler procedere con l'ordine?")) {
+            closeModals();
             document.getElementById('modalPay').style.display = 'flex'; 
         }
-    }
-
-    function finish(m) {
-        alert("✅ ORDINE INVIATO!\nMetodo: " + m + "\n\nGrazie per aver scelto Spesina!");
-        cart = [];
-        updateUI();
-        closeModals();
     }
 
     function closeModals() { 
@@ -190,7 +183,7 @@
     }
 
     function finish(m) {
-        alert("Ordine inviato! Pagamento: " + m);
+        alert("✅ ORDINE INVIATO CON SUCCESSO!\n\nPagamento: " + m + "\n\nGrazie per aver scelto Spesina!");
         cart = [];
         updateUI();
         closeModals();
@@ -198,7 +191,7 @@
 
     render();
 </script>
-
 </body>
 </html>
+
 
