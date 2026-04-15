@@ -74,7 +74,7 @@
 </div>
 
 <script>
-    const MY_PHONE = "393491423644";
+    const MY_PHONE = "393459846663";
     const IMG_BAG = "https://flaticon.com";
 
     const PRODS = [
@@ -143,18 +143,33 @@
 
     function showPay() { if(myCart.length > 0) document.getElementById('payModal').style.display = 'flex'; }
     function hidePay() { document.getElementById('payModal').style.display = 'none'; }
-
     function doOrder(m) {
         let t = "*NUOVO ORDINE SPESINA*\n\n";
-        myCart.forEach(i => { t += "• " + i.q + "x " + i.n + " (" + (i.p*i.q).toFixed(2) + "€)\n"; });
-        t += "\n*TOTALE: " + document.getElementById('price-total').innerText + "*\n*PAGAMENTO:* " + m;
-        window.open("https://whatsapp.com" + MY_PHONE + "&text=" + encodeURIComponent(t), "_blank");
+        myCart.forEach(i => {
+            t += `• ${i.q}x ${i.n} (${(i.p * i.q).toFixed(2)}€)\n`;
+        });
+        
+        let totale = document.getElementById('price-total').innerText;
+        t += `\n*TOTALE: ${totale}*`;
+        t += `\nPagamento: ${m}`;
+        
+        // Codifica il testo per l'URL
+        let url = `https://wa.me{MY_PHONE}?text=${encodeURIComponent(t)}`;
+        
+        // Apri WhatsApp
+        window.open(url, '_blank').focus();
+        
+        // Opzionale: svuota il carrello dopo l'ordine
+        myCart = [];
+        update();
         hidePay();
     }
 
+    // Inizializza il catalogo al caricamento della pagina
     draw();
 </script>
-</body>
+
+ 
 </html>
 
 
