@@ -129,7 +129,49 @@
     function showAddress() { document.getElementById('modalAddress').style.display = 'flex'; }
     function showPay() { if(confirm("Confermi l'ordine?")) { closeModals(); document.getElementById('modalPay').style.display = 'flex'; } }
     function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
-    function finish(m) { alert("✅ Ordine inviato!\nPagamento: " + m); cart = []; updateUI(); closeModals(); }
+      function finish(m) {
+        // Il tuo endpoint Formspree
+        const FORMSPREE_URL = "https://formspree.io/f/mlgagarn";
+        
+        // 1. Prepariamo i dati dell'ordine
+        let elencoProdotti = cart.map(i => `${i.q}x ${i.n} (${(i.p * i.q).toFixed(2)}€)`).join("\n");
+        let totaleValore = document.getElementById('final-price').innerText;
+
+        // Cambiamo il testo del tasto per dare un feedback all'utente
+        const btnConferma = document.querySelector("#modalPay .pay-option"); // Prende il primo tasto di pagamento
+        
+        // 2. Invio AJAX (invisibile)
+        fetch(FORMSPREE_URL, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                ordine: elencoProdotti,
+                totale: totaleValore,
+                pagamento: m,
+                _subject: "📦 NUOVO ORDINE SPESINA"
+            })
+        })
+        .then(response => {
+            if (response.ok) {
+                // Successo!
+                alert("✅ ORDINE INVIATO!\nGrazie, riceverai la spesa a breve.");
+                cart = [];
+                updateUI();
+                closeModals();
+            } else {
+                // Errore del server
+                alert("Si è verificato un problema tecnico. Riprova.");
+            }
+        })
+        .catch(error => {
+            // Errore di rete
+            alert("Errore di connessione. Controlla internet e riprova.");
+        });
+    }
+
 
     render();
 </script>
