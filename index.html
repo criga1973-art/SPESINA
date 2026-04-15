@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spesina V2.6 - Fix</title>
+    <title>Spesina V3.3</title>
     <style>
         :root { --primary: #2ecc71; --dark: #2c3e50; --gray: #f8fafc; --red: #ff7675; --dark-green: #27ae60; }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--gray); padding-bottom: 100px; }
@@ -43,7 +43,6 @@
     <button class="cat-btn" onclick="render('Pasta')">Pasta</button>
     <button class="cat-btn" onclick="render('Bevande')">Bevande</button>
     <button class="cat-btn" onclick="render('Frutta e Verdura')">Frutta/Verdura</button>
-    <button class="cat-btn" onclick="render('Carne e Pesce')">Carne/Pesce</button>
 </div>
 
 <div class="catalog" id="catalog"></div>
@@ -64,7 +63,7 @@
         </div>
 
         <h3 id="final-price" style="margin-top:20px; border-top:2px solid #eee; padding-top:10px;">Totale: 0.00€</h3>
-        <button class="btn-confirm" id="btn-order-step" onclick="checkOrder()">PROSEGUI</button>
+        <button class="btn-confirm" onclick="showPay()">PROSEGUI</button>
         <button onclick="closeModals()" style="border:none;background:none;color:gray;margin-top:10px;cursor:pointer">Chiudi</button>
     </div>
 </div>
@@ -136,58 +135,46 @@
 
     function remove(id) { cart = cart.filter(x => x.id !== id); updateUI(); if(cart.length === 0) closeModals(); }
     function openCart() { caricaOrari(); document.getElementById('modalCart').style.display = 'flex'; }
+    function showAddress() { document.getElementById('modalAddress').style.display = 'flex'; }
     function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
     
-    // Funzione di controllo ordine separata per evitare bug di conferma
-    function checkOrder() {
-        const oraSelezionata = document.getElementById('select-ora').value;
-        if (!oraSelezionata || oraSelezionata.includes("Esaurito")) {
-            alert("Per favore, seleziona un orario di consegna valido.");
-            return;
-        }
-        if (confirm("Vuoi confermare l'ordine e procedere al pagamento?")) {
-            closeModals();
-            document.getElementById('modalPay').style.display = 'flex';
-        }
+    function showPay() { 
+        if(!document.getElementById('select-ora').value || document.getElementById('select-ora').value.includes("Esaurito")) return alert("Seleziona un orario valido!");
+        if(confirm("Vuoi confermare l'ordine?")) { closeModals(); document.getElementById('modalPay').style.display = 'flex'; }
     }
 
-    function finish(metodo) {
-        const giorno = document.getElementById('select-giorno').value;
-        const ora = document.getElementById('select-ora').value;
-        
-        // Disabilita tasti per evitare doppi invii
-        document.querySelectorAll('.pay-option').forEach(el => el.style.pointerEvents = 'none');
+    function finish(m) {
+        const FORMSPREE_URL = "https://formspree.io/f/mlgagarn";
+        let elencoProdotti = cart.map(i => `${i.q}x ${i.n} (${(i.p * i.q).toFixed(2)}€)`).join("\n");
+        let totaleValore = document.getElementById('final-price').innerText;
+        let giorno = document.getElementById('select-giorno').value;
+        let ora = document.getElementById('select-ora').value;
 
-        fetch("https://formspree.io", {
+        fetch(FORMSPREE_URL, {
             method: 'POST',
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                ordine: cart.map(i => `${i.q}x ${i.n}`).join(", "),
-                totale: document.getElementById('final-price').innerText,
-                pagamento: metodo,
+                ordine: elencoProdotti,
+                totale: totaleValore,
+                pagamento: m,
                 consegna: giorno + " " + ora,
                 _subject: "📦 NUOVO ORDINE: " + giorno + " " + ora
             })
-        }).then(response => {
+        })
+        .then(response => {
             if (response.ok) {
-                alert("✅ ORDINE INVIATO CON SUCCESSO!\nRiceverai la spesa " + giorno + " alle " + ora);
+                alert("✅ ORDINE INVIATO!\nConsegna: " + giorno + " " + ora);
                 cart = []; updateUI(); closeModals();
             } else {
-                alert("Errore nell'invio. Riprova tra poco.");
+                alert("Si è verificato un problema tecnico. Riprova.");
             }
-        }).catch(() => {
-            alert("Errore di connessione. Verifica internet.");
-        }).finally(() => {
-            document.querySelectorAll('.pay-option').forEach(el => el.style.pointerEvents = 'auto');
         });
     }
 
-    function showAddress() { document.getElementById('modalAddress').style.display = 'flex'; }
     render();
 </script>
 </body>
 </html>
-
 
 
 
