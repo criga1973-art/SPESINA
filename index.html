@@ -3,36 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spesina App</title>
+    <title>Spesina Prototipo</title>
     <style>
         :root { --primary: #2ecc71; --dark: #2c3e50; }
-        body { font-family: sans-serif; margin: 0; background: #f4f7f6; display: flex; flex-direction: column; height: 100vh; }
-        
-        /* Layout */
+        body { font-family: sans-serif; margin: 0; background: #f8fafc; display: flex; flex-direction: column; height: 100vh; }
         header { background: white; padding: 15px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .main-content { display: flex; flex: 1; overflow: hidden; }
         
-        /* Prodotti */
-        .catalog { flex: 3; overflow-y: auto; padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
-        .card { background: white; border-radius: 15px; padding: 15px; text-align: center; position: relative; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .card img { max-width: 100%; height: 120px; object-fit: contain; }
+        /* Catalogo */
+        .catalog { flex: 3; overflow-y: auto; padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
+        .card { background: white; border-radius: 12px; padding: 15px; text-align: center; position: relative; border: 1px solid #eee; }
+        .card img { width: 80px; height: 80px; margin-bottom: 10px; opacity: 0.6; }
         
-        /* Label Quantità + */
-        .qty-label { position: absolute; top: 10px; right: 10px; background: var(--primary); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; }
-        .qty-popup { display: none; position: absolute; top: 45px; right: 10px; background: white; border: 1px solid #ddd; padding: 10px; border-radius: 8px; z-index: 10; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .qty-label { position: absolute; top: 10px; right: 10px; background: var(--primary); color: white; width: 25px; height: 25px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; }
+        .qty-popup { display: none; position: absolute; top: 40px; right: 10px; background: white; border: 1px solid #ddd; padding: 10px; border-radius: 8px; z-index: 10; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 
-        /* Carrello Laterale */
-        .sidebar { flex: 1; background: white; border-left: 1px solid #ddd; display: flex; flex-direction: column; padding: 20px; min-width: 300px; }
-        .cart-items { flex: 1; overflow-y: auto; }
-        .cart-item { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding: 10px 0; font-size: 14px; }
-        .total-box { border-top: 2px solid var(--primary); padding-top: 15px; margin-top: 15px; }
-        .btn-buy { background: var(--primary); color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; }
+        /* Sidebar Carrello */
+        .sidebar { flex: 1; background: white; border-left: 1px solid #ddd; display: flex; flex-direction: column; padding: 20px; min-width: 280px; }
+        .cart-items { flex: 1; overflow-y: auto; font-size: 14px; }
+        .total-box { border-top: 3px solid var(--primary); padding-top: 15px; }
+        .btn-buy { background: var(--primary); color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-        /* Modal Pagamento */
+        /* Pagamento */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 100; }
-        .modal-content { background: white; padding: 30px; border-radius: 15px; text-align: center; max-width: 400px; }
-        .pay-option { border: 2px solid #eee; margin: 10px 0; padding: 15px; border-radius: 10px; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        .pay-option:hover { border-color: var(--primary); color: var(--primary); }
+        .modal-content { background: white; padding: 20px; border-radius: 12px; text-align: center; width: 300px; }
+        .pay-option { border: 1px solid #ddd; margin: 10px 0; padding: 15px; border-radius: 8px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -40,44 +35,39 @@
 <header><h1 style="margin:0; color:var(--primary)">Spesina 🛒</h1></header>
 
 <div class="main-content">
-    <!-- Catalogo -->
-    <div class="catalog" id="catalog">
-        <!-- I prodotti verranno caricati qui -->
-    </div>
-
-    <!-- Barra Laterale -->
+    <div class="catalog" id="catalog"></div>
     <div class="sidebar">
-        <h3>Il tuo Carrello</h3>
-        <div class="cart-items" id="cart-items">
-            <p style="color:#999">Il carrello è vuoto</p>
-        </div>
+        <h3>Lista Spesa</h3>
+        <div class="cart-items" id="cart-items"><p>Aggiungi prodotti...</p></div>
         <div class="total-box">
-            <div style="display:flex; justify-content:space-between; margin-bottom:15px">
-                <span class="font-bold">TOTALE:</span>
-                <span id="grand-total" style="font-weight:bold; font-size:20px">0.00€</span>
-            </div>
-            <button class="btn-buy" onclick="openPayment()">ACQUISTA ORA</button>
+            <p>Totale: <span id="grand-total" style="font-weight:bold">0.00€</span></p>
+            <button class="btn-buy" onclick="openPayment()">ACQUISTA</button>
         </div>
     </div>
 </div>
 
-<!-- Modal Pagamento -->
 <div class="modal" id="paymentModal">
     <div class="modal-content">
-        <h3>Come vuoi pagare?</h3>
-        <div class="pay-option" onclick="sendOrder('Contanti alla consegna')">💵 Cash (all'arrivo dello shopper)</div>
-        <div class="pay-option" onclick="sendOrder('POS/Bancomat')">💳 Con Bancomat/Carta (al POS dello shopper)</div>
-        <button onclick="closePayment()" style="margin-top:15px; border:none; background:none; color:#999; cursor:pointer">Annulla</button>
+        <h3>Pagamento</h3>
+        <div class="pay-option" onclick="sendOrder('Contanti')">Cash</div>
+        <div class="pay-option" onclick="sendOrder('Bancomat')">Bancomat</div>
+        <button onclick="closePayment()">Indietro</button>
     </div>
 </div>
 
 <script>
+    // Dati finti veloci per testare la grafica
     const products = [
-        { id: 1, name: "Pasta Bucatini n.9", price: 0.99, img: "https://conad.it" },
-        { id: 2, name: "Birra Moretti 66cl", price: 1.19, img: "https://conad.it" }
+        { id: 1, name: "Pasta Bucatini", price: 0.99 },
+        { id: 2, name: "Birra Moretti", price: 1.19 },
+        { id: 3, name: "Confettura Bio", price: 2.49 },
+        { id: 4, name: "Pasta Farfalle", price: 0.99 },
+        { id: 5, name: "Latte Intero", price: 1.40 },
+        { id: 6, name: "Biscotti", price: 2.10 }
     ];
 
     let cart = [];
+    const icon = "https://flaticon.com"; // Icona pacco spesa
 
     function renderCatalog() {
         const catalog = document.getElementById('catalog');
@@ -85,12 +75,12 @@
             <div class="card">
                 <div class="qty-label" onclick="togglePopup(${p.id})">+</div>
                 <div id="popup-${p.id}" class="qty-popup">
-                    <input type="number" id="input-${p.id}" value="1" min="1" style="width:40px">
-                    <button onclick="addToCart(${p.id})" style="background:var(--primary); color:white; border:none; border-radius:4px; cursor:pointer">OK</button>
+                    <input type="number" id="input-${p.id}" value="1" style="width:30px">
+                    <button onclick="addToCart(${p.id})">OK</button>
                 </div>
-                <img src="${p.img}">
-                <p style="font-size:14px; height:40px">${p.name}</p>
-                <p style="color:var(--primary); font-weight:bold">${p.price}€</p>
+                <img src="${icon}">
+                <p style="font-size:13px">${p.name}</p>
+                <p style="font-weight:bold">${p.price}€</p>
             </div>
         `).join('');
     }
@@ -102,41 +92,32 @@
 
     function addToCart(id) {
         const qty = parseInt(document.getElementById(`input-${id}`).value);
-        const product = products.find(p => p.id === id);
-        const existing = cart.find(item => item.id === id);
-
-        if (existing) { existing.qty += qty; } 
-        else { cart.push({ ...product, qty }); }
-        
+        const p = products.find(prod => prod.id === id);
+        const exists = cart.find(item => item.id === id);
+        if(exists) exists.qty += qty; else cart.push({...p, qty});
         togglePopup(id);
         updateCart();
     }
 
     function updateCart() {
-        const container = document.getElementById('cart-items');
         let total = 0;
-        container.innerHTML = cart.map(item => {
-            total += (item.price * item.qty);
-            return `<div class="cart-item"><span>${item.qty}x ${item.name}</span><span>${(item.price * item.qty).toFixed(2)}€</span></div>`;
+        document.getElementById('cart-items').innerHTML = cart.map(i => {
+            total += (i.price * i.qty);
+            return `<div>${i.qty}x ${i.name} (${(i.price * i.qty).toFixed(2)}€)</div>`;
         }).join('');
         document.getElementById('grand-total').innerText = total.toFixed(2) + '€';
     }
 
     function openPayment() { if(cart.length > 0) document.getElementById('paymentModal').style.display = 'flex'; }
     function closePayment() { document.getElementById('paymentModal').style.display = 'none'; }
-
-    function sendOrder(method) {
-        let text = `NUOVO ORDINE SPESINA\n------------------\n`;
-        cart.forEach(item => { text += `${item.qty}x ${item.name} - ${(item.price * item.qty).toFixed(2)}€\n`; });
-        text += `------------------\nTOTALE: ${document.getElementById('grand-total').innerText}\nMETODO DI PAGAMENTO: ${method}`;
-        
-        const url = "https://wa.me" + encodeURIComponent(text);
-        window.open(url, '_blank');
+    function sendOrder(m) { 
+        alert("Ordine inviato via WhatsApp! (Pagamento: " + m + ")"); 
+        location.reload(); 
     }
 
     renderCatalog();
 </script>
-
 </body>
 </html>
+
 
