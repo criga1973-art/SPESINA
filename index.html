@@ -4,61 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spesina - La tua spesa</title>
-    <style>
-        :root { --primary: #2ecc71; --dark: #2c3e50; --gray: #f8fafc; --red: #ff7675; }
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--gray); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-        header { background: white; padding: 15px; border-bottom: 1px solid #eee; text-align: center; flex-shrink: 0; }
-        .top-nav { display: flex; justify-content: center; gap: 20px; margin-top: 10px; }
-        .top-nav a { text-decoration: none; color: var(--dark); font-size: 14px; font-weight: 600; padding: 5px 15px; border-radius: 20px; cursor: pointer; }
-        .categories-bar { background: white; padding: 10px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; box-shadow: 0 2px 5px rgba(0,0,0,0.05); flex-shrink: 0; }
-        .cat-btn { background: #e2e8f0; color: var(--dark); border: none; padding: 8px 18px; border-radius: 25px; cursor: pointer; font-size: 12px; font-weight: bold; }
-        
-        .main-content { display: flex; flex: 1; overflow: hidden; }
-        .catalog { flex: 3; overflow-y: auto; padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; align-content: start; }
-        
-        .card { background: white; border-radius: 15px; padding: 15px; text-align: center; position: relative; border: 1px solid #eee; box-shadow: 0 2px 5px rgba(0,0,0,0.05); height: fit-content; }
-        .card img { width: 60px; height: 60px; margin-bottom: 10px; opacity: 0.5; }
-        .qty-label { position: absolute; top: 10px; right: 10px; background: var(--primary); color: white; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; }
-        
-        .sidebar { flex: 1; background: white; border-left: 1px solid #ddd; display: flex; flex-direction: column; padding: 20px; min-width: 280px; }
-        .cart-items { flex: 1; overflow-y: auto; font-size: 14px; }
-        .total-box { border-top: 3px solid var(--primary); padding-top: 15px; }
-        .btn-buy { background: var(--primary); color: white; border: none; padding: 15px; width: 100%; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px; }
-
-        .qty-popup { display: none; position: absolute; top: 40px; right: 10px; background: white; border: 1px solid #ddd; padding: 10px; border-radius: 8px; z-index: 100; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000; }
-        .modal-content { background: white; padding: 25px; border-radius: 15px; text-align: center; width: 280px; }
-        .pay-option { border: 2px solid #eee; margin: 10px 0; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        .pay-option:hover { border-color: var(--primary); background: #f0fff4; }
-
-        .btn-remove { background: var(--red); color: white; border: none; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; font-size: 10px; display: flex; align-items: center; justify-content: center; }
-
-        @media (max-width: 768px) {
-            .main-content { flex-direction: column; }
-            .sidebar { min-width: auto; height: 300px; border-left: none; border-top: 2px solid #ddd; }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header>
     <h1 style="margin:0; color:var(--primary)">Spesina 🛒</h1>
     <div class="top-nav">
-        <a onclick="alert('Servizio di spesa veloce a domicilio.')">Come funziona</a> 
+        <a onclick="alert('Servizio veloce')">Come funziona</a> 
         <a onclick="showAddress()">Dove consegniamo</a> 
         <a onclick="showAddress()" style="background: var(--primary); color: white;">Fai la spesa</a>
     </div>
 </header>
 
 <div class="categories-bar">
-    <button class="cat-btn">Pasta</button> <button class="cat-btn">Bevande</button> <button class="cat-btn">Sughi</button> <button class="cat-btn">Detergenza</button> <button class="cat-btn">Riso</button>
+    <button class="cat-btn">Pasta</button> <button class="cat-btn">Bevande</button> 
+    <button class="cat-btn">Sughi</button> <button class="cat-btn">Detergenza</button>
 </div>
 
 <div class="main-content">
     <div class="catalog" id="catalog-list"></div>
     <div class="sidebar">
-        <h3 style="margin:0">🛒 Carrello</h3>
-        <div id="cart-list" class="cart-items"><p style="color:#999; margin-top:20px">Il carrello è vuoto</p></div>
+        <h3>🛒 Carrello</h3>
+        <div id="cart-list" class="cart-items"><p>Il carrello è vuoto</p></div>
         <div class="total-box">
             <div style="display:flex; justify-content:space-between; margin-bottom:10px">
                 <span>Totale:</span>
@@ -69,120 +37,27 @@
     </div>
 </div>
 
-<!-- Modal Indirizzo -->
+<!-- Modals -->
 <div class="modal" id="addressModal">
     <div class="modal-content">
         <h3>📍 Dove consegniamo?</h3>
         <div class="pay-option" onclick="hideAddress()">📍 Usa la mia posizione</div>
         <div class="pay-option" onclick="hideAddress()">✍️ Inserisci il tuo indirizzo</div>
         <button class="btn-buy" onclick="hideAddress()" style="margin-top:10px">INIZIA AD ACQUISTARE</button>
-        <p style="font-size:13px; margin-top:15px">Hai già un account? <a href="#" style="color:var(--primary); font-weight:bold">Accedi</a></p>
+        <p>Hai già un account? <a href="#">Accedi</a></p>
     </div>
 </div>
 
-<!-- Modal Pagamento -->
 <div class="modal" id="payModal">
     <div class="modal-content">
         <h3>Come vuoi pagare?</h3>
-        <div class="pay-option" onclick="doOrder('Contanti')">💵 Cash alla consegna</div>
-        <div class="pay-option" onclick="doOrder('Bancomat')">💳 Bancomat al POS</div>
-        <button onclick="hidePay()" style="border:none; background:none; color:#999; cursor:pointer; margin-top:10px">Annulla</button>
+        <div class="pay-option" onclick="doOrder('Contanti')">💵 Cash</div>
+        <div class="pay-option" onclick="doOrder('Bancomat')">💳 Bancomat</div>
+        <button onclick="hidePay()">Annulla</button>
     </div>
 </div>
 
-<script>
-    const IMG_PLACEHOLDER = "https://flaticon.com";
-
-    const PRODS = [
-        { id: 1, n: "Bucatini n.9", p: 0.99 }, { id: 2, n: "Moretti 66cl", p: 1.19 },
-        { id: 3, n: "Sugo Pomodoro", p: 1.50 }, { id: 4, n: "Sgrassatore", p: 2.30 },
-        { id: 5, n: "Riso Arborio", p: 2.10 }, { id: 6, n: "Spaghetti n.5", p: 0.89 },
-        { id: 7, n: "Vino Rosso", p: 4.50 }, { id: 8, n: "Acqua 1.5L", p: 0.40 },
-        { id: 9, n: "Biscotti", p: 2.50 }, { id: 10, n: "Sale Grosso", p: 0.60 },
-        { id: 11, n: "Caffè 250g", p: 3.20 }, { id: 12, n: "Olio EVO 1L", p: 8.90 },
-        { id: 13, n: "Tonno 3x80g", p: 3.50 }, { id: 14, n: "Farina 1kg", p: 1.10 },
-        { id: 15, n: "Latte 1L", p: 1.45 }, { id: 16, n: "Penne Rigate", p: 0.89 },
-        { id: 17, n: "Passata", p: 1.20 }, { id: 18, n: "Coca Cola 1.5L", p: 1.90 },
-        { id: 19, n: "Detersivo Piatti", p: 1.80 }, { id: 20, n: "Riso Basmati", p: 2.40 }
-    ];
-
-    let myCart = [];
-
-    function draw() {
-        let html = "";
-        PRODS.forEach(p => {
-            html += `<div class="card">
-                <div class="qty-label" onclick="togglePop(${p.id})">+</div>
-                <div id="pop-${p.id}" class="qty-popup">
-                    <input type="number" id="q-${p.id}" value="1" style="width:35px">
-                    <button onclick="add(${p.id})" style="background:var(--primary); color:white; border:none; border-radius:4px; padding:3px 8px">OK</button>
-                </div>
-                <img src="${IMG_PLACEHOLDER}">
-                <p style="font-size:13px; font-weight:bold; margin:5px 0">${p.n}</p>
-                <p style="color:var(--primary); font-weight:bold; margin:0">${p.p.toFixed(2)}€</p>
-            </div>`;
-        });
-        document.getElementById('catalog-list').innerHTML = html;
-    }
-
-    function togglePop(id) {
-        let el = document.getElementById('pop-'+id);
-        el.style.display = (el.style.display === 'block') ? 'none' : 'block';
-    }
-
-    function add(id) {
-        let qty = parseInt(document.getElementById('q-'+id).value);
-        if(qty < 1) return;
-        let p = PRODS.find(x => x.id === id);
-        let exists = myCart.find(x => x.id === id);
-        if(exists) exists.q += qty; else myCart.push({id:p.id, n:p.n, p:p.p, q:qty});
-        togglePop(id);
-        update();
-    }
-
-    function remove(id) {
-        myCart = myCart.filter(x => x.id !== id);
-        update();
-    }
-
-    function update() {
-        let total = 0;
-        let html = "";
-        if(myCart.length === 0) {
-            html = '<p style="color:#999; margin-top:20px">Il carrello è vuoto</p>';
-        } else {
-            myCart.forEach(i => {
-                total += (i.p * i.q);
-                html += `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px solid #f0f0f0; padding-bottom:5px">
-                    <div style="text-align:left">
-                        <b>${i.q}x</b> ${i.n}<br>
-                        <small style="color:var(--primary)">${(i.p*i.q).toFixed(2)}€</small>
-                    </div>
-                    <button class="btn-remove" onclick="remove(${i.id})">✕</button>
-                </div>`;
-            });
-        }
-        document.getElementById('cart-list').innerHTML = html;
-        document.getElementById('price-total').innerText = total.toFixed(2) + '€';
-    }
-
-    function showPay() { if(myCart.length > 0) document.getElementById('payModal').style.display = 'flex'; }
-    function hidePay() { document.getElementById('payModal').style.display = 'none'; }
-    
-    function showAddress() { document.getElementById('addressModal').style.display = 'flex'; }
-    function hideAddress() { document.getElementById('addressModal').style.display = 'none'; }
-
-    function doOrder(m) {
-        alert("🎉 Ordine Ricevuto!\nPagamento scelto: " + m + "\nTotale: " + document.getElementById('price-total').innerText);
-        myCart = [];
-        update();
-        hidePay();
-    }
-
-    // Avvio iniziale
-    draw();
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
 
