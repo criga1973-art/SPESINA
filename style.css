@@ -1,1 +1,21 @@
+:root { --primary: #2ecc71; --dark: #2c3e50; --gray: #f8fafc; --red: #ff7675; }
+body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--gray); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+header { background: white; padding: 15px; border-bottom: 1px solid #eee; text-align: center; }
+.top-nav { display: flex; justify-content: center; gap: 20px; margin-top: 10px; }
+.top-nav a { text-decoration: none; color: var(--dark); font-size: 14px; font-weight: 600; padding: 5px 15px; border-radius: 20px; cursor: pointer; }
+.categories-bar { background: white; padding: 10px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+.cat-btn { background: #e2e8f0; border: none; padding: 8px 18px; border-radius: 25px; cursor: pointer; font-size: 12px; font-weight: bold; }
+.main-content { display: flex; flex: 1; overflow: hidden; }
+.catalog { flex: 3; overflow-y: auto; padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
+.card { background: white; border-radius: 15px; padding: 15px; text-align: center; position: relative; border: 1px solid #eee; }
+.qty-label { position: absolute; top: 10px; right: 10px; background: var(--primary); color: white; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.sidebar { flex: 1; background: white; border-left: 1px solid #ddd; display: flex; flex-direction: column; padding: 20px; min-width: 280px; }
+.cart-items { flex: 1; overflow-y: auto; font-size: 14px; }
+.total-box { border-top: 3px solid var(--primary); padding-top: 15px; }
+.btn-buy { background: var(--primary); color: white; border: none; padding: 15px; width: 100%; border-radius: 12px; font-weight: bold; cursor: pointer; }
+.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000; }
+.modal-content { background: white; padding: 25px; border-radius: 15px; text-align: center; width: 280px; }
+.pay-option { border: 2px solid #eee; margin: 10px 0; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: bold; }
+.btn-remove { background: var(--red); color: white; border: none; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; }
+@media (max-width: 768px) { .main-content { flex-direction: column; } .sidebar { min-width: auto; height: 300px; } }
 
