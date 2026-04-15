@@ -3,50 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spesina V2.4</title>
+    <title>Spesina V3.0</title>
     <style>
         :root { --primary: #2ecc71; --dark: #2c3e50; --gray: #f8fafc; --red: #ff7675; --dark-green: #27ae60; }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--gray); padding-bottom: 100px; }
-        
         header { background: white; padding: 15px; border-bottom: 1px solid #eee; text-align: center; position: sticky; top: 0; z-index: 100; }
-        .top-nav { display: flex; justify-content: center; gap: 15px; margin-bottom: 10px; }
-        .top-nav a { text-decoration: none; color: var(--dark); font-size: 13px; font-weight: 600; cursor: pointer; }
-        
-        #cart-trigger { 
-            display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: var(--dark-green); color: white; padding: 18px 30px; border-radius: 50px; 
-            font-weight: 800; cursor: pointer; box-shadow: 0 8px 25px rgba(0,0,0,0.3); z-index: 200; 
-            width: 85%; max-width: 320px; text-align: center; font-size: 18px; border: 2px solid rgba(255,255,255,0.3);
-        }
-
         .categories-bar { background: white; padding: 12px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; border-bottom: 1px solid #eee; }
         .cat-btn { background: #e2e8f0; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 11px; font-weight: bold; }
-
         .catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; padding: 20px; }
         .card { background: white; border-radius: 12px; padding: 12px; text-align: center; border: 1px solid #eee; position: relative; }
         .product-emoji { font-size: 50px; height: 80px; display: flex; align-items: center; justify-content: center; background: #f8fafc; border-radius: 10px; margin-bottom: 10px; }
         .add-btn { position: absolute; top: 5px; right: 5px; background: var(--primary); color: white; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-weight: bold; font-size: 20px; }
-
+        #cart-trigger { display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--dark-green); color: white; padding: 18px 30px; border-radius: 50px; font-weight: 800; cursor: pointer; z-index: 200; width: 85%; max-width: 320px; text-align: center; box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); align-items: center; justify-content: center; z-index: 1000; }
-        .modal-content { background: white; padding: 25px; border-radius: 20px; width: 90%; max-width: 350px; text-align: center; max-height: 80vh; overflow-y: auto; }
-        .cart-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
-        .btn-remove { background: var(--red); color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; }
+        .modal-content { background: white; padding: 25px; border-radius: 20px; width: 90%; max-width: 350px; text-align: center; max-height: 85vh; overflow-y: auto; }
+        .cart-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; font-size: 14px; }
+        .select-box { width: 100%; padding: 12px; margin-top: 5px; border-radius: 10px; border: 1px solid #ddd; background: #fff; font-size: 14px; }
         .btn-confirm { background: var(--primary); color: white; border: none; padding: 16px; width: 100%; border-radius: 12px; font-weight: bold; margin-top: 15px; cursor: pointer; }
         .pay-option { border: 2px solid #eee; margin: 10px 0; padding: 15px; border-radius: 12px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div id="cart-trigger" onclick="openCart()">
-    VEDI CARRELLO: <span id="cart-total-top">0.00€</span>
-</div>
+<div id="cart-trigger" onclick="openCart()">🛒 VEDI CARRELLO: <span id="cart-total-top">0.00€</span></div>
 
 <header>
     <h2 style="margin:0; color:var(--primary)">Spesina 🛒</h2>
-    <div class="top-nav">
-        <a onclick="showAddress()">📍 Dove consegniamo</a>
-        <a onclick="showAddress()">🔑 Accedi</a>
-    </div>
 </header>
 
 <div class="categories-bar">
@@ -56,30 +38,57 @@
     <button class="cat-btn" onclick="render('Frutta e Verdura')">Frutta/Verdura</button>
     <button class="cat-btn" onclick="render('Carne e Pesce')">Carne/Pesce</button>
     <button class="cat-btn" onclick="render('Latticini')">Latticini</button>
-    <button class="cat-btn" onclick="render('Pane')">Pane</button>
-    <button class="cat-btn" onclick="render('Vegano')">Vegano</button>
-    <button class="cat-btn" onclick="render('Scatolame')">Scatolame</button>
 </div>
 
 <div class="catalog" id="catalog"></div>
 
-<!-- Modali -->
-<div class="modal" id="modalCart"><div class="modal-content"><h3>🛒 Carrello</h3><div id="cart-items-list"></div><h3 id="final-price">Totale: 0.00€</h3><button class="btn-confirm" onclick="showPay()">PROSEGUI</button><button onclick="closeModals()" style="border:none;background:none;color:gray;margin-top:10px;cursor:pointer">Chiudi</button></div></div>
-<div class="modal" id="modalPay"><div class="modal-content"><h3>Pagamento</h3><div class="pay-option" onclick="finish('Contanti')">💵 Contanti</div><div class="pay-option" onclick="finish('Bancomat')">💳 Bancomat</div><button onclick="closeModals()" style="border:none;background:none;color:gray;margin-top:10px;cursor:pointer">Annulla</button></div></div>
-<div class="modal" id="modalAddress"><div class="modal-content"><h3>📍 Dove consegniamo?</h3><div class="pay-option" onclick="closeModals()">📍 Usa posizione</div><div class="pay-option" onclick="closeModals()">✍️ Inserisci indirizzo</div><button class="btn-confirm" onclick="closeModals()">INIZIA AD ACQUISTARE</button></div></div>
+<!-- Modal Carrello -->
+<div class="modal" id="modalCart">
+    <div class="modal-content">
+        <h3>🛒 Il tuo Carrello</h3>
+        <div id="cart-items-list"></div>
+        
+        <div style="margin-top:20px; text-align:left;">
+            <label style="font-size:12px; font-weight:bold; color:var(--dark)">📅 QUANDO CONSEGNIAMO?</label>
+            <select id="select-giorno" class="select-box" onchange="caricaOrari()">
+                <option value="Oggi">Oggi</option>
+                <option value="Domani">Domani</option>
+            </select>
+            <select id="select-ora" class="select-box" style="margin-top:10px;"></select>
+        </div>
+
+        <h3 id="final-price" style="margin-top:20px; border-top:2px solid #eee; padding-top:10px;">0.00€</h3>
+        <button class="btn-confirm" onclick="showPay()">PROSEGUI ALL'ORDINE</button>
+        <button onclick="closeModals()" style="border:none;background:none;color:gray;margin-top:10px;cursor:pointer">Chiudi</button>
+    </div>
+</div>
+
+<!-- Modal Pagamento -->
+<div class="modal" id="modalPay">
+    <div class="modal-content">
+        <h3>Metodo di Pagamento</h3>
+        <div class="pay-option" onclick="finish('Contanti')">💵 Contanti alla consegna</div>
+        <div class="pay-option" onclick="finish('Bancomat')">💳 Bancomat al ritiro</div>
+        <button onclick="closeModals()" style="border:none;background:none;color:gray;margin-top:10px;cursor:pointer">Indietro</button>
+    </div>
+</div>
 
 <script>
+    // --- GESTIONE SLOT (Modifica i numeri per chiudere le fasce) ---
+    const SLOT_CONSEGNA = {
+        "10:00 - 12:00": 3,
+        "12:00 - 14:00": 5,
+        "14:00 - 16:00": 0, // Esempio: Esaurito
+        "16:00 - 18:00": 4
+    };
+
     const PRODS = [
         { id: 1, n: "Penne Rigate", p: 0.95, c: "Pasta", icon: "🍝" },
         { id: 2, n: "Acqua 1.5L", p: 0.45, c: "Bevande", icon: "💧" },
         { id: 3, n: "Mele Golden", p: 1.20, c: "Frutta e Verdura", icon: "🍎" },
         { id: 4, n: "Carne Bovina", p: 5.50, c: "Carne e Pesce", icon: "🥩" },
         { id: 5, n: "Latte 1L", p: 1.30, c: "Latticini", icon: "🥛" },
-        { id: 6, n: "Uova x6", p: 2.10, c: "Uova", icon: "🥚" },
-        { id: 7, n: "Pane Fresco", p: 1.50, c: "Pane", icon: "🥖" },
-        { id: 8, n: "Burger Veg", p: 2.99, c: "Vegano", icon: "🌿" },
-        { id: 9, n: "Tonno Olio", p: 3.20, c: "Scatolame", icon: "🥫" },
-        { id: 10, n: "Birra 66cl", p: 1.10, c: "Bevande", icon: "🍺" }
+        { id: 6, n: "Uova x6", p: 2.10, c: "Uova", icon: "🥚" }
     ];
 
     let cart = [];
@@ -88,15 +97,27 @@
         let html = "";
         let items = filter === 'Tutti' ? PRODS : PRODS.filter(p => p.c === filter);
         items.forEach(p => {
-            html += `<div class="card">
-                <button class="add-btn" onclick="addToCart(${p.id})">+</button>
-                <div class="product-emoji">${p.icon}</div>
-                <div style="font-size:13px; font-weight:bold">${p.n}</div>
-                <div style="color:var(--primary); font-weight:bold">${p.p.toFixed(2)}€</div>
-            </div>`;
+            html += `<div class="card"><button class="add-btn" onclick="addToCart(${p.id})">+</button><div class="product-emoji">${p.icon}</div><div><b>${p.n}</b></div><div style="color:var(--primary)">${p.p.toFixed(2)}€</div></div>`;
         });
         document.getElementById('catalog').innerHTML = html;
-        window.scrollTo(0,0);
+    }
+
+    function caricaOrari() {
+        const giorno = document.getElementById('select-giorno').value;
+        const oraAttuale = new Date().getHours();
+        let options = "";
+        
+        for (const [fascia, posti] of Object.entries(SLOT_CONSEGNA)) {
+            const oraInizio = parseInt(fascia.split(":")[0]);
+            const scaduto = (giorno === "Oggi" && oraInizio <= oraAttuale);
+            
+            if (posti <= 0 || scaduto) {
+                options += `<option disabled style="color:#ccc;">${fascia} (Non disponibile)</option>`;
+            } else {
+                options += `<option value="${fascia}">${fascia} (${posti} disponibili)</option>`;
+            }
+        }
+        document.getElementById('select-ora').innerHTML = options || "<option disabled>Nessun orario disponibile</option>";
     }
 
     function addToCart(id) {
@@ -106,18 +127,12 @@
         updateUI();
     }
 
-    function remove(id) {
-        cart = cart.filter(x => x.id !== id);
-        updateUI();
-        if(cart.length === 0) closeModals();
-    }
-
     function updateUI() {
         let total = 0;
         let listHtml = "";
         cart.forEach(i => {
             total += (i.p * i.q);
-            listHtml += `<div class="cart-row"><span><b>${i.q}x</b> ${i.n}</span><span>${(i.p*i.q).toFixed(2)}€ <button class="btn-remove" onclick="remove(${i.id})" style="margin-left:10px">✕</button></span></div>`;
+            listHtml += `<div class="cart-row"><span><b>${i.q}x</b> ${i.n}</span><span>${(i.p*i.q).toFixed(2)}€ <button onclick="remove(${i.id})" style="border:none;background:var(--red);color:white;border-radius:50%;width:20px;height:20px;cursor:pointer">✕</button></span></div>`;
         });
         document.getElementById('cart-trigger').style.display = cart.length > 0 ? 'block' : 'none';
         document.getElementById('cart-total-top').innerText = total.toFixed(2) + "€";
@@ -125,58 +140,40 @@
         document.getElementById('cart-items-list').innerHTML = listHtml;
     }
 
-    function openCart() { document.getElementById('modalCart').style.display = 'flex'; }
-    function showAddress() { document.getElementById('modalAddress').style.display = 'flex'; }
-    function showPay() { if(confirm("Confermi l'ordine?")) { closeModals(); document.getElementById('modalPay').style.display = 'flex'; } }
+    function remove(id) { cart = cart.filter(x => x.id !== id); updateUI(); if(cart.length === 0) closeModals(); }
+    function openCart() { caricaOrari(); document.getElementById('modalCart').style.display = 'flex'; }
     function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
-      function finish(m) {
-        // Il tuo endpoint Formspree
-        const FORMSPREE_URL = "https://formspree.io/f/mlgagarn";
-        
-        // 1. Prepariamo i dati dell'ordine
-        let elencoProdotti = cart.map(i => `${i.q}x ${i.n} (${(i.p * i.q).toFixed(2)}€)`).join("\n");
-        let totaleValore = document.getElementById('final-price').innerText;
-
-        // Cambiamo il testo del tasto per dare un feedback all'utente
-        const btnConferma = document.querySelector("#modalPay .pay-option"); // Prende il primo tasto di pagamento
-        
-        // 2. Invio AJAX (invisibile)
-        fetch(FORMSPREE_URL, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                ordine: elencoProdotti,
-                totale: totaleValore,
-                pagamento: m,
-                _subject: "📦 NUOVO ORDINE SPESINA"
-            })
-        })
-        .then(response => {
-            if (response.ok) {
-                // Successo!
-                alert("✅ ORDINE INVIATO!\nGrazie, riceverai la spesa a breve.");
-                cart = [];
-                updateUI();
-                closeModals();
-            } else {
-                // Errore del server
-                alert("Si è verificato un problema tecnico. Riprova.");
-            }
-        })
-        .catch(error => {
-            // Errore di rete
-            alert("Errore di connessione. Controlla internet e riprova.");
-        });
+    function showPay() { 
+        if(document.getElementById('select-ora').value.includes("disponibile")) return alert("Scegli un orario valido");
+        closeModals(); document.getElementById('modalPay').style.display = 'flex'; 
     }
 
+    function finish(metodo) {
+        const giorno = document.getElementById('select-giorno').value;
+        const ora = document.getElementById('select-ora').value;
+        const riepilogo = cart.map(i => `${i.q}x ${i.n}`).join(", ");
+        
+        fetch("https://formspree.io", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                ordine: riepilogo,
+                totale: document.getElementById('final-price').innerText,
+                pagamento: metodo,
+                consegna: `${giorno} nella fascia ${ora}`,
+                _subject: `📦 ORDINE: ${giorno} ore ${ora}`
+            })
+        }).then(() => {
+            alert("✅ Ordine inviato per " + giorno + " alle " + ora);
+            cart = []; updateUI(); closeModals();
+        });
+    }
 
     render();
 </script>
 </body>
 </html>
+
 
 
 
