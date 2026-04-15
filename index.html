@@ -18,46 +18,19 @@
 </header>
 
 <div class="categories-bar">
-    <button class="cat-btn">Pasta</button> <button class="cat-btn">Bevande</button> 
-    <button class="cat-btn">Sughi</button> <button class="cat-btn">Detergenza</button>
+    <button class="cat-btn">Pasta</button>
+    <button class="cat-btn">Bevande</button>
+    <button class="cat-btn">Sughi</button>
+    <button class="cat-btn">Riso</button>
+    <button class="cat-btn">Frutta e Verdura</button>
+    <button class="cat-btn">Carne e Pesce</button>
+    <button class="cat-btn">Latticini e Uova</button>
+    <button class="cat-btn">Pane</button>
+    <button class="cat-btn">Vegano</button>
+    <button class="cat-btn">Scatolame</button>
+    <button class="cat-btn">Farine e preparati</button>
+    <button class="cat-btn">Colazione dolcumi e snack</button>
+    <button class="cat-btn">Cura della persona</button>
+    <button class="cat-btn">Amici animali</button>
+    <button class="cat-btn">Cartoleria</button>
 </div>
-
-<div class="main-content">
-    <div class="catalog" id="catalog-list"></div>
-    <div class="sidebar">
-        <h3>🛒 Carrello</h3>
-        <div id="cart-list" class="cart-items"><p>Il carrello è vuoto</p></div>
-        <div class="total-box">
-            <div style="display:flex; justify-content:space-between; margin-bottom:10px">
-                <span>Totale:</span>
-                <span id="price-total" style="font-weight:bold; font-size:20px">0.00€</span>
-            </div>
-            <button class="btn-buy" onclick="showPay()">CONFERMA ORDINE</button>
-        </div>
-    </div>
-</div>
-
-<!-- Modals -->
-<div class="modal" id="addressModal">
-    <div class="modal-content">
-        <h3>📍 Dove consegniamo?</h3>
-        <div class="pay-option" onclick="hideAddress()">📍 Usa la mia posizione</div>
-        <div class="pay-option" onclick="hideAddress()">✍️ Inserisci il tuo indirizzo</div>
-        <button class="btn-buy" onclick="hideAddress()" style="margin-top:10px">INIZIA AD ACQUISTARE</button>
-        <p>Hai già un account? <a href="#">Accedi</a></p>
-    </div>
-</div>
-
-<div class="modal" id="payModal">
-    <div class="modal-content">
-        <h3>Come vuoi pagare?</h3>
-        <div class="pay-option" onclick="doOrder('Contanti')">💵 Cash</div>
-        <div class="pay-option" onclick="doOrder('Bancomat')">💳 Bancomat</div>
-        <button onclick="hidePay()">Annulla</button>
-    </div>
-</div>
-
-<script src="script.js"></script>
-</body>
-</html>
-
