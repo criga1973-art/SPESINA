@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spesina V2.5 - Orari</title>
+    <title>Spesina V2.6 - Fix</title>
     <style>
         :root { --primary: #2ecc71; --dark: #2c3e50; --gray: #f8fafc; --red: #ff7675; --dark-green: #27ae60; }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--gray); padding-bottom: 100px; }
@@ -32,6 +32,7 @@
 <header>
     <h2 style="margin:0; color:var(--primary)">Spesina 🛒</h2>
     <div class="top-nav">
+        <a onclick="alert('Spesa veloce a domicilio!')">Come funziona</a>
         <a onclick="showAddress()">📍 Dove consegniamo</a>
         <a onclick="showAddress()">🔑 Accedi</a>
     </div>
@@ -47,13 +48,12 @@
 
 <div class="catalog" id="catalog"></div>
 
-<!-- Modal Carrello Aggiornato -->
+<!-- Modal Carrello -->
 <div class="modal" id="modalCart">
     <div class="modal-content">
         <h3>🛒 Il tuo Carrello</h3>
         <div id="cart-items-list"></div>
         
-        <!-- Scelta Orario -->
         <div style="margin-top:20px; text-align:left; border-top:1px solid #eee; padding-top:10px;">
             <label style="font-size:12px; font-weight:bold;">🕒 QUANDO CONSEGNIAMO?</label>
             <select id="select-giorno" class="select-box" onchange="caricaOrari()">
@@ -64,7 +64,7 @@
         </div>
 
         <h3 id="final-price" style="margin-top:20px; border-top:2px solid #eee; padding-top:10px;">Totale: 0.00€</h3>
-        <button class="btn-confirm" onclick="showPay()">PROSEGUI</button>
+        <button class="btn-confirm" id="btn-order-step" onclick="checkOrder()">PROSEGUI</button>
         <button onclick="closeModals()" style="border:none;background:none;color:gray;margin-top:10px;cursor:pointer">Chiudi</button>
     </div>
 </div>
@@ -72,9 +72,10 @@
 <!-- Modal Pagamento -->
 <div class="modal" id="modalPay">
     <div class="modal-content">
-        <h3>Pagamento</h3>
-        <div class="pay-option" onclick="finish('Contanti')">💵 Contanti</div>
-        <div class="pay-option" onclick="finish('Bancomat')">💳 Bancomat</div>
+        <h3>Metodo di Pagamento</h3>
+        <div class="pay-option" onclick="finish('Contanti')">💵 Contanti alla consegna</div>
+        <div class="pay-option" onclick="finish('Bancomat')">💳 Bancomat al ritiro</div>
+        <button onclick="closeModals()" style="border:none;background:none;color:gray;margin-top:10px;cursor:pointer">Indietro</button>
     </div>
 </div>
 
@@ -125,7 +126,7 @@
         let listHtml = "";
         cart.forEach(i => {
             total += (i.p * i.q);
-            listHtml += `<div class="cart-row"><span><b>${i.q}x</b> ${i.n}</span><span>${(i.p*i.q).toFixed(2)}€ <button onclick="remove(${i.id})" style="background:var(--red);color:white;border:none;border-radius:50%;width:20px;height:20px;cursor:pointer">✕</button></span></div>`;
+            listHtml += `<div class="cart-row"><span><b>${i.q}x</b> ${i.n}</span><span>${(i.p*i.q).toFixed(2)}€ <button onclick="remove(${i.id})" style="background:var(--red);color:white;border:none;border-radius:50%;width:20px;height:20px;cursor:pointer;">✕</button></span></div>`;
         });
         document.getElementById('cart-trigger').style.display = cart.length > 0 ? 'block' : 'none';
         document.getElementById('cart-total-top').innerText = total.toFixed(2) + "€";
@@ -137,14 +138,26 @@
     function openCart() { caricaOrari(); document.getElementById('modalCart').style.display = 'flex'; }
     function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
     
-    function showPay() { 
-        if(!document.getElementById('select-ora').value || document.getElementById('select-ora').value.includes("Esaurito")) return alert("Seleziona un orario valido!");
-        if(confirm("Confermi l'ordine?")) { closeModals(); document.getElementById('modalPay').style.display = 'flex'; }
+    // Funzione di controllo ordine separata per evitare bug di conferma
+    function checkOrder() {
+        const oraSelezionata = document.getElementById('select-ora').value;
+        if (!oraSelezionata || oraSelezionata.includes("Esaurito")) {
+            alert("Per favore, seleziona un orario di consegna valido.");
+            return;
+        }
+        if (confirm("Vuoi confermare l'ordine e procedere al pagamento?")) {
+            closeModals();
+            document.getElementById('modalPay').style.display = 'flex';
+        }
     }
 
     function finish(metodo) {
         const giorno = document.getElementById('select-giorno').value;
         const ora = document.getElementById('select-ora').value;
+        
+        // Disabilita tasti per evitare doppi invii
+        document.querySelectorAll('.pay-option').forEach(el => el.style.pointerEvents = 'none');
+
         fetch("https://formspree.io", {
             method: 'POST',
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
@@ -152,15 +165,29 @@
                 ordine: cart.map(i => `${i.q}x ${i.n}`).join(", "),
                 totale: document.getElementById('final-price').innerText,
                 pagamento: metodo,
-                consegna: giorno + " " + ora
+                consegna: giorno + " " + ora,
+                _subject: "📦 NUOVO ORDINE: " + giorno + " " + ora
             })
-        }).then(() => { alert("✅ Ordine inviato!"); cart = []; updateUI(); closeModals(); });
+        }).then(response => {
+            if (response.ok) {
+                alert("✅ ORDINE INVIATO CON SUCCESSO!\nRiceverai la spesa " + giorno + " alle " + ora);
+                cart = []; updateUI(); closeModals();
+            } else {
+                alert("Errore nell'invio. Riprova tra poco.");
+            }
+        }).catch(() => {
+            alert("Errore di connessione. Verifica internet.");
+        }).finally(() => {
+            document.querySelectorAll('.pay-option').forEach(el => el.style.pointerEvents = 'auto');
+        });
     }
 
+    function showAddress() { document.getElementById('modalAddress').style.display = 'flex'; }
     render();
 </script>
 </body>
 </html>
+
 
 
 
