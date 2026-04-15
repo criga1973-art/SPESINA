@@ -3,64 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spesina</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Spesina - La tua spesa</title>
+    <style>
+        :root { --primary: #2ecc71; --dark: #2c3e50; --gray: #f8fafc; --red: #ff7675; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--gray); }
+        
+        /* Header e Navigazione */
+        header { background: white; padding: 15px; border-bottom: 1px solid #eee; text-align: center; position: sticky; top: 0; z-index: 100; }
+        .top-nav { display: flex; justify-content: center; gap: 15px; margin-bottom: 10px; }
+        .top-nav a { text-decoration: none; color: var(--dark); font-size: 13px; font-weight: 600; cursor: pointer; }
+        
+        /* Carrello Floating in alto a destra */
+        #cart-trigger { 
+            display: none; position: fixed; top: 15px; right: 15px; background: var(--primary); 
+            color: white; padding: 10px 20px; border-radius: 30px; font-weight: bold; 
+            cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 200; 
+        }
+
+        /* Bar dei tasti categorie */
+        .categories-bar { background: white; padding: 10px; display: flex; gap: 8px; overflow-x: auto; white-space: nowrap; border-bottom: 1px solid #eee; }
+        .cat-btn { background: #e2e8f0; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-size: 12px; font-weight: bold; }
+        .cat-btn:active { background: var(--primary); color: white; }
+
+        /* Catalogo Prodotti */
+        .catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; padding: 20px; }
+        .card { background: white; border-radius: 12px; padding: 15px; text-align: center; border: 1px solid #eee; position: relative; }
+        .add-btn { position: absolute; top: 8px; right: 8px; background: var(--primary); color: white; border: none; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-weight: bold; }
+        .card img { width: 50px; margin-bottom: 10px; opacity: 0.3; }
+
+        /* Modali (Carrello, Pagamento, Indirizzo) */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 1000; }
+        .modal-content { background: white; padding: 20px; border-radius: 15px; width: 90%; max-width: 350px; text-align: center; max-height: 80vh; overflow-y: auto; }
+        .cart-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
+        .btn-remove { background: var(--red); color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; }
+        .pay-option { border: 2px solid #eee; margin: 10px 0; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: bold; }
+        .btn-confirm { background: var(--primary); color: white; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; margin-top: 10px; cursor: pointer; }
+    </style>
 </head>
 <body>
 
+<div id="cart-trigger" onclick="openCart()">🛒 <span id="cart-total-top">0.00€</span></div>
+
 <header>
-    <h1 style="margin:0; color:var(--primary)">Spesina 🛒</h1>
+    <h2 style="margin:0; color:var(--primary)">Spesina 🛒</h2>
     <div class="top-nav">
-        <a onclick="alert('Spesa veloce a domicilio')">Come funziona</a> 
-        <a onclick="showAddress()">Dove consegniamo</a> 
-        <a onclick="showAddress()" style="background:var(--primary); color:white;">Fai la spesa</a>
+        <a onclick="showAddress()">📍 Dove consegniamo</a>
+        <a onclick="showAddress()">🔑 Accedi</a>
     </div>
 </header>
 
 <div class="categories-bar">
-    <button class="cat-btn" onclick="filter('Tutti')">Tutti</button>
-    <button class="cat-btn" onclick="filter('Pasta')">Pasta</button>
-    <button class="cat-btn" onclick="filter('Bevande')">Bevande</button>
-    <button class="cat-btn" onclick="filter('Frutta e Verdura')">Frutta</button>
-    <button class="cat-btn" onclick="filter('Carne e Pesce')">Carne/Pesce</button>
+    <button class="cat-btn" onclick="render('Tutti')">Tutti</button>
+    <button class="cat-btn" onclick="render('Pasta')">Pasta</button>
+    <button class="cat-btn" onclick="render('Bevande')">Bevande</button>
+    <button class="cat-btn" onclick="render('Frutta e Verdura')">Frutta/Verdura</button>
+    <button class="cat-btn" onclick="render('Carne e Pesce')">Carne/Pesce</button>
+    <button class="cat-btn" onclick="render('Latticini')">Latticini</button>
+    <button class="cat-btn" onclick="render('Uova')">Uova</button>
+    <button class="cat-btn" onclick="render('Pane')">Pane</button>
+    <button class="cat-btn" onclick="render('Vegano')">Vegano</button>
+    <button class="cat-btn" onclick="render('Scatolame')">Scatolame</button>
 </div>
 
-<div class="main-content">
-    <div class="catalog" id="catalog-list"></div>
-    <div class="sidebar">
-        <h3>🛒 Carrello</h3>
-        <div id="cart-list" class="cart-items"></div>
-        <div class="total-box">
-            <div style="display:flex; justify-content:space-between; margin-bottom:10px">
-                <span>Totale:</span>
-                <span id="price-total">0.00€</span>
-            </div>
-            <button class="btn-buy" onclick="showPay()">CONFERMA</button>
-        </div>
-    </div>
-</div>
+<div class="catalog" id="catalog"></div>
 
-<!-- Modals -->
-<div class="modal" id="addressModal">
+<!-- Modal Carrello -->
+<div class="modal" id="modalCart">
     <div class="modal-content">
-        <h3>📍 Dove consegniamo?</h3>
-        <div class="pay-option" onclick="hideAddress()">📍 Usa posizione</div>
-        <div class="pay-option" onclick="hideAddress()">✍️ Inserisci indirizzo</div>
-        <button class="btn-buy" onclick="hideAddress()">INIZIA AD ACQUISTARE</button>
-        <p>Hai un account? <a href="#">Accedi</a></p>
+        <h3>Il tuo Carrello</h3>
+        <div id="cart-items-list"></div>
+        <h4 id="final-price">Totale: 0.00€</h4>
+        <button class="btn-confirm" onclick="showPay()">VAI AL PAGAMENTO</button>
+        <button onclick="closeModals()" style="border:none; background:none; color:gray; margin-top:10px; cursor:pointer">Chiudi</button>
     </div>
 </div>
 
-<div class="modal" id="payModal">
+<!-- Altri Modal -->
+<div class="modal" id="modalAddress">
+    <div class="modal-content">
+        <h3>📍 Consegna</h3>
+        <div class="pay-option" onclick="closeModals()">Usa posizione attuale</div>
+        <div class="pay-option" onclick="closeModals()">Inserisci indirizzo</div>
+        <button class="btn-confirm" onclick="closeModals()">CONFERMA</button>
+    </div>
+</div>
+
+<div class="modal" id="modalPay">
     <div class="modal-content">
         <h3>Pagamento</h3>
-        <div class="pay-option" onclick="doOrder('Contanti')">💵 Cash</div>
-        <div class="pay-option" onclick="doOrder('Bancomat')">💳 Bancomat</div>
-        <button onclick="hidePay()">Annulla</button>
+        <div class="pay-option" onclick="finish('Contanti')">💵 Contanti</div>
+        <div class="pay-option" onclick="finish('Bancomat')">💳 Bancomat</div>
     </div>
 </div>
 
-<script src="script.js"></script>
+<script>
+    const PRODS = [
+        { id: 1, n: "Penne Rigate", p: 0.95, c: "Pasta" },
+        { id: 2, n: "Acqua Naturale 1.5L", p: 0.45, c: "Bevande" },
+        { id: 3, n: "Banane (kg)", p: 1.20, c: "Frutta e Verdura" },
+        { id: 4, n: "Hamburger Bovino", p: 3.50, c: "Carne e Pesce" },
+        { id: 5, n: "Latte 1L", p: 1.30, c: "Latticini" },
+        { id: 6, n: "Uova x6", p: 1.80, c: "Uova" },
+        { id: 7, n: "Fili sfilatini", p: 0.80, c: "Pane" },
+        { id: 8, n: "Tofu Bio", p: 2.50, c: "Vegano" },
+        { id: 9, n: "Tonno in scatola", p: 2.90, c: "Scatolame" },
+        { id: 10, n: "Birra 66cl", p: 1.10, c: "Bevande" }
+    ];
+
+    let cart = [];
+
+    function render(filter = 'Tutti') {
+        let html = "";
+        let items = filter === 'Tutti' ? PRODS : PRODS.filter(p => p.c === filter);
+        items.forEach(p => {
+            html += `<div class="card">
+                <button class="add-btn" onclick="addToCart(${p.id})">+</button>
+                <img src="https://flaticon.com">
+                <div style="font-size:13px; font-weight:bold">${p.n}</div>
+                <div style="color:var(--primary); font-weight:bold">${p.p.toFixed(2)}€</div>
+            </div>`;
+        });
+        document.getElementById('catalog').innerHTML = html;
+    }
+
+    function addToCart(id) {
+        let p = PRODS.find(x => x.id === id);
+        let exists = cart.find(x => x.id === id);
+        if(exists) exists.q++; else cart.push({...p, q:1});
+        updateUI();
+    }
+
+    function remove(id) {
+        cart = cart.filter(x => x.id !== id);
+        updateUI();
+        if(cart.length === 0) closeModals();
+    }
+
+    function updateUI() {
+        let total = 0;
+        let listHtml = "";
+        cart.forEach(i => {
+            total += (i.p * i.q);
+            listHtml += `<div class="cart-row">
+                <span><b>${i.q}x</b> ${i.n}</span>
+                <span>${(i.p*i.q).toFixed(2)}€ <button class="btn-remove" onclick="remove(${i.id})">✕</button></span>
+            </div>`;
+        });
+
+        document.getElementById('cart-trigger').style.display = cart.length > 0 ? 'block' : 'none';
+        document.getElementById('cart-total-top').innerText = total.toFixed(2) + "€";
+        document.getElementById('final-price').innerText = "Totale: " + total.toFixed(2) + "€";
+        document.getElementById('cart-items-list').innerHTML = listHtml || "Il carrello è vuoto";
+    }
+
+    function openCart() { document.getElementById('modalCart').style.display = 'flex'; }
+    function showAddress() { document.getElementById('modalAddress').style.display = 'flex'; }
+    function showPay() { document.getElementById('modalPay').style.display = 'flex'; }
+    function closeModals() { 
+        document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); 
+    }
+
+    function finish(m) {
+        alert("Ordine inviato! Pagamento: " + m);
+        cart = [];
+        updateUI();
+        closeModals();
+    }
+
+    render();
+</script>
+
 </body>
 </html>
 
