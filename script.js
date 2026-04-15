@@ -9,4 +9,58 @@ const PRODS = [
     { id: 23, n: "Latte Intero", p: 1.20, c: "Latticini e Uova" }
 ];
 
+let myCart = [];
 
+function draw() {
+    let html = "";
+    PRODS.forEach(p => {
+        html += `<div class="card">
+            <div class="qty-label" onclick="add(${p.id})">+</div>
+            <p style="font-size:13px; font-weight:bold; margin-top:25px">${p.n}</p>
+            <p style="color:var(--primary); font-weight:bold">${p.p.toFixed(2)}€</p>
+        </div>`;
+    });
+    document.getElementById('catalog-list').innerHTML = html;
+}
+
+function add(id) {
+    let p = PRODS.find(x => x.id === id);
+    let exists = myCart.find(x => x.id === id);
+    if(exists) exists.q += 1; else myCart.push({id:p.id, n:p.n, p:p.p, q:1});
+    update();
+}
+
+function remove(id) {
+    myCart = myCart.filter(x => x.id !== id);
+    update();
+}
+
+function update() {
+    let total = 0;
+    let html = "";
+    if(myCart.length === 0) {
+        html = '<p style="color:#999; margin-top:20px">Il carrello è vuoto</p>';
+    } else {
+        myCart.forEach(i => {
+            total += (i.p * i.q);
+            html += `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px solid #f0f0f0; padding-bottom:5px">
+                <div style="text-align:left"><b>${i.q}x</b> ${i.n}</div>
+                <button class="btn-remove" onclick="remove(${i.id})">✕</button>
+            </div>`;
+        });
+    }
+    document.getElementById('cart-list').innerHTML = html;
+    document.getElementById('price-total').innerText = total.toFixed(2) + '€';
+}
+
+function showPay() { if(myCart.length > 0) document.getElementById('payModal').style.display = 'flex'; }
+function hidePay() { document.getElementById('payModal').style.display = 'none'; }
+function showAddress() { document.getElementById('addressModal').style.display = 'flex'; }
+function hideAddress() { document.getElementById('addressModal').style.display = 'none'; }
+
+function doOrder(m) {
+    alert("Ordine ricevuto! Pagamento: " + m);
+    myCart = []; update(); hidePay();
+}
+
+draw();
