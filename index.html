@@ -337,7 +337,7 @@
 
     <div id="subcategory-view" style="display: none;">
         <div class="sub-header">
-            <button class="btn-back" onclick="goHome()">⬅ Indietro</button>
+            <button class="btn-back" onclick="handleBack()">⬅ Indietro</button>
             <h3 id="subcategory-title" style="margin: 0; flex-grow: 1; text-align: center;">Categoria</h3>
             <div style="width: 80px;"></div> <!-- Spazio per centrare il titolo -->
         </div>
@@ -420,30 +420,52 @@
             "12:00-13:00": 2, "13:00-14:00": 5, "14:00-15:00": 5,
             "15:00-16:00": 1, "16:00-17:00": 4, "17:00-18:00": 5
         };
+
+        // Sistema di aiuto per il debug: se c'è un errore, l'app lo dirà chiaramente
+        window.onerror = function(msg, url, line) {
+            alert("⚠️ Errore Tecnico:\n" + msg + "\nLinea: " + line);
+            return false;
+        };
+
         const CATEGORIES = [
-            { id: "Pasta & Riso", icon: "🍝", img: "" },
-            { id: "Bevande", icon: "🥤", img: "" },
-            { id: "Freschi", icon: "🧀", img: "" },
-            { id: "Frutta e Verdura", icon: "🍎", img: "" },
-            { id: "Dispensa", icon: "🥫", img: "" },
-            { id: "Igiene Persona", icon: "🧼", img: "" },
-            { id: "Igiene Casa", icon: "🧽", img: "" },
-            { id: "Vegano", icon: "🥗", img: "" },
-            { id: "Amici Domestici", icon: "🐾", img: "" }
+            { id: "pasta", n: "Pasta & Riso", icon: "🍝", img: "img/PASTA E RISO.jpg" },
+            { id: "bevande", n: "Bevande", icon: "🥤", img: "" },
+            { id: "freschi", n: "Freschi", icon: "🧀", img: "" },
+            { id: "orto", n: "Frutta e Verdura", icon: "🍎", img: "" },
+            { id: "dispensa", n: "Dispensa", icon: "🥫", img: "" },
+            { id: "igiene-p", n: "Igiene Persona", icon: "🧼", img: "" },
+            { id: "igiene-c", n: "Igiene Casa", icon: "🧽", img: "" },
+            { id: "vegano", n: "Vegano", icon: "🥗", img: "" },
+            { id: "animali", n: "Amici Domestici", icon: "🐾", img: "" }
         ];
 
+        function getCatName(id) {
+            let c = CATEGORIES.find(x => x.id === id);
+            return c ? c.n : "Prodotti";
+        }
+
         const PRODS = [
-            { id: 1, n: "Spaghetti n.5", p: 1.10, c: "Pasta & Riso", img: "https://images.openfoodfacts.org/images/products/807/680/951/6055/front_it.4.400.jpg" },
-            { id: 2, n: "Penne Rigate", p: 0.85, c: "Pasta & Riso", icon: "🍝" },
-            { id: 3, n: "Fusilli", p: 0.85, c: "Pasta & Riso", icon: "🍝" },
-            { id: 4, n: "Rigatoni", p: 0.95, c: "Pasta & Riso", icon: "🍝" },
-            { id: 5, n: "Farfalle", p: 0.90, c: "Pasta & Riso", icon: "🍝" },
-            { id: 6, n: "Bucatini", p: 1.10, c: "Pasta & Riso", icon: "🍝" },
-            { id: 7, n: "Tortiglioni", p: 0.85, c: "Pasta & Riso", icon: "🍝" },
-            { id: 8, n: "Orecchiette", p: 1.50, c: "Pasta & Riso", icon: "🍝" },
-            { id: 9, n: "Maccheroni", p: 0.90, c: "Pasta & Riso", icon: "🍝" },
-            { id: 10, n: "Tagliatelle", p: 1.20, c: "Pasta & Riso", icon: "🍝" },
-            { id: 49, n: "Riso Arborio 1kg", p: 2.80, c: "Pasta & Riso", icon: "🍚" },
+            // Pasta & Riso - Barilla
+            { id: 1, n: "Barilla - Spaghetti n°5", p: 1.10, c: "pasta", b: "Barilla", img: "img/BARILLA SPAGHETTI N5.jpg", icon: "🍝" },
+            { id: 2, n: "Barilla - Farfalle", p: 1.10, c: "pasta", b: "Barilla", img: "img/BARILLA FARFALLE.jpg", icon: "🍝" },
+            { id: 3, n: "Barilla - Fusilli", p: 1.10, c: "pasta", b: "Barilla", img: "img/BARILLA FUSILLI.jpg", icon: "🍝" },
+            { id: 4, n: "Barilla - Rigatoni", p: 1.10, c: "pasta", b: "Barilla", img: "img/BARILLA RIGATONI.jpg", icon: "🍝" },
+            // Pasta & Riso - De Cecco
+            { id: 5, n: "De Cecco - Spaghetti n°12", p: 1.60, c: "pasta", b: "De Cecco", img: "img/DE CECCO SPAGHETTI.jpg", icon: "🍝" },
+            { id: 6, n: "De Cecco - Farfalle", p: 1.60, c: "pasta", b: "De Cecco", img: "img/DE CECCO FARFALLE.jpg", icon: "🍝" },
+            { id: 7, n: "De Cecco - Fusilli", p: 1.60, c: "pasta", b: "De Cecco", img: "img/DE CECCO FUSILLI.jpg", icon: "🍝" },
+            { id: 8, n: "De Cecco - Rigatoni", p: 1.60, c: "pasta", b: "De Cecco", img: "img/DE CECCO RIGATONI.jpg", icon: "🍝" },
+            // Pasta & Riso - Rummo
+            { id: 9, n: "Rummo - Spaghetti n°3", p: 1.50, c: "pasta", b: "Rummo", img: "img/RUMMO SPAGHETTI.jpg", icon: "🍝" },
+            { id: 10, n: "Rummo - Farfalle", p: 1.50, c: "pasta", b: "Rummo", img: "img/RUMMO FARFALLE.jpg", icon: "🍝" },
+            { id: 71, n: "Rummo - Fusilli", p: 1.50, c: "pasta", b: "Rummo", img: "img/RUMMO FUSILLI.jpg", icon: "🍝" },
+            { id: 72, n: "Rummo - Rigatoni", p: 1.50, c: "pasta", b: "Rummo", img: "img/RUMMO RIGATONI.jpg", icon: "🍝" },
+            // Pasta & Riso - Voiello
+            { id: 73, n: "Voiello - Spaghetti n°105", p: 1.40, c: "pasta", b: "Voiello", img: "img/VOIELLO SPAGHETTI.jpg", icon: "🍝" },
+            { id: 74, n: "Voiello - Farfalle", p: 1.40, c: "pasta", b: "Voiello", img: "img/VOIELLO FARFALLE.jpg", icon: "🍝" },
+            { id: 75, n: "Voiello - Fusilli", p: 1.40, c: "pasta", b: "Voiello", img: "img/VOIELLO FUSILLI.jpg", icon: "🍝" },
+            { id: 76, n: "Voiello - Rigatoni", p: 1.40, c: "pasta", b: "Voiello", img: "img/VOIELLO RIGATONI.jpg", icon: "🍝" },
+            { id: 49, n: "Riso Arborio 1kg", p: 2.80, c: "pasta", b: "Riso", img: "img/riso.jpg", icon: "🍚" },
             { id: 11, n: "Acqua Naturale 1.5L", p: 0.30, c: "Bevande", icon: "💧" },
             { id: 12, n: "Acqua Frizzante 1.5L", p: 0.30, c: "Bevande", icon: "🍾" },
             { id: 13, n: "Coca Cola 1L", p: 1.50, c: "Bevande", icon: "🥤" },
@@ -510,21 +532,85 @@
         function renderCategories() {
             let html = "";
             CATEGORIES.forEach(c => {
-                let media = c.img ? `<img style="width:100%; height:130px; object-fit:cover; border-radius:12px; margin-bottom:15px; box-shadow:0 4px 10px rgba(0,0,0,0.08); transition:transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" src="${c.img}" alt="${c.id}">` : `<div class="product-emoji">${c.icon}</div>`;
-                html += `<div class="card" style="cursor:pointer; flex: 1 1 140px; max-width: 180px;" onclick="openCategory('${c.id}')">${media}<div style="font-size:17px; font-weight:800; color:var(--dark);">${c.id}</div></div>`;
+                let media = c.img ? `<img style="width:100%; height:130px; object-fit:cover; border-radius:12px; margin-bottom:15px; box-shadow:0 4px 10px rgba(0,0,0,0.08);" src="${c.img}" alt="${c.n}">` : `<div class="product-emoji">${c.icon}</div>`;
+                html += `<div class="card" style="cursor:pointer; flex: 1 1 140px; max-width: 180px;" onclick="openCategory('${c.id}')">${media}<div style="font-size:17px; font-weight:800; color:var(--dark);">${c.n}</div></div>`;
             });
             document.getElementById('categories-catalog').innerHTML = html;
         }
 
+        let currentCat = null;
+        let currentBrand = null;
+
         function openCategory(catId) {
+            let catObj = CATEGORIES.find(x => x.id === catId);
+            currentCat = catId;
+            currentBrand = null;
             document.getElementById('home-view').style.display = 'none';
             document.getElementById('subcategory-view').style.display = 'block';
-            document.getElementById('subcategory-title').innerText = catId;
-            renderProducts(catId);
+            document.getElementById('subcategory-title').innerText = catObj ? catObj.n : "Prodotti";
+            
+            if (catId === "pasta") {
+                renderSubFolders();
+            } else {
+                renderProducts(catId);
+            }
             window.scrollTo(0,0);
         }
 
+        function renderSubFolders() {
+            let brands = [
+                { id: "Barilla", img: "img/BARILLA.jpg", icon: "🍝" },
+                { id: "Voiello", img: "img/VOIELLO.jpg", icon: "🍝" },
+                { id: "Rummo", img: "img/RUMMO.jpg", icon: "🍝" },
+                { id: "De Cecco", img: "img/DE CECCO.jpg", icon: "🍝" },
+                { id: "Riso", img: "img/riso.jpg", icon: "🍚" }
+            ];
+            let html = "";
+            brands.forEach(b => {
+                // Trucco: proviamo a caricare l'immagine, se fallisce (onerror) mostriamo l'emoji
+                let imgHtml = b.img ? `<img style="width:100%; height:80px; object-fit:contain; padding:10px; display:none;" src="${b.img}" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" alt="${b.id}">` : "";
+                let emojiHtml = `<div class="product-emoji">${b.icon}</div>`;
+                
+                html += `<div class="card" style="cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:160px;" onclick="openBrand('${b.id}')">
+                            ${imgHtml}
+                            ${emojiHtml}
+                            <div style="font-size:16px; font-weight:800; color:var(--dark); margin-top:10px;">${b.id}</div>
+                         </div>`;
+            });
+            document.getElementById('sub-catalog').innerHTML = html;
+        }
+
+        function openBrand(brand) {
+            currentBrand = brand;
+            let catObj = CATEGORIES.find(x => x.id === currentCat);
+            document.getElementById('subcategory-title').innerText = (catObj ? catObj.n : "Prodotti") + " > " + brand;
+            renderProductsByBrand(currentCat, brand);
+        }
+
+        function renderProductsByBrand(catId, brand) {
+            let html = "";
+            let items = PRODS.filter(p => p.c === catId && p.b === brand);
+            items.forEach(p => {
+                let imgHtml = p.img ? `<img class="product-img" style="display:none;" src="${p.img}" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" alt="${p.n}">` : "";
+                let emojiHtml = `<div class="product-emoji">${p.icon || '🍝'}</div>`;
+                
+                html += `<div class="card"><button class="add-btn" onclick="addToCart(${p.id})">+</button>${imgHtml}${emojiHtml}<div style="font-size:13px; font-weight:bold">${p.n}</div><div style="color:var(--primary); font-weight:bold">${p.p.toFixed(2)}€</div></div>`;
+            });
+            document.getElementById('sub-catalog').innerHTML = html;
+        }
+
+        function handleBack() {
+            if (currentBrand) {
+                currentBrand = null;
+                renderSubFolders(currentCat);
+            } else {
+                goHome();
+            }
+        }
+
         function goHome() {
+            currentCat = null;
+            currentBrand = null;
             document.getElementById('subcategory-view').style.display = 'none';
             document.getElementById('home-view').style.display = 'block';
             document.getElementById('search-bar').value = '';
@@ -565,8 +651,9 @@
             let html = "";
             let items = PRODS.filter(p => p.c === filter);
             items.forEach(p => {
-                let media = p.img ? `<img class="product-img" src="${p.img}" alt="${p.n}">` : `<div class="product-emoji">${p.icon}</div>`;
-                html += `<div class="card"><button class="add-btn" onclick="addToCart(${p.id})">+</button>${media}<div style="font-size:13px; font-weight:bold">${p.n}</div><div style="color:var(--primary); font-weight:bold">${p.p.toFixed(2)}€</div></div>`;
+                let imgHtml = p.img ? `<img class="product-img" style="display:none;" src="${p.img}" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" alt="${p.n}">` : "";
+                let emojiHtml = `<div class="product-emoji">${p.icon || '📦'}</div>`;
+                html += `<div class="card"><button class="add-btn" onclick="addToCart(${p.id})">+</button>${imgHtml}${emojiHtml}<div style="font-size:13px; font-weight:bold">${p.n}</div><div style="color:var(--primary); font-weight:bold">${p.p.toFixed(2)}€</div></div>`;
             });
             document.getElementById('sub-catalog').innerHTML = html;
         }
@@ -673,7 +760,6 @@
 </body>
 
 </html>
-
 
 
 
