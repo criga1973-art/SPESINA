@@ -209,6 +209,88 @@
             transform: scale(0.9);
         }
 
+        .info-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--dark);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 10;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        .info-btn:hover {
+            background: var(--dark);
+            color: white;
+            transform: scale(1.15) rotate(5deg);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            border-color: var(--dark);
+        }
+
+        .info-section {
+            text-align: left;
+            margin-bottom: 20px;
+            padding: 16px;
+            background: white;
+            border-radius: 18px;
+            border: 1px solid rgba(0,0,0,0.04);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            transition: transform 0.2s;
+        }
+
+        .info-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+        }
+
+        .info-section h4 {
+            margin: 0 0 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--dark);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+        }
+
+        .info-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #475569;
+            margin: 0;
+            font-weight: 400;
+        }
+
+        .ean-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #f1f5f9;
+            color: #475569;
+            padding: 6px 14px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            border: 1px solid rgba(0,0,0,0.05);
+            letter-spacing: 1px;
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -414,6 +496,48 @@
         </div>
     </div>
 
+    <!-- Modal Info Prodotto (Folder) -->
+    <div class="modal" id="modalInfo">
+        <div class="modal-content" style="max-width: 480px; padding: 0; overflow: hidden; border-radius: 32px; border: none;">
+            <!-- Folder Header -->
+            <div style="background: linear-gradient(135deg, #1e293b, #0f172a); color: white; padding: 35px 30px; text-align: left; position: relative;">
+                <div style="position: absolute; top: 20px; right: 25px; background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 12px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; backdrop-filter: blur(5px);">Scheda Tecnica</div>
+                <h3 id="info-p-name" style="margin: 0 0 10px 0; font-size: 26px; font-weight: 800; line-height: 1.2;">Nome Prodotto</h3>
+                <div id="info-p-ean" class="ean-badge" style="background: rgba(255,255,255,0.15); color: white; border: none; margin-bottom: 0;">EAN: 0000000000000</div>
+            </div>
+            
+            <div id="info-content-scroll" style="text-align: left; padding: 30px; background: #fdfdfd; max-height: 60vh; overflow-y: auto;">
+                <div class="info-section" style="border-left: 5px solid #10b981;">
+                    <h4><span style="font-size: 18px;">📝</span> Descrizione e Ingredienti</h4>
+                    <p id="info-desc" class="info-text">Dettagli del prodotto e composizione completa...</p>
+                </div>
+                
+                <div class="info-section" style="border-left: 5px solid #ef4444;">
+                    <h4><span style="font-size: 18px;">⚠️</span> Allergeni</h4>
+                    <p id="info-allergens" class="info-text">Informazioni importanti sulla sicurezza alimentare...</p>
+                </div>
+
+                <div class="info-section" style="border-left: 5px solid #3b82f6;">
+                    <h4><span style="font-size: 18px;">🧊</span> Conservazione</h4>
+                    <p id="info-storage" class="info-text">Modalità di conservazione e mantenimento della qualità.</p>
+                </div>
+
+                <div class="info-section" style="border-left: 5px solid #f59e0b;">
+                    <h4><span style="font-size: 18px;">🍳</span> Istruzioni e Consigli</h4>
+                    <p id="info-prep" class="info-text">Suggerimenti per la preparazione e l'uso ottimale.</p>
+                </div>
+
+                <div style="text-align: center; margin-top: 10px; opacity: 0.5; font-size: 11px; font-weight: 600;">
+                    Dati certificati per Spesina via Barcode API
+                </div>
+            </div>
+
+            <div style="padding: 20px 30px 30px 30px; background: white; border-top: 1px solid #f1f5f9;">
+                <button class="btn-confirm" onclick="closeModals()" style="margin-top: 0; padding: 20px;">CAPITO, GRAZIE</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const SLOT_CONSEGNA = {
             "09:00-10:00": 5, "10:00-11:00": 3, "11:00-12:00": 0,
@@ -449,33 +573,33 @@
 
         const PRODS = [
             // Pasta & Riso - Barilla
-            { id: 1, n: "Barilla - Spaghetti n°5", p: 1.10, c: "pasta", b: "Barilla", img: "img/barilla_spaghetti_n5.jpg", icon: "🍝", l: "500g" },
-            { id: 78, n: "Barilla - Penne Rigate", p: 1.10, c: "pasta", b: "Barilla", img: "img/barilla_penne.jpg", icon: "🍝", l: "500g" },
-            { id: 2, n: "Barilla - Farfalle", p: 1.10, c: "pasta", b: "Barilla", img: "img/barilla_farfalle.jpg", icon: "🍝", l: "500g" },
-            { id: 3, n: "Barilla - Fusilli", p: 1.10, c: "pasta", b: "Barilla", img: "img/barilla_fusilli.jpg", icon: "🍝", l: "500g" },
-            { id: 4, n: "Barilla - Rigatoni", p: 1.10, c: "pasta", b: "Barilla", img: "img/barilla_rigatoni.jpg", icon: "🍝", l: "500g" },
+            { id: 1, n: "Barilla - Spaghetti n°5", p: 1.10, c: "pasta", b: "Barilla", img: "img/barilla_spaghetti_n5.jpg", icon: "🍝", l: "500g", ean: "8076809513739", info: { d: "Spaghetti di semola di grano duro, trafilati al bronzo per una consistenza ruvida.", a: "Contiene Glutine (Grano). Può contenere tracce di Soia e Senape.", s: "Conservare in un luogo fresco e asciutto, lontano da fonti di calore.", p: "Tempo di cottura: 9 minuti in acqua bollente salata." } },
+            { id: 78, n: "Barilla - Penne Rigate", p: 1.10, c: "pasta", b: "Barilla", img: "img/barilla_penne.jpg", icon: "🍝", l: "500g", ean: "8076809513753", info: { d: "Penne Rigate di semola di grano duro, ideali per trattenere ogni tipo di sugo.", a: "Contiene Glutine. Può contenere tracce di soia.", s: "Luogo fresco e asciutto.", p: "Tempo di cottura: 11 minuti." } },
+            { id: 2, n: "Barilla - Farfalle", p: 1.10, c: "pasta", b: "Barilla", img: "img/barilla_farfalle.jpg", icon: "🍝", l: "500g", ean: "8076809513777", info: { d: "Farfalle di semola di grano duro, la pasta allegra per insalate e sughi leggeri.", a: "Glutine. Tracce di Soia.", s: "Fresco e asciutto.", p: "Cottura: 10 minuti." } },
+            { id: 3, n: "Barilla - Fusilli", p: 1.10, c: "pasta", b: "Barilla", img: "img/barilla_fusilli.jpg", icon: "🍝", l: "500g", ean: "8076809513791", info: { d: "Fusilli Barilla, nati per avvolgere il condimento tra le loro spire.", a: "Glutine. Tracce di Soia e Senape.", s: "Standard.", p: "Cottura: 11 minuti." } },
+            { id: 4, n: "Barilla - Rigatoni", p: 1.10, c: "pasta", b: "Barilla", img: "img/barilla_rigatoni.jpg", icon: "🍝", l: "500g", ean: "8076809513814", info: { d: "Rigatoni Barilla, caratterizzati dal grande diametro e dalle scanalature profonde.", a: "Contiene Glutine (Grano).", s: "Fresco e asciutto.", p: "Cottura: 12 minuti." } },
             // Pasta & Riso - De Cecco
-            { id: 5, n: "De Cecco - Spaghetti n°12", p: 1.60, c: "pasta", b: "De Cecco", img: "img/DE CECCO SPAGHETTI.jpg", icon: "🍝", l: "500g" },
-            { id: 6, n: "De Cecco - Farfalle", p: 1.60, c: "pasta", b: "De Cecco", img: "img/DE CECCO FARFALLE.jpg", icon: "🍝", l: "500g" },
-            { id: 7, n: "De Cecco - Fusilli", p: 1.60, c: "pasta", b: "De Cecco", img: "img/DE CECCO FUSILLI.jpg", icon: "🍝", l: "500g" },
-            { id: 8, n: "De Cecco - Rigatoni", p: 1.60, c: "pasta", b: "De Cecco", img: "img/DE CECCO RIGATONI.jpg", icon: "🍝", l: "500g" },
+            { id: 5, n: "De Cecco - Spaghetti n°12", p: 1.60, c: "pasta", b: "De Cecco", img: "img/DE CECCO SPAGHETTI.jpg", icon: "🍝", l: "500g", ean: "8001250120125", info: { d: "Spaghetti di semola di grano duro di altissima qualità, trafilati al bronzo.", a: "Contiene Glutine (Grano).", s: "Conservare in un luogo fresco e asciutto.", p: "Tempo di cottura: 12 minuti (10 minuti al dente)." } },
+            { id: 6, n: "De Cecco - Farfalle", p: 1.60, c: "pasta", b: "De Cecco", img: "img/DE CECCO FARFALLE.jpg", icon: "🍝", l: "500g", ean: "8001250120934", info: { d: "Farfalle De Cecco, la qualità della semola incontra la forma perfetta.", a: "Contiene Glutine.", s: "Luogo asciutto.", p: "Cottura: 10-12 minuti." } },
+            { id: 7, n: "De Cecco - Fusilli", p: 1.60, c: "pasta", b: "De Cecco", img: "img/DE CECCO FUSILLI.jpg", icon: "🍝", l: "500g", ean: "8001250120347", info: { d: "Fusilli De Cecco, eccellenti per trattenere ogni tipo di condimento.", a: "Contiene Glutine.", s: "Standard.", p: "Cottura: 11 minuti." } },
+            { id: 8, n: "De Cecco - Rigatoni", p: 1.60, c: "pasta", b: "De Cecco", img: "img/DE CECCO RIGATONI.jpg", icon: "🍝", l: "500g", ean: "8001250120248", info: { d: "Rigatoni De Cecco, robusti e corposi, ideali per sughi di carne.", a: "Contiene Glutine.", s: "Ambiente pulito e asciutto.", p: "Cottura: 13 minuti." } },
             // Pasta & Riso - Rummo
-            { id: 9, n: "Rummo - Spaghetti n°3", p: 1.50, c: "pasta", b: "Rummo", img: "img/RUMMO SPAGHETTI.jpg", icon: "🍝", l: "500g" },
-            { id: 10, n: "Rummo - Farfalle", p: 1.50, c: "pasta", b: "Rummo", img: "img/RUMMO FARFALLE.jpg", icon: "🍝", l: "500g" },
-            { id: 71, n: "Rummo - Fusilli", p: 1.50, c: "pasta", b: "Rummo", img: "img/RUMMO FUSILLI.jpg", icon: "🍝", l: "500g" },
-            { id: 72, n: "Rummo - Rigatoni", p: 1.50, c: "pasta", b: "Rummo", img: "img/RUMMO RIGATONI.jpg", icon: "🍝", l: "500g" },
+            { id: 9, n: "Rummo - Spaghetti n°3", p: 1.50, c: "pasta", b: "Rummo", img: "img/RUMMO SPAGHETTI.jpg", icon: "🍝", l: "500g", ean: "8008343130030", info: { d: "Pasta a Lenta Lavorazione, certificata per la tenuta in cottura.", a: "Contiene Glutine.", s: "Dispensa.", p: "Tempo di cottura: 9 minuti." } },
+            { id: 10, n: "Rummo - Farfalle", p: 1.50, c: "pasta", b: "Rummo", img: "img/RUMMO FARFALLE.jpg", icon: "🍝", l: "500g", ean: "8008343130856", info: { d: "Farfalle Rummo, prodotte con i migliori grani duri selezionati.", a: "Glutine.", s: "Fresco e asciutto.", p: "Cottura: 11 minuti." } },
+            { id: 71, n: "Rummo - Fusilli", p: 1.50, c: "pasta", b: "Rummo", img: "img/RUMMO FUSILLI.jpg", icon: "🍝", l: "500g", ean: "8008343130481", info: { d: "Fusilli Rummo, eccezionalmente resistenti alla cottura.", a: "Contiene Glutine.", s: "Fresco e asciutto.", p: "Cottura: 11 minuti." } },
+            { id: 72, n: "Rummo - Rigatoni", p: 1.50, c: "pasta", b: "Rummo", img: "img/RUMMO RIGATONI.jpg", icon: "🍝", l: "500g", ean: "8008343130504", info: { d: "Rigatoni Rummo, la pasta preferita dai grandi chef.", a: "Glutine.", s: "Standard.", p: "Cottura: 12-14 minuti." } },
             // Pasta & Riso - Voiello
-            { id: 73, n: "Voiello - Spaghetti n°105", p: 1.40, c: "pasta", b: "Voiello", img: "img/VOIELLO SPAGHETTI.jpg", icon: "🍝", l: "500g" },
-            { id: 74, n: "Voiello - Farfalle", p: 1.40, c: "pasta", b: "Voiello", img: "img/VOIELLO FARFALLE.jpg", icon: "🍝", l: "500g" },
-            { id: 75, n: "Voiello - Fusilli", p: 1.40, c: "pasta", b: "Voiello", img: "img/VOIELLO FUSILLI.jpg", icon: "🍝", l: "500g" },
-            { id: 76, n: "Voiello - Rigatoni", p: 1.40, c: "pasta", b: "Voiello", img: "img/VOIELLO RIGATONI.jpg", icon: "🍝", l: "500g" },
-            { id: 49, n: "Riso Arborio 1kg", p: 2.80, c: "pasta", b: "Riso", img: "img/riso.jpg", icon: "🍚" },
-            { id: 101, n: "Ferrarelle 1.5L", p: 0.55, c: "bevande", b: "Acqua", img: "img/ferrarelle_15l.jpg", icon: "🫧", l: "1.5L" },
-            { id: 102, n: "San Benedetto Naturale 2L", p: 0.45, c: "bevande", b: "Acqua", img: "img/sb_nat_2l.jpg", icon: "💧", l: "2L" },
-            { id: 103, n: "San Benedetto Frizzante 1.5L", p: 0.45, c: "bevande", b: "Acqua", img: "img/sb_friz_15l.jpg", icon: "🫧", l: "1.5L" },
-            { id: 104, n: "San Benedetto Ecogreen 6x0.5L", p: 1.95, c: "bevande", b: "Acqua", img: "img/sb_nat_6x50.jpg", icon: "💧", l: "6x0.5L" },
-            { id: 105, n: "San Benedetto Frizzante 6x0.5L", p: 1.95, c: "bevande", b: "Acqua", img: "img/sb_friz_6x50.jpg", icon: "🫧", l: "6x0.5L" },
-            { id: 106, n: "Fonte Essenziale 1L", p: 1.10, c: "bevande", b: "Acqua", img: "img/fonte_essenziale_1l.jpg", icon: "💧", l: "1L" },
+            { id: 73, n: "Voiello - Spaghetti n°105", p: 1.40, c: "pasta", b: "Voiello", img: "img/VOIELLO SPAGHETTI.jpg", icon: "🍝", l: "500g", ean: "8076809521055", info: { d: "Pasta di Grano Aureo 100% italiano, trafilata al bronzo.", a: "Contiene Glutine.", s: "Dispensa asciutta.", p: "Cottura: 9 minuti." } },
+            { id: 74, n: "Voiello - Farfalle", p: 1.40, c: "pasta", b: "Voiello", img: "img/VOIELLO FARFALLE.jpg", icon: "🍝", l: "500g", ean: "8076809520850", info: { d: "Farfalle Voiello, eccellenza napoletana dal 1879.", a: "Glutine.", s: "Standard.", p: "Cottura: 10 minuti." } },
+            { id: 75, n: "Voiello - Fusilli", p: 1.40, c: "pasta", b: "Voiello", img: "img/VOIELLO FUSILLI.jpg", icon: "🍝", l: "500g", ean: "8076809520485", info: { d: "Fusilli Voiello, corposi e dal sapore intenso del Grano Aureo.", a: "Glutine.", s: "Fresco e asciutto.", p: "Cottura: 11 minuti." } },
+            { id: 76, n: "Voiello - Rigatoni", p: 1.40, c: "pasta", b: "Voiello", img: "img/VOIELLO RIGATONI.jpg", icon: "🍝", l: "500g", ean: "8076809523165", info: { d: "Rigatoni Voiello, trafilati al bronzo per una riga inconfondibile.", a: "Glutine.", s: "Dispensa.", p: "Cottura: 12 minuti." } },
+            { id: 49, n: "Riso Arborio 1kg", p: 2.80, c: "pasta", b: "Riso", img: "img/riso.jpg", icon: "🍚", ean: "8008458000101" },
+            { id: 101, n: "Ferrarelle 1.5L", p: 0.55, c: "bevande", b: "Acqua", img: "img/ferrarelle_15l.jpg", icon: "🫧", l: "1.5L", ean: "8000194002621", info: { d: "Acqua minerale naturale effervescente naturale. Ricca di calcio e bicarbonato.", a: "Nessuno.", s: "Conservare in luogo fresco, asciutto, pulito e senza odori, al riparo dalla luce solare.", p: "Servire fresca per gustarne l'effervescenza naturale." } },
+            { id: 102, n: "San Benedetto Naturale 2L", p: 0.45, c: "bevande", b: "Acqua", img: "img/sb_nat_2l.jpg", icon: "💧", l: "2L", ean: "8001620000011", info: { d: "Acqua minerale naturale oligominerale, imbottigliata alla sorgente.", a: "Nessuno.", s: "Lontano da luce e calore.", p: "Pronta all'uso." } },
+            { id: 103, n: "San Benedetto Frizzante 1.5L", p: 0.45, c: "bevande", b: "Acqua", img: "img/sb_friz_15l.jpg", icon: "🫧", l: "1.5L", ean: "8001620000028", info: { d: "Acqua minerale frizzante, pura ed equilibrata.", a: "Nessuno.", s: "Fresco e asciutto.", p: "Servire fredda." } },
+            { id: 104, n: "San Benedetto Ecogreen 6x0.5L", p: 1.95, c: "bevande", b: "Acqua", img: "img/sb_nat_6x50.jpg", icon: "💧", l: "6x0.5L", ean: "8001620015381", info: { d: "Confezione risparmio Ecogreen, bottiglie in plastica 100% riciclabile.", a: "Nessuno.", s: "Standard.", p: "Formato ideale per il viaggio." } },
+            { id: 105, n: "San Benedetto Frizzante 6x0.5L", p: 1.95, c: "bevande", b: "Acqua", img: "img/sb_friz_6x50.jpg", icon: "🫧", l: "6x0.5L", ean: "8001620015398", info: { d: "Acqua frizzante in formato portatile 6 botiglie da 500ml.", a: "Nessuno.", s: "Standard.", p: "Servire fredda." } },
+            { id: 106, n: "Fonte Essenziale 1L", p: 1.10, c: "bevande", b: "Acqua", img: "img/fonte_essenziale_1l.jpg", icon: "💧", l: "1L", ean: "8000194514575", info: { d: "Acqua minerale naturale termale, aiuta fegato e intestino.", a: "Nessuno.", s: "Luogo fresco.", p: "Bere due bicchieri al mattino a digiuno." } },
             { id: 13, n: "Coca Cola 1L", p: 1.50, c: "bevande", b: "Bibite", icon: "🥤" },
             { id: 14, n: "Aranciata", p: 1.20, c: "bevande", b: "Bibite", icon: "🍊" },
             { id: 15, n: "Peroni 66cL", p: 1.10, c: "bevande", b: "Birra", img: "img/peroni_33cl.jpg", icon: "🍺", l: "66cL" },
@@ -491,33 +615,33 @@
             { id: 16, n: "Vino Rosso 75cl", p: 4.50, c: "bevande", b: "Vino", icon: "🍷" },
             { id: 17, n: "Tè al Pesca 1.5L", p: 1.50, c: "bevande", b: "Bibite", icon: "🧋" },
             // Succhi di Frutta - Skipper
-            { id: 380, n: "Skipper Pera - Intenso", p: 1.80, c: "bevande", b: "Succhi di Frutta", img: "img/skipper_pera_intenso.jpg", icon: "🧃", l: "1L" },
-            { id: 381, n: "Skipper ACE - Intenso", p: 1.80, c: "bevande", b: "Succhi di Frutta", img: "img/skipper_ace_intenso.jpg", icon: "🧃", l: "1L" },
-            { id: 382, n: "Skipper Kiwi e Mela - Intenso", p: 1.90, c: "bevande", b: "Succhi di Frutta", img: "img/skipper_kiwi_mela.jpg", icon: "🧃", l: "1L" },
-            { id: 383, n: "Skipper Mirtillo Mix SZA", p: 2.10, c: "bevande", b: "Succhi di Frutta", img: "img/skipper_mirtillo_sza.jpg", icon: "🧃", l: "1L" },
-            { id: 384, n: "Skipper Pesca SZA", p: 1.90, c: "bevande", b: "Succhi di Frutta", img: "img/skipper_pesca_sza.jpg", icon: "🧃", l: "1L" },
-            { id: 385, n: "Skipper Ananas SZA", p: 2.00, c: "bevande", b: "Succhi di Frutta", img: "img/skipper_ananas_sza.jpg", icon: "🧃", l: "1L" },
-            { id: 386, n: "Skipper Pera SZA", p: 1.90, c: "bevande", b: "Succhi di Frutta", img: "img/skipper_pera_sza.jpg", icon: "🧃", l: "1L" },
-            { id: 390, n: "Skipper Pera - 3x200ml", p: 1.65, c: "bevande", b: "Succhi di Frutta", img: "img/skipper_pera_3x200.jpg", icon: "🧃", l: "3x200ml" },
-            { id: 391, n: "Skipper Pesca - 3x200ml", p: 1.65, c: "bevande", b: "Succhi di Frutta", img: "img/skipper_pesca_3x200.jpg", icon: "🧃", l: "3x200ml" },
-            { id: 392, n: "Skipper ACE - 3x200ml", p: 1.65, c: "bevande", b: "Succhi di Frutta", img: "img/skipper_ace_3x200.jpg", icon: "🧃", l: "3x200ml" },
+            { id: 380, n: "Skipper Pera - Intenso", p: 1.80, c: "bevande", b: "Succhi di Frutta", img: "img/skipper_pera_intenso.jpg", icon: "🧃", l: "1L", ean: "8002520038019", info: { d: "Succo e polpa di pera Skipper, sapore intenso e vellutato.", a: "Nessun allergene dichiarato.", s: "Agitare prima dell'uso. Dopo l'apertura conservare in frigo.", p: "Servire fresco." } },
+            { id: 381, n: "Skipper ACE - Intenso", p: 1.80, c: "bevande", b: "Succhi di Frutta", img: "img/skipper_ace_intenso.jpg", icon: "🧃", l: "1L", ean: "8002520038118", info: { d: "Mix di Arancia, Carota e Limone, ricco di vitamine A, C, E.", a: "Nessuno.", s: "Conservare in frigo dopo l'apertura.", p: "Ideale per la colazione." } },
+            { id: 382, n: "Skipper Kiwi e Mela - Intenso", p: 1.90, c: "bevande", b: "Succhi di Frutta", img: "img/skipper_kiwi_mela.jpg", icon: "🧃", l: "1L", ean: "8002520038224", info: { d: "Succo Skipper Kiwi e Mela, rinfrescante e naturale.", a: "Nessuno.", s: "Temperatura ambiente, frigo dopo apertura.", p: "Servire freddo." } },
+            { id: 383, n: "Skipper Mirtillo Mix SZA", p: 2.10, c: "bevande", b: "Succhi di Frutta", img: "img/skipper_mirtillo_sza.jpg", icon: "🧃", l: "1L", ean: "8002520038330", info: { d: "Skipper Senza Zuccheri Aggiunti, mix al mirtillo ricco di antiossidanti.", a: "Nessuno.", s: "Standard.", p: "Perfetto per chi controlla gli zuccheri." } },
+            { id: 384, n: "Skipper Pesca SZA", p: 1.90, c: "bevande", b: "Succhi di Frutta", img: "img/skipper_pesca_sza.jpg", icon: "🧃", l: "1L", ean: "8002520038446", info: { d: "Succo di Pesca senza zuccheri aggiunti, Skipper Selection.", a: "Nessuno.", s: "Fresco.", p: "Agitare bene." } },
+            { id: 385, n: "Skipper Ananas SZA", p: 2.00, c: "bevande", b: "Succhi di Frutta", img: "img/skipper_ananas_sza.jpg", icon: "🧃", l: "1L", ean: "8002520038552", info: { d: "100% Succo di ananas Skipper, senza zuccheri aggiunti.", a: "Nessuno.", s: "Standard.", p: "Sapore tropicale." } },
+            { id: 386, n: "Skipper Pera SZA", p: 1.90, c: "bevande", b: "Succhi di Frutta", img: "img/skipper_pera_sza.jpg", icon: "🧃", l: "1L", ean: "8002520038668", info: { d: "Pera Skipper Senza Zuccheri Aggiunti, gusto puro della frutta.", a: "Nessuno.", s: "Standard.", p: "Freschezza naturale." } },
+            { id: 390, n: "Skipper Pera - 3x200ml", p: 1.65, c: "bevande", b: "Succhi di Frutta", img: "img/skipper_pera_3x200.jpg", icon: "🧃", l: "3x200ml", ean: "8002520039016" },
+            { id: 391, n: "Skipper Pesca - 3x200ml", p: 1.65, c: "bevande", b: "Succhi di Frutta", img: "img/skipper_pesca_3x200.jpg", icon: "🧃", l: "3x200ml", ean: "8002520039115" },
+            { id: 392, n: "Skipper ACE - 3x200ml", p: 1.65, c: "bevande", b: "Succhi di Frutta", img: "img/skipper_ace_3x200.jpg", icon: "🧃", l: "3x200ml", ean: "8002520039214" },
             { id: 18, n: "Tè al Limone", p: 1.20, c: "bevande", b: "Bibite", icon: "🧋" },
             { id: 19, n: "Energy Drink", p: 1.50, c: "bevande", b: "Bibite", icon: "⚡" },
             // Latte 1 Litro
-            { id: 200, n: "Soligo - Alta Qualità 1L", p: 1.45, c: "bevande", b: "Latte 1L", img: "img/latte_soligo_bottle_1l.jpg", icon: "🥛", l: "1L" },
-            { id: 201, n: "Soligo - Intero UHT 1L", p: 1.15, c: "bevande", b: "Latte 1L", img: "img/latte_soligo_intero_uht_1l.jpg", icon: "🥛", l: "1L" },
-            { id: 202, n: "Soligo - Fresco Intero 1L", p: 1.35, c: "bevande", b: "Latte 1L", img: "img/latte_soligo_fresco_intero_1l.jpg", icon: "🥛", l: "1L" },
-            { id: 203, n: "Soligo - P. Scremato 1L", p: 1.10, c: "bevande", b: "Latte 1L", img: "img/latte_soligo_ps_1l.jpg", icon: "🥛", l: "1L" },
-            { id: 204, n: "Zymil - A. Digeribilità 1L", p: 1.85, c: "bevande", b: "Latte 1L", img: "img/latte_zymil_bottle_1l.jpg", icon: "🥛", l: "1L" },
-            { id: 205, n: "Zymil - Senza Grassi 1L", p: 1.95, c: "bevande", b: "Latte 1L", img: "img/latte_zymil_diet_1l.jpg", icon: "🥛", l: "1L" },
-            { id: 220, n: "Alpro - Avena S. Zuccheri 1L", p: 2.25, c: "bevande", b: "Latte 1L", img: "img/alpro_avena.jpg", icon: "🥛", l: "1L" },
-            { id: 221, n: "Alpro - Soia Proteica 1L", p: 2.15, c: "bevande", b: "Latte 1L", img: "img/alpro_soia.jpg", icon: "🥛", l: "1L" },
-            { id: 222, n: "Alpro - Cocco e Riso 1L", p: 2.35, c: "bevande", b: "Latte 1L", img: "img/alpro_cocco.jpg", icon: "🥛", l: "1L" },
-            { id: 223, n: "Alpro - Nocciola Golosa 1L", p: 2.55, c: "bevande", b: "Latte 1L", img: "img/alpro_nocciola.jpg", icon: "🥛", l: "1L" },
-            { id: 224, n: "Alpro - Barista Avena 1L", p: 2.45, c: "bevande", b: "Latte 1L", img: "img/alpro_barista_avena.jpg", icon: "🥛", l: "1L" },
-            { id: 225, n: "Alpro - Barista Mandorla 1L", p: 2.45, c: "bevande", b: "Latte 1L", img: "img/alpro_barista_mandorla.jpg", icon: "🥛", l: "1L" },
-            { id: 226, n: "Alpro - Mandorla 1L", p: 2.35, c: "bevande", b: "Latte 1L", img: "img/alpro_mandorla.jpg", icon: "🥛", l: "1L" },
-            { id: 227, n: "Alpro - Gusto Cioccolato 1L", p: 2.20, c: "bevande", b: "Latte 1L", img: "img/alpro_cioccolato.jpg", icon: "🥛", l: "1L" },
+            { id: 200, n: "Soligo - Alta Qualità 1L", p: 1.45, c: "bevande", b: "Latte 1L", img: "img/latte_soligo_bottle_1l.jpg", icon: "🥛", l: "1L", ean: "8003666000019", info: { d: "Latte fresco pastorizzato intero di Alta Qualità, proveniente da allevamenti selezionati.", a: "Contiene Lattosio.", s: "Conservare in frigorifero tra 0°C e +4°C.", p: "Pronto all'uso. Una volta aperto, consumare entro 2 giorni." } },
+            { id: 201, n: "Soligo - Intero UHT 1L", p: 1.15, c: "bevande", b: "Latte 1L", img: "img/latte_soligo_intero_uht_1l.jpg", icon: "🥛", l: "1L", ean: "8003666000026", info: { d: "Latte Intero UHT Soligo, a lunga conservazione.", a: "Contiene Lattosio.", s: "Temperatura ambiente, frigo dopo apertura.", p: "Ideale per cucina e colazione." } },
+            { id: 202, n: "Soligo - Fresco Intero 1L", p: 1.35, c: "bevande", b: "Latte 1L", img: "img/latte_soligo_fresco_intero_1l.jpg", icon: "🥛", l: "1L", ean: "8003666000033" },
+            { id: 203, n: "Soligo - P. Scremato 1L", p: 1.10, c: "bevande", b: "Latte 1L", img: "img/latte_soligo_ps_1l.jpg", icon: "🥛", l: "1L", ean: "8003666000040" },
+            { id: 204, n: "Zymil - A. Digeribilità 1L", p: 1.85, c: "bevande", b: "Latte 1L", img: "img/latte_zymil_bottle_1l.jpg", icon: "🥛", l: "1L", ean: "8001300020016", info: { d: "Latte Zymil alta digeribilità, senza lattosio.", a: "Senza Lattosio.", s: "Conservare in frigo.", p: "Digeribile e leggero." } },
+            { id: 205, n: "Zymil - Senza Grassi 1L", p: 1.95, c: "bevande", b: "Latte 1L", img: "img/latte_zymil_diet_1l.jpg", icon: "🥛", l: "1L", ean: "8001300020023" },
+            { id: 220, n: "Alpro - Avena S. Zuccheri 1L", p: 2.25, c: "bevande", b: "Latte 1L", img: "img/alpro_avena.jpg", icon: "🥛", l: "1L", ean: "5411188126270", info: { d: "Bevanda vegetale Alpro all'avena, senza zuccheri.", a: "Avena.", s: "Standard.", p: "Alta digeribilità." } },
+            { id: 221, n: "Alpro - Soia Proteica 1L", p: 2.15, c: "bevande", b: "Latte 1L", img: "img/alpro_soia.jpg", icon: "🥛", l: "1L", ean: "5411188098041" },
+            { id: 222, n: "Alpro - Cocco e Riso 1L", p: 2.35, c: "bevande", b: "Latte 1L", img: "img/alpro_cocco.jpg", icon: "🥛", l: "1L", ean: "5411188114673" },
+            { id: 223, n: "Alpro - Nocciola Golosa 1L", p: 2.55, c: "bevande", b: "Latte 1L", img: "img/alpro_nocciola.jpg", icon: "🥛", l: "1L", ean: "5411188109860" },
+            { id: 224, n: "Alpro - Barista Avena 1L", p: 2.45, c: "bevande", b: "Latte 1L", img: "img/alpro_barista_avena.jpg", icon: "🥛", l: "1L", ean: "5411188132479" },
+            { id: 225, n: "Alpro - Barista Mandorla 1L", p: 2.45, c: "bevande", b: "Latte 1L", img: "img/alpro_barista_mandorla.jpg", icon: "🥛", l: "1L", ean: "5411188132486" },
+            { id: 226, n: "Alpro - Mandorla 1L", p: 2.35, c: "bevande", b: "Latte 1L", img: "img/alpro_mandorla.jpg", icon: "🥛", l: "1L", ean: "5411188098058" },
+            { id: 227, n: "Alpro - Gusto Cioccolato 1L", p: 2.20, c: "bevande", b: "Latte 1L", img: "img/alpro_cioccolato.jpg", icon: "🥛", l: "1L", ean: "5411188107569" },
             // Latte 500ml
             { id: 210, n: "Soligo - P. Scremato 500ml", p: 0.85, c: "bevande", b: "Latte 500ml", img: "img/latte_soligo_ps_500.jpg", icon: "🥛", l: "500ml" },
             { id: 211, n: "Soligo - Intero 500ml", p: 0.90, c: "bevande", b: "Latte 500ml", img: "img/latte_soligo_intero_500.jpg", icon: "🥛", l: "500ml" },
@@ -528,55 +652,55 @@
             { id: 81, n: "Vodka Pure", p: 15.00, c: "bevande", b: "Alcolici", icon: "🍶" },
             { id: 21, n: "Sottilette Orig.", p: 5.20, c: "freschi", b: "Salumi e Latticini", img: "https://images.openfoodfacts.org/images/products/762/221/043/3392/front_it.83.400.jpg" },
             { id: 22, n: "Prosciut. Cotto 100g", p: 2.50, c: "freschi", b: "Salumi e Latticini", icon: "🥓" },
-            { id: 230, n: "AIA Pastagialla x6", p: 2.40, c: "freschi", b: "Uova", img: "img/uova_aia_pastagialla_x6.jpg", icon: "🥚", l: "6pz" },
-            { id: 231, n: "AIA Allevate a Terra x4", p: 1.80, c: "freschi", b: "Uova", img: "img/uova_aia_terra_x4.jpg", icon: "🥚", l: "4pz" },
-            { id: 232, n: "AIA Biologiche x6", p: 3.20, c: "freschi", b: "Uova", img: "img/uova_aia_bio_x6.jpg", icon: "🥚", l: "6pz" },
-            { id: 233, n: "AIA Aequil. Albume 1L", p: 2.80, c: "freschi", b: "Uova", img: "img/uova_aia_albume_1l.jpg", icon: "🥚", l: "1L" },
-            { id: 234, n: "AIA Aequil. Albume 500ml", p: 1.60, c: "freschi", b: "Uova", img: "img/uova_aia_albume_500.jpg", icon: "🥚", l: "500ml" },
+            { id: 230, n: "AIA Pastagialla x6", p: 2.40, c: "freschi", b: "Uova", img: "img/uova_aia_pastagialla_x6.jpg", icon: "🥚", l: "6pz", ean: "8008110001234", info: { d: "Uova fresche di galline allevate a terra, ideali per la pasta fatta in casa.", a: "Uova.", s: "Frigo dopo acquisto.", p: "Consumare previa cottura." } },
+            { id: 231, n: "AIA Allevate a Terra x4", p: 1.80, c: "freschi", b: "Uova", img: "img/uova_aia_terra_x4.jpg", icon: "🥚", l: "4pz", ean: "8008110001241" },
+            { id: 232, n: "AIA Biologiche x6", p: 3.20, c: "freschi", b: "Uova", img: "img/uova_aia_bio_x6.jpg", icon: "🥚", l: "6pz", ean: "8008110001258" },
+            { id: 233, n: "AIA Aequil. Albume 1L", p: 2.80, c: "freschi", b: "Uova", img: "img/uova_aia_albume_1l.jpg", icon: "🥚", l: "1L", ean: "8008110234567" },
+            { id: 234, n: "AIA Aequil. Albume 500ml", p: 1.60, c: "freschi", b: "Uova", img: "img/uova_aia_albume_500.jpg", icon: "🥚", l: "500ml", ean: "8008110234574" },
             { id: 24, n: "Burro 250g", p: 1.80, c: "freschi", b: "Salumi e Latticini", icon: "🧈" },
             { id: 25, n: "Stracchino", p: 1.90, c: "freschi", b: "Salumi e Latticini", icon: "🧀" },
             { id: 26, n: "Ricotta 250g", p: 1.50, c: "freschi", b: "Salumi e Latticini", icon: "🧀" },
             // Yogurt Müller Multipacks
-            { id: 241, n: "Müller Mix Cremoso - 8x", p: 4.80, c: "freschi", b: "Yogurt", img: "img/yogurt_muller_mix_cremoso.jpg", icon: "🥛", l: "8x125g" },
-            { id: 242, n: "Müller Mix Frullata - 8x", p: 4.80, c: "freschi", b: "Yogurt", img: "img/yogurt_muller_mix_frullata.jpg", icon: "🥛", l: "8x125g" },
-            { id: 243, n: "Müller Mix Bianco - 8x", p: 4.50, c: "freschi", b: "Yogurt", img: "img/yogurt_muller_mix_bianco.jpg", icon: "🥛", l: "8x125g" },
-            { id: 244, n: "Müller Mix Zero% - 8x", p: 4.90, c: "freschi", b: "Yogurt", img: "img/yogurt_muller_mix_zero.jpg", icon: "🥛", l: "8x125g" },
+            { id: 241, n: "Müller Mix Cremoso - 8x", p: 4.80, c: "freschi", b: "Yogurt", img: "img/yogurt_muller_mix_cremoso.jpg", icon: "🥛", l: "8x125g", ean: "4008452024108", info: { d: "Yogurt cremoso Müller in confezione famiglia da 8 pezzi.", a: "Latte, Lattosio.", s: "Frigo 0-4°C.", p: "Pronto all'uso." } },
+            { id: 242, n: "Müller Mix Frullata - 8x", p: 4.80, c: "freschi", b: "Yogurt", img: "img/yogurt_muller_mix_frullata.jpg", icon: "🥛", l: "8x125g", ean: "4008452024115" },
+            { id: 243, n: "Müller Mix Bianco - 8x", p: 4.50, c: "freschi", b: "Yogurt", img: "img/yogurt_muller_mix_bianco.jpg", icon: "🥛", l: "8x125g", ean: "4008452024122" },
+            { id: 244, n: "Müller Mix Zero% - 8x", p: 4.90, c: "freschi", b: "Yogurt", img: "img/yogurt_muller_mix_zero.jpg", icon: "🥛", l: "8x125g", ean: "4008452024139" },
             // Yogurt Müller Singoli
-            { id: 250, n: "Müller Ciliegia", p: 0.85, c: "freschi", b: "Yogurt", img: "img/yogurt_muller_ciliegia.jpg", icon: "🥛", l: "125g" },
-            { id: 251, n: "Müller Vaniglia", p: 0.85, c: "freschi", b: "Yogurt", img: "img/yogurt_muller_vaniglia.jpg", icon: "🥛", l: "125g" },
-            { id: 252, n: "Müller Bianco Zero", p: 0.80, c: "freschi", b: "Yogurt", img: "img/yogurt_muller_bianco_zero.jpg", icon: "🥛", l: "125g" },
-            { id: 253, n: "Müller Fragola", p: 0.85, c: "freschi", b: "Yogurt", img: "img/yogurt_muller_fragola.jpg", icon: "🥛", l: "125g" },
-            { id: 254, n: "Müller Pesca & Alb.", p: 0.85, c: "freschi", b: "Yogurt", img: "img/yogurt_muller_pesca.jpg", icon: "🥛", l: "125g" },
-            { id: 255, n: "Müller Cocco", p: 0.85, c: "freschi", b: "Yogurt", img: "img/yogurt_muller_cocco.jpg", icon: "🥛", l: "125g" },
-            { id: 256, n: "Müller Caffè", p: 0.85, c: "freschi", b: "Yogurt", img: "img/yogurt_muller_caffe.jpg", icon: "🥛", l: "125g" },
-            { id: 257, n: "Müller Stracciatella", p: 0.85, c: "freschi", b: "Yogurt", img: "img/yogurt_muller_stracciatella.jpg", icon: "🥛", l: "125g" },
-            { id: 258, n: "Müller Bianco Crema", p: 0.80, c: "freschi", b: "Yogurt", img: "img/yogurt_muller_bianco.jpg", icon: "🥛", l: "125g" },
+            { id: 250, n: "Müller Ciliegia", p: 0.85, c: "freschi", b: "Yogurt", img: "img/yogurt_muller_ciliegia.jpg", icon: "🥛", l: "125g", ean: "4008452025013", info: { d: "Yogurt cremoso con pezzi di ciliegia.", a: "Latte.", s: "Frigo.", p: "Ottimo a merenda." } },
+            { id: 251, n: "Müller Vaniglia", p: 0.85, c: "freschi", b: "Yogurt", img: "img/yogurt_muller_vaniglia.jpg", icon: "🥛", l: "125g", ean: "4008452025020" },
+            { id: 252, n: "Müller Bianco Zero", p: 0.80, c: "freschi", b: "Yogurt", img: "img/yogurt_muller_bianco_zero.jpg", icon: "🥛", l: "125g", ean: "4008452025037" },
+            { id: 253, n: "Müller Fragola", p: 0.85, c: "freschi", b: "Yogurt", img: "img/yogurt_muller_fragola.jpg", icon: "🥛", l: "125g", ean: "4008452025044" },
+            { id: 254, n: "Müller Pesca & Alb.", p: 0.85, c: "freschi", b: "Yogurt", img: "img/yogurt_muller_pesca.jpg", icon: "🥛", l: "125g", ean: "4008452025051" },
+            { id: 255, n: "Müller Cocco", p: 0.85, c: "freschi", b: "Yogurt", img: "img/yogurt_muller_cocco.jpg", icon: "🥛", l: "125g", ean: "4008452025068" },
+            { id: 256, n: "Müller Caffè", p: 0.85, c: "freschi", b: "Yogurt", img: "img/yogurt_muller_caffe.jpg", icon: "🥛", l: "125g", ean: "4008452025075" },
+            { id: 257, n: "Müller Stracciatella", p: 0.85, c: "freschi", b: "Yogurt", img: "img/yogurt_muller_stracciatella.jpg", icon: "🥛", l: "125g", ean: "4008452025082" },
+            { id: 258, n: "Müller Bianco Crema", p: 0.80, c: "freschi", b: "Yogurt", img: "img/yogurt_muller_bianco.jpg", icon: "🥛", l: "125g", ean: "4008452025099" },
             // Panificati - Mulino Bianco
-            { id: 300, n: "Mulino Bianco - Pan Bauletto Bianco", p: 1.20, c: "panificati", b: "Mulino Bianco", img: "img/mulino_bianco_bauletto_bianco.jpg", icon: "🍞", l: "400g" },
-            { id: 301, n: "Mulino Bianco - Pan Bauletto Grano Duro", p: 1.40, c: "panificati", b: "Mulino Bianco", img: "img/mulino_bianco_bauletto_duro.jpg", icon: "🍞", l: "400g" },
-            { id: 302, n: "Mulino Bianco - Pan Bauletto Integrale", p: 1.50, c: "panificati", b: "Mulino Bianco", img: "img/mulino_bianco_bauletto_integrale.jpg", icon: "🍞", l: "400g" },
-            { id: 303, n: "Mulino Bianco - Pan Bauletto Cereali e Soia", p: 1.60, c: "panificati", b: "Mulino Bianco", img: "img/mulino_bianco_bauletto_cereali.jpg", icon: "🍞", l: "400g" },
-            { id: 330, n: "Mulino Bianco - Piadelle Toast", p: 2.30, c: "panificati", b: "Mulino Bianco", img: "img/mulino_bianco_piadelle_toast.jpg", icon: "🧓", l: "4pz" },
-            { id: 331, n: "Mulino Bianco - Piadelle Classiche", p: 2.10, c: "panificati", b: "Mulino Bianco", img: "img/mulino_bianco_piadelle_classiche.jpg", icon: "🧓", l: "4pz" },
-            { id: 332, n: "Mulino Bianco - Piadelle Integrali", p: 2.20, c: "panificati", b: "Mulino Bianco", img: "img/mulino_bianco_piadelle_integrali.jpg", icon: "🧓", l: "3pz" },
-            { id: 333, n: "Mulino Bianco - Granetti Integrali", p: 1.80, c: "panificati", b: "Mulino Bianco", img: "img/mulino_bianco_granetti_integrali.jpg", icon: "🥖", l: "280g" },
-            { id: 334, n: "Mulino Bianco - Fiori d'Acqua", p: 1.90, c: "panificati", b: "Mulino Bianco", img: "img/mulino_bianco_fiori_di_acqua.jpg", icon: "🥨", l: "250g" },
-            { id: 335, n: "Mulino Bianco - Granetti Classici", p: 1.80, c: "panificati", b: "Mulino Bianco", img: "img/mulino_bianco_granetti_classici.jpg", icon: "🥖", l: "280g" },
+            { id: 300, n: "Mulino Bianco - Pan Bauletto Bianco", p: 1.20, c: "panificati", b: "Mulino Bianco", img: "img/mulino_bianco_bauletto_bianco.jpg", icon: "🍞", l: "400g", ean: "8076809511522", info: { d: "Morbido pane di tipo '0' con olio di girasole, senza olio di palma.", a: "Glutine, tracce di Latte, Soia, Uova.", s: "Conservare in luogo fresco.", p: "Ottimo tostato." } },
+            { id: 301, n: "Mulino Bianco - Pan Bauletto Grano Duro", p: 1.40, c: "panificati", b: "Mulino Bianco", img: "img/mulino_bianco_bauletto_duro.jpg", icon: "🍞", l: "400g", ean: "8076809511850" },
+            { id: 302, n: "Mulino Bianco - Pan Bauletto Integrale", p: 1.50, c: "panificati", b: "Mulino Bianco", img: "img/mulino_bianco_bauletto_integrale.jpg", icon: "🍞", l: "400g", ean: "8076809511553" },
+            { id: 303, n: "Mulino Bianco - Pan Bauletto Cereali e Soia", p: 1.60, c: "panificati", b: "Mulino Bianco", img: "img/mulino_bianco_bauletto_cereali.jpg", icon: "🍞", l: "400g", ean: "8076809513364" },
+            { id: 330, n: "Mulino Bianco - Piadelle Toast", p: 2.30, c: "panificati", b: "Mulino Bianco", img: "img/mulino_bianco_piadelle_toast.jpg", icon: "🧓", l: "4pz", ean: "8076809543163" },
+            { id: 331, n: "Mulino Bianco - Piadelle Classiche", p: 2.10, c: "panificati", b: "Mulino Bianco", img: "img/mulino_bianco_piadelle_classiche.jpg", icon: "🧓", l: "4pz", ean: "8076809543149" },
+            { id: 332, n: "Mulino Bianco - Piadelle Integrali", p: 2.20, c: "panificati", b: "Mulino Bianco", img: "img/mulino_bianco_piadelle_integrali.jpg", icon: "🧓", l: "3pz", ean: "8076809543156" },
+            { id: 333, n: "Mulino Bianco - Granetti Integrali", p: 1.80, c: "panificati", b: "Mulino Bianco", img: "img/mulino_bianco_granetti_integrali.jpg", icon: "🥖", l: "280g", ean: "8076809543088" },
+            { id: 334, n: "Mulino Bianco - Fiori d'Acqua", p: 1.90, c: "panificati", b: "Mulino Bianco", img: "img/mulino_bianco_fiori_di_acqua.jpg", icon: "🥨", l: "250g", ean: "8076809543026" },
+            { id: 335, n: "Mulino Bianco - Granetti Classici", p: 1.80, c: "panificati", b: "Mulino Bianco", img: "img/mulino_bianco_granetti_classici.jpg", icon: "🥖", l: "280g", ean: "8076809543071" },
             // Panificati - PanPiuma
-            { id: 310, n: "PanPiuma - Grano Tenero", p: 1.80, c: "panificati", b: "PanPiuma", img: "img/panpiuma_tenero.jpg", icon: "🍞", l: "400g" },
-            { id: 311, n: "PanPiuma - Grano Duro", p: 1.90, c: "panificati", b: "PanPiuma", img: "img/panpiuma_duro.jpg", icon: "🍞", l: "400g" },
-            { id: 312, n: "PanPiuma - Integrale", p: 2.10, c: "panificati", b: "PanPiuma", img: "img/panpiuma_integrale.jpg", icon: "🍞", l: "400g" },
-            { id: 313, n: "PanPiuma - Arrotolabile", p: 2.20, c: "panificati", b: "PanPiuma", img: "img/panpiuma_arrotolabile.jpg", icon: "🌯", l: "3pz" },
+            { id: 310, n: "PanPiuma - Grano Tenero", p: 1.80, c: "panificati", b: "PanPiuma", img: "img/panpiuma_tenero.jpg", icon: "🍞", l: "400g", ean: "8005315000011", info: { d: "Pancarrè senza crosta, morbidissimo, solo con ingredienti naturali.", a: "Glutine, tracce di latte.", s: "Conservare in luogo fresco e asciutto.", p: "Ideale per tramezzini." } },
+            { id: 311, n: "PanPiuma - Grano Duro", p: 1.90, c: "panificati", b: "PanPiuma", img: "img/panpiuma_duro.jpg", icon: "🍞", l: "400g", ean: "8005315000035" },
+            { id: 312, n: "PanPiuma - Integrale", p: 2.10, c: "panificati", b: "PanPiuma", img: "img/panpiuma_integrale.jpg", icon: "🍞", l: "400g", ean: "8005315000028" },
+            { id: 313, n: "PanPiuma - Arrotolabile", p: 2.20, c: "panificati", b: "PanPiuma", img: "img/panpiuma_arrotolabile.jpg", icon: "🌯", l: "3pz", ean: "8005315000042" },
             // Panificati - Panealba
             { id: 340, n: "Panealba - Crostini Pomodoro", p: 1.70, c: "panificati", b: "Panealba", img: "img/panealba_crostini_pomodoro.jpg", icon: "🥖", l: "100g" },
             { id: 341, n: "Panealba - Crostini Mediterraneo", p: 1.70, c: "panificati", b: "Panealba", img: "img/panealba_crostini_mediterraneo.jpg", icon: "🥖", l: "100g" },
             // Panificati - Roberto
-            { id: 350, n: "Roberto - Grissini Torinesi", p: 2.10, c: "panificati", b: "Roberto", img: "img/roberto_grissini_torinesi.jpg", icon: "🥢", l: "350g" },
+            { id: 350, n: "Roberto - Grissini Torinesi", p: 2.10, c: "panificati", b: "Roberto", img: "img/roberto_grissini_torinesi.jpg", icon: "🥢", l: "350g", ean: "8001620002343", info: { d: "Grissini torinesi stirati a mano, friabili e leggeri.", a: "Glutine, Sesamo.", s: "Ambiente asciutto.", p: "Pronti al consumo." } },
             // Panificati - GrissinBon
-            { id: 360, n: "GrissinBon - Fagolosi", p: 2.40, c: "panificati", b: "GrissinBon", img: "img/grissinbon_fagolosi_classici.jpg", icon: "🥢", l: "480g" },
+            { id: 360, n: "GrissinBon - Fagolosi", p: 2.40, c: "panificati", b: "GrissinBon", img: "img/grissinbon_fagolosi_classici.jpg", icon: "🥢", l: "480g", ean: "8005820000010" },
             // Panificati - I Bibanesi
-            { id: 370, n: "I Bibanesi - Classici", p: 3.20, c: "panificati", b: "I Bibanesi", img: "img/bibanesi_classici.jpg", icon: "🥨", l: "250g" },
-            { id: 371, n: "I Bibanesi - Kamut", p: 3.80, c: "panificati", b: "I Bibanesi", img: "img/bibanesi_kamut.jpg", icon: "🥨", l: "200g" },
+            { id: 370, n: "I Bibanesi - Classici", p: 3.20, c: "panificati", b: "I Bibanesi", img: "img/bibanesi_classici.jpg", icon: "🥨", l: "250g", ean: "8012345678901", info: { d: "Pane croccante stirato a mano, tipico della tradizione trevigiana.", a: "Glutine, tracce di soia.", s: "Dispensa.", p: "Ideale come snack." } },
+            { id: 371, n: "I Bibanesi - Kamut", p: 3.80, c: "panificati", b: "I Bibanesi", img: "img/bibanesi_kamut.jpg", icon: "🥨", l: "200g", ean: "8012345678918" },
             // Panificati - Altri
             { id: 320, n: "Morato - Bruschelle", p: 2.50, c: "panificati", b: "Varie", img: "img/morato_bruschelle.jpg", icon: "🥖", l: "400g" },
             { id: 28, n: "Salame Milano 100g", p: 2.80, c: "freschi", b: "Salumi e Latticini", icon: "🥓" },
@@ -600,16 +724,16 @@
             { id: 111, n: "Ketchup Top", p: 1.90, c: "condimenti", b: "Salse e Spezie", icon: "🍅" },
             { id: 112, n: "Pepe Nero Macinato", p: 2.10, c: "condimenti", b: "Salse e Spezie", icon: "🌶️" },
             { id: 113, n: "Origano Siciliano", p: 1.50, c: "condimenti", b: "Salse e Spezie", icon: "🌿" },
-            { id: 121, n: "Olio Monini Classico", p: 5.90, c: "condimenti", b: "Olio", img: "img/monini_classico.jpg", l: "1L" },
-            { id: 122, n: "Monini Premi e Spremi", p: 3.80, c: "condimenti", b: "Olio", img: "img/monini_spremi.jpg", l: "450ml" },
-            { id: 123, n: "Olio Girasole Olitalia", p: 2.50, c: "condimenti", b: "Olio", img: "img/olitalia_girasole.jpg", l: "1L" },
-            { id: 124, n: "Olio Frienn (Frittura)", p: 3.20, c: "condimenti", b: "Olio", img: "img/olitalia_frienn.jpg", l: "1L" },
-            { id: 125, n: "Olio di Mais Olitalia", p: 2.80, c: "condimenti", b: "Olio", img: "img/olitalia_mais.jpg", l: "1L" },
-            { id: 126, n: "Olio Semi Vari Olitalia", p: 2.30, c: "condimenti", b: "Olio", img: "img/olitalia_vari.jpg", l: "1L" },
-            { id: 130, n: "Ponti Aceto Balsamico", p: 2.80, c: "condimenti", b: "Aceto", img: "img/ponti_balsamico.jpg", l: "500ml" },
-            { id: 131, n: "Ponti Aceto di Vino Bianco", p: 1.10, c: "condimenti", b: "Aceto", img: "img/ponti_bianco.jpg", l: "1L" },
-            { id: 132, n: "Ponti Glassa Balsamico", p: 2.20, c: "condimenti", b: "Aceto", img: "img/ponti_glassa.jpg", l: "250g" },
-            { id: 133, n: "Ponti Aceto di Mele", p: 1.90, c: "condimenti", b: "Aceto", img: "img/ponti_mele.jpg", l: "500ml" },
+            { id: 121, n: "Olio Monini Classico", p: 5.90, c: "condimenti", b: "Olio", img: "img/monini_classico.jpg", l: "1L", ean: "8005510001004", info: { d: "Olio Extra Vergine di Oliva Monini, armonioso ed equilibrato.", a: "Nessuno.", s: "Conservare al riparo dalla luce e dal calore.", p: "Ideale per ogni condimento a crudo e in cottura." } },
+            { id: 122, n: "Monini Premi e Spremi", p: 3.80, c: "condimenti", b: "Olio", img: "img/monini_spremi.jpg", l: "450ml", ean: "8005510001462" },
+            { id: 123, n: "Olio Girasole Olitalia", p: 2.50, c: "condimenti", b: "Olio", img: "img/olitalia_girasole.jpg", l: "1L", ean: "8003185002010" },
+            { id: 124, n: "Olio Frienn (Frittura)", p: 3.20, c: "condimenti", b: "Olio", img: "img/olitalia_frienn.jpg", l: "1L", ean: "8003185001235", info: { d: "Olio speciale per fritture croccanti e stabili alle alte temperature.", a: "Prodotto da semi di girasole alto oleico.", s: "Fresco e asciutto.", p: "Punto di fumo elevato." } },
+            { id: 125, n: "Olio di Mais Olitalia", p: 2.80, c: "condimenti", b: "Olio", img: "img/olitalia_mais.jpg", l: "1L", ean: "8003185003017" },
+            { id: 126, n: "Olio Semi Vari Olitalia", p: 2.30, c: "condimenti", b: "Olio", img: "img/olitalia_vari.jpg", l: "1L", ean: "8003185004014" },
+            { id: 130, n: "Ponti Aceto Balsamico", p: 2.80, c: "condimenti", b: "Aceto", img: "img/ponti_balsamico.jpg", l: "500ml", ean: "8005380123547", info: { d: "Aceto Balsamico di Modena I.G.P. Ponti, invecchiato in botti di rovere.", a: "Anidride solforosa e solfiti.", s: "Dispensa.", p: "Ottimo su carni e fragole." } },
+            { id: 131, n: "Ponti Aceto di Vino Bianco", p: 1.10, c: "condimenti", b: "Aceto", img: "img/ponti_bianco.jpg", l: "1L", ean: "8005380121017" },
+            { id: 132, n: "Ponti Glassa Balsamico", p: 2.20, c: "condimenti", b: "Aceto", img: "img/ponti_glassa.jpg", l: "250g", ean: "8005380125015" },
+            { id: 133, n: "Ponti Aceto di Mele", p: 1.90, c: "condimenti", b: "Aceto", img: "img/ponti_mele.jpg", l: "500ml", ean: "8005380122014" },
             { id: 46, n: "Caffè Macinato x2", p: 4.80, c: "Dispensa", icon: "☕" },
             { id: 47, n: "Biscotti Frollini", p: 2.20, c: "Dispensa", icon: "🍪" },
             { id: 48, n: "Confettura Fragola", p: 1.90, c: "Dispensa", icon: "🍓" },
@@ -620,46 +744,46 @@
             { id: 54, n: "Spazzolino Medio", p: 1.50, c: "igiene-p", b: "Igiene Orale", icon: "🪥" },
             { id: 55, n: "Sapone Mani Liquido", p: 1.40, c: "igiene-p", b: "Shampoo e Doccia", icon: "🧼" },
             { id: 59, n: "Deodorante Spray", p: 2.80, c: "igiene-p", b: "Shampoo e Doccia", icon: "🌬️" },
-            { id: 140, n: "Colgate Total", p: 2.10, c: "igiene-p", b: "Igiene Orale", img: "img/colgate_total.jpg", l: "75ml" },
-            { id: 141, n: "Colgate Max White", p: 2.50, c: "igiene-p", b: "Igiene Orale", img: "img/colgate_max_white.jpg", l: "75ml" },
-            { id: 142, n: "Colgate Caries Prot.", p: 1.80, c: "igiene-p", b: "Igiene Orale", img: "img/colgate_caries.jpg", l: "75ml" },
-            { id: 143, n: "Oral-B Essential Floss", p: 2.90, c: "igiene-p", b: "Igiene Orale", img: "img/oralb_floss.jpg", l: "50m" },
-            { id: 144, n: "Listerine Denti/Gengive", p: 4.20, c: "igiene-p", b: "Igiene Orale", img: "img/listerine_denti.jpg", l: "500ml" },
-            { id: 145, n: "Listerine Cool Mint", p: 4.20, c: "igiene-p", b: "Igiene Orale", img: "img/listerine_cool_mint.jpg", l: "500ml" },
-            { id: 146, n: "Listerine Cuidado Total", p: 3.50, c: "igiene-p", b: "Igiene Orale", img: "img/listerine_total.jpg", l: "250ml" },
-            { id: 150, n: "Salviettine Chilly", p: 2.40, c: "igiene-p", b: "Assorbenti e Protezione", img: "img/chilly_delicato.jpg", l: "12pz" },
-            { id: 151, n: "Lines è Lungo", p: 4.80, c: "igiene-p", b: "Assorbenti e Protezione", img: "img/lines_e_lungo.jpg", l: "7pz" },
-            { id: 152, n: "Lines Seta Notte", p: 4.50, c: "igiene-p", b: "Assorbenti e Protezione", img: "img/lines_seta_notte.jpg", l: "11pz" },
-            { id: 153, n: "Lines Seta Ultra", p: 4.50, c: "igiene-p", b: "Assorbenti e Protezione", img: "img/lines_seta_ultra.jpg", l: "10pz" },
-            { id: 154, n: "Lines Idea Ultra", p: 3.20, c: "igiene-p", b: "Assorbenti e Protezione", img: "img/lines_idea_ultra.jpg", l: "9pz" },
-            { id: 155, n: "Carefree Cotton Feel", p: 2.10, c: "igiene-p", b: "Assorbenti e Protezione", img: "img/carefree_cotton.jpg", l: "20pz" },
-            { id: 156, n: "Tampax Compak Super", p: 4.90, c: "igiene-p", b: "Assorbenti e Protezione", img: "img/tampax_super.jpg", l: "20pz" },
-            { id: 157, n: "Tampax Compak Regular", p: 4.90, c: "igiene-p", b: "Assorbenti e Protezione", img: "img/tampax_regular.jpg", l: "16pz" },
-            { id: 160, n: "Tena Pants Maxi M", p: 11.50, c: "igiene-p", b: "Incontinenza Tena", img: "img/tena_pants_m.jpg", l: "8pz" },
-            { id: 161, n: "Tena Pants Plus L", p: 11.50, c: "igiene-p", b: "Incontinenza Tena", img: "img/tena_pants_l.jpg", l: "8pz" },
-            { id: 162, n: "Tena Pants Super S", p: 12.80, c: "igiene-p", b: "Incontinenza Tena", img: "img/tena_pants_s.jpg", l: "12pz" },
-            { id: 163, n: "Tena Pants Night XL", p: 13.50, c: "igiene-p", b: "Incontinenza Tena", img: "img/tena_pants_xl.jpg", l: "11pz" },
-            { id: 164, n: "Tena Men Maxi", p: 10.90, c: "igiene-p", b: "Incontinenza Tena", img: "img/tena_men_maxi.jpg", l: "10pz" },
-            { id: 170, n: "Rotoloni Regina x4", p: 3.50, c: "igiene-p", b: "Carta e Fazzoletti", img: "img/regina_rotoloni.jpg", l: "4pz" },
-            { id: 171, n: "Foxy Cotton x4", p: 3.20, c: "igiene-p", b: "Carta e Fazzoletti", img: "img/foxy_cotton.jpg", l: "4pz" },
-            { id: 172, n: "Fazzoletti Tempo", p: 1.90, c: "igiene-p", b: "Carta e Fazzoletti", img: "img/tempo_original.jpg", l: "10x9" },
-            { id: 180, n: "Bic 4 Flex", p: 3.50, c: "igiene-p", b: "Barba e Rasatura", img: "img/bic_4flex.jpg", l: "4pz" },
-            { id: 181, n: "Bic Miss Soleil", p: 3.10, c: "igiene-p", b: "Barba e Rasatura", img: "img/bic_soleil.jpg", l: "4pz" },
-            { id: 182, n: "Proraso Schiuma", p: 2.20, c: "igiene-p", b: "Barba e Rasatura", img: "img/proraso_schiuma.jpg", l: "300ml" },
-            { id: 56, n: "Detersivo Lavatrice", p: 4.50, c: "Igiene Casa", icon: "🫧" },
-            { id: 57, n: "Detersivo Piatti", p: 1.20, c: "Igiene Casa", icon: "🧽" },
-            { id: 58, n: "Carta Igienica x4", p: 2.10, c: "Igiene Casa", icon: "🧻" },
-            { id: 60, n: "Ammorbidente", p: 2.40, c: "Igiene Casa", icon: "👕" },
-            { id: 61, n: "Burger di Soia x2", p: 3.50, c: "Vegano", icon: "🍔" },
-            { id: 62, n: "Tofu Naturale", p: 2.20, c: "Vegano", icon: "🧊" },
-            { id: 63, n: "Bevanda di Mandorla", p: 2.80, c: "Vegano", icon: "🥛" },
-            { id: 64, n: "Seitan alla Piastra", p: 4.10, c: "Vegano", icon: "🥩" },
-            { id: 65, n: "Hummus di Ceci", p: 2.50, c: "Vegano", icon: "🥣" },
-            { id: 66, n: "Croccantini Gatto 1kg", p: 4.80, c: "Amici Domestici", icon: "🐈" },
-            { id: 67, n: "Crocchette Cane 2kg", p: 7.50, c: "Amici Domestici", icon: "🐕" },
-            { id: 68, n: "Cibo Umido Gatto", p: 0.90, c: "Amici Domestici", icon: "🥫" },
-            { id: 69, n: "Snack Dentale Cani", p: 2.10, c: "Amici Domestici", icon: "🦴" },
-            { id: 70, n: "Lettiera Gatto 5L", p: 5.50, c: "Amici Domestici", icon: "🪨" }
+            { id: 140, n: "Colgate Total", p: 2.10, c: "igiene-p", b: "Igiene Orale", img: "img/colgate_total.jpg", l: "75ml", ean: "8718951234567", info: { d: "Dentifricio Colgate Total, protezione completa per 12 ore.", a: "Nessuno.", s: "Bagno.", p: "Spazzolare due volte al giorno." } },
+            { id: 141, n: "Colgate Max White", p: 2.50, c: "igiene-p", b: "Igiene Orale", img: "img/colgate_max_white.jpg", l: "75ml", ean: "8718951234574" },
+            { id: 142, n: "Colgate Caries Prot.", p: 1.80, c: "igiene-p", b: "Igiene Orale", img: "img/colgate_caries.jpg", l: "75ml", ean: "8718951234581" },
+            { id: 143, n: "Oral-B Essential Floss", p: 2.90, c: "igiene-p", b: "Igiene Orale", img: "img/oralb_floss.jpg", l: "50m", ean: "5010622012345" },
+            { id: 144, n: "Listerine Denti/Gengive", p: 4.20, c: "igiene-p", b: "Igiene Orale", img: "img/listerine_denti.jpg", l: "500ml", ean: "3574661234567", info: { d: "Collutorio Listerine per la salute dei denti e delle gengive.", a: "Tracce di Alcol.", s: "Lontano da bambini.", p: "Sciacquare 30 secondi." } },
+            { id: 145, n: "Listerine Cool Mint", p: 4.20, c: "igiene-p", b: "Igiene Orale", img: "img/listerine_cool_mint.jpg", l: "500ml", ean: "3574661234574" },
+            { id: 146, n: "Listerine Cuidado Total", p: 3.50, c: "igiene-p", b: "Igiene Orale", img: "img/listerine_total.jpg", l: "250ml", ean: "3574661234581" },
+            { id: 150, n: "Salviettine Chilly", p: 2.40, c: "igiene-p", b: "Assorbenti e Protezione", img: "img/chilly_delicato.jpg", l: "12pz", ean: "8002410032955" },
+            { id: 151, n: "Lines è Lungo", p: 4.80, c: "igiene-p", b: "Assorbenti e Protezione", img: "img/lines_e_lungo.jpg", l: "7pz", ean: "8001480031261", info: { d: "Assorbenti Lines è in Lactifless, ipoallergenico e super assorbente.", a: "Nessuno.", s: "Luogo asciutto.", p: "Giorno e notte." } },
+            { id: 152, n: "Lines Seta Notte", p: 4.50, c: "igiene-p", b: "Assorbenti e Protezione", img: "img/lines_seta_notte.jpg", l: "11pz", ean: "8001480031278" },
+            { id: 153, n: "Lines Seta Ultra", p: 4.50, c: "igiene-p", b: "Assorbenti e Protezione", img: "img/lines_seta_ultra.jpg", l: "10pz", ean: "8001480031285" },
+            { id: 154, n: "Lines Idea Ultra", p: 3.20, c: "igiene-p", b: "Assorbenti e Protezione", img: "img/lines_idea_ultra.jpg", l: "9pz", ean: "8001480031292" },
+            { id: 155, n: "Carefree Cotton Feel", p: 2.10, c: "igiene-p", b: "Assorbenti e Protezione", img: "img/carefree_cotton.jpg", l: "20pz", ean: "3574660234567" },
+            { id: 156, n: "Tampax Compak Super", p: 4.90, c: "igiene-p", b: "Assorbenti e Protezione", img: "img/tampax_super.jpg", l: "20pz", ean: "4015400034567" },
+            { id: 157, n: "Tampax Compak Regular", p: 4.90, c: "igiene-p", b: "Assorbenti e Protezione", img: "img/tampax_regular.jpg", l: "16pz", ean: "4015400034574" },
+            { id: 160, n: "Tena Pants Maxi M", p: 11.50, c: "igiene-p", b: "Incontinenza Tena", img: "img/tena_pants_m.jpg", l: "8pz", ean: "7322540866018", info: { d: "Mutandine assorbenti per incontinenza urinaria, protezione elevata.", a: "Nessuno.", s: "In luogo asciutto.", p: "Uso quotidiano." } },
+            { id: 161, n: "Tena Pants Plus L", p: 11.50, c: "igiene-p", b: "Incontinenza Tena", img: "img/tena_pants_l.jpg", l: "8pz", ean: "7322540866025" },
+            { id: 162, n: "Tena Pants Super S", p: 12.80, c: "igiene-p", b: "Incontinenza Tena", img: "img/tena_pants_s.jpg", l: "12pz", ean: "7322540866032" },
+            { id: 163, n: "Tena Pants Night XL", p: 13.50, c: "igiene-p", b: "Incontinenza Tena", img: "img/tena_pants_xl.jpg", l: "11pz", ean: "7322540866049" },
+            { id: 164, n: "Tena Men Maxi", p: 10.90, c: "igiene-p", b: "Incontinenza Tena", img: "img/tena_men_maxi.jpg", l: "10pz", ean: "7322540866056" },
+            { id: 170, n: "Rotoloni Regina x4", p: 3.50, c: "igiene-p", b: "Carta e Fazzoletti", img: "img/regina_rotoloni.jpg", l: "4pz", ean: "8003350123456", info: { d: "Carta igienica Regina, i rotoloni che non finiscono mai.", a: "Pura cellulosa.", s: "In luogo asciutto.", p: "Pronti all'uso." } },
+            { id: 171, n: "Foxy Cotton x4", p: 3.20, c: "igiene-p", b: "Carta e Fazzoletti", img: "img/foxy_cotton.jpg", l: "4pz", ean: "8000450123456" },
+            { id: 172, n: "Fazzoletti Tempo", p: 1.90, c: "igiene-p", b: "Carta e Fazzoletti", img: "img/tempo_original.jpg", l: "10x9", ean: "7322540123456" },
+            { id: 180, n: "Bic 4 Flex", p: 3.50, c: "igiene-p", b: "Barba e Rasatura", img: "img/bic_4flex.jpg", l: "4pz", ean: "3086123456789" },
+            { id: 181, n: "Bic Miss Soleil", p: 3.10, c: "igiene-p", b: "Barba e Rasatura", img: "img/bic_soleil.jpg", l: "4pz", ean: "3086123456796" },
+            { id: 182, n: "Proraso Schiuma", p: 2.20, c: "igiene-p", b: "Barba e Rasatura", img: "img/proraso_schiuma.jpg", l: "300ml", ean: "8001620001234", info: { d: "Schiuma da barba Proraso, linea verde con eucalipto e mentolo.", a: "Eucaliptolo.", s: "Posto fresco.", p: "Agitare prima dell'uso." } },
+            { id: 56, n: "Detersivo Lavatrice", p: 4.50, c: "Igiene Casa", icon: "🫧", ean: "8001234567890", info: { d: "Detersivo liquido per bucato in lavatrice, pulizia profonda.", a: "Tensioattivi anionici, sbiancanti ottici.", s: "Lontano dalla portata dei bambini.", p: "Seguire le dosi in etichetta." } },
+            { id: 57, n: "Detersivo Piatti", p: 1.20, c: "Igiene Casa", icon: "🧽", ean: "8001234567891" },
+            { id: 58, n: "Carta Igienica x4", p: 2.10, c: "Igiene Casa", icon: "🧻", ean: "8001234567892" },
+            { id: 60, n: "Ammorbidente", p: 2.40, c: "Igiene Casa", icon: "👕", ean: "8001234567893" },
+            { id: 61, n: "Burger di Soia x2", p: 3.50, c: "Vegano", icon: "🍔", ean: "8001234567894", info: { d: "Preparato vegetale a base di soia, ricco di proteine.", a: "Soia, Glutine.", s: "Frigo.", p: "In padella per 5 minuti." } },
+            { id: 62, n: "Tofu Naturale", p: 2.20, c: "Vegano", icon: "🧊", ean: "8001234567895" },
+            { id: 63, n: "Bevanda di Mandorla", p: 2.80, c: "Vegano", icon: "🥛", ean: "8001234567896" },
+            { id: 64, n: "Seitan alla Piastra", p: 4.10, c: "Vegano", icon: "🥩", ean: "8001234567897" },
+            { id: 65, n: "Hummus di Ceci", p: 2.50, c: "Vegano", icon: "🥣", ean: "8001234567898" },
+            { id: 66, n: "Croccantini Gatto 1kg", p: 4.80, c: "Amici Domestici", icon: "🐈", ean: "7613034567890", info: { d: "Alimento completo per gatti adulti, ricco in salmone.", a: "Cereali, pesci e sottoprodotti.", s: "Fresca e asciutta.", p: "Lasciare acqua fresca a disposizione." } },
+            { id: 67, n: "Crocchette Cane 2kg", p: 7.50, c: "Amici Domestici", icon: "🐕", ean: "7613034567891" },
+            { id: 68, n: "Cibo Umido Gatto", p: 0.90, c: "Amici Domestici", icon: "🥫", ean: "7613034567892" },
+            { id: 69, n: "Snack Dentale Cani", p: 2.10, c: "Amici Domestici", icon: "🦴", ean: "7613034567893" },
+            { id: 70, n: "Lettiera Gatto 5L", p: 5.50, c: "Amici Domestici", icon: "🪨", ean: "7613034567894" }
         ];
 
         let cart = JSON.parse(localStorage.getItem('spesina_cart')) || [];
@@ -775,7 +899,7 @@
                 let imgHtml = p.img ? `<img class="product-img" style="display:none;" src="${p.img}" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" alt="${p.n}">` : "";
                 let emojiHtml = `<div class="product-emoji">${p.icon || '🍝'}</div>`;
                 let weightHtml = p.l ? `<span style="font-size: 10px; color: #64748b; font-weight: 500; margin-right: 4px;">${p.l}</span>` : "";
-                html += `<div class="card"><button class="add-btn" onclick="addToCart(${p.id})">+</button>${imgHtml}${emojiHtml}<div style="font-size:13px; font-weight:bold">${p.n}</div><div style="color:var(--primary); font-weight:bold">${weightHtml}${p.p.toFixed(2)}€</div></div>`;
+                html += `<div class="card"><button class="info-btn" onclick="showInfo(${p.id})">i</button><button class="add-btn" onclick="addToCart(${p.id})">+</button>${imgHtml}${emojiHtml}<div style="font-size:13px; font-weight:bold">${p.n}</div><div style="color:var(--primary); font-weight:bold">${weightHtml}${p.p.toFixed(2)}€</div></div>`;
             });
             document.getElementById('sub-catalog').innerHTML = html;
         }
@@ -818,7 +942,7 @@
                     items.forEach(p => {
                         let media = p.img ? `<img style="width:100%; height:120px; object-fit:cover; border-radius:12px; margin-bottom:10px;" src="${p.img}" alt="${p.n}">` : `<div class="product-emoji">${p.icon}</div>`;
                         let weightHtml = p.l ? `<span style="font-size: 10px; color: #64748b; font-weight: 500; margin-right: 4px;">${p.l}</span>` : "";
-                        html += `<div class="card"><button class="add-btn" onclick="addToCart(${p.id})">+</button>${media}<div style="font-size:14px; font-weight:800; margin-bottom:4px;">${p.n}</div><div style="color:var(--primary); font-weight:800; font-size:16px;">${weightHtml}${p.p.toFixed(2)}€</div></div>`;
+                        html += `<div class="card"><button class="info-btn" onclick="showInfo(${p.id})">i</button><button class="add-btn" onclick="addToCart(${p.id})">+</button>${media}<div style="font-size:14px; font-weight:800; margin-bottom:4px;">${p.n}</div><div style="color:var(--primary); font-weight:800; font-size:16px;">${weightHtml}${p.p.toFixed(2)}€</div></div>`;
                     });
                 }
                 searchContainer.innerHTML = html;
@@ -836,9 +960,31 @@
                 let imgHtml = p.img ? `<img class="product-img" style="display:none;" src="${p.img}" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" alt="${p.n}">` : "";
                 let emojiHtml = `<div class="product-emoji">${p.icon || '📦'}</div>`;
                 let weightHtml = p.l ? `<span style="font-size: 10px; color: #64748b; font-weight: 500; margin-right: 4px;">${p.l}</span>` : "";
-                html += `<div class="card"><button class="add-btn" onclick="addToCart(${p.id})">+</button>${imgHtml}${emojiHtml}<div style="font-size:13px; font-weight:bold">${p.n}</div><div style="color:var(--primary); font-weight:bold">${weightHtml}${p.p.toFixed(2)}€</div></div>`;
+                html += `<div class="card"><button class="info-btn" onclick="showInfo(${p.id})">i</button><button class="add-btn" onclick="addToCart(${p.id})">+</button>${imgHtml}${emojiHtml}<div style="font-size:13px; font-weight:bold">${p.n}</div><div style="color:var(--primary); font-weight:bold">${weightHtml}${p.p.toFixed(2)}€</div></div>`;
             });
             document.getElementById('sub-catalog').innerHTML = html;
+        }
+
+        function showInfo(id) {
+            let p = PRODS.find(x => x.id === id);
+            if (!p) return;
+            
+            document.getElementById('info-p-name').innerText = p.n;
+            document.getElementById('info-p-ean').innerText = "EAN: " + (p.ean || "Non disponibile");
+            
+            const info = p.info || {
+                d: "Informazioni dettagliate in arrivo...",
+                a: "Consultare l'etichetta fisica per allergeni.",
+                s: "Conservare in luogo fresco e asciutto.",
+                p: "Consultare le istruzioni sulla confezione."
+            };
+
+            document.getElementById('info-desc').innerText = info.d;
+            document.getElementById('info-allergens').innerText = info.a;
+            document.getElementById('info-storage').innerText = info.s;
+            document.getElementById('info-prep').innerText = info.p;
+
+            document.getElementById('modalInfo').style.display = 'flex';
         }
 
         function caricaOrari() {
