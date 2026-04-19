@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<body style="margin:0; padding:0; background:white; display:flex; justify-content:center; align-items:center; height:100vh;">
+    <!-- Canvas 1000x1000 Bianco -->
+    <canvas id="c" width="1000" height="1000" style="background:white;"></canvas>
+    <script>
+        const canvas = document.getElementById('c');
+        const ctx = canvas.getContext('2d');
+        const img = new Image();
+        img.onload = () => {
+            ctx.fillStyle = "white";
+            ctx.fillRect(0, 0, 1000, 1000);
+            
+            // Centra l'immagine mantenendo le proporzioni
+            const scale = Math.min(800 / img.width, 800 / img.height);
+            const w = img.width * scale;
+            const h = img.height * scale;
+            const x = (1000 - w) / 2;
+            const y = (1000 - h) / 2;
+            
+            ctx.drawImage(img, x, y, w, h);
+            document.title = "READY";
+        };
+        // Caricherò qui l'immagine scontornata
+        img.src = "input_no_bg.png";
+    </script>
+</body>
+</html>

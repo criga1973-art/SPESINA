@@ -1,0 +1,19 @@
+# Escludi cartelle di backup e log
+img/original_backup/
+.gemini/
+.system_generated/
+
+# Escludi file di testo e bozze
+*.txt
+*.pdf
+prova.html
+WEBSPESINA .html
+MEMO_REGOLE_APP.md
+
+# Escludi script Python e automazioni (mantieni solo l'app)
+*.py
+Antigravity.exe
+
+# File di sistema
+.DS_Store
+Thumbs.db
