@@ -305,7 +305,11 @@
             justify-content: center;
             z-index: 1000;
             animation: fadeIn 0.3s ease;
+            cursor: pointer;
         }
+
+        .modal-content {
+            cursor: default;
 
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -501,8 +505,9 @@
         <div class="modal-content" style="max-width: 480px; padding: 0; overflow: hidden; border-radius: 32px; border: none;">
             <!-- Folder Header -->
             <div style="background: linear-gradient(135deg, #1e293b, #0f172a); color: white; padding: 35px 30px; text-align: left; position: relative;">
+                <button onclick="closeModals()" style="position: absolute; top: 15px; left: 15px; background: rgba(255,255,255,0.1); border: none; color: white; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); z-index: 10;">✕</button>
                 <div style="position: absolute; top: 20px; right: 25px; background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 12px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; backdrop-filter: blur(5px);">Scheda Tecnica</div>
-                <h3 id="info-p-name" style="margin: 0 0 10px 0; font-size: 26px; font-weight: 800; line-height: 1.2;">Nome Prodotto</h3>
+                <h3 id="info-p-name" style="margin: 15px 0 10px 0; font-size: 26px; font-weight: 800; line-height: 1.2;">Nome Prodotto</h3>
                 <div id="info-p-ean" class="ean-badge" style="background: rgba(255,255,255,0.15); color: white; border: none; margin-bottom: 0;">EAN: 0000000000000</div>
             </div>
             
@@ -1026,6 +1031,13 @@
         function showAddress() { document.getElementById('modalAddress').style.display = 'flex'; }
         function showHowItWorks() { document.getElementById('modalHowItWorks').style.display = 'flex'; }
         function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
+
+        // Chiudi modal cliccando fuori dal contenuto
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                closeModals();
+            }
+        }
 
         function useCurrentLocation() {
             let input = document.getElementById('address-input');
