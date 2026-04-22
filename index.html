@@ -687,11 +687,22 @@
         <div class="top-nav">
             <a onclick="showHowItWorks()">Come funziona</a>
             <a onclick="showAddress()">📍 Dove consegniamo</a>
-            <a onclick="showRegister()">🔑 Accedi</a>
+            <a id="nav-login" onclick="showRegister()">🔑 Accedi</a>
         </div>
     </header>
 
     <div id="home-view">
+        <!-- Banner Benvenuto Utente -->
+        <div id="user-welcome-banner" style="display:none; padding:15px 20px 0 20px;">
+            <div style="background:linear-gradient(135deg, #f8fafc, #f1f5f9); border:1px solid #e2e8f0; border-radius:18px; padding:15px; display:flex; align-items:center; gap:12px; box-shadow:0 4px 6px rgba(0,0,0,0.02);">
+                <div style="background:var(--primary); color:white; width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px;">👤</div>
+                <div style="flex-grow:1;">
+                    <div style="font-size:14px; font-weight:800; color:var(--dark);">Ciao, <span id="welcome-name">...</span>!</div>
+                    <div style="font-size:11px; color:#64748b; font-weight:600; margin-top:2px;">ID: <span id="welcome-id">...</span> | Scade: <span id="welcome-expiry">...</span></div>
+                </div>
+            </div>
+        </div>
+
         <div style="padding: 15px 20px 5px 20px;">
             <input type="text" id="search-bar" class="select-box" placeholder="🔍 Cerca prodotti (es. Acqua...)"
                 oninput="handleSearch()"
@@ -1877,6 +1888,7 @@
 
             localStorage.setItem('spesina_user', JSON.stringify(userData));
             alert(`Registrazione completata! Benvenuto in Spesina, ${nome}.\nIl tuo ID Cliente è: ${clientId}\nAbbonamento attivo fino al: ${subExpiry}`);
+            updateAuthUI();
             goHome();
             checkSubscriptionStatus();
         }
@@ -2051,17 +2063,36 @@
                 });
         }
 
+        function updateAuthUI() {
+            const loginLink = document.getElementById('nav-login');
+            const welcomeBanner = document.getElementById('user-welcome-banner');
+            
+            if (userData && userData.id) {
+                if (loginLink) loginLink.innerHTML = `👤 Profilo`;
+                if (welcomeBanner) {
+                    welcomeBanner.style.display = 'block';
+                    document.getElementById('welcome-name').innerText = userData.n.split(' ')[0];
+                    document.getElementById('welcome-id').innerText = userData.id;
+                    document.getElementById('welcome-expiry').innerText = userData.subExpiry;
+                }
+                // Update footer if exists
+                const companyData = document.getElementById('company-data');
+                if (companyData && !companyData.innerHTML.includes('🆔')) {
+                    companyData.innerHTML += `<br><span style="font-size:11px; opacity:0.8;">🆔 ID Cliente: <b>${userData.id}</b></span>`;
+                }
+            } else {
+                if (loginLink) loginLink.innerHTML = `🔑 Accedi`;
+                if (welcomeBanner) welcomeBanner.style.display = 'none';
+            }
+        }
+
         renderCategories();
         renderFooter();
         updateUI();
+        updateAuthUI();
         
         // Identity & Subscription Startup Check
         checkSubscriptionStatus();
-
-        // Footer update with Client ID if exists
-        if (userData && userData.id) {
-            document.getElementById('company-data').innerHTML += ` | 🆔 ID Cliente: <b>${userData.id}</b>`;
-        }
     </script>
 </body>
 
