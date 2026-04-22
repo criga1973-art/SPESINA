@@ -1956,7 +1956,10 @@
 
         function selectSuggestion(address, cap) {
             document.getElementById('reg-address').value = address;
-            document.getElementById('address-suggestions').style.display = 'none';
+            const container = document.getElementById('address-suggestions');
+            container.innerHTML = "";
+            container.style.display = 'none';
+            checkRegisterValidity();
 
             // Se il CAP suggerito è tra quelli validi, lo impostiamo
             if (cap && AUTHORIZED_CAPS.includes(cap)) {
@@ -1964,6 +1967,15 @@
                 validateRegisterCAP();
             }
         }
+
+        // Chiusura suggerimenti al click esterno
+        window.addEventListener('click', function(e) {
+            const container = document.getElementById('address-suggestions');
+            const input = document.getElementById('reg-address');
+            if (container && e.target !== input && !container.contains(e.target)) {
+                container.style.display = 'none';
+            }
+        });
 
         // --- FINE AUTOCOMPLETE ---
 
