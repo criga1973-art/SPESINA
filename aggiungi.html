@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Aggiungi Prodotto</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://jsdelivr.net"></script>
+    <style>
+        body { font-family: sans-serif; padding: 20px; text-align: center; }
+        input { padding: 15px; width: 80%; font-size: 18px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ccc; }
+        button { padding: 15px 30px; font-size: 18px; background: #24b47e; color: white; border: none; border-radius: 8px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h2>Scanner EAN</h2>
+    <input type="text" id="ean" placeholder="Tocca qui e scansiona...">
+    <br>
+    <button onclick="salvaProdotto()">SALVA PRODOTTO</button>
+    <p id="stato"></p>
+
+    <script type="module">
+        // Qui il codice usa le tue chiavi Supabase
+        import { createClient } from 'https://jsdelivr.net/+esm'
+        
+        // RECUPERA LE TUE CHIAVI DA supabase_config.js O INCOLLALE QUI
+        const supabase = createClient('IL_TUO_URL_SUPABASE', 'LA_TUA_ANON_KEY');
+
+        window.salvaProdotto = async () => {
+            const ean = document.getElementById('ean').value;
+            const stato = document.getElementById('stato');
+            if(!ean) return alert("Inserisci un codice!");
+
+            stato.innerText = "🔍 Ricerca in corso...";
+
+            // 1. Cerca su Open Food Facts
+            const res = await fetch(`https://openfoodfacts.org{ean}.json`);
+            const data = await res.json();
+
+            if (data.status === 0) {
+                stato.innerText = "❌ Prodotto non trovato!";
+                return;
+            }
+
+            const p = data.product;
+
+            // 2. Salva su Supabase
+            const { error } = await supabase.from('prodotti').insert([{
+                ean: ean,
+                nome: p.product_name,
+                foto_url: p.image_front_url,
+                dati: p.nutriments
+            }]);
+
+            if (error) {
+                stato.innerText = "⚠️ Errore salvataggio: " + error.message;
+            } else {
+                stato.innerText = "✅ SALVATO: " + p.product_name;
+                document.getElementById('ean').value = "";
+            }
+        }
+    </script>
+</body>
+</html>
