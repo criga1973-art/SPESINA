@@ -2090,6 +2090,14 @@
 
         // Funzione per gestire la modalità manutenzione
         function checkMaintenance() {
+            // Permetti il bypass tramite parametro URL ?preview=true o sessionStorage
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('preview') === 'true') {
+                sessionStorage.setItem('spesina_preview', 'true');
+            }
+            
+            if (sessionStorage.getItem('spesina_preview') === 'true') return;
+
             if (typeof MAINTENANCE_MODE !== 'undefined' && MAINTENANCE_MODE) {
                 const overlay = document.createElement('div');
                 overlay.id = 'maintenance-overlay';
