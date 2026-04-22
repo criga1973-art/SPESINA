@@ -1862,9 +1862,9 @@
             userData = { id: clientId, n: nome, t: tel, a: via, c: cap, subExpiry: subExpiry };
             
             // Salvataggio su Supabase
-            if (typeof supabase !== 'undefined') {
+            if (typeof sb !== 'undefined') {
                 try {
-                    await supabase.from('profiles').upsert({
+                    await sb.from('profiles').upsert({
                         client_id: clientId,
                         full_name: nome,
                         phone: tel,
@@ -2014,9 +2014,9 @@
                 .then(async response => {
                     if (response.ok) {
                         // Registra ordine su Supabase
-                        if (typeof supabase !== 'undefined' && userData && userData.id) {
+                        if (typeof sb !== 'undefined' && userData && userData.id) {
                             try {
-                                await supabase.from('orders').insert({
+                                await sb.from('orders').insert({
                                     user_id: userData.id, // Useremo il client_id come riferimento
                                     order_data: { items: cart, total: totaleValore, delivery: giorno + " " + ora }
                                 });
