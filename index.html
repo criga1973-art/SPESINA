@@ -1016,8 +1016,7 @@
         };
 
         const AUTHORIZED_CAPS = ["30171", "30172", "30173", "30174", "30175"];
-        let userAddress = localStorage.getItem('spesina_address') || "";
-        let userCAP = localStorage.getItem('spesina_cap') || "";
+        // Le variabili userAddress e userCAP sono ora gestite dentro l'oggetto globale userData
 
         // Sistema di aiuto per il debug: se c'è un errore, l'app lo dirà chiaramente
         window.onerror = function (msg, url, line) {
@@ -2017,8 +2016,9 @@
             let ora = document.getElementById('select-ora').value;
 
             // Validazione "Server-side" (last gate)
-            if (!AUTHORIZED_CAPS.includes(userCAP)) {
-                alert("Errore: Zona di consegna non valida. Spesina non può procedere con l'invio.");
+            const currentCAP = userData ? userData.c : "";
+            if (!AUTHORIZED_CAPS.includes(currentCAP)) {
+                alert("Errore: Zona di consegna non valida (" + currentCAP + "). Spesina non può procedere con l'invio.");
                 return;
             }
 
