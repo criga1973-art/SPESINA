@@ -1,62 +1,77 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Aggiungi Prodotto</title>
+    <title>Scanner Spesa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://unpkg.com"></script>
     <script src="https://jsdelivr.net"></script>
     <style>
-        body { font-family: sans-serif; padding: 20px; text-align: center; }
-        input { padding: 15px; width: 80%; font-size: 18px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ccc; }
-        button { padding: 15px 30px; font-size: 18px; background: #24b47e; color: white; border: none; border-radius: 8px; cursor: pointer; }
+        body { font-family: sans-serif; text-align: center; background: #f4f4f9; padding: 10px; margin: 0; }
+        h3 { color: #333; margin-top: 20px; }
+        #reader { width: 100%; max-width: 400px; margin: 20px auto; border-radius: 12px; overflow: hidden; border: 3px solid #24b47e; background: #000; }
+        input { padding: 15px; width: 90%; font-size: 18px; margin: 10px 0; border-radius: 8px; border: 2px solid #ddd; box-sizing: border-box; }
+        button { padding: 18px; width: 90%; font-size: 18px; background: #24b47e; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:active { background: #1c8c61; transform: scale(0.98); }
+        #stato { margin-top: 20px; font-size: 18px; font-weight: bold; padding: 10px; }
     </style>
 </head>
 <body>
-    <h2>Scanner EAN</h2>
-    <input type="text" id="ean" placeholder="Tocca qui e scansiona...">
-    <br>
-    <button onclick="salvaProdotto()">SALVA PRODOTTO</button>
+    <h3>📦 Scannerizza Prodotto</h3>
+    
+    <div id="reader"></div>
+    
+    <input type="text" id="ean" placeholder="Inquadra il codice a barre...">
+    <button onclick="salvaProdotto()">💾 SALVA NEL DATABASE</button>
     <p id="stato"></p>
 
     <script type="module">
-        // Qui il codice usa le tue chiavi Supabase
         import { createClient } from 'https://jsdelivr.net/+esm'
         
-        // RECUPERA LE TUE CHIAVI DA supabase_config.js O INCOLLALE QUI
-        const supabase = createClient('IL_TUO_URL_SUPABASE', 'LA_TUA_ANON_KEY');
+        const SUPABASE_URL = 'https://supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsZHBuaG1kamJid3dxd2pzZG9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4NDE5ODQsImV4cCI6MjA5MjQxNzk4NH0.yXcJBcZtiaDbPl2IyDUBK-Ndoyu0unmEzfY8xZrogzM';
+        
+        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        const html5QrCode = new Html5Qrcode("reader");
+        const config = { fps: 15, qrbox: { width: 280, height: 150 } };
+
+        html5QrCode.start({ facingMode: "environment" }, config, (decodedText) => {
+            document.getElementById('ean').value = decodedText;
+            if (navigator.vibrate) navigator.vibrate(80);
+        }).catch(err => {
+            document.getElementById('stato').innerText = "Accetta i permessi della fotocamera!";
+        });
 
         window.salvaProdotto = async () => {
             const ean = document.getElementById('ean').value;
             const stato = document.getElementById('stato');
-            if(!ean) return alert("Inserisci un codice!");
+            if(!ean) return alert("Prima scansiona un codice!");
 
-            stato.innerText = "🔍 Ricerca in corso...";
+            stato.innerHTML = "🔍 Ricerca info...";
+            try {
+                const res = await fetch(`https://openfoodfacts.org{ean}.json`);
+                const data = await res.json();
 
-            // 1. Cerca su Open Food Facts
-            const res = await fetch(`https://openfoodfacts.org{ean}.json`);
-            const data = await res.json();
-
-            if (data.status === 0) {
-                stato.innerText = "❌ Prodotto non trovato!";
-                return;
+                if (data.status === 1) {
+                    const p = data.product;
+                    const { error } = await supabase.from('prodotti').insert([{
+                        ean: ean,
+                        nome: p.product_name || "Senza nome",
+                        foto_url: p.image_front_url || "",
+                        dati: p.nutriments
+                    }]);
+                    
+                    if (error) throw error;
+                    stato.innerHTML = `<span style="color:green">✅ SALVATO:<br>${p.product_name}</span>`;
+                    document.getElementById('ean').value = "";
+                } else {
+                    stato.innerHTML = `<span style="color:red">❌ Prodotto non trovato</span>`;
+                }
+            } catch (err) {
+                stato.innerHTML = `<span style="color:red">⚠️ Errore: ${err.message}</span>`;
             }
-
-            const p = data.product;
-
-            // 2. Salva su Supabase
-            const { error } = await supabase.from('prodotti').insert([{
-                ean: ean,
-                nome: p.product_name,
-                foto_url: p.image_front_url,
-                dati: p.nutriments
-            }]);
-
-            if (error) {
-                stato.innerText = "⚠️ Errore salvataggio: " + error.message;
-            } else {
-                stato.innerText = "✅ SALVATO: " + p.product_name;
-                document.getElementById('ean').value = "";
-            }
-        }
+        };
     </script>
 </body>
 </html>
+
