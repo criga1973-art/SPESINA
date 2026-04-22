@@ -113,10 +113,10 @@
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             margin-bottom: 20px;
             border-radius: 0 0 24px 24px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.02);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.02);
             position: sticky;
             top: 73px;
             z-index: 90;
@@ -246,14 +246,14 @@
             padding: 16px;
             background: white;
             border-radius: 18px;
-            border: 1px solid rgba(0,0,0,0.04);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
             transition: transform 0.2s;
         }
 
         .info-section:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
         }
 
         .info-section h4 {
@@ -287,7 +287,7 @@
             font-size: 12px;
             font-weight: 700;
             margin-bottom: 20px;
-            border: 1px solid rgba(0,0,0,0.05);
+            border: 1px solid rgba(0, 0, 0, 0.05);
             letter-spacing: 1px;
         }
 
@@ -323,13 +323,25 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         @keyframes slideUp {
-            from { transform: translateY(30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         .cart-row {
@@ -337,7 +349,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px 0;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             font-size: 15px;
         }
 
@@ -353,7 +365,7 @@
             font-weight: 500;
             transition: border-color 0.2s;
         }
-        
+
         .select-box:focus {
             outline: none;
             border-color: var(--primary);
@@ -388,34 +400,305 @@
             font-weight: 700;
             transition: all 0.2s;
         }
-        
+
         .pay-option:hover {
             border-color: var(--primary);
             background: rgba(16, 185, 129, 0.05);
             transform: scale(1.02);
+        }
+
+        /* Footer Styles */
+        footer {
+            background: #ffffff;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 40px 20px;
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        @media (min-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1.5fr 1fr;
+                text-align: left;
+            }
+        }
+
+        .footer-section h4 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--dark);
+            margin-bottom: 20px;
+            font-weight: 800;
+        }
+
+        .footer-info {
+            font-size: 13px;
+            color: #64748b;
+            line-height: 1.8;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .footer-links a {
+            font-size: 14px;
+            color: #475569;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+            cursor: pointer;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.03);
+            font-size: 12px;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        /* Legal Content Style */
+        .legal-container {
+            background: white;
+            padding: 30px;
+            border-radius: 24px;
+            margin: 20px;
+            text-align: left;
+            line-height: 1.6;
+        }
+
+        .legal-container h2 {
+            color: var(--primary);
+            font-weight: 800;
+        }
+
+        .legal-container h3 {
+            margin-top: 25px;
+            font-weight: 700;
+        }
+
+        /* Form & Register Styles */
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 28px;
+            margin: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            text-align: left;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-top: 25px;
+            padding: 15px;
+            background: var(--gray);
+            border-radius: 12px;
+        }
+
+        .checkbox-group input {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            font-size: 13px;
+            color: #475569;
+            line-height: 1.4;
+            cursor: pointer;
+        }
+
+        .error-message {
+            color: var(--red);
+            font-size: 12px;
+            font-weight: 700;
+            margin-top: 6px;
+            display: none;
+        }
+
+        /* Autocomplete Results */
+        .autocomplete-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .autocomplete-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 5px;
+            border: 1px solid #f1f5f9;
+        }
+
+        .suggestion-item {
+            padding: 12px 15px;
+            font-size: 14px;
+            color: var(--dark);
+            cursor: pointer;
+            border-bottom: 1px solid #f8fafc;
+            transition: background 0.2s;
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .suggestion-item:hover {
+            background: #f1f5f9;
+            color: var(--primary);
+        }
+
+        /* Phone Prefix Style */
+        .phone-input-wrapper {
+            display: flex;
+            align-items: center;
+            background: #f8fafc;
+            border: 2px solid var(--gray-dark);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+
+        .phone-input-wrapper:focus-within {
+            border-color: var(--primary);
+            background: white;
+        }
+
+        .phone-prefix {
+            background: #e2e8f0;
+            padding: 0 15px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            font-weight: 800;
+            color: var(--dark);
+            font-size: 16px;
+            border-right: 1px solid #cbd5e1;
+            user-select: none;
+            height: 54px;
+            /* Altezza standard dei nostri box */
+        }
+
+        .phone-input-field {
+            border: none !important;
+            background: transparent !important;
+            flex-grow: 1;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--dark);
+            outline: none;
+            width: 100%;
+        }
+
+        /* Philosophy Page Styles */
+        .philosophy-hero {
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            padding: 40px 25px;
+            border-radius: 0 0 40px 40px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .philosophy-card {
+            background: white;
+            padding: 30px 25px;
+            border-radius: 28px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            border: 1px solid #f1f5f9;
+            transition: transform 0.2s;
+        }
+
+        .philosophy-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .philosophy-card h4 {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .philosophy-card p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-muted);
         }
     </style>
 </head>
 
 <body>
 
-    <div id="cart-trigger" onclick="openCart()">🛒 VEDI CARRELLO: <span id="cart-total-top">0.00€</span></div>
+    <div id="cart-trigger" onclick="openCart()">🛒 Articoli: <span id="cart-limit-display">0 di 7</span> | <span id="cart-total-top">0.00€</span></div>
 
     <header>
-        <h2 style="margin:0; color:var(--primary)">Spesina 🛒</h2>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h2 style="margin:0; color:var(--primary); cursor:pointer;" onclick="goHome()">Spesina 🛒</h2>
+            <button onclick="showPhilosophy()" style="background:var(--primary); color:white; border:none; border-radius:30px; padding:8px 16px; font-size:13px; font-weight:800; cursor:pointer; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);">PERCHÉ SPESINA? ➔</button>
+        </div>
         <div class="top-nav">
             <a onclick="showHowItWorks()">Come funziona</a>
             <a onclick="showAddress()">📍 Dove consegniamo</a>
-            <a onclick="showAddress()">🔑 Accedi</a>
+            <a onclick="showRegister()">🔑 Accedi</a>
         </div>
     </header>
 
     <div id="home-view">
         <div style="padding: 15px 20px 5px 20px;">
-            <input type="text" id="search-bar" class="select-box" placeholder="🔍 Cerca prodotti (es. Acqua...)" oninput="handleSearch()" style="border-radius:20px; padding:15px 20px; font-size:16px; border: 2px solid var(--gray-dark); width: 100%; box-sizing:border-box; box-shadow:0 4px 10px rgba(0,0,0,0.03);">
+            <input type="text" id="search-bar" class="select-box" placeholder="🔍 Cerca prodotti (es. Acqua...)"
+                oninput="handleSearch()"
+                style="border-radius:20px; padding:15px 20px; font-size:16px; border: 2px solid var(--gray-dark); width: 100%; box-sizing:border-box; box-shadow:0 4px 10px rgba(0,0,0,0.03);">
         </div>
-        <div id="home-categories-title" style="padding:15px 20px 0 20px; font-weight:bold; color:var(--dark); font-size:18px;">Esplora Categorie</div>
-        <div class="catalog" id="categories-catalog" style="display:flex; flex-wrap:wrap; justify-content:center;"></div>
+        <div id="home-categories-title"
+            style="padding:15px 20px 0 20px; font-weight:bold; color:var(--dark); font-size:18px;">Esplora Categorie
+        </div>
+        <div class="catalog" id="categories-catalog" style="display:flex; flex-wrap:wrap; justify-content:center;">
+        </div>
         <div class="catalog" id="search-catalog" style="display:none;"></div>
     </div>
 
@@ -428,10 +711,106 @@
         <div class="catalog" id="sub-catalog"></div>
     </div>
 
+    <div id="philosophy-view" style="display: none;">
+        <div class="sub-header">
+            <button class="btn-back" onclick="handleBack()">⬅ Indietro</button>
+            <h3 style="margin: 0; flex-grow: 1; text-align: center;">Filosofia</h3>
+            <div style="width: 80px;"></div>
+        </div>
+        
+        <div class="philosophy-hero">
+            <h2 style="font-size:26px; font-weight:800; color:var(--dark); line-height:1.2;">Spesina: La tua spesa intelligente a Mestre.</h2>
+        </div>
+
+        <div style="padding:0 20px 40px 20px;">
+            <div class="philosophy-card">
+                <span class="philosophy-icon">🎟️</span>
+                <h4>Abbonamento Mensile</h4>
+                <p>Nessun costo di consegna, mai. Con 19,99€ al mese ordini quante volte vuoi. Ti basta un solo ordine a settimana per iniziare a risparmiare.</p>
+            </div>
+
+            <div class="philosophy-card">
+                <span class="philosophy-icon">⚡</span>
+                <h4>Il limite dei 7 pezzi</h4>
+                <p>Perché solo 7 pezzi? Perché vogliamo essere fulminei. Meno peso per i nostri rider significa più velocità per te e meno traffico per Mestre.</p>
+            </div>
+
+            <div class="philosophy-card">
+                <span class="philosophy-icon">💎</span>
+                <h4>Qualità Garantita</h4>
+                <p>Selezioniamo solo il meglio, dalla frutta fresca ai prodotti locali, pronti per essere consegnati a casa tua.</p>
+            </div>
+
+            <button class="btn-confirm" onclick="goHome();" style="margin-top:20px;">INIZIA LA SPESA</button>
+        </div>
+    </div>
+
+    <div id="legal-view" style="display: none;">
+        <div class="sub-header">
+            <button class="btn-back" onclick="handleBack()">⬅ Indietro</button>
+            <h3 id="legal-title" style="margin: 0; flex-grow: 1; text-align: center;">Informazioni</h3>
+            <div style="width: 80px;"></div>
+        </div>
+        <div class="legal-container" id="legal-content"></div>
+    </div>
+
+    <div id="register-view" style="display: none;">
+        <div class="sub-header">
+            <button class="btn-back" onclick="handleBack()">⬅ Indietro</button>
+            <h3 style="margin: 0; flex-grow: 1; text-align: center;">Registrazione</h3>
+            <div style="width: 80px;"></div>
+        </div>
+        <div class="form-container">
+            <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px; line-height:1.4; border-bottom: 1px solid #eee; padding-bottom: 15px;">L'accesso al servizio Spesina comporta la sottoscrizione di un <b>abbonamento mensile di 19,99€</b> per consegne illimitate nel territorio di Mestre (max 7 articoli per ordine).</p>
+            <form id="register-form" onsubmit="handleRegister(event)">
+                <div class="input-group">
+                    <label>Nome e Cognome</label>
+                    <input type="text" id="reg-name" class="select-box" placeholder="Mario Rossi" required>
+                </div>
+                <div class="input-group">
+                    <label>Numero di Cellulare</label>
+                    <div class="phone-input-wrapper">
+                        <span class="phone-prefix">+39</span>
+                        <input type="tel" id="reg-phone" class="phone-input-field" placeholder="3401234567" required
+                            oninput="validateRegisterPhone()">
+                    </div>
+                    <div id="reg-phone-error" class="error-message">Inserisci un numero di cellulare valido (9 o 10
+                        cifre).</div>
+                </div>
+                <div class="input-group">
+                    <label>Indirizzo di Consegna</label>
+                    <div class="autocomplete-container">
+                        <input type="text" id="reg-address" class="select-box" placeholder="Via Mestrina, 10" required
+                            oninput="handleAddressInput(this.value)">
+                        <div id="address-suggestions" class="autocomplete-results"></div>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>CAP (Solo Mestre)</label>
+                    <input type="number" id="reg-cap" class="select-box" placeholder="Esempio: 30171" required
+                        oninput="validateRegisterCAP()">
+                    <div id="reg-cap-error" class="error-message">Ci dispiace, al momento Spesina consegna solo a
+                        Mestre.</div>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="reg-privacy" required>
+                    <label for="reg-privacy">Accetto la <a onclick="showLegalPage('privacy')"
+                            style="color:var(--primary); font-weight:700;">Privacy Policy</a> di Spesina.</label>
+                </div>
+
+                <button type="submit" class="btn-confirm" id="btn-submit-reg">COMPLETA REGISTRAZIONE</button>
+            </form>
+        </div>
+    </div>
+
     <!-- Modal Carrello -->
     <div class="modal" id="modalCart">
         <div class="modal-content">
             <h3>🛒 Il tuo Carrello</h3>
+            <div id="first-order-msg" style="display:none; background:var(--primary-light); border:1px solid var(--primary); color:var(--dark); padding:15px; border-radius:12px; font-size:13px; font-weight:700; margin-bottom:15px; border-left: 5px solid var(--primary);">
+                ℹ️ Stai effettuando la prima spesa del mese: l'abbonamento per l'accesso illimitato a Spesina viene aggiunto a questo ordine.
+            </div>
             <div id="cart-items-list"></div>
 
             <div style="margin-top:20px; text-align:left; border-top:1px solid #eee; padding-top:10px;">
@@ -448,8 +827,8 @@
                 <select id="select-ora" class="select-box" style="margin-top:10px;"></select>
             </div>
 
-            <h3 id="final-price" style="margin-top:20px; border-top:2px solid #eee; padding-top:10px;">Totale: 0.00€
-            </h3>
+            <h3 id="final-price" style="margin-top:20px; border-top:2px solid #eee; padding-top:10px;">Totale: 0.00€</h3>
+            <p id="weight-disclaimer" style="font-size:12px; color:var(--text-muted); margin-bottom:15px; font-style:italic; line-height:1.4; display:none;">* I prodotti a peso (frutta/verdura) possono subire leggere variazioni di prezzo in base al peso effettivo al momento della preparazione.</p>
             <button class="btn-confirm" onclick="showPay()">PROSEGUI</button>
             <button onclick="closeModals()"
                 style="border:none;background:none;color:gray;margin-top:10px;cursor:pointer">Chiudi</button>
@@ -470,21 +849,42 @@
     <div class="modal" id="modalAddress">
         <div class="modal-content">
             <h3 style="margin-top:0;">📍 Dove consegniamo?</h3>
-            <button class="btn-confirm" style="background:var(--dark); margin-top:10px; box-shadow:none; padding:15px; border-radius:12px;" onclick="useCurrentLocation()">📡 Usa la mia posizione attuale</button>
-            <div style="margin: 20px 0; font-weight:600; color:var(--text-muted); font-size:14px;">oppure</div>
-            <input type="text" id="address-input" class="select-box" placeholder="Inserisci il tuo indirizzo..." oninput="checkAddressInput()">
-            
-            <div style="margin-top:30px; font-size:14px; color:var(--text-muted); font-weight:600;">Hai già un account?</div>
-            <button id="btn-login" class="btn-confirm" style="opacity:0.5; cursor:not-allowed; margin-top:10px;" disabled onclick="closeModals(); alert('Login completato con successo (Demo)!')">🔐 Accedi</button>
-            <button onclick="closeModals()" style="border:none;background:none;color:var(--text-muted);margin-top:20px;cursor:pointer;font-weight:700;">Chiudi</button>
+            <p style="font-size:14px; color:var(--text-muted); margin-bottom:20px;">Inserisci il tuo CAP per verificare
+                se la tua zona a Mestre è coperta dal servizio.</p>
+
+            <select id="cap-check" class="select-box" onchange="checkQuickArea()">
+                <option value="" disabled selected>Seleziona il CAP...</option>
+                <option value="30171">30171 (Mestre)</option>
+                <option value="30172">30172 (Mestre)</option>
+                <option value="30173">30173 (Mestre)</option>
+                <option value="30174">30174 (Mestre)</option>
+                <option value="30175">30175 (Mestre)</option>
+            </select>
+
+            <div id="quick-check-msg" style="margin-top:20px; display:none;">
+                <div
+                    style="background:rgba(16, 185, 129, 0.1); color:var(--primary-dark); padding:15px; border-radius:12px; font-weight:700; font-size:14px;">
+                    ✅ Ottime notizie! Consegniamo nella tua zona.
+                </div>
+                <button class="btn-confirm" style="margin-top:15px;" onclick="closeModals(); showRegister()">REGISTRATI
+                    PER ORDINARE</button>
+            </div>
+
+            <button onclick="closeModals()"
+                style="border:none;background:none;color:var(--text-muted);margin-top:20px;cursor:pointer;font-weight:700;">Chiudi</button>
         </div>
     </div>
 
     <div class="modal" id="modalHowItWorks">
         <div class="modal-content" style="text-align:center;">
             <h3 style="margin-top:0; font-size:24px;">ℹ️ Come funziona</h3>
-            <p style="font-size:18px; line-height:1.6; color:var(--text-muted); font-weight:500; margin: 20px 0;">Fai la spesa ora.<br>Scegli data e ora e dopo il CLICK...<br><span style="color:var(--primary); font-weight:800; font-size:22px; display:inline-block; margin-top:10px;">Ci pensiamo noi! 🚀</span></p>
-            <button onclick="closeModals()" style="background:var(--primary); color:white; border:none; border-radius:12px; padding:15px 30px; font-size:16px; font-weight:bold; cursor:pointer; margin-top:15px; width:100%; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);">Capito 👍</button>
+            <p style="font-size:18px; line-height:1.6; color:var(--text-muted); font-weight:500; margin: 20px 0;">Fai la
+                spesa ora.<br>Scegli data e ora e dopo il CLICK...<br><span
+                    style="color:var(--primary); font-weight:800; font-size:22px; display:inline-block; margin-top:10px;">Ci
+                    pensiamo noi! 🚀</span></p>
+            <button onclick="closeModals()"
+                style="background:var(--primary); color:white; border:none; border-radius:12px; padding:15px 30px; font-size:16px; font-weight:bold; cursor:pointer; margin-top:15px; width:100%; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);">Capito
+                👍</button>
         </div>
     </div>
 
@@ -493,28 +893,39 @@
         <div class="modal-content" style="text-align:center; padding: 40px 25px;">
             <div style="font-size:70px; margin-bottom:15px; animation: bounce 1s ease;">🎉</div>
             <h3 style="margin-top:0; color:var(--primary); font-size:26px;">Ordine Confermato!</h3>
-            <p style="font-size:16px; line-height:1.5; color:var(--text-muted); font-weight:500; margin:20px 0;" id="success-desc">Prepareremo la tua spesa con cura.</p>
-            <button class="btn-confirm" onclick="closeModals(); window.scrollTo(0,0);" style="margin-top:20px;">Torna alla Home</button>
+            <p style="font-size:16px; line-height:1.5; color:var(--text-muted); font-weight:500; margin:20px 0;"
+                id="success-desc">Prepareremo la tua spesa con cura.</p>
+            <button class="btn-confirm" onclick="closeModals(); window.scrollTo(0,0);" style="margin-top:20px;">Torna
+                alla Home</button>
         </div>
     </div>
 
     <!-- Modal Info Prodotto (Folder) -->
     <div class="modal" id="modalInfo">
-        <div class="modal-content" style="max-width: 420px; width: 95%; padding: 0; overflow: hidden; border-radius: 24px; border: none; max-height: 90vh;">
+        <div class="modal-content"
+            style="max-width: 420px; width: 95%; padding: 0; overflow: hidden; border-radius: 24px; border: none; max-height: 90vh;">
             <!-- Folder Header -->
-            <div style="background: linear-gradient(135deg, #1e293b, #0f172a); color: white; padding: 25px 25px; text-align: left; position: relative;">
-                <button onclick="closeModals()" style="position: absolute; top: 12px; left: 12px; background: rgba(255,255,255,0.1); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); z-index: 10;">✕</button>
-                <div style="position: absolute; top: 15px; right: 20px; background: rgba(255,255,255,0.1); padding: 5px 12px; border-radius: 10px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; backdrop-filter: blur(5px);">Scheda Tecnica</div>
-                <h3 id="info-p-name" style="margin: 15px 0 5px 0; font-size: 20px; font-weight: 800; line-height: 1.2;">Nome Prodotto</h3>
-                <div id="info-p-ean" class="ean-badge" style="background: rgba(255,255,255,0.15); color: white; border: none; margin-bottom: 0; padding: 4px 10px; font-size: 10px;">EAN: 0000000000000</div>
+            <div
+                style="background: linear-gradient(135deg, #1e293b, #0f172a); color: white; padding: 25px 25px; text-align: left; position: relative;">
+                <button onclick="closeModals()"
+                    style="position: absolute; top: 12px; left: 12px; background: rgba(255,255,255,0.1); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); z-index: 10;">✕</button>
+                <div
+                    style="position: absolute; top: 15px; right: 20px; background: rgba(255,255,255,0.1); padding: 5px 12px; border-radius: 10px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; backdrop-filter: blur(5px);">
+                    Scheda Tecnica</div>
+                <h3 id="info-p-name" style="margin: 15px 0 5px 0; font-size: 20px; font-weight: 800; line-height: 1.2;">
+                    Nome Prodotto</h3>
+                <div id="info-p-ean" class="ean-badge"
+                    style="background: rgba(255,255,255,0.15); color: white; border: none; margin-bottom: 0; padding: 4px 10px; font-size: 10px;">
+                    EAN: 0000000000000</div>
             </div>
-            
-            <div id="info-content-scroll" style="text-align: left; padding: 20px 25px; background: #fdfdfd; max-height: 45vh; overflow-y: auto;">
+
+            <div id="info-content-scroll"
+                style="text-align: left; padding: 20px 25px; background: #fdfdfd; max-height: 45vh; overflow-y: auto;">
                 <div class="info-section" style="border-left: 5px solid #10b981;">
                     <h4><span style="font-size: 18px;">📝</span> Descrizione e Ingredienti</h4>
                     <p id="info-desc" class="info-text">Dettagli del prodotto e composizione completa...</p>
                 </div>
-                
+
                 <div class="info-section" style="border-left: 5px solid #ef4444;">
                     <h4><span style="font-size: 18px;">⚠️</span> Allergeni</h4>
                     <p id="info-allergens" class="info-text">Informazioni importanti sulla sicurezza alimentare...</p>
@@ -536,20 +947,58 @@
             </div>
 
             <div style="padding: 15px 25px 20px 25px; background: white; border-top: 1px solid #f1f5f9;">
-                <button class="btn-confirm" onclick="closeModals()" style="margin-top: 0; padding: 15px; border-radius: 12px;">CAPITO, GRAZIE</button>
+                <button class="btn-confirm" onclick="closeModals()"
+                    style="margin-top: 0; padding: 15px; border-radius: 12px;">CAPITO, GRAZIE</button>
             </div>
         </div>
     </div>
 
+    <footer id="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Informazioni Legali</h4>
+                <div class="footer-info" id="company-data">
+                    <!-- Popolato da JS -->
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Link Obbligatori</h4>
+                <div class="footer-links">
+                    <a onclick="showPhilosophy()"><b>Perché Spesina?</b></a>
+                    <a onclick="showLegalPage('privacy')">Privacy Policy</a>
+                    <a onclick="showLegalPage('cookie')">Cookie Policy</a>
+                    <a onclick="showLegalPage('termini')">Termini e Condizioni</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; <span id="footer-year"></span> Spesina - Tutti i diritti riservati.
+        </div>
+    </footer>
+
     <script>
+        const SITE_CONFIG = {
+            ragioneSociale: "SPESINA S.R.L.",
+            indirizzo: "Via Mestrina 1, 30171 Mestre (VE)",
+            partitaIva: "01234567890",
+            rea: "VE-123456",
+            capitaleSociale: "10.000,00 € i.v.",
+            emailPec: "spesina@legalmail.it",
+            annoCorrente: new Date().getFullYear()
+        };
+
         const SLOT_CONSEGNA = {
             "09:00-10:00": 5, "10:00-11:00": 3, "11:00-12:00": 0,
             "12:00-13:00": 2, "13:00-14:00": 5, "14:00-15:00": 5,
             "15:00-16:00": 1, "16:00-17:00": 4, "17:00-18:00": 5
         };
 
+        const AUTHORIZED_CAPS = ["30171", "30172", "30173", "30174", "30175"];
+        let userAddress = localStorage.getItem('spesina_address') || "";
+        let userCAP = localStorage.getItem('spesina_cap') || "";
+
         // Sistema di aiuto per il debug: se c'è un errore, l'app lo dirà chiaramente
-        window.onerror = function(msg, url, line) {
+        window.onerror = function (msg, url, line) {
             alert("⚠️ Errore Tecnico:\n" + msg + "\nLinea: " + line);
             return false;
         };
@@ -866,18 +1315,18 @@
             document.getElementById('home-view').style.display = 'none';
             document.getElementById('subcategory-view').style.display = 'block';
             document.getElementById('subcategory-title').innerText = catObj ? catObj.n : "Prodotti";
-            
+
             if (catId === "pasta" || catId === "bevande" || catId === "condimenti" || catId === "igiene-p" || catId === "freschi" || catId === "colazione" || catId === "dispensa") {
                 renderSubFolders(catId);
             } else {
                 renderProducts(catId);
             }
-            window.scrollTo(0,0);
+            window.scrollTo(0, 0);
         }
 
         function renderSubFolders(catId) {
             let subcatData = [];
-            
+
             if (catId === "pasta") {
                 subcatData = [
                     { id: "Barilla", img: "img/BARILLA.jpg", icon: "🍝" },
@@ -941,7 +1390,7 @@
                 // Trucco: proviamo a caricare l'immagine, se fallisce (onerror) mostriamo l'emoji
                 let imgHtml = b.img ? `<img style="width:100%; height:80px; object-fit:contain; padding:10px; display:none;" src="${b.img}" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" alt="${b.id}">` : "";
                 let emojiHtml = `<div class="product-emoji">${b.icon}</div>`;
-                
+
                 html += `<div class="card" style="cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:160px;" onclick="openBrand('${b.id}')">
                             ${imgHtml}
                             ${emojiHtml}
@@ -972,7 +1421,16 @@
         }
 
         function handleBack() {
-            if (currentBrand) {
+            if (currentLegalPage && currentRegisterPage) {
+                // Se eravamo in registrazione e abbiamo aperto una pagina legale, torniamo alla registrazione
+                currentLegalPage = null;
+                document.getElementById('legal-view').style.display = 'none';
+                document.getElementById('register-view').style.display = 'block';
+            } else if (currentRegisterPage) {
+                goHome();
+            } else if (currentLegalPage) {
+                goHome();
+            } else if (currentBrand) {
                 currentBrand = null;
                 renderSubFolders(currentCat);
             } else {
@@ -983,11 +1441,146 @@
         function goHome() {
             currentCat = null;
             currentBrand = null;
+            currentLegalPage = null;
+            currentRegisterPage = false;
             document.getElementById('subcategory-view').style.display = 'none';
+            document.getElementById('legal-view').style.display = 'none';
+            document.getElementById('register-view').style.display = 'none';
             document.getElementById('home-view').style.display = 'block';
+            document.getElementById('main-footer').style.display = 'block';
             document.getElementById('search-bar').value = '';
             handleSearch();
-            window.scrollTo(0,0);
+            window.scrollTo(0, 0);
+        }
+
+        let currentLegalPage = null;
+
+        function showLegalPage(page) {
+            currentLegalPage = page;
+            document.getElementById('home-view').style.display = 'none';
+            document.getElementById('subcategory-view').style.display = 'none';
+            document.getElementById('register-view').style.display = 'none'; // Nasconde la registrazione se attiva
+            document.getElementById('main-footer').style.display = 'none';
+            document.getElementById('legal-view').style.display = 'block';
+
+            const content = document.getElementById('legal-content');
+            const title = document.getElementById('legal-title');
+
+            if (page === 'privacy') {
+                title.innerText = "Privacy Policy";
+                content.innerHTML = `
+                    <h2 style="color:var(--primary); font-weight:800;">Informativa Privacy</h2>
+                    <p style="margin-bottom:20px; font-size:14px; color:var(--text-muted);">Ai sensi del Regolamento UE 2016/679 (GDPR)</p>
+                    
+                    <h3 style="margin-top:25px; font-weight:700;">1. Titolare del Trattamento</h3>
+                    <p>Il Titolare del trattamento è <strong>${SITE_CONFIG.ragioneSociale}</strong>, con sede legale in ${SITE_CONFIG.indirizzo}, P.IVA ${SITE_CONFIG.partitaIva}, Email: ${SITE_CONFIG.emailPec}.</p>
+                    
+                    <h3 style="margin-top:25px; font-weight:700;">2. Finalità del Trattamento</h3>
+                    <p>I dati forniti (nome, cognome, cellulare, indirizzo) verranno utilizzati esclusivamente per:</p>
+                    <ul style="padding-left:20px; margin-top:10px; line-height:1.8;">
+                        <li>Gestire la registrazione dell'account.</li>
+                        <li>Elaborare e consegnare gli ordini a domicilio a Mestre e zone limitrofe.</li>
+                        <li>Inviare comunicazioni di servizio relative all'ordine (tramite SMS o chiamata al numero fornito).</li>
+                        <li>Adempiere agli obblighi di legge (fiscali e contabili).</li>
+                    </ul>
+
+                    <h3 style="margin-top:25px; font-weight:700;">3. Base Giuridica</h3>
+                    <p>Il trattamento è necessario per l'esecuzione di un contratto (l'acquisto della spesa) e per l'adempimento di obblighi di legge.</p>
+
+                    <h3 style="margin-top:25px; font-weight:700;">4. Destinatari dei Dati</h3>
+                    <p>I dati potranno essere comunicati a soggetti terzi strettamente necessari per il servizio (es. corrieri/fattorini per la consegna, gestori dei pagamenti, consulente fiscale). I dati non saranno venduti a terzi.</p>
+
+                    <h3 style="margin-top:25px; font-weight:700;">5. Periodo di Conservazione</h3>
+                    <p>I dati saranno conservati per il tempo necessario a gestire il rapporto commerciale e secondo i termini previsti dalla legge (solitamente 10 anni per i dati fiscali).</p>
+
+                    <h3 style="margin-top:25px; font-weight:700;">6. Diritti dell'Interessato</h3>
+                    <p>L'utente ha il diritto in qualunque momento di richiedere l'accesso, la rettifica, la cancellazione dei dati o la limitazione del trattamento scrivendo all'indirizzo email sopra indicato.</p>
+                `;
+            } else if (page === 'cookie') {
+                title.innerText = "Cookie Policy";
+                content.innerHTML = `
+                    <h2 style="color:var(--primary); font-weight:800;">Cookie Policy</h2>
+                    <p style="margin-bottom:20px; font-size:14px; color:var(--text-muted);">Informativa sull'utilizzo delle tecnologie di tracciamento</p>
+                    
+                    <h3 style="margin-top:25px; font-weight:700;">1. Cosa sono i Cookie</h3>
+                    <p>I cookie sono piccoli file di testo che i siti visitati dall'utente inviano al suo terminale, dove vengono memorizzati per essere poi ritrasmessi agli stessi siti alla visita successiva. In questa app utilizziamo anche il "Local Storage", una tecnologia simile che permette di salvare i dati (come il tuo carrello) direttamente nel tuo browser.</p>
+                    
+                    <h3 style="margin-top:25px; font-weight:700;">2. Cookie Tecnici e Funzionali (Necessari)</h3>
+                    <p>Questi cookie sono indispensabili per il corretto funzionamento di Spesina:</p>
+                    <ul style="padding-left:20px; margin-top:10px; line-height:1.8;">
+                        <li><strong>Carrello e Sessione:</strong> Utilizziamo il Local Storage per ricordare i prodotti nel tuo carrello e i tuoi dati di registrazione durante la sessione.</li>
+                        <li><strong>Sicurezza:</strong> Strumenti tecnici per prevenire frodi e garantire la sicurezza della navigazione.</li>
+                    </ul>
+
+                    <h3 style="margin-top:25px; font-weight:700;">3. Servizi di Terze Parti</h3>
+                    <p>L'app interagisce con alcuni servizi esterni per fornire funzionalità specifiche (es. trovare l'indirizzo a Mestre). L'uso di questi servizi è limitato alla fornitura della funzionalità richiesta e <strong>non</strong> per finalità di profilazione dell'utente:</p>
+                    <ul style="padding-left:20px; margin-top:10px; line-height:1.8;">
+                        <li><strong>Photon / OpenStreetMap:</strong> Per l'auto-completamento dell'indirizzo.</li>
+                        <li><strong>Google Fonts:</strong> Per la visualizzazione dei caratteri tipografici.</li>
+                        <li><strong>Formspree:</strong> Per l'invio sicuro del riepilogo dell'ordine.</li>
+                    </ul>
+
+                    <h3 style="margin-top:25px; font-weight:700;">4. Gestione dei Cookie</h3>
+                    <p>L'utente può disabilitare i cookie o pulire il Local Storage dalle impostazioni del proprio browser. Nota: disabilitando queste funzioni, il carrello della spesa non sarà più in grado di funzionare correttamente.</p>
+
+                    <h3 style="margin-top:25px; font-weight:700;">5. Cookie di Profilazione</h3>
+                    <p><strong>Spesina non utilizza cookie di profilazione o di marketing</strong> per tracciare il comportamento dell'utente a fini pubblicitari.</p>
+                `;
+            } else if (page === 'termini') {
+                title.innerText = "Termini e Condizioni";
+                content.innerHTML = `
+                    <h2 style="color:var(--primary); font-weight:800;">Termini e Condizioni</h2>
+                    <p style="margin-bottom:20px; font-size:14px; color:var(--text-muted);">Condizioni Generali di Vendita del servizio Spesina</p>
+                    
+                    <h3 style="margin-top:25px; font-weight:700;">1. Oggetto del Servizio</h3>
+                    <p>Spesina offre un servizio di spesa online con consegna a domicilio. Il servizio è attivo esclusivamente nel comune di Mestre (VE) nei CAP autorizzati (30171-30175).</p>
+                    
+                    <h3 style="margin-top:25px; font-weight:700;">2. Registrazione e Dati Utente</h3>
+                    <p>Per effettuare un ordine è necessario registrarsi fornendo dati accurati. L'utente è responsabile della veridicità dell'indirizzo di consegna e del numero di cellulare forniti, essenziali per il completamento del servizio a Mestre.</p>
+                    
+                    <h3 style="margin-top:25px; font-weight:700;">3. Ordini e Disponibilità</h3>
+                    <p>Gli ordini sono vincolati alla disponibilità dei prodotti e agli slot orari selezionati. In caso di variazioni o prodotti mancanti, Spesina contatterà l'utente tramite SMS o chiamata al numero registrato.</p>
+
+                    <h3 style="margin-top:25px; font-weight:700;">4. Prodotti del reparto Ortofrutta</h3>
+                    <p>Per i prodotti del reparto ortofrutta, la vendita avviene a pezzo o confezione. Il peso indicato è puramente indicativo e può oscillare all'interno del range dichiarato nella scheda prodotto. L'acquisto si intende perfezionato per l'unità (pezzo/confezione) e non per il peso esatto.</p>
+
+                    <h3 style="margin-top:25px; font-weight:700;">5. Modalità di Pagamento</h3>
+                    <p>Il pagamento avviene esclusivamente alla consegna per garantire la massima trasparenza. Accettiamo:</p>
+                    <ul style="padding-left:20px; margin-top:10px; line-height:1.8;">
+                        <li>Contanti direttamente al fattorino.</li>
+                        <li>Bancomat o Carta di Credito tramite POS portatile.</li>
+                    </ul>
+
+                    <h3 style="margin-top:25px; font-weight:700;">6. Diritto di Recesso</h3>
+                    <p>Ai sensi dell'art. 59 del Codice del Consumo, il diritto di recesso è escluso per la fornitura di beni alimentari deperibili che rischiano di deteriorarsi o scadere rapidamente (freschi, frutta, verdura, latticini).</p>
+
+                    <h3 style="margin-top:25px; font-weight:700;">7. Responsabilità</h3>
+                    <p>L'utente si impegna a essere presente all'indirizzo di Mestre indicato durante la fascia oraria di consegna scelta. Spesina non è responsabile per mancate consegne dovute all'assenza del destinatario o a errori nell'indirizzo fornito.</p>
+
+                    <h3 style="margin-top:25px; font-weight:700;">8. Abbonamento e Durata</h3>
+                    <p>L'accesso al servizio di consegna Spesina è subordinato alla sottoscrizione di un <strong>abbonamento mensile di 19,99€</strong>. Il servizio ha validità mensile e <strong>scade l'ultimo giorno del mese solare</strong> di sottoscrizione (es. 30 o 31 del mese corrente).</p>
+
+                    <h3 style="margin-top:25px; font-weight:700;">9. Utilizzo del Servizio e Limite Giornaliero</h3>
+                    <p>L'abbonamento Spesina permette di effettuare fino a un <strong>massimo di 3 ordini al giorno</strong>, previa disponibilità delle fasce orarie di consegna. Ogni singola consegna è inoltre limitata a un massimo di 7 articoli totali per garantire l'efficienza logistica nel territorio di Mestre.</p>
+
+                    <h3 style="margin-top:25px; font-weight:700;">10. Termine del Servizio</h3>
+                    <p>Poiché il servizio non prevede il rinnovo automatico alla scadenza, non è necessario inviare alcuna comunicazione di disdetta. L'abbonamento cesserà la sua validità automaticamente al termine del mese solare. L'utente potrà decidere in totale libertà se sottoscrivere un nuovo abbonamento per il mese successivo. Il diritto di recesso entro 14 giorni dall'attivazione rimane garantito, a condizione che non sia già stata usufruita la prima consegna del mese.</p>
+                `;
+            }
+            window.scrollTo(0, 0);
+        }
+
+        function renderFooter() {
+            if (typeof SITE_CONFIG !== 'undefined') {
+                document.getElementById('company-data').innerHTML = `
+                    <b>${SITE_CONFIG.ragioneSociale}</b><br>
+                    ${SITE_CONFIG.indirizzo}<br>
+                    P.IVA: ${SITE_CONFIG.partitaIva} | REA: ${SITE_CONFIG.rea}<br>
+                    Cap. Soc: ${SITE_CONFIG.capitaleSociale}<br>
+                    PEC: ${SITE_CONFIG.emailPec}
+                `;
+                document.getElementById('footer-year').innerText = SITE_CONFIG.annoCorrente;
+            }
         }
 
         function handleSearch() {
@@ -1000,7 +1593,7 @@
                 catContainer.style.display = 'none';
                 searchContainer.style.display = 'grid';
                 title.innerText = "Risultati Ricerca";
-                
+
                 let items = PRODS.filter(p => p.n.toLowerCase().includes(q) || p.c.toLowerCase().includes(q));
                 let html = "";
                 if (items.length === 0) {
@@ -1037,10 +1630,10 @@
         function showInfo(id) {
             let p = PRODS.find(x => x.id === id);
             if (!p) return;
-            
+
             document.getElementById('info-p-name').innerText = p.n;
             document.getElementById('info-p-ean').innerText = "EAN: " + (p.ean || "Non disponibile");
-            
+
             const info = p.info || {
                 d: "Informazioni dettagliate in arrivo...",
                 a: "Consultare l'etichetta fisica per allergeni.",
@@ -1070,6 +1663,19 @@
         }
 
         function addToCart(id) {
+            // Controllo preventivo abbonamento e limiti
+            if (!checkSubscriptionStatus()) return;
+            if (getDailyOrderCount() >= 3) {
+                alert("Spiacenti, hai già effettuato i 3 ordini massimi consentiti per oggi.");
+                return;
+            }
+
+            const totalItems = cart.reduce((acc, item) => acc + item.q, 0);
+            if (totalItems >= 7) {
+                alert("⚠️ Limite Raggiunto: Ogni consegna a Mestre è limitata a un massimo di 7 articoli per garantire l'efficienza logistica.");
+                return;
+            }
+
             let p = PRODS.find(x => x.id === id);
             let exists = cart.find(x => x.id === id);
             if (exists) exists.q++; else cart.push({ ...p, q: 1 });
@@ -1079,61 +1685,302 @@
         function updateUI() {
             let total = 0;
             let listHtml = "";
+            let hasOrtofrutta = false;
             cart.forEach(i => {
                 total += (i.p * i.q);
+                if (i.c === 'orto') hasOrtofrutta = true;
                 listHtml += `<div class="cart-row"><span><b>${i.q}x</b> ${i.n}</span><span>${(i.p * i.q).toFixed(2)}€ <button onclick="remove(${i.id})" style="background:var(--red);color:white;border:none;border-radius:50%;width:20px;height:20px;cursor:pointer;">✕</button></span></div>`;
             });
             document.getElementById('cart-trigger').style.display = cart.length > 0 ? 'block' : 'none';
             document.getElementById('cart-total-top').innerText = total.toFixed(2) + "€";
             document.getElementById('final-price').innerText = "Totale: " + total.toFixed(2) + "€";
+            
+            // Check primo ordine del mese
+            const history = JSON.parse(localStorage.getItem('spesina_history') || "[]");
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            
+            const ordersThisMonth = history.filter(o => {
+                const oDate = new Date(o.date);
+                return o.id === (userData ? userData.id : null) && oDate.getMonth() === currentMonth && oDate.getFullYear() === currentYear;
+            }).length;
+
+            const firstOrderMsg = document.getElementById('first-order-msg');
+            if (firstOrderMsg) {
+                firstOrderMsg.style.display = (ordersThisMonth === 0 && cart.length > 0) ? 'block' : 'none';
+            }
+
+            // Aggiornamento contatore dinamico X di 7
+            const count = cart.reduce((acc, item) => acc + item.q, 0);
+            const limitDisplay = document.getElementById('cart-limit-display');
+            if (limitDisplay) {
+                limitDisplay.innerText = `${count} di 7`;
+                limitDisplay.style.color = count >= 7 ? 'var(--red)' : 'inherit';
+            }
+
+            const weightDisclaimer = document.getElementById('weight-disclaimer');
+            if (weightDisclaimer) {
+                weightDisclaimer.style.display = hasOrtofrutta ? 'block' : 'none';
+            }
+
+            // Avviso limite articoli
+            if (count >= 7) {
+                document.getElementById('final-price').innerHTML += `<br><span style="color:var(--red); font-size:12px; display:block; margin-top:5px;">⚠️ Limite di 7 articoli raggiunto</span>`;
+            }
+
             document.getElementById('cart-items-list').innerHTML = listHtml;
             localStorage.setItem('spesina_cart', JSON.stringify(cart));
         }
 
         function remove(id) { cart = cart.filter(x => x.id !== id); updateUI(); if (cart.length === 0) closeModals(); }
-        function openCart() { caricaOrari(); document.getElementById('modalCart').style.display = 'flex'; }
-        function showAddress() { document.getElementById('modalAddress').style.display = 'flex'; }
+        function openCart() { 
+            if (!checkSubscriptionStatus()) return;
+            if (getDailyOrderCount() >= 3) {
+                alert("Hai raggiunto il limite di 3 spese per oggi. Ci vediamo domani!");
+                return;
+            }
+            caricaOrari(); 
+            document.getElementById('modalCart').style.display = 'flex'; 
+        }
+        function showAddress() {
+            document.getElementById('cap-check').value = "";
+            document.getElementById('quick-check-msg').style.display = 'none';
+            document.getElementById('modalAddress').style.display = 'flex';
+        }
+
+        function checkQuickArea() {
+            const cap = document.getElementById('cap-check').value;
+            const msg = document.getElementById('quick-check-msg');
+            if (AUTHORIZED_CAPS.includes(cap)) {
+                msg.style.display = 'block';
+            } else {
+                msg.style.display = 'none';
+            }
+        }
+
+        let currentRegisterPage = false;
+        let currentPhilosophyPage = false;
+        let userData = JSON.parse(localStorage.getItem('spesina_user')) || null;
+
+        function showPhilosophy() {
+            currentPhilosophyPage = true;
+            document.getElementById('home-view').style.display = 'none';
+            document.getElementById('subcategory-view').style.display = 'none';
+            document.getElementById('register-view').style.display = 'none';
+            document.getElementById('legal-view').style.display = 'none';
+            document.getElementById('main-footer').style.display = 'none';
+            document.getElementById('philosophy-view').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        function showRegister() {
+            currentRegisterPage = true;
+            document.getElementById('home-view').style.display = 'none';
+            document.getElementById('subcategory-view').style.display = 'none';
+            document.getElementById('main-footer').style.display = 'none';
+            document.getElementById('register-view').style.display = 'block';
+
+            // Pre-fill se esiste già l'utente
+            if (userData) {
+                document.getElementById('reg-name').value = userData.name || "";
+                document.getElementById('reg-phone').value = userData.phone || "";
+                document.getElementById('reg-address').value = userData.address || "";
+                document.getElementById('reg-cap').value = userData.cap || "";
+            }
+            window.scrollTo(0, 0);
+        }
+
+        function validateRegisterCAP() {
+            const cap = document.getElementById('reg-cap').value;
+            const error = document.getElementById('reg-cap-error');
+            checkRegisterValidity();
+
+            if (cap.length === 5 && !AUTHORIZED_CAPS.includes(cap)) {
+                error.style.display = 'block';
+            } else {
+                error.style.display = 'none';
+            }
+        }
+
+        function validateRegisterPhone() {
+            const phone = document.getElementById('reg-phone').value.trim();
+            const error = document.getElementById('reg-phone-error');
+            const regex = /^\d{9,10}$/; // Cerchiamo solo le 9 o 10 cifre
+
+            checkRegisterValidity();
+
+            if (phone.length > 0 && !regex.test(phone)) {
+                error.style.display = 'block';
+            } else {
+                error.style.display = 'none';
+            }
+        }
+
+        function checkRegisterValidity() {
+            const cap = document.getElementById('reg-cap').value;
+            const phone = document.getElementById('reg-phone').value.trim();
+            const submitBtn = document.getElementById('btn-submit-reg');
+
+            const isCapValid = AUTHORIZED_CAPS.includes(cap);
+            const isPhoneValid = /^\d{9,10}$/.test(phone);
+
+            if (isCapValid && isPhoneValid) {
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.5';
+            }
+        }
+
+        function handleRegister(event) {
+            event.preventDefault();
+            const name = document.getElementById('reg-name').value;
+            const phonePart = document.getElementById('reg-phone').value.trim();
+            const address = document.getElementById('reg-address').value;
+            const cap = document.getElementById('reg-cap').value;
+
+            // Aggiungiamo il prefisso fisso al numero finale
+            const phone = "+39" + phonePart;
+
+            if (!AUTHORIZED_CAPS.includes(cap)) {
+                alert("Spiacenti, Spesina non consegna ancora nella tua zona.");
+                return;
+            }
+
+            // Calcolo scadenza fine mese solare
+            const now = new Date();
+            const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0); // Ultimo giorno del mese corrente
+            const subExpiry = lastDay.toISOString().split('T')[0];
+
+            // Generazione ID cliente univoco
+            const clientId = "SP-" + Math.random().toString(36).substr(2, 6).toUpperCase();
+
+            userData = { name, phone, address, cap, id: clientId, subExpiry };
+            localStorage.setItem('spesina_user', JSON.stringify(userData));
+
+            alert(`Registrazione completata! Benvenuto in Spesina, ${name}.\nIl tuo ID Cliente è: ${clientId}\nAbbonamento attivo fino al: ${subExpiry}`);
+            goHome();
+            checkSubscriptionStatus();
+        }
+
+        function checkSubscriptionStatus() {
+            if (!userData) return true; // Permetti l'uso se non ancora registrato
+            const now = new Date().toISOString().split('T')[0];
+            if (now > userData.subExpiry) {
+                alert("Il tuo abbonamento Spesina è scaduto. Rinnovalo ora per continuare a ordinare!");
+                showPhilosophy();
+                return false;
+            }
+            return true;
+        }
+
+        function getDailyOrderCount() {
+            if (!userData || !userData.id) return 0;
+            const today = new Date().toISOString().split('T')[0];
+            const history = JSON.parse(localStorage.getItem('spesina_history') || "[]");
+            return history.filter(o => o.date === today && o.id === userData.id).length;
+        }
+
         function showHowItWorks() { document.getElementById('modalHowItWorks').style.display = 'flex'; }
         function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
 
-        // Chiudi modal cliccando fuori dal contenuto
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
-                closeModals();
+        // --- ADDRESS AUTOCOMPLETE (PHOTON FREE) ---
+        let debounceTimer;
+        function handleAddressInput(val) {
+            clearTimeout(debounceTimer);
+            if (val.length < 3) {
+                document.getElementById('address-suggestions').style.display = 'none';
+                return;
+            }
+            debounceTimer = setTimeout(() => fetchAddressSuggestions(val), 300);
+        }
+
+        async function fetchAddressSuggestions(query) {
+            const MESTRE_LAT = 45.49;
+            const MESTRE_LON = 12.24;
+            const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&lat=${MESTRE_LAT}&lon=${MESTRE_LON}&limit=5`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                renderSuggestions(data.features);
+            } catch (error) {
+                console.error("Errore Autocomplete:", error);
             }
         }
 
-        function useCurrentLocation() {
-            let input = document.getElementById('address-input');
-            input.value = "📍 Posizione rilevata (es. Via Roma 1)";
-            checkAddressInput();
+        function renderSuggestions(features) {
+            const container = document.getElementById('address-suggestions');
+            if (!features || features.length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+
+            let html = "";
+            features.forEach(f => {
+                const p = f.properties;
+                const name = p.name || "";
+                const street = p.street || "";
+                const housenumber = p.housenumber || "";
+                const city = p.city || "";
+                const postcode = p.postcode || "";
+
+                // Formattazione bella
+                let display = street ? `${street} ${housenumber}, ${city}` : `${name}, ${city}`;
+                if (postcode) display += ` (${postcode})`;
+
+                html += `<div class="suggestion-item" onclick="selectSuggestion('${display.replace(/'/g, "\\'")}', '${postcode}')">${display}</div>`;
+            });
+
+            container.innerHTML = html;
+            container.style.display = 'block';
         }
 
-        function checkAddressInput() {
-            let input = document.getElementById('address-input').value;
-            let btn = document.getElementById('btn-login');
-            if(input.trim().length > 3) {
-                btn.disabled = false;
-                btn.style.opacity = '1';
-                btn.style.cursor = 'pointer';
-            } else {
-                btn.disabled = true;
-                btn.style.opacity = '0.5';
-                btn.style.cursor = 'not-allowed';
+        function selectSuggestion(address, cap) {
+            document.getElementById('reg-address').value = address;
+            document.getElementById('address-suggestions').style.display = 'none';
+
+            // Se il CAP suggerito è tra quelli validi, lo impostiamo
+            if (cap && AUTHORIZED_CAPS.includes(cap)) {
+                document.getElementById('reg-cap').value = cap;
+                validateRegisterCAP();
             }
         }
+
+        // --- FINE AUTOCOMPLETE ---
 
         function showPay() {
+            // Check subscription before showing pay
+            if (!checkSubscriptionStatus()) return;
+
+            // Check daily cap
+            if (getDailyOrderCount() >= 3) {
+                alert("Hai raggiunto il limite di 3 spese per oggi. Ci vediamo domani!");
+                return;
+            }
+
             if (!document.getElementById('select-ora').value || document.getElementById('select-ora').value.includes("Esaurito")) return alert("Seleziona un orario valido!");
             if (confirm("Vuoi confermare l'ordine?")) { closeModals(); document.getElementById('modalPay').style.display = 'flex'; }
         }
 
         function finish(m) {
+            // Re-verify subscription and cap just before sending
+            if (!checkSubscriptionStatus()) return;
+            if (getDailyOrderCount() >= 3) return;
+
             const FORMSPREE_URL = "https://formspree.io/f/mlgagarn";
             let elencoProdotti = cart.map(i => `${i.q}x ${i.n} (${(i.p * i.q).toFixed(2)}€)`).join("\n");
             let totaleValore = document.getElementById('final-price').innerText;
             let giorno = document.getElementById('select-giorno').value;
             let ora = document.getElementById('select-ora').value;
+
+            // Validazione "Server-side" (last gate)
+            if (!AUTHORIZED_CAPS.includes(userCAP)) {
+                alert("Errore: Zona di consegna non valida. Spesina non può procedere con l'invio.");
+                return;
+            }
 
             fetch(FORMSPREE_URL, {
                 method: 'POST',
@@ -1143,13 +1990,19 @@
                     totale: totaleValore,
                     pagamento: m,
                     consegna: giorno + " " + ora,
+                    indirizzo: userAddress + " (CAP: " + userCAP + ")",
                     _subject: "📦 NUOVO ORDINE: " + giorno + " " + ora
                 })
             })
                 .then(response => {
                     if (response.ok) {
-                        cart = []; 
-                        updateUI(); 
+                        // Registra ordine nella history locale per il daily cap
+                        const history = JSON.parse(localStorage.getItem('spesina_history') || "[]");
+                        history.push({ date: new Date().toISOString().split('T')[0], id: userData.id });
+                        localStorage.setItem('spesina_history', JSON.stringify(history));
+
+                        cart = [];
+                        updateUI();
                         closeModals();
                         document.getElementById('success-desc').innerHTML = "La consegna è in programma per<br><b style='color:var(--dark);'>" + giorno + " alle " + ora + "</b><br><br>Grazie per aver scelto Spesina!";
                         document.getElementById('modalSuccess').style.display = 'flex';
@@ -1160,7 +2013,16 @@
         }
 
         renderCategories();
-        updateUI(); // Ripristina il carrello eventualmente salvato localmente
+        renderFooter();
+        updateUI();
+        
+        // Identity & Subscription Startup Check
+        checkSubscriptionStatus();
+
+        // Footer update with Client ID if exists
+        if (userData && userData.id) {
+            document.getElementById('company-data').innerHTML += ` | 🆔 ID Cliente: <b>${userData.id}</b>`;
+        }
     </script>
 </body>
 
