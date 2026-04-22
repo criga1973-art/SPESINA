@@ -1,83 +1,64 @@
 <!DOCTYPE html>
-<html lang="it">
+<html>
 <head>
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scanner Spesa</title>
-    <!-- LIBRERIE CORRETTE E COMPLETE -->
-    <script src="https://unpkg.com" type="text/javascript"></script>
+    <title>Scanner Finale</title>
+    <script src="https://unpkg.com"></script>
     <script src="https://jsdelivr.net"></script>
     <style>
-        body { font-family: sans-serif; text-align: center; background: #f4f4f9; padding: 10px; margin: 0; }
-        #reader { width: 100%; max-width: 400px; margin: 10px auto; border-radius: 12px; overflow: hidden; border: 3px solid #24b47e; min-height: 250px; background: #000; }
-        input { padding: 15px; width: 90%; font-size: 18px; margin: 10px 0; border-radius: 8px; border: 2px solid #ddd; box-sizing: border-box; }
-        .btn-save { padding: 18px; width: 90%; font-size: 18px; background: #24b47e; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        .btn-scan { padding: 15px; width: 90%; font-size: 16px; background: #333; color: white; border: none; border-radius: 8px; margin-top: 10px; cursor: pointer; }
-        #stato { margin-top: 20px; font-weight: bold; font-size: 18px; }
+        body { font-family: sans-serif; text-align: center; padding: 10px; background: #f4f4f9; }
+        #reader { width: 100%; max-width: 400px; margin: auto; background: #000; border-radius: 10px; min-height: 250px; }
+        input { width: 90%; padding: 15px; margin: 20px 0; border-radius: 8px; border: 1px solid #ccc; font-size: 18px; }
+        button { width: 90%; padding: 15px; margin: 5px; border-radius: 8px; font-weight: bold; border: none; font-size: 18px; }
+        .btn-scan { background: #333; color: white; }
+        .btn-save { background: #24b47e; color: white; }
     </style>
 </head>
 <body>
     <h3>📦 Scannerizza Prodotto</h3>
-    
     <div id="reader"></div>
-    <button class="btn-scan" onclick="accendiScanner()">📷 ACCENDI FOTOCAMERA</button>
-    
+    <button class="btn-scan" onclick="accendiCamera()">📷 ATTIVA FOTOCAMERA</button>
     <input type="text" id="ean" placeholder="Codice EAN...">
     <button class="btn-save" onclick="salvaProdotto()">💾 SALVA NEL DATABASE</button>
     <p id="stato"></p>
 
     <script type="module">
-        // Inizializzazione Supabase con i tuoi dati
+        import { createClient } from 'https://jsdelivr.net/+esm'
         const SUPABASE_URL = 'https://supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsZHBuaG1kamJid3dxd2pzZG9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4NDE5ODQsImV4cCI6MjA5MjQxNzk4NH0.yXcJBcZtiaDbPl2IyDUBK-Ndoyu0unmEzfY8xZrogzM';
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        let html5QrCode;
-
-        window.accendiScanner = () => {
-            if (!html5QrCode) {
-                html5QrCode = new Html5Qrcode("reader");
-            }
-            const config = { fps: 15, qrbox: { width: 280, height: 150 } };
-            
-            html5QrCode.start({ facingMode: "environment" }, config, (decodedText) => {
-                document.getElementById('ean').value = decodedText;
-                if (navigator.vibrate) navigator.vibrate(80);
-            }).catch(err => {
-                alert("Errore fotocamera: " + err);
-            });
-        };
+        window.accendiCamera = () => {
+            Html5Qrcode.getCameras().then(devices => {
+                if (devices && devices.length) {
+                    const cameraId = devices[devices.length - 1].id; // Prende l'ultima (di solito quella dietro)
+                    const html5QrCode = new Html5Qrcode("reader");
+                    html5QrCode.start(cameraId, { fps: 15, qrbox: 250 }, (txt) => {
+                        document.getElementById('ean').value = txt;
+                        if (navigator.vibrate) navigator.vibrate(80);
+                    });
+                }
+            }).catch(err => alert("Errore: " + err));
+        }
 
         window.salvaProdotto = async () => {
             const ean = document.getElementById('ean').value;
             const stato = document.getElementById('stato');
-            if(!ean) return alert("Scansiona prima un prodotto!");
-
-            stato.innerHTML = "🔍 Ricerca info...";
-            try {
-                const res = await fetch(`https://openfoodfacts.org{ean}.json`);
-                const data = await res.json();
-
-                if (data.status === 1) {
-                    const p = data.product;
-                    const { error } = await _supabase.from('prodotti').insert([{
-                        ean: ean,
-                        nome: p.product_name || "Senza nome",
-                        foto_url: p.image_front_url || "",
-                        dati: p.nutriments
-                    }]);
-                    if (error) throw error;
-                    stato.innerHTML = `<span style="color:green">✅ SALVATO:<br>${p.product_name}</span>`;
-                    document.getElementById('ean').value = "";
-                } else {
-                    stato.innerHTML = `<span style="color:red">❌ Prodotto non trovato</span>`;
-                }
-            } catch (err) {
-                stato.innerHTML = `<span style="color:red">⚠️ Errore: ${err.message}</span>`;
+            if(!ean) return;
+            stato.innerText = "🔍 Ricerca...";
+            const res = await fetch(`https://openfoodfacts.org{ean}.json`);
+            const data = await res.json();
+            if (data.status === 1) {
+                await supabase.from('prodotti').insert([{
+                    ean: ean, nome: data.product.product_name, foto_url: data.product.image_front_url
+                }]);
+                stato.innerHTML = "<b style='color:green'>✅ SALVATO!</b>";
+                document.getElementById('ean').value = "";
+            } else {
+                stato.innerText = "❌ Non trovato";
             }
-        };
+        }
     </script>
 </body>
 </html>
-
 
