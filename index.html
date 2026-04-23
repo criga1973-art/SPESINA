@@ -2041,15 +2041,14 @@
         }
 
 
-        document.addEventListener('DOMContentLoaded', () => {
-            checkMaintenance();
-            renderCategories(); 
-            fetchProducts();    
-            renderFooter();
-            updateUI();
-            updateAuthUI();
-            checkSubscriptionStatus();
-        });
+        // Inizializzazione immediata
+        renderCategories(); 
+        checkMaintenance();
+        fetchProducts();    
+        renderFooter();
+        updateUI();
+        updateAuthUI();
+        checkSubscriptionStatus();
     </script>
 </body>
 
