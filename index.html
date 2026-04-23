@@ -1862,7 +1862,7 @@
             }
         }
 
-        function finish(m) {
+        async function finish(m) {
             // Re-verify subscription and cap just before sending
             if (!checkSubscriptionStatus()) return;
             if (getDailyOrderCount() >= 3) return;
