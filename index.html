@@ -814,7 +814,7 @@
                     <label>Indirizzo di Consegna (Mestre)</label>
                     <div class="autocomplete-container">
                         <input type="text" id="reg-address" class="select-box" placeholder="Inizia a scrivere la tua via..."
-                            oninput="handleAddressInput(this.value)" autocomplete="new-password">
+                            oninput="handleAddressInput(this.value)">
                         <div id="address-suggestions" class="autocomplete-results"></div>
                     </div>
                 </div>
@@ -1830,7 +1830,10 @@
                 
                 const filtered = data.features.filter(f => {
                     const p = f.properties;
-                    return (p.city === "Venice" || p.city === "Venezia" || p.state === "Veneto");
+                    // Includiamo Venice, Venezia e Mestre per essere sicuri al 100%
+                    const c = (p.city || "").toLowerCase();
+                    const n = (p.name || "").toLowerCase();
+                    return (c.includes("venice") || c.includes("venezia") || c.includes("mestre") || p.state === "Veneto");
                 });
                 
                 renderSuggestions(filtered);
