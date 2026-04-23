@@ -812,11 +812,7 @@
 
                 <div class="input-group">
                     <label>Indirizzo di Consegna (Mestre)</label>
-                    <div class="autocomplete-container">
-                        <input type="text" id="reg-address" class="select-box" placeholder="Inizia a scrivere la tua via..."
-                            oninput="handleAddressInput(this.value)">
-                        <div id="address-suggestions" class="autocomplete-results"></div>
-                    </div>
+                    <input type="text" id="reg-address" class="select-box" placeholder="es: Via Mestrina" oninput="checkRegisterValidity()">
                 </div>
 
                 <div class="input-group">
@@ -1804,98 +1800,6 @@
 
         // --- ADDRESS AUTOCOMPLETE (PHOTON FREE) ---
         let debounceTimer;
-        function handleAddressInput(val) {
-            clearTimeout(debounceTimer);
-            if (val.length < 3) {
-                document.getElementById('address-suggestions').style.display = 'none';
-                return;
-            }
-            debounceTimer = setTimeout(() => fetchAddressSuggestions(val), 300);
-            checkRegisterValidity(); // Controlliamo la validità anche mentre scrive la via
-        }
-
-        async function fetchAddressSuggestions(query) {
-            if (query.length < 3) return;
-            
-            // Recuperiamo il CAP selezionato dall'utente per restringere la ricerca
-            const selectedCAP = document.getElementById('reg-cap').value;
-            
-            const MESTRE_LAT = 45.49;
-            const MESTRE_LON = 12.24;
-            const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(query + " " + selectedCAP + ", Mestre")}&lat=${MESTRE_LAT}&lon=${MESTRE_LON}&limit=6`;
-
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                const filtered = data.features.filter(f => {
-                    const p = f.properties;
-                    // Includiamo Venice, Venezia e Mestre per essere sicuri al 100%
-                    const c = (p.city || "").toLowerCase();
-                    const n = (p.name || "").toLowerCase();
-                    return (c.includes("venice") || c.includes("venezia") || c.includes("mestre") || p.state === "Veneto");
-                });
-                
-                renderSuggestions(filtered);
-            } catch (error) {
-                console.error("Errore Autocomplete:", error);
-            }
-        }
-
-        function renderSuggestions(features) {
-            const container = document.getElementById('address-suggestions');
-            if (!features || features.length === 0) {
-                container.style.display = 'none';
-                return;
-            }
-
-            let html = "";
-            features.forEach(f => {
-                const p = f.properties;
-                const name = p.name || "";
-                const street = p.street || "";
-                const housenumber = p.housenumber || "";
-                const city = p.city || "";
-                const postcode = p.postcode || "";
-
-                // Formattazione professionale
-                let mainAddress = street ? `${street} ${housenumber}` : name;
-                let subInfo = `${city} ${postcode ? '(' + postcode + ')' : ''}`;
-
-                html += `
-                    <div class="suggestion-item" onclick="selectSuggestion('${mainAddress.replace(/'/g, "\\'")}', '${postcode}', '${city.replace(/'/g, "\\'")}', '${street.replace(/'/g, "\\'")}')">
-                        <div style="display:flex; align-items:center; gap:10px;">
-                            <span style="font-size:18px;">📍</span>
-                            <div>
-                                <div style="font-weight:800; font-size:14px; color:var(--dark);">${mainAddress}</div>
-                                <div style="font-size:11px; color:#64748b; font-weight:600;">${subInfo}</div>
-                            </div>
-                        </div>
-                    </div>`;
-            });
-
-            container.innerHTML = html;
-            container.style.display = 'block';
-        }
-
-        function selectSuggestion(address, cap, city, streetOnly) {
-            // Se streetOnly è presente, usiamo solo il nome della via senza il civico dell'autocomplete
-            document.getElementById('reg-address').value = streetOnly || address;
-            
-            const container = document.getElementById('address-suggestions');
-            container.innerHTML = "";
-            container.style.display = 'none';
-
-            // Auto-compilazione CAP se disponibile e valido per Mestre
-            if (cap) {
-                const capInput = document.getElementById('reg-cap');
-                capInput.value = cap;
-                validateRegisterCAP(); // Attiva subito la validazione visiva
-            }
-            
-            document.getElementById('reg-details').focus(); // Sposta il focus sul campo civico/piano
-            checkRegisterValidity();
-        }
 
         // Chiusura suggerimenti al click esterno
         window.addEventListener('click', function(e) {
