@@ -1702,42 +1702,34 @@
         }
 
         function checkRegisterValidity() {
-            const nome = document.getElementById('reg-name').value.trim();
-            const cap = document.getElementById('reg-cap').value;
-            const phone = document.getElementById('reg-phone').value.trim();
-            const email = document.getElementById('reg-email').value.trim();
-            const address = document.getElementById('reg-address').value.trim();
-            const details = document.getElementById('reg-details').value.trim();
-            const privacy = document.getElementById('reg-privacy').checked;
+            // Ora lasciamo il pulsante sempre attivo per dare feedback al click
             const submitBtn = document.getElementById('btn-submit-reg');
-
-            const isCapValid = AUTHORIZED_CAPS.includes(cap);
-            const isPhoneValid = /^\d{9,10}$/.test(phone);
-            const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-            const isAddressValid = address.length > 3 && details.length > 0;
-            const isNameValid = nome.length > 3;
-
-            if (isCapValid && isPhoneValid && isEmailValid && isAddressValid && isNameValid && privacy) {
-                submitBtn.disabled = false;
-                submitBtn.style.opacity = '1';
-                submitBtn.style.cursor = 'pointer';
-            } else {
-                submitBtn.disabled = true;
-                submitBtn.style.opacity = '0.5';
-                submitBtn.style.cursor = 'not-allowed';
-            }
+            submitBtn.disabled = false;
+            submitBtn.style.opacity = '1';
+            submitBtn.style.cursor = 'pointer';
         }
 
         async function handleRegister(e) {
             e.preventDefault();
-            const nome = document.getElementById('reg-name').value;
-            const email = document.getElementById('reg-email').value;
-            const tel = document.getElementById('reg-phone').value;
-            const via = document.getElementById('reg-address').value;
-            const dettagli = document.getElementById('reg-details').value;
+            
+            const nome = document.getElementById('reg-name').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const tel = document.getElementById('reg-phone').value.trim();
+            const via = document.getElementById('reg-address').value.trim();
+            const dettagli = document.getElementById('reg-details').value.trim();
             const cap = document.getElementById('reg-cap').value;
+            const privacy = document.getElementById('reg-privacy').checked;
 
-            // Generazione ID cliente univoco
+            // --- VALIDAZIONE ATTIVA CON FEEDBACK ---
+            if (nome.length < 3) return alert("⚠️ Inserisci Nome e Cognome completi.");
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return alert("⚠️ Inserisci un indirizzo Email valido.");
+            if (!/^\d{9,10}$/.test(tel)) return alert("⚠️ Inserisci un numero di cellulare valido (9 o 10 cifre).");
+            if (!AUTHORIZED_CAPS.includes(cap)) return alert("⚠️ Seleziona un CAP valido tra quelli di Mestre.");
+            if (via.length < 3) return alert("⚠️ Seleziona una via valida dall'autocompletamento.");
+            if (dettagli.length < 1) return alert("⚠️ Inserisci il Numero Civico, Piano e Interno.");
+            if (!privacy) return alert("⚠️ Devi accettare la Privacy Policy per continuare.");
+            
+            // Se arriviamo qui, i dati sono perfetti!
             const clientId = "SP-" + Math.random().toString(36).substr(2, 6).toUpperCase();
             
             const now = new Date();
