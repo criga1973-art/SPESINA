@@ -1692,14 +1692,25 @@
         }
 
         async function fetchAddressSuggestions(query) {
+            if (query.length < 3) return;
+            
+            // Limitiamo la ricerca a Mestre (lat: 45.49, lon: 12.24) con un raggio molto stretto
             const MESTRE_LAT = 45.49;
             const MESTRE_LON = 12.24;
-            const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&lat=${MESTRE_LAT}&lon=${MESTRE_LON}&limit=5`;
+            // Usiamo anche il parametro location_bias per dare priorità assoluta a Mestre
+            const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(query + ", Mestre")}&lat=${MESTRE_LAT}&lon=${MESTRE_LON}&limit=6`;
 
             try {
                 const response = await fetch(url);
                 const data = await response.json();
-                renderSuggestions(data.features);
+                
+                // Filtriamo ulteriormente per assicurarci che i risultati siano pertinenti (Venezia/Mestre)
+                const filtered = data.features.filter(f => {
+                    const p = f.properties;
+                    return (p.city === "Venice" || p.city === "Venezia" || p.state === "Veneto");
+                });
+                
+                renderSuggestions(filtered);
             } catch (error) {
                 console.error("Errore Autocomplete:", error);
             }
@@ -1721,29 +1732,41 @@
                 const city = p.city || "";
                 const postcode = p.postcode || "";
 
-                // Formattazione bella
-                let display = street ? `${street} ${housenumber}, ${city}` : `${name}, ${city}`;
-                if (postcode) display += ` (${postcode})`;
+                // Formattazione professionale
+                let mainAddress = street ? `${street} ${housenumber}` : name;
+                let subInfo = `${city} ${postcode ? '(' + postcode + ')' : ''}`;
 
-                html += `<div class="suggestion-item" onclick="selectSuggestion('${display.replace(/'/g, "\\'")}', '${postcode}')">${display}</div>`;
+                html += `
+                    <div class="suggestion-item" onclick="selectSuggestion('${mainAddress.replace(/'/g, "\\'")}', '${postcode}', '${city.replace(/'/g, "\\'")}')">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <span style="font-size:18px;">📍</span>
+                            <div>
+                                <div style="font-weight:800; font-size:14px; color:var(--dark);">${mainAddress}</div>
+                                <div style="font-size:11px; color:#64748b; font-weight:600;">${subInfo}</div>
+                            </div>
+                        </div>
+                    </div>`;
             });
 
             container.innerHTML = html;
             container.style.display = 'block';
         }
 
-        function selectSuggestion(address, cap) {
+        function selectSuggestion(address, cap, city) {
             document.getElementById('reg-address').value = address;
+            
             const container = document.getElementById('address-suggestions');
             container.innerHTML = "";
             container.style.display = 'none';
-            checkRegisterValidity();
 
-            // Se il CAP suggerito è tra quelli validi, lo impostiamo
-            if (cap && AUTHORIZED_CAPS.includes(cap)) {
-                document.getElementById('reg-cap').value = cap;
-                validateRegisterCAP();
+            // Auto-compilazione CAP se disponibile e valido per Mestre
+            if (cap) {
+                const capInput = document.getElementById('reg-cap');
+                capInput.value = cap;
+                validateRegisterCAP(); // Attiva subito la validazione visiva
             }
+            
+            checkRegisterValidity();
         }
 
         // Chiusura suggerimenti al click esterno
