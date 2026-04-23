@@ -1053,6 +1053,7 @@
         };
 
         const AUTHORIZED_CAPS = ["30170", "30171", "30172", "30173", "30174", "30175"];
+        const FORMSPREE_URL = "https://formspree.io/f/mlgagarn";
         // Le variabili userAddress e userCAP sono ora gestite dentro l'oggetto globale userData
 
         // Sistema di aiuto per il debug: se c'è un errore, l'app lo dirà chiaramente
@@ -1722,7 +1723,7 @@
             if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return alert("⚠️ Inserisci un indirizzo Email valido.");
             if (!/^\d{9,10}$/.test(tel)) return alert("⚠️ Inserisci un numero di cellulare valido (9 o 10 cifre).");
             if (!AUTHORIZED_CAPS.includes(cap)) return alert("⚠️ Seleziona un CAP valido tra quelli di Mestre.");
-            if (via.length < 3) return alert("⚠️ Seleziona una via valida dall'autocompletamento.");
+            if (via.length < 3) return alert("⚠️ Inserisci un indirizzo di consegna valido.");
             if (dettagli.length < 1) return alert("⚠️ Inserisci il Numero Civico, Piano e Interno.");
             if (!privacy) return alert("⚠️ Devi accettare la Privacy Policy per continuare.");
             
@@ -1843,7 +1844,6 @@
             if (!checkSubscriptionStatus()) return;
             if (getDailyOrderCount() >= 3) return;
 
-            const FORMSPREE_URL = "https://formspree.io/f/mlgagarn";
             let elencoProdotti = cart.map(i => `${i.q}x ${i.n} (${(i.p * i.q).toFixed(2)}€)`).join("\n");
             let totaleValore = document.getElementById('final-price').innerText;
             let giorno = document.getElementById('select-giorno').value;
