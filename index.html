@@ -819,6 +819,11 @@
                     </div>
                 </div>
 
+                <div class="input-group">
+                    <label>Civico, Piano e Interno</label>
+                    <input type="text" id="reg-details" class="select-box" placeholder="es: Civico 10, Piano 2, Int. 5" required oninput="checkRegisterValidity()">
+                </div>
+
                 <div class="checkbox-group">
                     <input type="checkbox" id="reg-privacy" required onchange="checkRegisterValidity()">
                     <label for="reg-privacy">Accetto la <a onclick="showLegalPage('privacy')"
@@ -1644,6 +1649,7 @@
                     e: data.email,
                     t: data.phone, 
                     a: data.address, 
+                    d: data.details,
                     c: data.cap, 
                     subExpiry: data.sub_expiry 
                 };
@@ -1699,14 +1705,17 @@
             const cap = document.getElementById('reg-cap').value;
             const phone = document.getElementById('reg-phone').value.trim();
             const email = document.getElementById('reg-email').value.trim();
+            const address = document.getElementById('reg-address').value.trim();
+            const details = document.getElementById('reg-details').value.trim();
             const privacy = document.getElementById('reg-privacy').checked;
             const submitBtn = document.getElementById('btn-submit-reg');
 
             const isCapValid = AUTHORIZED_CAPS.includes(cap);
             const isPhoneValid = /^\d{9,10}$/.test(phone);
             const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            const isAddressValid = address.length > 3 && details.length > 0;
 
-            if (isCapValid && isPhoneValid && isEmailValid && privacy) {
+            if (isCapValid && isPhoneValid && isEmailValid && isAddressValid && privacy) {
                 submitBtn.disabled = false;
                 submitBtn.style.opacity = '1';
                 submitBtn.style.cursor = 'pointer';
@@ -1723,6 +1732,7 @@
             const email = document.getElementById('reg-email').value;
             const tel = document.getElementById('reg-phone').value;
             const via = document.getElementById('reg-address').value;
+            const dettagli = document.getElementById('reg-details').value;
             const cap = document.getElementById('reg-cap').value;
 
             // Generazione ID cliente univoco
@@ -1732,7 +1742,7 @@
             const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
             const subExpiry = lastDay.toISOString().split('T')[0];
 
-            userData = { id: clientId, n: nome, e: email, t: tel, a: via, c: cap, subExpiry: subExpiry };
+            userData = { id: clientId, n: nome, e: email, t: tel, a: via, d: dettagli, c: cap, subExpiry: subExpiry };
             
             // Salvataggio su Supabase
             if (typeof sb !== 'undefined') {
@@ -1743,6 +1753,7 @@
                         email: email,
                         phone: tel,
                         address: via,
+                        details: dettagli,
                         cap: cap,
                         sub_expiry: subExpiry
                     }, { onConflict: 'client_id' });
@@ -1853,7 +1864,7 @@
                 let subInfo = `${city} ${postcode ? '(' + postcode + ')' : ''}`;
 
                 html += `
-                    <div class="suggestion-item" onclick="selectSuggestion('${mainAddress.replace(/'/g, "\\'")}', '${postcode}', '${city.replace(/'/g, "\\'")}')">
+                    <div class="suggestion-item" onclick="selectSuggestion('${mainAddress.replace(/'/g, "\\'")}', '${postcode}', '${city.replace(/'/g, "\\'")}', '${street.replace(/'/g, "\\'")}')">
                         <div style="display:flex; align-items:center; gap:10px;">
                             <span style="font-size:18px;">📍</span>
                             <div>
@@ -1868,8 +1879,9 @@
             container.style.display = 'block';
         }
 
-        function selectSuggestion(address, cap, city) {
-            document.getElementById('reg-address').value = address;
+        function selectSuggestion(address, cap, city, streetOnly) {
+            // Se streetOnly è presente, usiamo solo il nome della via senza il civico dell'autocomplete
+            document.getElementById('reg-address').value = streetOnly || address;
             
             const container = document.getElementById('address-suggestions');
             container.innerHTML = "";
@@ -1882,6 +1894,7 @@
                 validateRegisterCAP(); // Attiva subito la validazione visiva
             }
             
+            document.getElementById('reg-details').focus(); // Sposta il focus sul campo civico/piano
             checkRegisterValidity();
         }
 
@@ -1949,7 +1962,7 @@
                     totale: totaleValore,
                     pagamento: m,
                     consegna: giorno + " " + ora,
-                    indirizzo: (userData ? userData.a : "") + " (CAP: " + (userData ? userData.c : "") + ")",
+                    indirizzo: (userData ? userData.a : "") + " " + (userData ? userData.d : "") + " (CAP: " + (userData ? userData.c : "") + ")",
                     id_cliente: (userData ? userData.id : "GUEST"),
                     nota_legale: cart.some(i => i.c === 'orto') ? "Accettazione Art. 4 T&C (Peso Variabile Ortofrutta)" : "Standard",
                     _subject: "📦 NUOVO ORDINE: " + giorno + " " + ora
