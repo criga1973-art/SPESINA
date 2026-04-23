@@ -1741,6 +1741,19 @@
 
             localStorage.setItem('spesina_user', JSON.stringify(userData));
             
+            // Invio Email di Benvenuto via Formspree
+            fetch(FORMSPREE_URL, {
+                method: 'POST',
+                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    _subject: "🎉 BENVENUTO IN SPESINA: " + nome,
+                    email: email,
+                    messaggio: `Benvenuto ${nome}! La tua registrazione è completata.\n\nIl tuo ID CLIENTE è: ${clientId}\nAbbonamento attivo fino al: ${subExpiry}\n\nUsa questo ID per accedere da altri dispositivi. Buona spesa!`,
+                    id_cliente: clientId,
+                    tipo: "REGISTRAZIONE"
+                })
+            });
+
             // UI Successo per Registrazione
             document.getElementById('success-title').innerText = "Benvenuto in Spesina!";
             document.getElementById('success-desc').innerHTML = `Ciao ${nome}, la tua registrazione è attiva.<br>Controlla l'email <b>${email}</b> per i dettagli!`;
