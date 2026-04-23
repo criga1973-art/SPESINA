@@ -1,6 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 
-// Version: 1.0.1 - Activated via GitHub Actions
 const RESEND_API_KEY = "re_fQUPt4TL_JxoJLoLjtzyD6ZKdezXoeAaM"
 
 const corsHeaders = {
@@ -9,22 +8,58 @@ const corsHeaders = {
 }
 
 serve(async (req) => {
-  // Gestione CORS per chiamate dal browser
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
 
   try {
     const body = await req.json()
-    // Supporta sia il formato del sito che quello del Webhook (nomi colonne DB)
+    const type = body.type || 'welcome' 
     const name = body.name || body.full_name
     const email = body.email
     const clientId = body.clientId || body.client_id
-    const address = body.address
-    const phone = body.phone
-    const subExpiry = body.subExpiry || body.sub_expiry
 
-    console.log(`Invio email a ${email} per il cliente ${clientId}`)
+    let subject, html, from;
+
+    if (type === 'order') {
+      from = 'Spesina <ordini@spesina.it>'
+      subject = `📦 Conferma Ordine Spesina - ${body.delivery}`
+      html = `
+        <div style="font-family: sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px; border-radius: 15px;">
+          <h1 style="color: #10b981; text-align: center;">Ordine Ricevuto!</h1>
+          <p>Ciao <b>${name}</b>, il tuo ordine è stato preso in carico.</p>
+          <div style="background: #f9fafb; padding: 20px; border-radius: 10px; border: 1px solid #e5e7eb; margin-bottom: 20px;">
+            <p style="margin: 5px 0;">🚚 <b>Consegna prevista:</b> ${body.delivery}</p>
+            <p style="margin: 5px 0;">📍 <b>Indirizzo:</b> ${body.address}</p>
+          </div>
+          <div style="background: #fff; padding: 15px; border: 1px solid #eee; border-radius: 10px;">
+            <h4 style="margin: 0 0 10px 0;">Riepilogo Prodotti:</h4>
+            <pre style="white-space: pre-wrap; font-family: inherit; font-size: 14px;">${body.orderItems}</pre>
+            <hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
+            <p style="text-align: right; font-weight: bold; font-size: 18px; margin: 0;">${body.total}</p>
+          </div>
+          <p style="margin-top: 20px; font-size: 14px; color: #64748b;">Grazie per aver scelto Spesina, la spesa intelligente a Mestre.</p>
+          <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+          <p style="font-size: 12px; color: #6b7280; text-align: center;">Spesina S.r.l. - Mestre (VE)</p>
+        </div>
+      `
+    } else {
+      from = 'Spesina <benvenuto@spesina.it>'
+      subject = `🎉 Benvenuto in Spesina, ${name}!`
+      html = `
+        <div style="font-family: sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px; border-radius: 15px;">
+          <h1 style="color: #10b981; text-align: center;">Benvenuto in Spesina!</h1>
+          <p>Ciao <b>${name}</b>, la tua registrazione è stata completata con successo.</p>
+          <div style="background: #f9fafb; padding: 20px; border-radius: 10px; border: 1px solid #e5e7eb;">
+            <p style="margin: 5px 0;">🆔 <b>ID CLIENTE:</b> <span style="font-family: monospace; font-size: 18px; color: #0f172a;">${clientId}</span></p>
+            <p style="margin: 5px 0;">📅 <b>Scadenza Abbonamento:</b> ${body.subExpiry || body.sub_expiry}</p>
+          </div>
+          <p style="margin-top: 20px;">Usa il tuo ID per accedere da qualsiasi dispositivo e iniziare a fare la spesa!</p>
+          <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+          <p style="font-size: 12px; color: #6b7280; text-align: center;">Spesina S.r.l. - Mestre (VE)</p>
+        </div>
+      `
+    }
 
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
@@ -32,26 +67,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${RESEND_API_KEY}`,
       },
-      body: JSON.stringify({
-        from: 'Spesina <benvenuto@spesina.it>',
-        to: [email],
-        subject: `🎉 Benvenuto in Spesina, ${name}!`,
-        html: `
-          <div style="font-family: sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px; border-radius: 15px;">
-            <h1 style="color: #10b981; text-align: center;">Benvenuto in Spesina!</h1>
-            <p>Ciao <b>${name}</b>, la tua registrazione è stata completata con successo.</p>
-            <div style="background: #f9fafb; padding: 20px; border-radius: 10px; border: 1px solid #e5e7eb;">
-              <p style="margin: 5px 0;">🆔 <b>ID CLIENTE:</b> <span style="font-family: monospace; font-size: 18px; color: #0f172a;">${clientId}</span></p>
-              <p style="margin: 5px 0;">📍 <b>Indirizzo:</b> ${address}</p>
-              <p style="margin: 5px 0;">📞 <b>Telefono:</b> ${phone}</p>
-              <p style="margin: 5px 0;">📅 <b>Scadenza Abbonamento:</b> ${subExpiry}</p>
-            </div>
-            <p style="margin-top: 20px;">Usa il tuo ID per accedere da qualsiasi dispositivo e iniziare a fare la spesa!</p>
-            <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
-            <p style="font-size: 12px; color: #6b7280; text-align: center;">Spesina S.r.l. - Mestre (VE)</p>
-          </div>
-        `,
-      }),
+      body: JSON.stringify({ from, to: [email], subject, html }),
     })
 
     const data = await res.json()
