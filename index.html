@@ -1785,7 +1785,33 @@
             document.getElementById('wa-share-btn').onclick = () => window.open(waLink, '_blank');
 
             updateAuthUI();
+            
+            // Invio automatico email al cliente via EmailJS
+            sendWelcomeEmail(userData);
+            
             goHome();
+        }
+
+        async function sendWelcomeEmail(data) {
+            console.log("Innesco invio email automatica...");
+            try {
+                const response = await fetch("https://uldpnhmdjbbwwqwjsdoh.supabase.co/functions/v1/send-welcome", {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: data.n,
+                        email: data.e,
+                        clientId: data.id,
+                        address: `${data.a}, ${data.d}`,
+                        phone: data.t,
+                        subExpiry: data.subExpiry
+                    })
+                });
+                const result = await response.json();
+                console.log("Risultato invio email:", result);
+            } catch (err) {
+                console.error("Errore chiamata Edge Function:", err);
+            }
         }
 
         function checkSubscriptionStatus() {
