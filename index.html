@@ -1909,7 +1909,7 @@
                             } catch (err) { console.error("Errore salvataggio ordine cloud:", err); }
                         }
 
-                        const history = JSON.parse(localStorage.getItem('spesina_history') || "[]");
+                        // Aggiorna la cronologia locale (già dichiarata all'inizio della funzione)
                         history.push({ 
                             date: new Date().toISOString().split('T')[0], 
                             id: userData.id,
