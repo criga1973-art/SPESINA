@@ -15,7 +15,14 @@ serve(async (req) => {
   }
 
   try {
-    const { name, email, clientId, address, phone, subExpiry } = await req.json()
+    const body = await req.json()
+    // Supporta sia il formato del sito che quello del Webhook (nomi colonne DB)
+    const name = body.name || body.full_name
+    const email = body.email
+    const clientId = body.clientId || body.client_id
+    const address = body.address
+    const phone = body.phone
+    const subExpiry = body.subExpiry || body.sub_expiry
 
     console.log(`Invio email a ${email} per il cliente ${clientId}`)
 
