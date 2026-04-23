@@ -1089,29 +1089,15 @@
                 
                 if (error) throw error;
 
-                // Mappiamo i dati dal database al formato usato dall'app
                 if (data) {
                     PRODS = data.map(p => ({
-                        id: p.id,
-                        n: p.name,
-                        p: p.price,
-                        c: p.category,
-                        b: p.brand,
-                        img: p.image_url,
-                        icon: p.icon,
-                        l: p.size,
-                        ean: p.ean,
-                        info: p.info || {}
+                        id: p.id, n: p.name, p: p.price, c: p.category, b: p.brand,
+                        img: p.image_url, icon: p.icon, l: p.size, ean: p.ean, info: p.info || {}
                     }));
+                    console.log(`✅ Caricati ${PRODS.length} prodotti da Supabase.`);
                 }
-
-                // Una volta caricati i prodotti, renderizziamo le categorie
-                renderCategories();
-                console.log(`✅ Caricati ${PRODS.length} prodotti da Supabase.`);
             } catch (err) {
                 console.error("❌ Errore caricamento prodotti:", err);
-                // Fallback: se il DB fallisce, l'app non crasha ma mostra categorie vuote
-                renderCategories();
             }
         }
 
@@ -2015,7 +2001,8 @@
         }
 
 
-        fetchProducts();
+        renderCategories(); // Mostra subito le categorie
+        fetchProducts();    // Poi carica i prodotti in background
         renderFooter();
         updateUI();
         updateAuthUI();
