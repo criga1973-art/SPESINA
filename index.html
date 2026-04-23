@@ -8,11 +8,6 @@
     <title>SPESINA</title>
     <!-- Supabase Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-        const SUPABASE_URL = "https://uldpnhmdjbbwwqwjsdoh.supabase.co";
-        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsZHBuaG1kamJid3dxd2pzZG9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4NDE5ODQsImV4cCI6MjA5MjQxNzk4NH0.yXcJBcZtiaDbPl2IyDUBK-Ndoyu0unmEzfY8xZrogzM";
-        const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
 
@@ -1987,13 +1982,16 @@
 
         // Funzione per gestire la modalità manutenzione
         function checkMaintenance() {
-            // Permetti il bypass tramite parametro URL ?preview=true o sessionStorage
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('preview') === 'true') {
-                sessionStorage.setItem('spesina_preview', 'true');
-            }
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('preview') === 'true') {
+                    sessionStorage.setItem('spesina_preview', 'true');
+                }
+            } catch(e) {}
             
-            if (sessionStorage.getItem('spesina_preview') === 'true') return;
+            let isPreview = false;
+            try { isPreview = sessionStorage.getItem('spesina_preview') === 'true'; } catch(e) {}
+            if (isPreview) return;
 
             if (typeof MAINTENANCE_MODE !== 'undefined' && MAINTENANCE_MODE) {
                 const overlay = document.createElement('div');
@@ -2026,15 +2024,28 @@
         }
 
 
-        renderCategories(); // Mostra subito le categorie
-        fetchProducts();    // Poi carica i prodotti in background
-        renderFooter();
-        updateUI();
-        updateAuthUI();
-        checkMaintenance();
+        // Avvio protetto dell'applicazione
+        const SUPABASE_URL = "https://uldpnhmdjbbwwqwjsdoh.supabase.co";
+        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsZHBuaG1kamJid3dxd2pzZG9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4NDE5ODQsImV4cCI6MjA5MjQxNzk4NH0.yXcJBcZtiaDbPl2IyDUBK-Ndoyu0unmEzfY8xZrogzM";
+        let sb;
+        try {
+            if (typeof supabase !== 'undefined') {
+                sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            }
+        } catch (e) { console.error("Database connection error:", e); }
+
+        // Forza il rendering delle categorie prima di tutto
+        renderCategories(); 
         
-        // Identity & Subscription Startup Check
-        checkSubscriptionStatus();
+        // Esegue il resto delle operazioni dopo un brevissimo delay
+        setTimeout(() => {
+            checkMaintenance();
+            fetchProducts();    
+            renderFooter();
+            updateUI();
+            updateAuthUI();
+            checkSubscriptionStatus();
+        }, 100);
     </script>
 </body>
 
