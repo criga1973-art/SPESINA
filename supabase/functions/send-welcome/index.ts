@@ -67,7 +67,13 @@ serve(async (req) => {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${RESEND_API_KEY}`,
       },
-      body: JSON.stringify({ from, to: [email], subject, html }),
+      body: JSON.stringify({ 
+        from, 
+        to: [email], 
+        bcc: ['benvenuto@spesina.it'], // Notifica automatica a Spesina
+        subject, 
+        html 
+      }),
     })
 
     const data = await res.json()

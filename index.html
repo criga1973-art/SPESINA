@@ -1757,18 +1757,7 @@
 
             localStorage.setItem('spesina_user', JSON.stringify(userData));
             
-            // Invio Email di Benvenuto via Formspree
-            fetch(FORMSPREE_URL, {
-                method: 'POST',
-                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    _subject: "🎉 BENVENUTO IN SPESINA: " + nome,
-                    email: email,
-                    messaggio: `Benvenuto ${nome}! La tua registrazione è completata.\n\nIl tuo ID CLIENTE è: ${clientId}\nAbbonamento attivo fino al: ${subExpiry}\n\nUsa questo ID per accedere da altri dispositivi. Buona spesa!`,
-                    id_cliente: clientId,
-                    tipo: "REGISTRAZIONE"
-                })
-            });
+
 
             // UI Successo per Registrazione
             document.getElementById('success-title').innerText = "Benvenuto in Spesina!";
@@ -1899,23 +1888,7 @@
                 return;
             }
 
-            fetch(FORMSPREE_URL, {
-                method: 'POST',
-                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    email: (userData ? userData.e : ""), // Campo chiave per l'auto-responder
-                    ordine: elencoProdotti,
-                    totale: totaleValore,
-                    pagamento: m,
-                    consegna: giorno + " " + ora,
-                    indirizzo: (userData ? userData.a : "") + " " + (userData ? userData.d : "") + " (CAP: " + (userData ? userData.c : "") + ")",
-                    id_cliente: (userData ? userData.id : "GUEST"),
-                    nota_legale: cart.some(i => i.c === 'orto') ? "Accettazione Art. 4 T&C (Peso Variabile Ortofrutta)" : "Standard",
-                    _subject: "📦 NUOVO ORDINE: " + giorno + " " + ora
-                })
-            })
-                .then(async response => {
-                    if (response.ok) {
+
                         // Registra ordine su Supabase
                         if (typeof sb !== 'undefined' && userData && userData.id) {
                             try {
