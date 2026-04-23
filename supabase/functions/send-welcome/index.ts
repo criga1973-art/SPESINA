@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 
+// Version: 1.0.1 - Activated via GitHub Actions
 const RESEND_API_KEY = "re_fQUPt4TL_JxoJLoLjtzyD6ZKdezXoeAaM"
 
 const corsHeaders = {
