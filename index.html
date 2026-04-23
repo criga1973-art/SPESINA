@@ -8,7 +8,11 @@
     <title>SPESINA</title>
     <!-- Supabase Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="supabase-config.js"></script>
+    <script>
+        const SUPABASE_URL = "https://uldpnhmdjbbwwqwjsdoh.supabase.co";
+        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsZHBuaG1kamJid3dxd2pzZG9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4NDE5ODQsImV4cCI6MjA5MjQxNzk4NH0.yXcJBcZtiaDbPl2IyDUBK-Ndoyu0unmEzfY8xZrogzM";
+        const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
 
@@ -1632,7 +1636,7 @@
 
             try {
                 // Cerchiamo il profilo su Supabase
-                const { data, error } = await sb.from('profiles').select('*').eq('client_id', id).single();
+                const { data, error } = await sb.from('profiles').select('*').eq('id', id).single();
                 
                 if (error || !data) {
                     alert("ID Cliente non trovato. Verifica il codice o registrati come nuovo cliente.");
@@ -1740,7 +1744,7 @@
             if (typeof sb !== 'undefined') {
                 try {
                     await sb.from('profiles').upsert({
-                        client_id: clientId,
+                        id: clientId,
                         full_name: nome,
                         email: email,
                         phone: tel,
@@ -1748,7 +1752,7 @@
                         details: dettagli,
                         cap: cap,
                         sub_expiry: subExpiry
-                    }, { onConflict: 'client_id' });
+                    }, { onConflict: 'id' });
                 } catch (err) { console.error("Errore Supabase:", err); }
             }
 
