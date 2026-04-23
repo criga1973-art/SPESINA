@@ -784,7 +784,7 @@
                 </div>
                 <div class="input-group">
                     <label>Email (Per ricevere il riepilogo spesa)</label>
-                    <input type="email" id="reg-email" class="select-box" placeholder="mario.rossi@esempio.it" required>
+                    <input type="email" id="reg-email" class="select-box" placeholder="mario.rossi@esempio.it" required oninput="checkRegisterValidity()">
                 </div>
                 <div class="input-group">
                     <label>Numero di Cellulare</label>
@@ -820,7 +820,7 @@
                 </div>
 
                 <div class="checkbox-group">
-                    <input type="checkbox" id="reg-privacy" required>
+                    <input type="checkbox" id="reg-privacy" required onchange="checkRegisterValidity()">
                     <label for="reg-privacy">Accetto la <a onclick="showLegalPage('privacy')"
                             style="color:var(--primary); font-weight:700;">Privacy Policy</a> di Spesina.</label>
                 </div>
@@ -1698,17 +1698,22 @@
         function checkRegisterValidity() {
             const cap = document.getElementById('reg-cap').value;
             const phone = document.getElementById('reg-phone').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const privacy = document.getElementById('reg-privacy').checked;
             const submitBtn = document.getElementById('btn-submit-reg');
 
             const isCapValid = AUTHORIZED_CAPS.includes(cap);
             const isPhoneValid = /^\d{9,10}$/.test(phone);
+            const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-            if (isCapValid && isPhoneValid) {
+            if (isCapValid && isPhoneValid && isEmailValid && privacy) {
                 submitBtn.disabled = false;
                 submitBtn.style.opacity = '1';
+                submitBtn.style.cursor = 'pointer';
             } else {
                 submitBtn.disabled = true;
                 submitBtn.style.opacity = '0.5';
+                submitBtn.style.cursor = 'not-allowed';
             }
         }
 
