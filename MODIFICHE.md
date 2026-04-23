@@ -41,5 +41,12 @@ Ecco un riepilogo delle ultime migliorie apportate al progetto:
 - **Informativa Carrello**: Messaggio dinamico per il primo ordine del mese ("Stai effettuando la prima spesa...").
 - **Disclaimer Ortofrutta**: Avviso condizionale per i prodotti a peso variabile, visibile solo se presenti nel carrello.
 
+## 🔒 Manutenzione & Sicurezza (Aprile 2026)
+- **Maintenance Mode**: Ripristinato il blocco globale (`MAINTENANCE_MODE = true`) per il pubblico, con sistema di bypass via `?preview=true` per lo sviluppo.
+- **Fix SyntaxError**: Risolto un errore critico di doppia dichiarazione variabile (`history`) che bloccava l'avvio dell'app.
+- **Supabase Safety**: Introdotta una gestione sicura dell'inizializzazione del database per prevenire crash se le librerie esterne non vengono caricate.
+- **Startup Sequence**: Ottimizzato l'ordine di esecuzione degli script per garantire il rendering istantaneo delle categorie.
+
 ---
-*Per visualizzare l'app, apri il file **index.html** tramite il collegamento sul desktop.*
+*Per visualizzare l'app durante i test, usa il link: **spesina.it/?preview=true***
+*Per lo sviluppo locale, apri il file **index.html** tramite il collegamento sul desktop.*
