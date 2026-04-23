@@ -70,7 +70,7 @@ serve(async (req) => {
       body: JSON.stringify({ 
         from, 
         to: [email], 
-        bcc: ['benvenuto@spesina.it'], // Notifica automatica a Spesina
+        bcc: ['criga1973@gmail.com'], // Notifica automatica a Spesina (Gmail per ora)
         subject, 
         html 
       }),
