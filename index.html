@@ -1794,6 +1794,7 @@
                         email: data.e,
                         delivery: data.delivery,
                         address: data.address,
+                        phone: data.phone,
                         orderItems: data.items,
                         total: data.total
                     })
@@ -1902,6 +1903,7 @@
                         sendOrderEmail({
                             n: userData.n,
                             e: userData.e,
+                            phone: userData.t,
                             delivery: giorno + " " + ora,
                             address: userData.a + " " + userData.d,
                             items: elencoProdotti,

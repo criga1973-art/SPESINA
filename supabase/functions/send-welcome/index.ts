@@ -31,6 +31,7 @@ serve(async (req) => {
           <div style="background: #f9fafb; padding: 20px; border-radius: 10px; border: 1px solid #e5e7eb; margin-bottom: 20px;">
             <p style="margin: 5px 0;">🚚 <b>Consegna prevista:</b> ${body.delivery}</p>
             <p style="margin: 5px 0;">📍 <b>Indirizzo:</b> ${body.address}</p>
+            <p style="margin: 5px 0;">📞 <b>Telefono:</b> ${body.phone || 'Non fornito'}</p>
           </div>
           <div style="background: #fff; padding: 15px; border: 1px solid #eee; border-radius: 10px;">
             <h4 style="margin: 0 0 10px 0;">Riepilogo Prodotti:</h4>
