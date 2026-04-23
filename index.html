@@ -1010,9 +1010,9 @@
         const MAINTENANCE_MODE = true; // Cambia in false per aprire ufficialmente il sito!
 
         const SLOT_CONSEGNA = {
-            "09:00-10:00": 5, "10:00-11:00": 3, "11:00-12:00": 0,
-            "12:00-13:00": 2, "13:00-14:00": 5, "14:00-15:00": 5,
-            "15:00-16:00": 1, "16:00-17:00": 4, "17:00-18:00": 5
+            "10:00-11:00": 5, "11:00-12:00": 5, "12:00-13:00": 5,
+            "13:00-14:00": 5, "14:00-15:00": 5, "15:00-16:00": 5,
+            "16:00-17:00": 5, "17:00-18:00": 5
         };
 
         const AUTHORIZED_CAPS = ["30171", "30172", "30173", "30174", "30175"];
@@ -1430,14 +1430,24 @@
         function caricaOrari() {
             const giorno = document.getElementById('select-giorno').value;
             const oraAttuale = new Date().getHours();
+            const history = JSON.parse(localStorage.getItem('spesina_history') || "[]");
             let options = "";
-            for (const [fascia, posti] of Object.entries(SLOT_CONSEGNA)) {
+
+            for (const [fascia, capMassima] of Object.entries(SLOT_CONSEGNA)) {
                 const oraInizio = parseInt(fascia.split(":"));
                 const scaduto = (giorno === "Oggi" && oraInizio <= oraAttuale);
-                if (posti <= 0 || scaduto) options += `<option disabled>${fascia} (Esaurito)</option>`;
-                else options += `<option value="${fascia}">${fascia} (${posti} disponibili)</option>`;
+                
+                // Calcola ordini totali già presi per questa fascia
+                const ordiniPresi = history.filter(o => o.slot === (giorno + " " + fascia)).length;
+                const postiDisponibili = capMassima - ordiniPresi;
+
+                if (postiDisponibili <= 0 || scaduto) {
+                    options += `<option disabled>${fascia} (Esaurito)</option>`;
+                } else {
+                    options += `<option value="${fascia}">${fascia} (${postiDisponibili} posti rimasti)</option>`;
+                }
             }
-            document.getElementById('select-ora').innerHTML = options || "<option disabled>Nessun orario</option>";
+            document.getElementById('select-ora').innerHTML = options || "<option disabled>Nessun orario disponibile</option>";
         }
 
         function addToCart(id) {
@@ -1748,17 +1758,29 @@
         // --- FINE AUTOCOMPLETE ---
 
         function showPay() {
-            // Check subscription before showing pay
             if (!checkSubscriptionStatus()) return;
-
-            // Check daily cap
             if (getDailyOrderCount() >= 3) {
                 alert("Hai raggiunto il limite di 3 spese per oggi. Ci vediamo domani!");
                 return;
             }
 
-            if (!document.getElementById('select-ora').value || document.getElementById('select-ora').value.includes("Esaurito")) return alert("Seleziona un orario valido!");
-            if (confirm("Vuoi confermare l'ordine?")) { closeModals(); document.getElementById('modalPay').style.display = 'flex'; }
+            const giorno = document.getElementById('select-giorno').value;
+            const ora = document.getElementById('select-ora').value;
+            if (!ora || ora.includes("Esaurito")) return alert("Seleziona un orario valido!");
+
+            // NUOVA REGOLA: Massimo 3 spese dello stesso ID in un'ora
+            const history = JSON.parse(localStorage.getItem('spesina_history') || "[]");
+            const ordiniUtenteInFascia = history.filter(o => o.id === (userData ? userData.id : null) && o.slot === (giorno + " " + ora)).length;
+            
+            if (ordiniUtenteInFascia >= 3) {
+                alert("⚠️ Hai già prenotato 3 consegne per questa fascia oraria. Seleziona un altro orario per i prossimi articoli!");
+                return;
+            }
+
+            if (confirm(`Confermi l'ordine per ${giorno} alle ${ora}?`)) { 
+                closeModals(); 
+                document.getElementById('modalPay').style.display = 'flex'; 
+            }
         }
 
         function finish(m) {
@@ -1806,7 +1828,11 @@
                         }
 
                         const history = JSON.parse(localStorage.getItem('spesina_history') || "[]");
-                        history.push({ date: new Date().toISOString().split('T')[0], id: userData.id });
+                        history.push({ 
+                            date: new Date().toISOString().split('T')[0], 
+                            id: userData.id,
+                            slot: giorno + " " + ora 
+                        });
                         localStorage.setItem('spesina_history', JSON.stringify(history));
 
                         cart = [];
