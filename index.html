@@ -777,20 +777,20 @@
         </div>
         <div class="form-container">
             <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px; line-height:1.4; border-bottom: 1px solid #eee; padding-bottom: 15px;">L'accesso al servizio Spesina comporta la sottoscrizione di un <b>abbonamento mensile di 19,99€</b> per consegne illimitate nel territorio di Mestre (max 7 articoli per ordine).</p>
-            <form id="register-form" onsubmit="handleRegister(event)">
+            <form id="register-form" onsubmit="handleRegister(event)" autocomplete="off">
                 <div class="input-group">
                     <label>Nome e Cognome</label>
-                    <input type="text" id="reg-name" class="select-box" placeholder="Mario Rossi" required oninput="checkRegisterValidity()">
+                    <input type="text" id="reg-name" class="select-box" placeholder="Mario Rossi" oninput="checkRegisterValidity()">
                 </div>
                 <div class="input-group">
                     <label>Email (Per ricevere il riepilogo spesa)</label>
-                    <input type="email" id="reg-email" class="select-box" placeholder="mario.rossi@esempio.it" required oninput="checkRegisterValidity()">
+                    <input type="email" id="reg-email" class="select-box" placeholder="mario.rossi@esempio.it" oninput="checkRegisterValidity()">
                 </div>
                 <div class="input-group">
                     <label>Numero di Cellulare</label>
                     <div class="phone-input-wrapper">
                         <span class="phone-prefix">+39</span>
-                        <input type="tel" id="reg-phone" class="phone-input-field" placeholder="3401234567" required
+                        <input type="tel" id="reg-phone" class="phone-input-field" placeholder="3401234567"
                             oninput="validateRegisterPhone()">
                     </div>
                     <div id="reg-phone-error" class="error-message">Inserisci un numero di cellulare valido (9 o 10
@@ -798,7 +798,7 @@
                 </div>
                 <div class="input-group">
                     <label>CAP (Solo Mestre)</label>
-                    <select id="reg-cap" class="select-box" onchange="validateRegisterCAP()" required>
+                    <select id="reg-cap" class="select-box" onchange="validateRegisterCAP()">
                         <option value="" disabled selected>Seleziona il tuo CAP...</option>
                         <option value="30170">30170 (Mestre)</option>
                         <option value="30171">30171 (Mestre)</option>
@@ -813,7 +813,7 @@
                 <div class="input-group">
                     <label>Indirizzo di Consegna (Mestre)</label>
                     <div class="autocomplete-container">
-                        <input type="text" id="reg-address" class="select-box" placeholder="Inizia a scrivere la tua via..." required
+                        <input type="text" id="reg-address" class="select-box" placeholder="Inizia a scrivere la tua via..."
                             oninput="handleAddressInput(this.value)">
                         <div id="address-suggestions" class="autocomplete-results"></div>
                     </div>
@@ -821,11 +821,11 @@
 
                 <div class="input-group">
                     <label>Civico, Piano e Interno</label>
-                    <input type="text" id="reg-details" class="select-box" placeholder="es: Civico 10, Piano 2, Int. 5" required oninput="checkRegisterValidity()">
+                    <input type="text" id="reg-details" class="select-box" placeholder="es: Civico 10, Piano 2, Int. 5" oninput="checkRegisterValidity()">
                 </div>
 
                 <div class="checkbox-group">
-                    <input type="checkbox" id="reg-privacy" required onchange="checkRegisterValidity()">
+                    <input type="checkbox" id="reg-privacy" onchange="checkRegisterValidity()">
                     <label for="reg-privacy">Accetto la <a onclick="showLegalPage('privacy')"
                             style="color:var(--primary); font-weight:700;">Privacy Policy</a> di Spesina.</label>
                 </div>
@@ -1711,6 +1711,7 @@
 
         async function handleRegister(e) {
             e.preventDefault();
+            console.log("Tentativo di registrazione avviato...");
             
             const nome = document.getElementById('reg-name').value.trim();
             const email = document.getElementById('reg-email').value.trim();
