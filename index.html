@@ -1636,7 +1636,7 @@
 
             try {
                 // Cerchiamo il profilo su Supabase
-                const { data, error } = await sb.from('profiles').select('*').eq('id', id).single();
+                const { data, error } = await sb.from('customers').select('*').eq('client_id', id).single();
                 
                 if (error || !data) {
                     alert("ID Cliente non trovato. Verifica il codice o registrati come nuovo cliente.");
@@ -1743,8 +1743,8 @@
             // Salvataggio su Supabase
             if (typeof sb !== 'undefined') {
                 try {
-                    await sb.from('profiles').upsert({
-                        id: clientId,
+                    await sb.from('customers').upsert({
+                        client_id: clientId,
                         full_name: nome,
                         email: email,
                         phone: tel,
@@ -1752,7 +1752,7 @@
                         details: dettagli,
                         cap: cap,
                         sub_expiry: subExpiry
-                    }, { onConflict: 'id' });
+                    }, { onConflict: 'client_id' });
                 } catch (err) { console.error("Errore Supabase:", err); }
             }
 
