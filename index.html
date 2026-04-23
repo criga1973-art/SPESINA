@@ -866,6 +866,23 @@
         </div>
     </div>
 
+    <!-- Modal Login -->
+    <div class="modal" id="modalLogin">
+        <div class="modal-content">
+            <h3 style="margin-top:0;">🔑 Accedi a Spesina</h3>
+            <p style="font-size:14px; color:var(--text-muted); margin-bottom:20px;">Inserisci il tuo ID Cliente per recuperare il tuo profilo e i tuoi ordini.</p>
+            
+            <div class="input-group">
+                <label>ID Cliente (es: SP-XXXXXX)</label>
+                <input type="text" id="login-id" class="select-box" placeholder="Inserisci il tuo ID..." style="text-transform:uppercase;">
+            </div>
+
+            <button class="btn-confirm" style="margin-top:10px;" onclick="handleLogin()">ACCEDI ORA</button>
+            <p style="font-size:12px; margin-top:15px; color:var(--text-muted);">Non hai un ID? <a onclick="closeModals(); showRegister()" style="color:var(--primary); font-weight:700; cursor:pointer;">Registrati qui</a></p>
+            <button onclick="closeModals()" style="border:none;background:none;color:var(--text-muted);margin-top:10px;cursor:pointer;font-weight:700;">Chiudi</button>
+        </div>
+    </div>
+
     <div class="modal" id="modalAddress">
         <div class="modal-content">
             <h3 style="margin-top:0;">📍 Dove consegniamo?</h3>
@@ -1571,20 +1588,68 @@
         }
 
         function showRegister() {
+            if (userData && userData.id) {
+                // Se è già loggato, mostriamo un'opzione di logout o i suoi dati
+                if(confirm(`Sei loggato come ${userData.n}. Vuoi disconnetterti?`)) {
+                    handleLogout();
+                }
+                return;
+            }
             currentRegisterPage = true;
             document.getElementById('home-view').style.display = 'none';
             document.getElementById('subcategory-view').style.display = 'none';
             document.getElementById('main-footer').style.display = 'none';
             document.getElementById('register-view').style.display = 'block';
-
-            // Pre-fill se esiste già l'utente
-            if (userData) {
-                document.getElementById('reg-name').value = userData.n || "";
-                document.getElementById('reg-phone').value = userData.t || "";
-                document.getElementById('reg-address').value = userData.a || "";
-                document.getElementById('reg-cap').value = userData.c || "";
-            }
             window.scrollTo(0, 0);
+        }
+
+        function openLogin() {
+            document.getElementById('login-id').value = "";
+            document.getElementById('modalLogin').style.display = 'flex';
+        }
+
+        async function handleLogin() {
+            const id = document.getElementById('login-id').value.trim().toUpperCase();
+            if (!id) return alert("Inserisci un ID valido!");
+
+            try {
+                // Cerchiamo il profilo su Supabase
+                const { data, error } = await sb.from('profiles').select('*').eq('client_id', id).single();
+                
+                if (error || !data) {
+                    alert("ID Cliente non trovato. Verifica il codice o registrati come nuovo cliente.");
+                    return;
+                }
+
+                // Ripristiniamo l'utente
+                userData = { 
+                    id: data.client_id, 
+                    n: data.full_name, 
+                    t: data.phone, 
+                    a: data.address, 
+                    c: data.cap, 
+                    subExpiry: data.sub_expiry 
+                };
+                
+                localStorage.setItem('spesina_user', JSON.stringify(userData));
+                alert(`Bentornato, ${userData.n}! Accesso eseguito con successo.`);
+                closeModals();
+                updateAuthUI();
+                goHome();
+            } catch (err) {
+                console.error("Errore Login:", err);
+                alert("Errore tecnico durante l'accesso. Riprova più tardi.");
+            }
+        }
+
+        function handleLogout() {
+            if (confirm("Vuoi uscire dal tuo profilo Spesina?")) {
+                localStorage.removeItem('spesina_user');
+                userData = null;
+                alert("Logout effettuato. A presto!");
+                updateAuthUI();
+                goHome();
+            }
         }
 
         function validateRegisterCAP() {
@@ -1882,12 +1947,25 @@
             const welcomeBanner = document.getElementById('user-welcome-banner');
             
             if (userData && userData.id) {
-                if (loginLink) loginLink.innerHTML = `👤 Profilo`;
+                if (loginLink) {
+                    loginLink.innerHTML = `👤 Profilo`;
+                    loginLink.onclick = handleLogout; // Cliccando su Profilo ora chiede il logout
+                }
                 if (welcomeBanner) {
                     welcomeBanner.style.display = 'block';
                     document.getElementById('welcome-name').innerText = userData.n.split(' ')[0];
                     document.getElementById('welcome-id').innerText = userData.id;
                     document.getElementById('welcome-expiry').innerText = userData.subExpiry;
+                    
+                    // Aggiungiamo un tasto Logout visibile nel banner
+                    if (!document.getElementById('btn-logout-banner')) {
+                        const logoutBtn = document.createElement('button');
+                        logoutBtn.id = 'btn-logout-banner';
+                        logoutBtn.innerText = "Esci ✕";
+                        logoutBtn.style = "background:rgba(255,255,255,0.2); border:none; color:white; padding:4px 10px; border-radius:8px; font-size:10px; font-weight:800; cursor:pointer; margin-left:10px; vertical-align:middle;";
+                        logoutBtn.onclick = handleLogout;
+                        welcomeBanner.querySelector('div').appendChild(logoutBtn);
+                    }
                 }
                 // Update footer if exists
                 const companyData = document.getElementById('company-data');
@@ -1895,8 +1973,15 @@
                     companyData.innerHTML += `<br><span style="font-size:11px; opacity:0.8;">🆔 ID Cliente: <b>${userData.id}</b></span>`;
                 }
             } else {
-                if (loginLink) loginLink.innerHTML = `🔑 Accedi`;
-                if (welcomeBanner) welcomeBanner.style.display = 'none';
+                if (loginLink) {
+                    loginLink.innerHTML = `🔑 Accedi`;
+                    loginLink.onclick = openLogin;
+                }
+                if (welcomeBanner) {
+                    welcomeBanner.style.display = 'none';
+                    const oldBtn = document.getElementById('btn-logout-banner');
+                    if (oldBtn) oldBtn.remove();
+                }
             }
         }
 
