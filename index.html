@@ -780,18 +780,18 @@
             <form id="register-form" onsubmit="handleRegister(event)" autocomplete="off">
                 <div class="input-group">
                     <label>Nome e Cognome</label>
-                    <input type="text" id="reg-name" class="select-box" placeholder="Mario Rossi" oninput="checkRegisterValidity()">
+                    <input type="text" id="reg-name" class="select-box" placeholder="Mario Rossi" oninput="checkRegisterValidity()" autocomplete="new-password">
                 </div>
                 <div class="input-group">
                     <label>Email (Per ricevere il riepilogo spesa)</label>
-                    <input type="email" id="reg-email" class="select-box" placeholder="mario.rossi@esempio.it" oninput="checkRegisterValidity()">
+                    <input type="email" id="reg-email" class="select-box" placeholder="mario.rossi@esempio.it" oninput="checkRegisterValidity()" autocomplete="new-password">
                 </div>
                 <div class="input-group">
                     <label>Numero di Cellulare</label>
                     <div class="phone-input-wrapper">
                         <span class="phone-prefix">+39</span>
                         <input type="tel" id="reg-phone" class="phone-input-field" placeholder="3401234567"
-                            oninput="validateRegisterPhone()">
+                            oninput="validateRegisterPhone()" autocomplete="new-password">
                     </div>
                     <div id="reg-phone-error" class="error-message">Inserisci un numero di cellulare valido (9 o 10
                         cifre).</div>
@@ -814,14 +814,14 @@
                     <label>Indirizzo di Consegna (Mestre)</label>
                     <div class="autocomplete-container">
                         <input type="text" id="reg-address" class="select-box" placeholder="Inizia a scrivere la tua via..."
-                            oninput="handleAddressInput(this.value)">
+                            oninput="handleAddressInput(this.value)" autocomplete="new-password">
                         <div id="address-suggestions" class="autocomplete-results"></div>
                     </div>
                 </div>
 
                 <div class="input-group">
                     <label>Civico, Piano e Interno</label>
-                    <input type="text" id="reg-details" class="select-box" placeholder="es: Civico 10, Piano 2, Int. 5" oninput="checkRegisterValidity()">
+                    <input type="text" id="reg-details" class="select-box" placeholder="es: Civico 10, Piano 2, Int. 5" oninput="checkRegisterValidity()" autocomplete="new-password">
                 </div>
 
                 <div class="checkbox-group">
