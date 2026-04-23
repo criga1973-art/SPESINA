@@ -1506,29 +1506,38 @@
             let total = 0;
             let listHtml = "";
             let hasOrtofrutta = false;
+            
+            // Calcolo primo ordine del mese
+            const history = JSON.parse(localStorage.getItem('spesina_history') || "[]");
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            const ordersThisMonth = history.filter(o => {
+                const oDate = new Date(o.date);
+                return o.id === (userData ? userData.id : null) && oDate.getMonth() === currentMonth && oDate.getFullYear() === currentYear;
+            }).length;
+            const isFirstOrder = (ordersThisMonth === 0 && cart.length > 0);
+
             cart.forEach(i => {
                 total += (i.p * i.q);
                 if (i.c === 'orto') hasOrtofrutta = true;
                 listHtml += `<div class="cart-row"><span><b>${i.q}x</b> ${i.n}</span><span>${(i.p * i.q).toFixed(2)}€ <button onclick="remove(${i.id})" style="background:var(--red);color:white;border:none;border-radius:50%;width:20px;height:20px;cursor:pointer;">✕</button></span></div>`;
             });
+
+            // Se è il primo ordine, aggiungiamo l'abbonamento al totale e alla lista
+            if (isFirstOrder) {
+                const subPrice = 19.99;
+                total += subPrice;
+                listHtml += `<div class="cart-row" style="color:var(--primary); font-weight:800; border-top:1px dashed var(--primary-light); margin-top:10px; padding-top:10px;"><span>🎟️ Abbonamento Mensile</span><span>${subPrice.toFixed(2)}€</span></div>`;
+            }
+
             document.getElementById('cart-trigger').style.display = cart.length > 0 ? 'block' : 'none';
             document.getElementById('cart-total-top').innerText = total.toFixed(2) + "€";
             document.getElementById('final-price').innerText = "Totale: " + total.toFixed(2) + "€";
             
-            // Check primo ordine del mese
-            const history = JSON.parse(localStorage.getItem('spesina_history') || "[]");
-            const now = new Date();
-            const currentMonth = now.getMonth();
-            const currentYear = now.getFullYear();
-            
-            const ordersThisMonth = history.filter(o => {
-                const oDate = new Date(o.date);
-                return o.id === (userData ? userData.id : null) && oDate.getMonth() === currentMonth && oDate.getFullYear() === currentYear;
-            }).length;
-
             const firstOrderMsg = document.getElementById('first-order-msg');
             if (firstOrderMsg) {
-                firstOrderMsg.style.display = (ordersThisMonth === 0 && cart.length > 0) ? 'block' : 'none';
+                firstOrderMsg.style.display = isFirstOrder ? 'block' : 'none';
             }
 
             // Aggiornamento contatore dinamico X di 7
@@ -1868,7 +1877,21 @@
             if (!checkSubscriptionStatus()) return;
             if (getDailyOrderCount() >= 3) return;
 
+            // Calcolo se aggiungere abbonamento nel riepilogo email
+            const history = JSON.parse(localStorage.getItem('spesina_history') || "[]");
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            const ordersThisMonth = history.filter(o => {
+                const oDate = new Date(o.date);
+                return o.id === (userData ? userData.id : null) && oDate.getMonth() === currentMonth && oDate.getFullYear() === currentYear;
+            }).length;
+
             let elencoProdotti = cart.map(i => `${i.q}x ${i.n} (${(i.p * i.q).toFixed(2)}€)`).join("\n");
+            if (ordersThisMonth === 0 && cart.length > 0) {
+                elencoProdotti += "\n+ 🎟️ Abbonamento Mensile Spesina (19.99€)";
+            }
+
             let totaleValore = document.getElementById('final-price').innerText;
             let giorno = document.getElementById('select-giorno').value;
             let ora = document.getElementById('select-ora').value;
