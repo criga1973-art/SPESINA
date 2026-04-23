@@ -1599,18 +1599,23 @@
         }
 
         function showRegister() {
+            // Se l'utente è loggato, chiediamo se vuole uscire prima di registrarne uno nuovo
             if (userData && userData.id) {
-                // Se è già loggato, mostriamo un'opzione di logout o i suoi dati
-                if(confirm(`Sei loggato come ${userData.n}. Vuoi disconnetterti?`)) {
-                    handleLogout();
+                if(confirm(`Sei già loggato come ${userData.n}. Vuoi uscire per creare un nuovo account?`)) {
+                    localStorage.removeItem('spesina_user');
+                    userData = null;
+                    updateAuthUI();
+                } else {
+                    return;
                 }
-                return;
             }
+            
+            closeModals();
             currentRegisterPage = true;
             document.getElementById('home-view').style.display = 'none';
             document.getElementById('subcategory-view').style.display = 'none';
-            document.getElementById('main-footer').style.display = 'none';
             document.getElementById('register-view').style.display = 'block';
+            document.getElementById('main-footer').style.display = 'none';
             window.scrollTo(0, 0);
         }
 
