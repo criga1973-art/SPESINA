@@ -1778,6 +1778,12 @@
             document.getElementById('id-display-box').style.display = 'block';
             document.getElementById('modalSuccess').style.display = 'flex';
             
+            // Messaggio WhatsApp per lo Shopper
+            const shopperNumber = "393459846663"; // Il tuo numero
+            const waMsg = encodeURIComponent(`👋 Ciao! Mi sono appena registrato su Spesina!\n\n🆔 ID: ${clientId}\n👤 Nome: ${nome}\n📍 Indirizzo: ${via}, ${dettagli}\n📞 Cell: ${tel}\n\nAbbonamento attivo fino al: ${subExpiry}`);
+            const waLink = `https://wa.me/${shopperNumber}?text=${waMsg}`;
+            document.getElementById('wa-share-btn').onclick = () => window.open(waLink, '_blank');
+
             updateAuthUI();
             goHome();
         }
