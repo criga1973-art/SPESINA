@@ -783,6 +783,10 @@
                     <input type="text" id="reg-name" class="select-box" placeholder="Mario Rossi" required>
                 </div>
                 <div class="input-group">
+                    <label>Email (Per ricevere il riepilogo spesa)</label>
+                    <input type="email" id="reg-email" class="select-box" placeholder="mario.rossi@esempio.it" required>
+                </div>
+                <div class="input-group">
                     <label>Numero di Cellulare</label>
                     <div class="phone-input-wrapper">
                         <span class="phone-prefix">+39</span>
@@ -929,11 +933,18 @@
     <div class="modal" id="modalSuccess">
         <div class="modal-content" style="text-align:center; padding: 40px 25px;">
             <div style="font-size:70px; margin-bottom:15px; animation: bounce 1s ease;">🎉</div>
-            <h3 style="margin-top:0; color:var(--primary); font-size:26px;">Ordine Confermato!</h3>
+            <h3 style="margin-top:0; color:var(--primary); font-size:26px;" id="success-title">Ordine Confermato!</h3>
+            <div id="id-display-box" style="display:none; background: #f8fafc; border: 2px dashed var(--primary); padding: 20px; border-radius: 16px; margin: 20px 0;">
+                <div style="font-size: 12px; color: #64748b; font-weight: 700; text-transform: uppercase; margin-bottom: 5px;">Il tuo ID Cliente Spesina</div>
+                <div id="display-client-id" style="font-size: 28px; font-weight: 900; color: var(--dark); letter-spacing: 2px;">SP-XXXXXX</div>
+                <div style="display:flex; gap:10px; justify-content:center; margin-top:15px;">
+                    <button onclick="copyID()" style="background:var(--primary); color:white; border:none; padding:8px 15px; border-radius:8px; font-weight:700; cursor:pointer; font-size:12px;">📋 Copia</button>
+                    <button onclick="shareIDWhatsApp()" style="background:#25D366; color:white; border:none; padding:8px 15px; border-radius:8px; font-weight:700; cursor:pointer; font-size:12px;">💬 WhatsApp</button>
+                </div>
+            </div>
             <p style="font-size:16px; line-height:1.5; color:var(--text-muted); font-weight:500; margin:20px 0;"
                 id="success-desc">Prepareremo la tua spesa con cura.</p>
-            <button class="btn-confirm" onclick="closeModals(); window.scrollTo(0,0);" style="margin-top:20px;">Torna
-                alla Home</button>
+            <button class="btn-confirm" onclick="closeModals(); window.scrollTo(0,0);" style="margin-top:20px;">Torna alla Home</button>
         </div>
     </div>
 
@@ -1625,6 +1636,7 @@
                 userData = { 
                     id: data.client_id, 
                     n: data.full_name, 
+                    e: data.email,
                     t: data.phone, 
                     a: data.address, 
                     c: data.cap, 
@@ -1698,6 +1710,7 @@
         async function handleRegister(e) {
             e.preventDefault();
             const nome = document.getElementById('reg-name').value;
+            const email = document.getElementById('reg-email').value;
             const tel = document.getElementById('reg-phone').value;
             const via = document.getElementById('reg-address').value;
             const cap = document.getElementById('reg-cap').value;
@@ -1709,7 +1722,7 @@
             const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
             const subExpiry = lastDay.toISOString().split('T')[0];
 
-            userData = { id: clientId, n: nome, t: tel, a: via, c: cap, subExpiry: subExpiry };
+            userData = { id: clientId, n: nome, e: email, t: tel, a: via, c: cap, subExpiry: subExpiry };
             
             // Salvataggio su Supabase
             if (typeof sb !== 'undefined') {
@@ -1717,6 +1730,7 @@
                     await sb.from('profiles').upsert({
                         client_id: clientId,
                         full_name: nome,
+                        email: email,
                         phone: tel,
                         address: via,
                         cap: cap,
@@ -1726,10 +1740,16 @@
             }
 
             localStorage.setItem('spesina_user', JSON.stringify(userData));
-            alert(`Registrazione completata! Benvenuto in Spesina, ${nome}.\nIl tuo ID Cliente è: ${clientId}\nAbbonamento attivo fino al: ${subExpiry}`);
+            
+            // UI Successo per Registrazione
+            document.getElementById('success-title').innerText = "Benvenuto in Spesina!";
+            document.getElementById('success-desc').innerHTML = `Ciao ${nome}, la tua registrazione è attiva.<br>Controlla l'email <b>${email}</b> per i dettagli!`;
+            document.getElementById('display-client-id').innerText = clientId;
+            document.getElementById('id-display-box').style.display = 'block';
+            document.getElementById('modalSuccess').style.display = 'flex';
+            
             updateAuthUI();
             goHome();
-            checkSubscriptionStatus();
         }
 
         function checkSubscriptionStatus() {
@@ -1901,6 +1921,7 @@
                 method: 'POST',
                 headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
                 body: JSON.stringify({
+                    email: (userData ? userData.e : ""), // Campo chiave per l'auto-responder
                     ordine: elencoProdotti,
                     totale: totaleValore,
                     pagamento: m,
@@ -1934,7 +1955,9 @@
                         cart = [];
                         updateUI();
                         closeModals();
-                        document.getElementById('success-desc').innerHTML = "La consegna è in programma per<br><b style='color:var(--dark);'>" + giorno + " alle " + ora + "</b><br><br>Grazie per aver scelto Spesina!";
+                        document.getElementById('success-title').innerText = "Ordine Confermato!";
+                        document.getElementById('id-display-box').style.display = 'none';
+                        document.getElementById('success-desc').innerHTML = "La consegna è in programma per<br><b style='color:var(--dark);'>" + giorno + " alle " + ora + "</b><br><br>Ti abbiamo inviato il riepilogo via Email!";
                         document.getElementById('modalSuccess').style.display = 'flex';
                     } else {
                         alert("Si è verificato un problema tecnico. Riprova.");
@@ -2016,6 +2039,19 @@
                 document.body.appendChild(overlay);
                 document.body.style.overflow = 'hidden';
             }
+        }
+
+        function copyID() {
+            const id = document.getElementById('display-client-id').innerText;
+            navigator.clipboard.writeText(id).then(() => {
+                alert("ID Cliente copiato negli appunti! 📋");
+            });
+        }
+
+        function shareIDWhatsApp() {
+            const id = document.getElementById('display-client-id').innerText;
+            const text = encodeURIComponent(`Ciao! Il mio ID Cliente Spesina è: ${id}. Conservalo per i miei prossimi ordini! 🛒🚀`);
+            window.open(`https://wa.me/?text=${text}`, '_blank');
         }
 
         fetchProducts();
