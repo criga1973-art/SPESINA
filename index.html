@@ -1813,8 +1813,13 @@
                 });
                 const result = await response.json();
                 console.log("Risultato invio email:", result);
+                if (result.error) {
+                    console.error("Dettaglio Errore:", result.error);
+                } else {
+                    console.log("Email inviata con successo al cliente!");
+                }
             } catch (err) {
-                console.error("Errore chiamata Edge Function:", err);
+                console.error("Errore critico chiamata Edge Function:", err);
             }
         }
 
