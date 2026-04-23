@@ -716,7 +716,7 @@
         <div id="home-categories-title"
             style="padding:15px 20px 0 20px; font-weight:bold; color:var(--dark); font-size:18px;">Esplora Categorie
         </div>
-        <div class="catalog" id="categories-catalog" style="display:flex; flex-wrap:wrap; justify-content:center;">
+        <div class="catalog" id="categories-catalog" style="display: grid;">
         </div>
         <div class="catalog" id="search-catalog" style="display:none;"></div>
     </div>
@@ -1083,6 +1083,10 @@
         let PRODS = [];
 
         async function fetchProducts() {
+            if (typeof sb === 'undefined') {
+                console.warn("⚠️ Supabase non inizializzato. Uso dati locali se disponibili.");
+                return;
+            }
             try {
                 // Carichiamo tutti i prodotti dalla tabella 'products' su Supabase
                 const { data, error } = await sb.from('products').select('*').order('name');
@@ -1104,12 +1108,19 @@
         let cart = JSON.parse(localStorage.getItem('spesina_cart')) || [];
 
         function renderCategories() {
+            console.log("Innesco rendering categorie...");
             let html = "";
             CATEGORIES.forEach(c => {
                 let media = c.img ? `<img style="width:100%; height:130px; object-fit:cover; border-radius:12px; margin-bottom:15px; box-shadow:0 4px 10px rgba(0,0,0,0.08);" src="${c.img}" alt="${c.n}">` : `<div class="product-emoji">${c.icon}</div>`;
-                html += `<div class="card" style="cursor:pointer; flex: 1 1 140px; max-width: 180px;" onclick="openCategory('${c.id}')">${media}<div style="font-family: 'Outfit', sans-serif; font-size:14px; font-weight:800; color:var(--dark);">${c.n}</div></div>`;
+                html += `<div class="card" style="cursor:pointer;" onclick="openCategory('${c.id}')">${media}<div style="font-family: 'Outfit', sans-serif; font-size:14px; font-weight:800; color:var(--dark);">${c.n}</div></div>`;
             });
-            document.getElementById('categories-catalog').innerHTML = html;
+            const container = document.getElementById('categories-catalog');
+            if (container) {
+                container.innerHTML = html;
+                console.log("✅ Categorie renderizzate correttamente.");
+            } else {
+                console.error("❌ Errore: Contenitore categories-catalog non trovato.");
+            }
         }
 
         let currentCat = null;
@@ -1421,6 +1432,7 @@
                 catContainer.style.display = 'grid';
                 searchContainer.style.display = 'none';
                 title.innerText = "Esplora Categorie";
+                renderCategories();
             }
         }
 
@@ -1993,7 +2005,10 @@
                 sessionStorage.setItem('spesina_preview', 'true');
             }
             
-            if (sessionStorage.getItem('spesina_preview') === 'true') return;
+            if (sessionStorage.getItem('spesina_preview') === 'true') {
+                console.log("🚀 Modalità Preview attiva.");
+                return;
+            }
 
             if (typeof MAINTENANCE_MODE !== 'undefined' && MAINTENANCE_MODE) {
                 const overlay = document.createElement('div');
@@ -2026,15 +2041,15 @@
         }
 
 
-        renderCategories(); // Mostra subito le categorie
-        fetchProducts();    // Poi carica i prodotti in background
-        renderFooter();
-        updateUI();
-        updateAuthUI();
-        checkMaintenance();
-        
-        // Identity & Subscription Startup Check
-        checkSubscriptionStatus();
+        document.addEventListener('DOMContentLoaded', () => {
+            checkMaintenance();
+            renderCategories(); 
+            fetchProducts();    
+            renderFooter();
+            updateUI();
+            updateAuthUI();
+            checkSubscriptionStatus();
+        });
     </script>
 </body>
 
