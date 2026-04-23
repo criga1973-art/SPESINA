@@ -780,7 +780,7 @@
             <form id="register-form" onsubmit="handleRegister(event)">
                 <div class="input-group">
                     <label>Nome e Cognome</label>
-                    <input type="text" id="reg-name" class="select-box" placeholder="Mario Rossi" required>
+                    <input type="text" id="reg-name" class="select-box" placeholder="Mario Rossi" required oninput="checkRegisterValidity()">
                 </div>
                 <div class="input-group">
                     <label>Email (Per ricevere il riepilogo spesa)</label>
@@ -1702,6 +1702,7 @@
         }
 
         function checkRegisterValidity() {
+            const nome = document.getElementById('reg-name').value.trim();
             const cap = document.getElementById('reg-cap').value;
             const phone = document.getElementById('reg-phone').value.trim();
             const email = document.getElementById('reg-email').value.trim();
@@ -1714,8 +1715,9 @@
             const isPhoneValid = /^\d{9,10}$/.test(phone);
             const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
             const isAddressValid = address.length > 3 && details.length > 0;
+            const isNameValid = nome.length > 3;
 
-            if (isCapValid && isPhoneValid && isEmailValid && isAddressValid && privacy) {
+            if (isCapValid && isPhoneValid && isEmailValid && isAddressValid && isNameValid && privacy) {
                 submitBtn.disabled = false;
                 submitBtn.style.opacity = '1';
                 submitBtn.style.cursor = 'pointer';
@@ -1816,6 +1818,7 @@
                 return;
             }
             debounceTimer = setTimeout(() => fetchAddressSuggestions(val), 300);
+            checkRegisterValidity(); // Controlliamo la validità anche mentre scrive la via
         }
 
         async function fetchAddressSuggestions(query) {
