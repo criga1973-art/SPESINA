@@ -1903,7 +1903,7 @@
                         if (typeof sb !== 'undefined' && userData && userData.id) {
                             try {
                                 await sb.from('orders').insert({
-                                    user_id: userData.id, // Useremo il client_id come riferimento
+                                    client_id: userData.id, // Useremo il client_id come riferimento
                                     order_data: { items: cart, total: totaleValore, delivery: giorno + " " + ora }
                                 });
                             } catch (err) { console.error("Errore salvataggio ordine cloud:", err); }

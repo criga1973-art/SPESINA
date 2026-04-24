@@ -41,6 +41,11 @@ Ecco un riepilogo delle ultime migliorie apportate al progetto:
 - **Informativa Carrello**: Messaggio dinamico per il primo ordine del mese ("Stai effettuando la prima spesa...").
 - **Disclaimer Ortofrutta**: Avviso condizionale per i prodotti a peso variabile, visibile solo se presenti nel carrello.
 
+## 🆔 Unificazione Identità (Client ID)
+- **Database Schema**: Convertita la colonna `user_id` della tabella `orders` in `TEXT` e rinominata in `client_id` per uniformità con l'anagrafica clienti.
+- **Integrazione Cloud**: Risolto il bug che impediva il salvataggio degli ordini su Supabase a causa della discrepanza tra formati (UUID vs SP-XXXXXX).
+- **Integrazione Totale**: Ora l'ID Cliente è l'unica chiave di riferimento tra Frontend, Database e Notifiche Email.
+
 ## 🔒 Manutenzione & Sicurezza (Aprile 2026)
 - **Maintenance Mode**: Ripristinato il blocco globale (`MAINTENANCE_MODE = true`) per il pubblico, con sistema di bypass via `?preview=true` per lo sviluppo.
 - **Fix SyntaxError**: Risolto un errore critico di doppia dichiarazione variabile (`history`) che bloccava l'avvio dell'app.
