@@ -5,8 +5,9 @@ Questo file serve come memoria storica per le prossime sessioni di sviluppo. **N
 ### 📸 GESTIONE IMMAGINI
 - **Tool**: Usare `process_rembg.py` per tutti i prodotti. Scontornamento AI obbligatorio per isolare il prodotto.
 - **Workflow**: Ricerca web immagine ufficiale -> `rembg` -> Canvas 1000x1000 -> Ottimizzazione WebP.
-- **Standard Immagini**: **1000x1000 pixel**, sfondo grigio chiaro (**#E6E6E6**), prodotto centrato e "staccato" dai bordi.
-- **Layout Card**: Immagine in alto, Nome Prodotto e Quantità (L, gr, ml) immediatamente sotto l'immagine. Prezzo bene in evidenza.
+- **Qualità Immagini**: 1000x1000px (o alta res), sfondo #E6E6E6 (scontornato con `rembg`), formato `.jpg`.
+- **Tecnica Infallibile Ricerca**: Per trovare il prodotto esatto al 100%, cercare su **Google Images** usando la stringa: `ean [codice_prodotto]`.
+- **Messa in Casa**: Non usare mai link esterni diretti. Scaricare, pulire, salvare in `img/` e fare push su GitHub.antità (L, gr, ml) immediatamente sotto l'immagine. Prezzo bene in evidenza.
 - **Design Card Minimal**: Le descrizioni lunghe (`info.d`) NON devono essere mostrate sulla card, ma solo nel modal "Info".
 - **Dati Tecnici**: Ogni prodotto deve avere EAN-13, formato e dettagli tecnici (ingredienti/allergeni) caricati su Supabase.
 
