@@ -46,6 +46,7 @@ Ecco un riepilogo delle ultime migliorie apportate al progetto:
 - **Integrazione Cloud**: Risolto il bug che impediva il salvataggio degli ordini su Supabase a causa della discrepanza tra formati (UUID vs SP-XXXXXX).
 - **Integrazione Totale**: Ora l'ID Cliente è l'unica chiave di riferimento tra Frontend, Database e Notifiche Email.
 - **Fix Abbonamento**: Corretto il calcolo del "Mese Solare" per evitare discrepanze di fuso orario (ora punta correttamente all'ultimo giorno del mese, es. 30 Aprile invece del 29).
+- **Aggiornamento Standard Immagini**: Aggiornate le regole nel MEMO per il nuovo standard 1000x1000 con sfondo `#E6E6E6` e ottimizzazione WebP.
 
 ## 🔒 Manutenzione & Sicurezza (Aprile 2026)
 - **Maintenance Mode**: Ripristinato il blocco globale (`MAINTENANCE_MODE = true`) per il pubblico, con sistema di bypass via `?preview=true` per lo sviluppo.

@@ -3,12 +3,12 @@
 Questo file serve come memoria storica per le prossime sessioni di sviluppo. **NON USARE STRUMENTI ESTERNI (Adobe, Browser, ecc.)**.
 
 ### 📸 GESTIONE IMMAGINI
-- **Tool**: Usare `process_rembg.py` per prodotti premium o complessi (rimozione sfondo AI). Usare `process_product.py` per ritagli rettangolari semplici.
-- **Workflow**: Caricare lo screenshot in `Desktop/screenspesina` -> Elaborare -> Salvare in `img/`.
-- **Standard Immagini**: 1000x1000 pixel, sfondo bianco (#FFFFFF), prodotto centrato, massima pulizia dai bordi.
-- **Design Card Minimal**: Le descrizioni dei prodotti (`info.d` o `info.fullDesc`) NON devono essere mostrate direttamente sulla card. Consultabili esclusivamente tramite il tasto "Info" (modal).
-- **Dati Tecnici**: Ogni prodotto deve essere arricchito con EAN-13, formato (L, gr, ml) e dettagli tecnici completi nel modal.
-- **Cleanup**: Cancellare i file in `screenspesina` solo dopo approvazione dell'utente.
+- **Tool**: Usare `process_rembg.py` per tutti i prodotti. Scontornamento AI obbligatorio per isolare il prodotto.
+- **Workflow**: Ricerca web immagine ufficiale -> `rembg` -> Canvas 1000x1000 -> Ottimizzazione WebP.
+- **Standard Immagini**: **1000x1000 pixel**, sfondo grigio chiaro (**#E6E6E6**), prodotto centrato e "staccato" dai bordi.
+- **Layout Card**: Immagine in alto, Nome Prodotto e Quantità (L, gr, ml) immediatamente sotto l'immagine. Prezzo bene in evidenza.
+- **Design Card Minimal**: Le descrizioni lunghe (`info.d`) NON devono essere mostrate sulla card, ma solo nel modal "Info".
+- **Dati Tecnici**: Ogni prodotto deve avere EAN-13, formato e dettagli tecnici (ingredienti/allergeni) caricati su Supabase.
 
 ### 💻 SVILUPPO WEBAPP (index.html)
 - **Struttura**: Navigazione a cartelle (Sub-folders) per categorie complesse (Pasta, Bevande).
