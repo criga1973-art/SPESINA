@@ -681,7 +681,7 @@
 
     <header>
         <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h2 style="margin:0; color:var(--primary); cursor:pointer;" onclick="goHome()">Spesina 🛒</h2>
+            <h2 style="margin:0; color:var(--primary); cursor:pointer;" onclick="adminClick()">Spesina 🛒</h2>
             <button onclick="showPhilosophy()" style="background:var(--primary); color:white; border:none; border-radius:30px; padding:8px 16px; font-size:13px; font-weight:800; cursor:pointer; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);">PERCHÉ SPESINA? ➔</button>
         </div>
         <div class="top-nav">
@@ -926,6 +926,16 @@
             <button onclick="closeModals()"
                 style="background:var(--primary); color:white; border:none; border-radius:12px; padding:15px 30px; font-size:16px; font-weight:bold; cursor:pointer; margin-top:15px; width:100%; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);">Capito
                 👍</button>
+        </div>
+    </div>
+
+    <div class="modal" id="modalAdmin">
+        <div class="modal-content" style="max-width:400px; padding:30px 20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3 style="margin:0; font-size:22px; font-weight:800;">🕵️ Admin Dashboard</h3>
+                <button onclick="loadAdminStats()" style="background:none; border:none; color:var(--primary); font-weight:800; cursor:pointer; font-size:12px;">Aggiorna 🔄</button>
+            </div>
+            <div id="admin-stats-content"></div>
         </div>
     </div>
 
@@ -2038,6 +2048,89 @@
         renderCategories(); 
         
         // Esegue il resto delle operazioni dopo un brevissimo delay
+        // --- ADMIN DASHBOARD SECRET ---
+        let adminClicks = 0;
+        function adminClick() {
+            adminClicks++;
+            if (adminClicks >= 5) {
+                adminClicks = 0;
+                showAdminDashboard();
+            } else {
+                goHome();
+            }
+        }
+
+        async function showAdminDashboard() {
+            closeModals();
+            document.getElementById('modalAdmin').style.display = 'flex';
+            loadAdminStats();
+        }
+
+        async function loadAdminStats() {
+            const statsContent = document.getElementById('admin-stats-content');
+            statsContent.innerHTML = '<div style="padding:40px; text-align:center;"><div class="loading-spinner" style="margin:auto;"></div><p style="margin-top:15px; font-size:14px; color:#64748b;">Interrogazione Supabase...</p></div>';
+            
+            try {
+                // 1. Clienti
+                const { count: customersCount } = await sb.from('customers').select('*', { count: 'exact', head: true });
+                
+                // 2. Ordini e Incasso
+                const { data: orders, error } = await sb.from('orders').select('*');
+                
+                let totalRevenue = 0;
+                let ordersCount = orders ? orders.length : 0;
+                
+                if (orders) {
+                    orders.forEach(o => {
+                        if (o.order_data && o.order_data.total) {
+                            // Estrae solo i numeri dal totale (es. "7.30€" -> 7.30)
+                            const val = parseFloat(o.order_data.total.replace(/[^0-9.]/g, ''));
+                            if (!isNaN(val)) totalRevenue += val;
+                        }
+                    });
+                }
+
+                let recentOrdersHtml = "";
+                if (orders && orders.length > 0) {
+                    orders.slice(-5).reverse().forEach(o => {
+                        const date = new Date(o.created_at).toLocaleString('it-IT', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+                        recentOrdersHtml += `
+                            <div style="background:#f8fafc; padding:12px; border-radius:12px; margin-bottom:8px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center;">
+                                <div>
+                                    <div style="font-weight:800; font-size:12px; color:var(--primary);">${o.client_id}</div>
+                                    <div style="font-size:10px; color:#64748b;">${date}</div>
+                                </div>
+                                <div style="font-size:14px; font-weight:800; color:var(--dark);">${o.order_data ? o.order_data.total : 'N/D'}</div>
+                            </div>
+                        `;
+                    });
+                }
+
+                statsContent.innerHTML = `
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:20px;">
+                        <div style="background:linear-gradient(135deg, var(--primary), var(--primary-dark)); color:white; padding:15px; border-radius:18px; text-align:center; box-shadow:0 8px 15px rgba(16, 185, 129, 0.2);">
+                            <div style="font-size:10px; opacity:0.9; font-weight:700; letter-spacing:1px; text-transform:uppercase;">INCASSO</div>
+                            <div style="font-size:22px; font-weight:800; margin-top:5px;">${totalRevenue.toFixed(2)}€</div>
+                        </div>
+                        <div style="background:var(--dark); color:white; padding:15px; border-radius:18px; text-align:center; box-shadow:0 8px 15px rgba(15, 23, 42, 0.2);">
+                            <div style="font-size:10px; opacity:0.9; font-weight:700; letter-spacing:1px; text-transform:uppercase;">ORDINI</div>
+                            <div style="font-size:22px; font-weight:800; margin-top:5px;">${ordersCount}</div>
+                        </div>
+                    </div>
+                    <div style="background:#f1f5f9; padding:12px; border-radius:15px; text-align:center; margin-bottom:25px; border:1px solid #e2e8f0;">
+                         <div style="font-size:10px; color:#64748b; font-weight:700; letter-spacing:1px; text-transform:uppercase;">CLIENTI ISCRITTI</div>
+                         <div style="font-size:20px; font-weight:800; color:var(--dark); margin-top:2px;">${customersCount}</div>
+                    </div>
+                    <h4 style="font-size:14px; margin-bottom:12px; font-weight:800; display:flex; align-items:center; gap:8px;">📦 Ultimi 5 Ordini</h4>
+                    ${recentOrdersHtml || '<p style="font-size:12px; color:#64748b; text-align:center; padding:20px;">Nessun ordine trovato.</p>'}
+                    <button class="btn-confirm" onclick="closeModals()" style="margin-top:20px; background:#e2e8f0; color:var(--dark); font-size:14px;">CHIUDI PANNELLO</button>
+                `;
+            } catch (err) {
+                console.error(err);
+                statsContent.innerHTML = '<div style="padding:40px; text-align:center; color:var(--red); font-weight:700;">❌ Errore nel recupero dati.</div>';
+            }
+        }
+
         setTimeout(() => {
             checkMaintenance();
             fetchProducts();    
