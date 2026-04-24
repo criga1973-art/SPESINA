@@ -7,6 +7,7 @@ Questo file serve come memoria storica per le prossime sessioni di sviluppo. **N
 - **Workflow**: Ricerca web immagine ufficiale -> `rembg` -> Canvas 1000x1000 -> Ottimizzazione WebP.
 - **Qualità Immagini**: 1000x1000px (o alta res), sfondo #E6E6E6 (scontornato con `rembg`), formato `.jpg`.
 - **Tecnica Infallibile Ricerca**: Per trovare il prodotto esatto al 100%, cercare su **Google Images** usando la stringa: `ean [codice_prodotto]`.
+- **Prevenzione Duplicati (Risparmio Crediti)**: Prima di cercare e processare la foto per un nuovo inserimento, controllare sempre se in Supabase esiste già un prodotto con lo stesso EAN dotato di immagine. In caso positivo, **copiare** semplicemente l'`image_url` e i dati mancanti dal prodotto vecchio a quello nuovo.
 - **Messa in Casa**: Non usare mai link esterni diretti. Scaricare, pulire, salvare in `img/` e fare push su GitHub.antità (L, gr, ml) immediatamente sotto l'immagine. Prezzo bene in evidenza.
 - **Design Card Minimal**: Le descrizioni lunghe (`info.d`) NON devono essere mostrate sulla card, ma solo nel modal "Info".
 - **Dati Tecnici**: Ogni prodotto deve avere EAN-13, formato e dettagli tecnici (ingredienti/allergeni) caricati su Supabase.
