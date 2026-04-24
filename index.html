@@ -1730,7 +1730,7 @@
             
             const now = new Date();
             const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-            const subExpiry = lastDay.toISOString().split('T')[0];
+            const subExpiry = lastDay.getFullYear() + "-" + String(lastDay.getMonth() + 1).padStart(2, '0') + "-" + String(lastDay.getDate()).padStart(2, '0');
 
             userData = { id: clientId, n: nome, e: email, t: tel, a: via, d: dettagli, c: cap, subExpiry: subExpiry };
             
