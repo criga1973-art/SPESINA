@@ -74,25 +74,24 @@ def process_image(img_url, ean):
 import sys
 
 if __name__ == "__main__":
-    # Get products that have external image URLs (not yet processed by AI)
-    # We look for image_url starting with 'http'
+    # Get products that need AI processing: 
+    # 1. image_url is null
+    # 2. image_url is an external http link
+    # 3. category is 'da-assegnare'
     try:
-        res = requests.get(f"{SUPABASE_URL}/rest/v1/products?image_url=ilike.http%&select=id,ean,category,brand,name,image_url&limit=100&order=id.asc", headers=sb_headers)
+        # Using Supabase 'or' filter for maximum coverage - Batch of 5 - NEWEST FIRST
+        url = f"{SUPABASE_URL}/rest/v1/products?or=(image_url.is.null,image_url.ilike.http*,category.eq.da-assegnare)&select=id,ean,category,brand,name,image_url&limit=5&order=id.desc"
+        res = requests.get(url, headers=sb_headers)
         products = res.json()
-        
-        # Fallback: check legacy 'da-assegnare' products
-        if not isinstance(products, list):
-            res = requests.get(f"{SUPABASE_URL}/rest/v1/products?category=eq.da-assegnare&select=id,ean,category,brand,name,image_url&limit=100&order=id.asc", headers=sb_headers)
-            products = res.json()
     except Exception as e:
         print(f"Error connecting to Supabase: {e}")
         sys.exit(1)
 
     if not isinstance(products, list):
-        print(f"No products to process (Response: {products})")
+        print(f"No products to process or error (Response: {products})")
         sys.exit(0)
 
-    print(f"Scanning {len(products)} products for images...\n")
+    print(f"Found {len(products)} potential products to enrich.\n")
     
     found = 0
     for p in products:
@@ -102,15 +101,18 @@ if __name__ == "__main__":
         ean = p.get("ean")
         if not ean: continue
         
-        # Use the image URL from DB as priority for processing
+        # Use existing image_url if it's a link, otherwise try to find one
         img_to_process = p.get('image_url')
-        
+        if img_to_process and not img_to_process.startswith('http'):
+            # Already a local image, skip
+            continue
+            
         data = get_product_data(ean)
-        if not img_to_process and data:
+        if (not img_to_process or img_to_process == '') and data:
             img_to_process = data.get('img_url')
         
         if img_to_process:
-            print(f"[{p['id']}] Processing image for: {p.get('name') or (data['name'] if data else 'Unknown')}")
+            print(f"[{p['id']}] Processing: {p.get('name') or (data['name'] if data else 'Unknown')} ({ean})")
             
             # Category/Brand logic
             cat = p.get('category')
@@ -122,28 +124,38 @@ if __name__ == "__main__":
                     cat = guessed_cat
                     brand = brand or guessed_brand
             
-            # If we have a category, process image
-            if cat and cat != 'da-assegnare':
-                img_path = process_image(img_to_process, ean)
-                if img_path:
-                    upd = {
-                        "name": p.get("name") or (data["name"] if data else f"Prodotto {ean}"),
-                        "category": cat,
-                        "brand": brand or "Altro",
-                        "size": (data["size"] if data else ""),
-                        "image_url": img_path
-                    }
-                    requests.patch(f"{SUPABASE_URL}/rest/v1/products?id=eq.{p['id']}", headers=sb_headers, json=upd)
-                    print(f"  --> Updated DB and Image ✅")
-                    found += 1
-                else:
-                    print(f"  --> Image processing failed ❌")
+            # If we still don't have a category, we can't save the image in a folder
+            if not cat or cat == 'da-assegnare':
+                cat = 'altro'
+                brand = brand or 'Generico'
+            
+            # Process image
+            img_path = process_image(img_to_process, ean)
+            if img_path:
+                # Better name logic: if current name is just "Prodotto EAN", try to get a better one
+                final_name = p.get("name")
+                if not final_name or final_name.startswith("Prodotto"):
+                    if data and data.get("name"):
+                        final_name = data["name"]
+                
+                if not final_name:
+                    final_name = f"Prodotto {ean}"
+
+                upd = {
+                    "name": final_name,
+                    "category": cat,
+                    "brand": brand or "Altro",
+                    "size": (data["size"] if data else ""),
+                    "image_url": img_path
+                }
+                requests.patch(f"{SUPABASE_URL}/rest/v1/products?id=eq.{p['id']}", headers=sb_headers, json=upd)
+                print(f"  --> Updated DB and Image OK")
+                found += 1
             else:
-                print(f"  --> Category mapping failed ❌")
+                print(f"  --> Image processing failed FAIL")
         else:
-            # Skip silent if no image found
-            pass
+            print(f"  --> Category mapping failed FAIL")
         
-        time.sleep(0.2)
+        time.sleep(0.5)
     
     print(f"\nTotal enriched with images: {found}")
