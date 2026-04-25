@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fr" locale="fr_FR">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	
+	<title>INCI Beauty - Analysez la composition de vos cosmétiques</title>
+	<meta name="description" content="Téléchargez gratuitement notre application pour iPhone, Android et Microsoft permettant d'analysez la composition de vos cosmétiques.">
+
+	
+	
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link rel="stylesheet" href="/vendor/font-awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900">
+	<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Muli:300,400,700">
+	<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Nothing+You+Could+Do">
+
+			<link rel="stylesheet" href="/css/style.min.css?1771237752712">
+	
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/manifest.json">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#e5265c">
+	<meta name="theme-color" content="#ffffff">
+
+	</head>
+
+<body class="errorpage webpage">
+	
+		<nav id="mainNav" class="navbar navbar-expand-lg navbar-light fixed-top">
+		<div class="container">
+			<a class="navbar-brand js-scroll-trigger" href="https://incibeauty.com"><img class="navbar-brand-logo" src="https://incibeauty.com/img/ib-logo@40.png" alt="Remonter en haut de la page"> <span class="navbar-brand-label">INCI Beauty</span></a>
+			<button id="navbar-toggler" class="navbar-toggler navbar-toggler-right ml-auto" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+				<i class="fa fa-bars"></i>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarResponsive">
+				<ul class="navbar-nav ml-auto">
+											<li class="nav-item">
+																	<span class="lien nav-link" data-l="aHR0cHM6Ly9pbmNpYmVhdXR5LmNvbS90aGVtZS8xOS1sLWFwcGxpY2F0aW9uLWluY2ktYmVhdXR5" data-t="0"><span>L'application</span></span>
+														</li>
+										<li class="nav-item">
+													<span class="lien nav-link" data-l="aHR0cHM6Ly9pbmNpYmVhdXR5LmNvbS9pbmdyZWRpZW50cw==" data-t="0"><span>Ingrédients</span></span>
+											</li>
+					<li class="nav-item">
+						<span id="search-header-link" class="lien nav-link"><span>Recherche</span></span>
+					</li>
+											<li class="nav-item">
+							<span id="dossiers-header-link" class="lien nav-link">
+								<span>Dossiers</span>
+								<div class="content-dossiers d-none">
+									<ul class="list-unstyled">
+										<li class="">
+                <a class="nav-link" href="/theme/7-la-reglementation-cosmetique">La réglementation cosmétique</a>
+            </li><li class="">
+                <a class="nav-link" href="/theme/11-les-parfums-et-les-couleurs">Les parfums et les couleurs</a>
+            </li><li class="dossier-produits">
+                <a class="nav-link" href="/theme/1-hygiene-dentaire">Hygiène dentaire</a>
+            </li><li class="">
+                <a class="nav-link" href="/theme/12-deodorant-et-anti-transpirant">Déodorant et anti-transpirant</a>
+            </li><li class="">
+                <a class="nav-link" href="/theme/14-coloration-capillaire">Coloration capillaire</a>
+            </li><li class="">
+                <a class="nav-link" href="/theme/16-les-produits-solaires">Les produits solaires</a>
+            </li><li class="">
+                <a class="nav-link" href="/theme/18-les-nanoparticules">Les nanoparticules</a>
+            </li>									</ul>
+								</div>
+							</span>
+						</li>
+										<li class="nav-item">
+						<span class="lien nav-link" data-l="aHR0cHM6Ly9vcGVuLmluY2liZWF1dHkuY29t" data-t="0"><span>Accès Open</span></span>
+					</li>
+					<li class="nav-item">
+													<span class="lien nav-link" data-l="aHR0cHM6Ly9wcm8uaW5jaWJlYXV0eS5jb20=" data-t="0"><span>Pros</span></span>
+											</li>
+					<!-- <li class="nav-item">
+						<a class="nav-link" href="https://shop.incibeauty.com"><span>Shop</span></a>
+					</li> -->
+					<li class="nav-item ml-lg-5">
+						<div class="navbar-lang">
+							<button class="btn btn-sm dropdown-toggle mini-flag-dropdown-toggle p-0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<span class="icon-world"><i class="fa fa-globe" aria-hidden="true"></i></span>
+								Français							</button>
+							<div class="dropdown-menu">
+																	<span class="dropdown-item d-none" data-locale="fr_FR">
+										Français									</span>
+																	<span class="dropdown-item " data-locale="de_DE">
+										Allemand									</span>
+																	<span class="dropdown-item " data-locale="es_ES">
+										Espagnol									</span>
+																	<span class="dropdown-item " data-locale="en_GB">
+										Anglais									</span>
+																	<span class="dropdown-item " data-locale="it_IT">
+										Italien									</span>
+															</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+					<div id="search-header-container" class="container mt-3 mt-lg-2 d-lg-none">
+				<form id="search-form" action="https://incibeauty.com/search/k/" method="GET" autocomplete="off" class="w-100">
+					<div class="row">
+						<div class="col">
+							<div class="search-autocomplete-wrapper">
+								<input type="search" name="search-keywords" autocomplete="off" id="search-keywords" class="form-control" placeholder="Produits, ingrédients, articles, code-barres..." value="">
+							</div>
+						</div>
+						<div class="col-12 col-md-auto mt-3 mt-md-0 search-submit-btn-container">
+							<button id="search-submit-btn" type="submit" class="btn btn-primary-ib"><i class="fa fa-search mr-1" aria-hidden="true"></i> Rechercher</button>
+						</div>
+					</div>
+				</form>
+			</div>
+			</nav>
+	
+	<header class="masthead">
+	<div class="container h-100">
+		<div class="row h-100">
+			<div class="col-lg-12 my-auto">
+				<div class="header-content mx-auto my-5">
+					<h1 class="home mb-5">Oups !<br />Cette page est introuvable.</h1>
+					<a href="https://incibeauty.com" class="btn btn-primary-ib btn-xl btn-shadow">Revenir sur l'accueil</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+	
+	<footer>
+		<div class="container">
+			<p>
+				&copy; 2017-2026 INCI Beauty. Tous droits réservés.				</p>
+			<p class="mt-2">
+				INCI Beauty est membre de <a href="https://www.onepercentfortheplanet.fr/" target="_blank" rel="nofollow noopener noreferrer"><img src="/img/1ftp.svg" width="75" /></a>			</p>
+			<ul class="list-inline mt-3">
+				<li class="list-inline-item">
+											<span class="lien" data-l="aHR0cHM6Ly9pbmNpYmVhdXR5LmNvbS9tZW50aW9ucy1sZWdhbGVz" data-t="0">Mentions légales</span>
+									</li>
+				<li class="list-inline-item">
+											<span class="lien" data-l="aHR0cHM6Ly9pbmNpYmVhdXR5LmNvbS9jZ3U=" data-t="0">
+							CGU						</span>
+									</li>
+				<li class="list-inline-item">
+											<span class="lien" data-l="aHR0cHM6Ly9pbmNpYmVhdXR5LmNvbS9jZ3Y=" data-t="0">CGV</span>
+									</li>
+				<li class="list-inline-item">
+											<span class="lien" data-l="aHR0cHM6Ly9pbmNpYmVhdXR5LmNvbS9wcml2YWN5" data-t="0">Confidentialité</span>
+									</li>
+				<li class="list-inline-item">
+					<a href="javascript:googlefc.callbackQueue.push(googlefc.showRevocationMessage)">Paramétrer les cookies</a>
+				</li>
+			</ul>
+			<ul class="list-inline">
+				<li class="list-inline-item">
+											<span class="lien" data-l="aHR0cHM6Ly9pbmNpYmVhdXR5LmNvbS9jb250YWN0" data-t="0">Contact</span>
+									</li>
+									<li class="list-inline-item">
+													<span class="lien" data-l="aHR0cHM6Ly9pbmNpYmVhdXR5LmNvbS9ibG9n" data-t="0">Blog</span>
+											</li>
+								<li class="list-inline-item">
+											<span class="lien" data-l="aHR0cHM6Ly9pbmNpYmVhdXR5LmNvbS9icmFuZHM=" data-t="0">Marques</span>
+									</li>
+									<li class="list-inline-item">
+													<span class="lien" data-l="L3RoZW1lLzE3LWNvbW1lbnQtY2EtbWFyY2hl" data-t="0">Comment ça marche ?</span>
+											</li>
+							</ul>
+		</div>
+	</footer>
+
+	
+    <div type="hidden" id="breakpoint-sm" class="d-none d-sm-block"></div>
+    <div type="hidden" id="breakpoint-md" class="d-none d-md-block"></div>
+    <div type="hidden" id="breakpoint-lg" class="d-none d-lg-block"></div>
+    <div type="hidden" id="breakpoint-xl" class="d-none d-xl-block"></div>
+
+	<script src="/vendor/jquery/jquery.min.js"></script>
+	<script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+	<script src="https://js.stripe.com/v3/"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+			<script async src="https://www.googletagmanager.com/gtag/js?id=G-H253DJJL7J"></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+
+			gtag('js', new Date());
+
+			gtag('config', 'G-H253DJJL7J', {
+				'anonymize_ip': true
+			});
+		</script>
+	
+			<script src="/js/script.min.js?1771237752712"></script>
+	</body>
+</html>

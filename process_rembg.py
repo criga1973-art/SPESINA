@@ -1,6 +1,6 @@
 import sys
 import os
-from PIL import Image
+from PIL import Image, ImageFilter
 from rembg import remove
 
 def process_with_rembg(input_path, output_path, bg_color_hex="FFFFFF"):
@@ -10,10 +10,20 @@ def process_with_rembg(input_path, output_path, bg_color_hex="FFFFFF"):
     bg_color = tuple(int(bg_color_hex[i:i+2], 16) for i in (0, 2, 4)) + (255,)
     
     # Open image
-    input_image = Image.open(input_path)
+    img = Image.open(input_path)
+    
+    # SAFETY CROP: Aggressively remove edges to clear UI icons (Google Lens, etc.)
+    w_orig, h_orig = img.size
+    if w_orig > 300 and h_orig > 300:
+        # Tagliamo di più sotto e a sinistra dove di solito ci sono le icone
+        left = int(w_orig * 0.08)
+        top = int(h_orig * 0.05)
+        right = int(w_orig * 0.95)
+        bottom = int(h_orig * 0.88) # Più aggressivo sotto
+        img = img.crop((left, top, right, bottom))
     
     # Remove background
-    output_image = remove(input_image)
+    output_image = remove(img)
     
     # Find bounding box of the non-transparent area
     bbox = output_image.getbbox()
@@ -35,20 +45,23 @@ def process_with_rembg(input_path, output_path, bg_color_hex="FFFFFF"):
     new_size = (int(w * ratio), int(h * ratio))
     img_resized = img_cropped.resize(new_size, Image.Resampling.LANCZOS)
     
+    # SHARPEN: Enhance details after resizing
+    img_resized = img_resized.filter(ImageFilter.SHARPEN)
+    
     # Paste centered
     px = (canvas_size - new_size[0]) // 2
     py = (canvas_size - new_size[1]) // 2
     canvas.paste(img_resized, (px, py), img_resized)
     
-    # Convert to RGB (remove alpha) before saving as JPEG
+    # Convert to RGB (remove alpha) before saving
     final_img = canvas.convert("RGB")
     
-    # Save final result - auto detect format from extension
+    # Save final result
     ext = os.path.splitext(output_path)[1].lower()
     fmt = "WEBP" if ext == ".webp" else "JPEG"
     
-    final_img.save(output_path, fmt, quality=95 if fmt == "JPEG" else 85)
-    print(f"Success! Product saved to {output_path} with background #{bg_color_hex} (Format: {fmt})")
+    final_img.save(output_path, fmt, quality=90 if fmt == "WEBP" else 95)
+    print(f"Success! Product saved to {output_path} (Format: {fmt})")
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
