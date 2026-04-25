@@ -1128,7 +1128,7 @@
             document.getElementById('subcategory-view').style.display = 'block';
             document.getElementById('subcategory-title').innerText = catObj ? catObj.n : "Prodotti";
 
-            if (catId === "pasta" || catId === "bevande" || catId === "condimenti" || catId === "igiene-p" || catId === "freschi" || catId === "colazione" || catId === "dispensa" || catId === "igiene-c" || catId === "surgelati" || catId === "farine") {
+            if (catId === "bevande" || catId === "condimenti" || catId === "igiene-p" || catId === "freschi" || catId === "colazione" || catId === "dispensa" || catId === "igiene-c" || catId === "surgelati" || catId === "farine") {
                 renderSubFolders(catId);
             } else {
                 renderProducts(catId);
@@ -1139,15 +1139,7 @@
         function renderSubFolders(catId) {
             let subcatData = [];
 
-            if (catId === "pasta") {
-                subcatData = [
-                    { id: "Barilla", img: "img/BARILLA.jpg", icon: "🍝" },
-                    { id: "Voiello", img: "img/VOIELLO.jpg", icon: "🍝" },
-                    { id: "Rummo", img: "img/RUMMO.jpg", icon: "🍝" },
-                    { id: "De Cecco", img: "img/DE CECCO.jpg", icon: "🍝" },
-                    { id: "Riso", img: "img/riso.jpg", icon: "🍚" }
-                ];
-            } else if (catId === "bevande") {
+            if (catId === "bevande") {
                 subcatData = [
                     { id: "Acqua", icon: "💧" },
                     { id: "Succhi di Frutta", icon: "🧃" },
