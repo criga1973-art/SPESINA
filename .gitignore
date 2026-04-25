@@ -17,3 +17,5 @@ Antigravity.exe
 # File di sistema
 .DS_Store
 Thumbs.db
+
+.env

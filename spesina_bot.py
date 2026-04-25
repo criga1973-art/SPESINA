@@ -7,8 +7,11 @@ import zxingcpp
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, ContextTypes, MessageHandler, CallbackQueryHandler, filters
 from supabase import create_client, Client
+from dotenv import load_dotenv
 
-# --- CONFIGURAZIONE (Legge da Variabili d'Ambiente su Render) ---
+load_dotenv() # Carica variabili da .env se presente in locale
+
+# --- CONFIGURAZIONE (Legge da Variabili d'Ambiente su Render o .env) ---
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 SUPABASE_URL = os.getenv("SUPABASE_URL", "https://uldpnhmdjbbwwqwjsdoh.supabase.co")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
@@ -37,7 +40,17 @@ CAT_MAP = {
     "varie": {"n": "VarIE", "sub": ["Varie"]}
 }
 
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+if not SUPABASE_KEY:
+    print("ERRORE: Variabile SUPABASE_KEY non trovata! Controlla il file .env o le variabili d'ambiente.")
+
+if not TELEGRAM_TOKEN:
+    print("ERRORE: Variabile TELEGRAM_TOKEN non trovata! Controlla il file .env o le variabili d'ambiente.")
+
+if SUPABASE_KEY and SUPABASE_URL:
+    supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+else:
+    supabase = None
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 user_states = {}
@@ -107,9 +120,14 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     chat_id = query.message.chat_id
     data = query.data
+    
+    await query.answer() # Ferma il caricamento sul pulsante
+
     state = user_states.get(chat_id)
 
-    if not state: return
+    if not state:
+        await query.message.reply_text("❌ Sessione scaduta o bot riavviato. Riprova da capo inviando il prodotto.")
+        return
 
     if data.startswith("cat_"):
         cat_id = data.replace("cat_", "")
@@ -175,6 +193,10 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if os.path.exists(path): os.remove(path)
 
 if __name__ == '__main__':
+    if not TELEGRAM_TOKEN:
+        print("Il bot non può essere avviato senza TELEGRAM_TOKEN. Esce.")
+        exit(1)
+    
     app = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
     app.add_handler(MessageHandler(filters.PHOTO, handle_photo))
     app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), handle_message))
