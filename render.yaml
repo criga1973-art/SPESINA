@@ -1,0 +1,13 @@
+services:
+  - type: worker
+    name: spesina-bot
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python spesina_bot.py
+    envVars:
+      - key: TELEGRAM_TOKEN
+        sync: false
+      - key: SUPABASE_URL
+        value: https://uldpnhmdjbbwwqwjsdoh.supabase.co
+      - key: SUPABASE_KEY
+        sync: false

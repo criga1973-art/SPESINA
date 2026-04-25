@@ -1,9 +1,6 @@
 requests
-rembg
-pillow
-onnxruntime
 supabase
-python-telegram-bot>=20.0
+python-telegram-bot[job-queue]
 opencv-python-headless
 numpy
 zxing-cpp
