@@ -71,26 +71,37 @@ def process_image(img_url, ean):
     except: pass
     return None
 
+import sys
+
 if __name__ == "__main__":
     # Get products that have external image URLs (not yet processed by AI)
     # We look for image_url starting with 'http'
-    res = requests.get(f"{SUPABASE_URL}/rest/v1/products?image_url=ilike.http%&select=id,ean,category,brand,name,image_url&limit=100&order=id.asc", headers=sb_headers)
-    products = res.json()
-    
-    # Fallback: if no http images found, check if there are any 'da-assegnare' categories (legacy)
-    if not products or not isinstance(products, list):
-        res = requests.get(f"{SUPABASE_URL}/rest/v1/products?category=eq.da-assegnare&select=id,ean,category,brand,name,image_url&limit=100&order=id.asc", headers=sb_headers)
+    try:
+        res = requests.get(f"{SUPABASE_URL}/rest/v1/products?image_url=ilike.http%&select=id,ean,category,brand,name,image_url&limit=100&order=id.asc", headers=sb_headers)
         products = res.json()
+        
+        # Fallback: check legacy 'da-assegnare' products
+        if not isinstance(products, list):
+            res = requests.get(f"{SUPABASE_URL}/rest/v1/products?category=eq.da-assegnare&select=id,ean,category,brand,name,image_url&limit=100&order=id.asc", headers=sb_headers)
+            products = res.json()
+    except Exception as e:
+        print(f"Error connecting to Supabase: {e}")
+        sys.exit(1)
 
     if not isinstance(products, list):
-        print(f"Error fetching products: {products}")
-        sys.exit(1)
+        print(f"No products to process (Response: {products})")
+        sys.exit(0)
 
     print(f"Scanning {len(products)} products for images...\n")
     
     found = 0
     for p in products:
-        ean = p["ean"]
+        if not isinstance(p, dict):
+            continue
+            
+        ean = p.get("ean")
+        if not ean: continue
+        
         # Use the image URL from DB as priority for processing
         img_to_process = p.get('image_url')
         
@@ -99,7 +110,7 @@ if __name__ == "__main__":
             img_to_process = data.get('img_url')
         
         if img_to_process:
-            print(f"[{p['id']}] Processing image for: {p['name'] or (data['name'] if data else 'Unknown')}")
+            print(f"[{p['id']}] Processing image for: {p.get('name') or (data['name'] if data else 'Unknown')}")
             
             # Category/Brand logic
             cat = p.get('category')
@@ -116,7 +127,7 @@ if __name__ == "__main__":
                 img_path = process_image(img_to_process, ean)
                 if img_path:
                     upd = {
-                        "name": p["name"] or (data["name"] if data else f"Prodotto {ean}"),
+                        "name": p.get("name") or (data["name"] if data else f"Prodotto {ean}"),
                         "category": cat,
                         "brand": brand or "Altro",
                         "size": (data["size"] if data else ""),
