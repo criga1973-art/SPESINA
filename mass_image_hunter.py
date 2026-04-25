@@ -72,8 +72,8 @@ def process_image(img_url, ean):
     return None
 
 if __name__ == "__main__":
-    # Get 100 products from 'da-assegnare'
-    res = requests.get(f"{SUPABASE_URL}/rest/v1/products?category=eq.da-assegnare&select=id,ean&limit=100&order=id.asc", headers=sb_headers)
+    # Get products that need AI processing
+    res = requests.get(f"{SUPABASE_URL}/rest/v1/products?status=eq.da-assegnare&select=id,ean,category,brand,name&limit=100&order=id.asc", headers=sb_headers)
     products = res.json()
     print(f"Scanning {len(products)} products for images...\n")
     
@@ -84,18 +84,26 @@ if __name__ == "__main__":
         
         if data and data["img_url"]:
             print(f"[{p['id']}] Found image for: {data['name']}")
-            cat, brand = map_category(data["off_cats"])
             
-            # If we identified category and have image, process it
-            if cat:
+            # Use manual selection from bot if available, otherwise guess
+            cat = p.get('category')
+            brand = p.get('brand')
+            
+            if not cat or cat == 'da-assegnare':
+                cat, guessed_brand = map_category(data["off_cats"])
+                brand = brand or guessed_brand
+            
+            # If we have a category, process image
+            if cat and cat != 'da-assegnare':
                 img_path = process_image(data["img_url"], ean)
                 if img_path:
                     upd = {
-                        "name": data["name"],
+                        "name": data["name"] or p["name"],
                         "category": cat,
-                        "brand": brand,
-                        "size": data["size"],
-                        "image_url": img_path
+                        "brand": brand or "Altro",
+                        "size": data["size"] or "",
+                        "image_url": img_path,
+                        "status": "attivo"
                     }
                     requests.patch(f"{SUPABASE_URL}/rest/v1/products?id=eq.{p['id']}", headers=sb_headers, json=upd)
                     print(f"  --> Updated DB and Image ✅")
