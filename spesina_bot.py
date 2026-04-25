@@ -86,12 +86,24 @@ def detect_barcode(image_path):
     try:
         img = cv2.imread(image_path)
         if img is None: return None
+        
+        def get_valid_ean(res_list):
+            for r in res_list:
+                if r.text.isdigit() and len(r.text) >= 8:
+                    return r.text
+            return None
+
         results = zxingcpp.read_barcodes(img)
-        if results: return results[0].text
+        if results: 
+            valid = get_valid_ean(results)
+            if valid: return valid
+            
         h, w = img.shape[:2]
         resized = cv2.resize(img, (int(w*1.5), int(h*1.5)))
         results = zxingcpp.read_barcodes(resized)
-        return results[0].text if results else None
+        if results:
+            return get_valid_ean(results)
+        return None
     except: return None
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
