@@ -1439,7 +1439,7 @@
                 searchContainer.style.display = 'grid';
                 title.innerText = "Risultati Ricerca";
 
-                let items = PRODS.filter(p => p.n.toLowerCase().includes(q) || p.c.toLowerCase().includes(q));
+                let items = PRODS.filter(p => (p.n.toLowerCase().includes(q) || p.c.toLowerCase().includes(q)) && p.c !== 'archivio');
                 let html = "";
                 if (items.length === 0) {
                     html = "<div style='grid-column: 1 / -1; text-align:center; padding:20px; color:var(--text-muted); font-weight:600;'>Nessuno prodotto trovato 😔</div>";
