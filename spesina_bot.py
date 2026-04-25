@@ -68,8 +68,9 @@ def avvisa_github_per_foto(ean, categoria, brand):
 
 def fetch_off_data(ean):
     url = f"https://world.openfoodfacts.org/api/v0/product/{ean}.json"
+    headers = {"User-Agent": "SpesinaBot - Telegram - Version 1.0"}
     try:
-        r = requests.get(url, timeout=10)
+        r = requests.get(url, headers=headers, timeout=10)
         if r.status_code == 200:
             d = r.json()
             if d.get('status') == 1:
