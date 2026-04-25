@@ -41,9 +41,9 @@ def map_category(off_cats):
     return None, None
 
 def process_image(img_url, ean):
-    out = f"img/prod_{ean}.jpg"
+    out = f"img/prod_{ean}.webp"
     if os.path.exists(out): return out
-    temp = f"temp_{ean}.jpg"
+    temp = f"temp_{ean}.webp"
     try:
         r = requests.get(img_url, headers=OFF_HEADERS, timeout=10)
         if r.status_code == 200 and len(r.content) > 5000:
