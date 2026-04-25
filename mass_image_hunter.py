@@ -29,16 +29,24 @@ def get_product_data(ean):
     return None
 
 def map_category(off_cats):
-    # Basic mapping logic
     cats_str = ",".join(off_cats).lower()
-    if "shampoo" in cats_str or "shower" in cats_str or "bagno" in cats_str: return "igiene-p", "Shampoo e Doccia"
-    if "pasta" in cats_str: return "pasta", "Barilla" # Default brand if unknown
-    if "beverage" in cats_str or "bevande" in cats_str: return "bevande", "Bibite"
-    if "snack" in cats_str or "biscuits" in cats_str: return "colazione", "Biscotti"
-    if "sauce" in cats_str or "condiment" in cats_str: return "condimenti", "Salse"
-    if "dairy" in cats_str or "cheese" in cats_str: return "freschi", "Latticini"
-    if "canned" in cats_str or "conserves" in cats_str: return "dispensa", "Conserve"
-    return None, None
+    # Igiene Persona
+    if any(x in cats_str for x in ["shampoo", "shower", "bagno", "hair", "capelli", "dentifricio", "toothpaste", "deodorant", "sapone", "body-wash", "hygiene"]): return "igiene-p", "Cura Persona"
+    # Igiene Casa
+    if any(x in cats_str for x in ["detersivo", "lavatrice", "lavavastoviglie", "detergent", "cleaning", "disinfectant", "igiene-c", "floor"]): return "igiene-c", "Pulizia Casa"
+    # Pasta
+    if "pasta" in cats_str: return "pasta", "Varie"
+    # Bevande
+    if any(x in cats_str for x in ["beverage", "bevande", "drink", "water", "juice", "beer", "wine", "spirits", "soda"]): return "bevande", "Bibite"
+    # Colazione
+    if any(x in cats_str for x in ["snack", "biscuit", "biscotti", "colazione", "breakfast", "cereals", "muesli", "coffee", "caffe", "teas", "te"]): return "colazione", "Varie"
+    # Condimenti
+    if any(x in cats_str for x in ["sauce", "condiment", "ketchup", "mayonnaise", "pesto", "vinegar", "oil", "olio", "aceto", "sale", "spice", "spezie"]): return "condimenti", "Varie"
+    # Freschi
+    if any(x in cats_str for x in ["dairy", "cheese", "yogurt", "milk", "latte", "eggs", "uova", "butter", "cream", "fresh", "fresco"]): return "freschi", "Latticini"
+    # Dispensa (ampio, include lievito, farine, conserve, legumi ecc.)
+    if any(x in cats_str for x in ["canned", "conserve", "legume", "beans", "tuna", "fish", "baking", "flour", "farina", "lievito", "raising", "sugar", "rice", "riso", "broth", "brodo", "sauce", "tomato", "pomodoro", "food"]): return "dispensa", "Varie"
+    return "dispensa", "Varie"  # Default sicuro: dispensa
 
 def process_image(img_url, ean):
     out = f"img/prod_{ean}.webp"

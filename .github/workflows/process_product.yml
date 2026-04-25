@@ -34,4 +34,5 @@ jobs:
           git config --local user.name "Spesina AI Bot"
           git add img/
           git commit -m "🤖 Aggiunte nuove foto scontornate AI" || echo "Nessuna nuova foto da salvare"
+          git pull --rebase origin main || true
           git push
