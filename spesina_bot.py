@@ -1,4 +1,6 @@
 import os
+import threading
+from http.server import HTTPServer, BaseHTTPRequestHandler
 import logging
 import requests
 import cv2
@@ -192,7 +194,20 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else: await update.message.reply_text("❌ Codice non letto.")
     if os.path.exists(path): os.remove(path)
 
+class DummyHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b"Bot is running")
+
+def run_dummy_server():
+    port = int(os.environ.get("PORT", 8080))
+    server = HTTPServer(("0.0.0.0", port), DummyHandler)
+    server.serve_forever()
+
 if __name__ == '__main__':
+    threading.Thread(target=run_dummy_server, daemon=True).start()
+    
     if not TELEGRAM_TOKEN:
         print("Il bot non può essere avviato senza TELEGRAM_TOKEN. Esce.")
         exit(1)
