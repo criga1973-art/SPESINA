@@ -72,38 +72,55 @@ def process_image(img_url, ean):
     return None
 
 if __name__ == "__main__":
-    # Get products that need AI processing
-    res = requests.get(f"{SUPABASE_URL}/rest/v1/products?status=eq.da-assegnare&select=id,ean,category,brand,name&limit=100&order=id.asc", headers=sb_headers)
+    # Get products that have external image URLs (not yet processed by AI)
+    # We look for image_url starting with 'http'
+    res = requests.get(f"{SUPABASE_URL}/rest/v1/products?image_url=ilike.http%&select=id,ean,category,brand,name,image_url&limit=100&order=id.asc", headers=sb_headers)
     products = res.json()
+    
+    # Fallback: if no http images found, check if there are any 'da-assegnare' categories (legacy)
+    if not products or not isinstance(products, list):
+        res = requests.get(f"{SUPABASE_URL}/rest/v1/products?category=eq.da-assegnare&select=id,ean,category,brand,name,image_url&limit=100&order=id.asc", headers=sb_headers)
+        products = res.json()
+
+    if not isinstance(products, list):
+        print(f"Error fetching products: {products}")
+        sys.exit(1)
+
     print(f"Scanning {len(products)} products for images...\n")
     
     found = 0
     for p in products:
         ean = p["ean"]
-        data = get_product_data(ean)
+        # Use the image URL from DB as priority for processing
+        img_to_process = p.get('image_url')
         
-        if data and data["img_url"]:
-            print(f"[{p['id']}] Found image for: {data['name']}")
+        data = get_product_data(ean)
+        if not img_to_process and data:
+            img_to_process = data.get('img_url')
+        
+        if img_to_process:
+            print(f"[{p['id']}] Processing image for: {p['name'] or (data['name'] if data else 'Unknown')}")
             
-            # Use manual selection from bot if available, otherwise guess
+            # Category/Brand logic
             cat = p.get('category')
             brand = p.get('brand')
             
             if not cat or cat == 'da-assegnare':
-                cat, guessed_brand = map_category(data["off_cats"])
-                brand = brand or guessed_brand
+                if data:
+                    guessed_cat, guessed_brand = map_category(data["off_cats"])
+                    cat = guessed_cat
+                    brand = brand or guessed_brand
             
             # If we have a category, process image
             if cat and cat != 'da-assegnare':
-                img_path = process_image(data["img_url"], ean)
+                img_path = process_image(img_to_process, ean)
                 if img_path:
                     upd = {
-                        "name": data["name"] or p["name"],
+                        "name": p["name"] or (data["name"] if data else f"Prodotto {ean}"),
                         "category": cat,
                         "brand": brand or "Altro",
-                        "size": data["size"] or "",
-                        "image_url": img_path,
-                        "status": "attivo"
+                        "size": (data["size"] if data else ""),
+                        "image_url": img_path
                     }
                     requests.patch(f"{SUPABASE_URL}/rest/v1/products?id=eq.{p['id']}", headers=sb_headers, json=upd)
                     print(f"  --> Updated DB and Image ✅")
@@ -111,7 +128,7 @@ if __name__ == "__main__":
                 else:
                     print(f"  --> Image processing failed ❌")
             else:
-                print(f"  --> Category mapping failed (cats: {data['off_cats'][:3]}) ❌")
+                print(f"  --> Category mapping failed ❌")
         else:
             # Skip silent if no image found
             pass
