@@ -1076,12 +1076,14 @@
             { id: "freschi", n: "Freschi", icon: "🧀", img: "" },
             { id: "orto", n: "Frutta e Verdura", icon: "🍎", img: "" },
             { id: "dispensa", n: "Dispensa", icon: "🥫", img: "" },
+            { id: "farine", n: "Farine e Preparati", icon: "🌾", img: "" },
             { id: "condimenti", n: "Condimenti e Spezie", icon: "🧂🌶️", img: "" },
             { id: "igiene-p", n: "Igiene Persona", icon: "🧼", img: "" },
-            { id: "igiene-c", n: "Igiene Casa", icon: "🧽", img: "" },
-            { id: "vegano", n: "Vegano", icon: "🥗", img: "" },
+            { id: "igiene-c", n: "Igiene Casa e Detersivi", icon: "🧽", img: "" },
+            { id: "surgelati", n: "Surgelati", icon: "❄️", img: "" },
             { id: "colazione", n: "Colazione", icon: "🥐", img: "" },
             { id: "panificati", n: "Panificati", icon: "🍞", img: "" },
+            { id: "vegano", n: "Vegano", icon: "🥗", img: "" },
             { id: "animali", n: "Amici Domestici", icon: "🐾", img: "" }
         ];
 
@@ -1128,7 +1130,7 @@
             document.getElementById('subcategory-view').style.display = 'block';
             document.getElementById('subcategory-title').innerText = catObj ? catObj.n : "Prodotti";
 
-            if (catId === "pasta" || catId === "bevande" || catId === "condimenti" || catId === "igiene-p" || catId === "freschi" || catId === "colazione" || catId === "dispensa") {
+            if (catId === "pasta" || catId === "bevande" || catId === "condimenti" || catId === "igiene-p" || catId === "freschi" || catId === "colazione" || catId === "dispensa" || catId === "igiene-c" || catId === "surgelati" || catId === "farine") {
                 renderSubFolders(catId);
             } else {
                 renderProducts(catId);
@@ -1202,11 +1204,29 @@
                 ];
             } else if (catId === "dispensa") {
                 subcatData = [
-                    { id: "Tonno", img: "img/tonno_riomare_olio_4x80.jpg", icon: "🐟" },
-                    { id: "Alici e Salmone", img: "img/alici_rizzoli_bio.jpg", icon: "🌊" },
-                    { id: "Bonduelle", img: "img/bonduelle_mix_mais_piselli_3x160.jpg", icon: "🥫" },
+                    { id: "Tonno e Pesce", img: "img/tonno_riomare_olio_4x80.jpg", icon: "🐟" },
+                    { id: "Carne in scatola", icon: "🥫" },
+                    { id: "Verdure e Legumi", img: "img/valfrutta_ceci_vapore.jpg", icon: "🥦" },
                     { id: "Conserve", icon: "🫙" },
-                    { id: "Insalatissime", icon: "🥗" }
+                    { id: "Insalatissime", icon: "🥗" },
+                    { id: "Altro", icon: "📦" }
+                ];
+            } else if (catId === "surgelati") {
+                subcatData = [
+                    { id: "Pizze e Panificati", icon: "🍕" },
+                    { id: "Verdure", icon: "🥦" },
+                    { id: "Pesce", icon: "🐟" },
+                    { id: "Piatti Pronti", icon: "🥘" },
+                    { id: "Gelati", icon: "🍦" },
+                    { id: "Altro", icon: "❄️" }
+                ];
+            } else if (catId === "farine") {
+                subcatData = [
+                    { id: "Farine", icon: "🌾" },
+                    { id: "Preparati Dolci", icon: "🧁" },
+                    { id: "Preparati Salati", icon: "🍕" },
+                    { id: "Lieviti", img: "img/prod_8000050446102.webp", icon: "✨" },
+                    { id: "Altro", icon: "📦" }
                 ];
             }
 
