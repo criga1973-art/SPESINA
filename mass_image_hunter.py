@@ -31,21 +31,29 @@ def get_product_data(ean):
 def map_category(off_cats):
     cats_str = ",".join(off_cats).lower()
     # Igiene Persona
-    if any(x in cats_str for x in ["shampoo", "shower", "bagno", "hair", "capelli", "dentifricio", "toothpaste", "deodorant", "sapone", "body-wash", "hygiene"]): return "igiene-p", "Cura Persona"
+    if any(x in cats_str for x in ["shampoo", "shower", "bagno", "hair", "capelli", "dentifricio", "toothpaste", "deodorant", "sapone", "body-wash", "hygiene", "oral-b", "colgate", "listerine"]): return "igiene-p", "Cura Persona"
     # Igiene Casa
-    if any(x in cats_str for x in ["detersivo", "lavatrice", "lavavastoviglie", "detergent", "cleaning", "disinfectant", "igiene-c", "floor"]): return "igiene-c", "Pulizia Casa"
+    if any(x in cats_str for x in ["detersivo", "lavatrice", "lavavastoviglie", "detergent", "cleaning", "disinfectant", "igiene-c", "floor", "finish", "dash", "chanteclair"]): return "igiene-c", "Pulizia Casa"
     # Pasta
-    if "pasta" in cats_str: return "pasta", "Varie"
+    if "pasta" in cats_str or "spaghetti" in cats_str or "penne" in cats_str or "fusilli" in cats_str: return "pasta", "Varie"
     # Bevande
-    if any(x in cats_str for x in ["beverage", "bevande", "drink", "water", "juice", "beer", "wine", "spirits", "soda"]): return "bevande", "Bibite"
+    if any(x in cats_str for x in ["beverage", "bevande", "drink", "water", "juice", "beer", "wine", "spirits", "soda", "coca-cola", "aranciata", "the", "acqua"]): return "bevande", "Bibite"
     # Colazione
-    if any(x in cats_str for x in ["snack", "biscuit", "biscotti", "colazione", "breakfast", "cereals", "muesli", "coffee", "caffe", "teas", "te"]): return "colazione", "Varie"
+    if any(x in cats_str for x in ["snack", "biscuit", "biscotti", "colazione", "breakfast", "cereals", "muesli", "coffee", "caffe", "teas", "te", "frollini"]): return "colazione", "Varie"
     # Condimenti
-    if any(x in cats_str for x in ["sauce", "condiment", "ketchup", "mayonnaise", "pesto", "vinegar", "oil", "olio", "aceto", "sale", "spice", "spezie"]): return "condimenti", "Varie"
+    if any(x in cats_str for x in ["sauce", "condiment", "ketchup", "mayonnaise", "pesto", "vinegar", "oil", "olio", "aceto", "sale", "spice", "spezie", "maionese"]): return "condimenti", "Varie"
     # Freschi
-    if any(x in cats_str for x in ["dairy", "cheese", "yogurt", "milk", "latte", "eggs", "uova", "butter", "cream", "fresh", "fresco"]): return "freschi", "Latticini"
-    # Dispensa (ampio, include lievito, farine, conserve, legumi ecc.)
-    if any(x in cats_str for x in ["canned", "conserve", "legume", "beans", "tuna", "fish", "baking", "flour", "farina", "lievito", "raising", "sugar", "rice", "riso", "broth", "brodo", "sauce", "tomato", "pomodoro", "food"]): return "dispensa", "Varie"
+    if any(x in cats_str for x in ["dairy", "cheese", "yogurt", "milk", "latte", "eggs", "uova", "butter", "cream", "fresh", "fresco", "formaggio", "mozzarella"]): return "freschi", "Latticini"
+    # Orto (Frutta e Verdura)
+    if any(x in cats_str for x in ["fruit", "vegetable", "frutta", "verdura", "orto", "apple", "banana", "salad", "insalata"]): return "orto", "Orto"
+    # Vegano
+    if "vegan" in cats_str or "vegano" in cats_str or "plant-based" in cats_str: return "vegano", "Vegano"
+    # Panificati
+    if any(x in cats_str for x in ["bread", "pane", "crackers", "grissini", "piadina", "panificati", "focaccia"]): return "panificati", "Panificati"
+    # Animali
+    if any(x in cats_str for x in ["pet", "dog", "cat", "cane", "gatto", "animali", "pet-food"]): return "animali", "Amici Domestici"
+    # Dispensa (Default per tutto il resto che è cibo)
+    if any(x in cats_str for x in ["canned", "conserve", "legume", "beans", "tuna", "fish", "baking", "flour", "farina", "lievito", "raising", "sugar", "rice", "riso", "broth", "brodo", "sauce", "tomato", "pomodoro", "food", "snack"]): return "dispensa", "Varie"
     return "dispensa", "Varie"  # Default sicuro: dispensa
 
 def process_image(img_url, ean):
