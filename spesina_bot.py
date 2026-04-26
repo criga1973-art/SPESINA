@@ -121,9 +121,8 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 await update.message.reply_text(f"✅ **PREZZO AGGIORNATO!** ({price}€)")
                 del user_states[chat_id]
             else:
-                state['step'] = 'waiting_category'
-                buttons = [[InlineKeyboardButton(c['n'], callback_data=f"cat_{id}")] for id, c in CAT_MAP.items()]
-                await update.message.reply_text("📂 **Scegli la CATEGORIA:**", reply_markup=InlineKeyboardMarkup(buttons))
+                state['step'] = 'waiting_image'
+                await update.message.reply_text("📸 **Mi dai l'immagine del prodotto?**")
         except:
             await update.message.reply_text("❌ Inserisci un prezzo valido.")
         return
@@ -199,6 +198,17 @@ async def process_ean(ean, update):
 
 async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.message.chat_id
+    state = user_states.get(chat_id)
+    
+    if state and state.get('step') == 'waiting_image':
+        photo_file = await update.message.photo[-1].get_file()
+        state['image_url'] = photo_file.file_path
+        
+        state['step'] = 'waiting_category'
+        buttons = [[InlineKeyboardButton(c['n'], callback_data=f"cat_{id}")] for id, c in CAT_MAP.items()]
+        await update.message.reply_text("📂 **Scegli la CATEGORIA:**", reply_markup=InlineKeyboardMarkup(buttons))
+        return
+
     photo_file = await update.message.photo[-1].get_file()
     path = f"tmp_{chat_id}.jpg"
     await photo_file.download_to_drive(path)
