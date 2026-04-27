@@ -366,7 +366,7 @@
 
         function renderMasterList() {
             const container = document.getElementById('master-list-container');
-            const dryCategories = ['pasta', 'bevande', 'condimenti', 'dispensa', 'farine', 'colazione', 'panificati', 'vegano', 'animali', 'igiene-p', 'igiene-c'];
+            const dryCategories = ['pasta', 'bevande', 'condimenti', 'dispensa', 'farine', 'colazione', 'panificati', 'vegano', 'animali', 'igiene-p', 'igiene-c', 'surgelati'];
             
             // Aggreghiamo i prodotti dry di tutti gli ordini "nuovi" o "in preparazione"
             let masterMap = {};
@@ -375,7 +375,7 @@
                 if (o.order_data.status === 'nuovo' || o.order_data.status === 'in preparazione') {
                     o.order_data.items.forEach(i => {
                         if (dryCategories.includes(i.c)) {
-                            if (!masterMap[i.n]) masterMap[i.n] = { q: 0, ean: i.ean };
+                            if (!masterMap[i.n]) masterMap[i.n] = { q: 0, ean: i.ean, size: i.l || i.size };
                             masterMap[i.n].q += i.q;
                         }
                     });
@@ -388,7 +388,7 @@
                     <div class="master-item">
                         <div>
                             <div style="font-weight:800; font-size:16px;">${masterMap[name].q}x</div>
-                            <div style="font-size:14px;">${name}</div>
+                            <div style="font-size:14px;">${name} ${masterMap[name].size ? '(' + masterMap[name].size + ')' : ''}</div>
                             <div style="font-size:11px; color:var(--text-muted);">EAN: ${masterMap[name].ean || 'N/A'}</div>
                         </div>
                     </div>
@@ -422,7 +422,7 @@
                         <img src="${item.img || 'img/placeholder.png'}" class="item-img">
                         <div class="item-info">
                             <div class="item-name">${item.q}x ${item.n}</div>
-                            <div class="item-ean">EAN: ${item.ean || 'N/A'} | €${item.p.toFixed(2)}</div>
+                            <div class="item-ean">${item.l || item.size || ''} | EAN: ${item.ean || 'N/A'} | €${item.p.toFixed(2)}</div>
                         </div>
                         <div class="item-controls">
                             <button class="btn-delete" onclick="removeItem(${index})">🗑️</button>
