@@ -1052,10 +1052,11 @@
 
         const MAINTENANCE_MODE = true; // Cambia in false per aprire ufficialmente il sito!
 
-        const SLOT_CONSEGNA = {
-            "10:00-11:00": 5, "11:00-12:00": 5, "12:00-13:00": 5,
-            "13:00-14:00": 5, "14:00-15:00": 5, "15:00-16:00": 5,
-            "16:00-17:00": 5, "17:00-18:00": 5
+        const SLOTS_LUN_SAB = {
+            "10:00-12:00": 5, "12:00-14:00": 5, "14:00-16:00": 5, "16:00-18:00": 5
+        };
+        const SLOTS_DOM = {
+            "10:00-12:00": 5
         };
 
         const AUTHORIZED_CAPS = ["30170", "30171", "30172", "30173", "30174", "30175"];
@@ -1395,7 +1396,7 @@
                     <p>L'accesso al servizio di consegna Spesina è subordinato alla sottoscrizione di un <strong>abbonamento mensile di 19,99€</strong>. Il servizio ha validità mensile e <strong>scade l'ultimo giorno del mese solare</strong> di sottoscrizione (es. 30 o 31 del mese corrente).</p>
 
                     <h3 style="margin-top:25px; font-weight:700;">9. Utilizzo del Servizio e Limite Giornaliero</h3>
-                    <p>L'abbonamento Spesina permette di effettuare fino a un <strong>massimo di 3 ordini al giorno</strong>, previa disponibilità delle fasce orarie di consegna. Ogni singola consegna è inoltre limitata a un massimo di 7 articoli totali per garantire l'efficienza logistica nel territorio di Mestre.</p>
+                    <p>L'abbonamento Spesina permette di effettuare fino a un <strong>massimo di 2 ordini al giorno</strong>, previa disponibilità delle fasce orarie di consegna. Ogni singola consegna è inoltre limitata a un massimo di 7 articoli totali per garantire l'efficienza logistica nel territorio di Mestre.</p>
 
                     <h3 style="margin-top:25px; font-weight:700;">10. Termine del Servizio</h3>
                     <p>Poiché il servizio non prevede il rinnovo automatico alla scadenza, non è necessario inviare alcuna comunicazione di disdetta. L'abbonamento cesserà la sua validità automaticamente al termine del mese solare. L'utente potrà decidere in totale libertà se sottoscrivere un nuovo abbonamento per il mese successivo. Il diritto di recesso entro 14 giorni dall'attivazione rimane garantito, a condizione che non sia già stata usufruita la prima consegna del mese.</p>
@@ -1492,8 +1493,10 @@
             const history = JSON.parse(localStorage.getItem('spesina_history') || "[]");
             let options = "";
 
-            for (const [fascia, capMassima] of Object.entries(SLOT_CONSEGNA)) {
-                const oraInizio = parseInt(fascia.split(":"));
+            const slotsToUse = (giorno === "Domenica") ? SLOTS_DOM : SLOTS_LUN_SAB;
+
+            for (const [fascia, capMassima] of Object.entries(slotsToUse)) {
+                const oraInizio = parseInt(fascia.split(":")[0]);
                 const scaduto = (giorno === "Oggi" && oraInizio <= oraAttuale);
                 
                 // Calcola ordini totali già presi per questa fascia
@@ -1512,8 +1515,8 @@
         function addToCart(id) {
             // Controllo preventivo abbonamento e limiti
             if (!checkSubscriptionStatus()) return;
-            if (getDailyOrderCount() >= 3) {
-                alert("Spiacenti, hai già effettuato i 3 ordini massimi consentiti per oggi.");
+            if (getDailyOrderCount() >= 2) {
+                alert("Spiacenti, hai già effettuato i 2 ordini massimi consentiti per oggi.");
                 return;
             }
 
@@ -1592,8 +1595,8 @@
         function remove(id) { cart = cart.filter(x => x.id !== id); updateUI(); if (cart.length === 0) closeModals(); }
         function openCart() { 
             if (!checkSubscriptionStatus()) return;
-            if (getDailyOrderCount() >= 3) {
-                alert("Hai raggiunto il limite di 3 spese per oggi. Ci vediamo domani!");
+            if (getDailyOrderCount() >= 2) {
+                alert("Hai raggiunto il limite di 2 spese per oggi. Ci vediamo domani!");
                 return;
             }
             caricaOrari(); 
@@ -1875,8 +1878,8 @@
 
         function showPay() {
             if (!checkSubscriptionStatus()) return;
-            if (getDailyOrderCount() >= 3) {
-                alert("Hai raggiunto il limite di 3 spese per oggi. Ci vediamo domani!");
+            if (getDailyOrderCount() >= 2) {
+                alert("Hai raggiunto il limite di 2 spese per oggi. Ci vediamo domani!");
                 return;
             }
 
@@ -1884,12 +1887,12 @@
             const ora = document.getElementById('select-ora').value;
             if (!ora || ora.includes("Esaurito")) return alert("Seleziona un orario valido!");
 
-            // NUOVA REGOLA: Massimo 3 spese dello stesso ID in un'ora
+            // NUOVA REGOLA: Massimo 2 spese dello stesso ID in un'ora
             const history = JSON.parse(localStorage.getItem('spesina_history') || "[]");
             const ordiniUtenteInFascia = history.filter(o => o.id === (userData ? userData.id : null) && o.slot === (giorno + " " + ora)).length;
             
-            if (ordiniUtenteInFascia >= 3) {
-                alert("⚠️ Hai già prenotato 3 consegne per questa fascia oraria. Seleziona un altro orario per i prossimi articoli!");
+            if (ordiniUtenteInFascia >= 2) {
+                alert("⚠️ Hai già prenotato 2 consegne per questa fascia oraria. Seleziona un altro orario per i prossimi articoli!");
                 return;
             }
 
@@ -1902,7 +1905,7 @@
         async function finish(m) {
             // Re-verify subscription and cap just before sending
             if (!checkSubscriptionStatus()) return;
-            if (getDailyOrderCount() >= 3) return;
+            if (getDailyOrderCount() >= 2) return;
 
             // Calcolo se aggiungere abbonamento nel riepilogo email
             const history = JSON.parse(localStorage.getItem('spesina_history') || "[]");

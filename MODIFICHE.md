@@ -34,7 +34,7 @@ Ecco un riepilogo delle ultime migliorie apportate al progetto:
 ## ⚡ Logistica "Mestre Fast" (7 pezzi)
 - **Limite Quantitativo**: Implementato il blocco rigoroso a un massimo di **7 articoli per consegna** per ottimizzare la velocità dei rider.
 - **Contatore Dinamico**: Banner carrello interattivo con indicatore "X di 7" che cambia colore al raggiungimento del limite.
-- **Daily Cap**: Limite di **3 ordini giornalieri** per ogni ID utente per garantire l'equità del servizio.
+- **Daily Cap**: Limite di **2 ordini giornalieri** per ogni ID utente per garantire l'equità del servizio.
 
 ## 📖 Narrazione & Trasparenza
 - **Pagina Filosofia**: Creazione della sezione "Perché Spesina?" per comunicare i valori del brand e i vantaggi dell'abbonamento.
@@ -53,6 +53,12 @@ Ecco un riepilogo delle ultime migliorie apportate al progetto:
 - **Fix SyntaxError**: Risolto un errore critico di doppia dichiarazione variabile (`history`) che bloccava l'avvio dell'app.
 - **Supabase Safety**: Introdotta una gestione sicura dell'inizializzazione del database per prevenire crash se le librerie esterne non vengono caricate.
 - **Startup Sequence**: Ottimizzato l'ordine di esecuzione degli script per garantire il rendering istantaneo delle categorie.
+
+## 🕒 Nuove Fasce Orarie di Consegna
+- **Lunedì - Sabato**: Fasce orarie da 2 ore (10:00-12:00, 12:00-14:00, 14:00-16:00, 16:00-18:00).
+- **Domenica**: Fascia unica dalle 10:00 alle 12:00.
+- **Gestione Dinamica**: Il sistema seleziona automaticamente il set di orari corretto in base al giorno scelto dall'utente.
+- **Limite per Fascia**: Ridotto il numero massimo di ordini per lo stesso ID utente nella stessa fascia oraria da 3 a **2**.
 
 ---
 *Per visualizzare l'app durante i test, usa il link: **spesina.it/?preview=true***
