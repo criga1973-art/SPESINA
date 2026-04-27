@@ -69,6 +69,13 @@ Ecco un riepilogo delle ultime migliorie apportate al progetto:
 - **Miniature Prodotti**: Ogni articolo nel carrello mostra ora una miniatura da 50x50px per una rapida identificazione visiva.
 - **Dati EAN**: Visualizzazione del codice EAN sotto il titolo del prodotto nel carrello per una maggiore precisione durante la fase di riepilogo.
 
+## 📱 Shopper Dashboard & Workflow (27 Aprile 2026)
+- **Nuova PWA**: Creata la pagina `shopper.html` dedicata a chi prepara la spesa.
+- **Master Pick List**: Lista cumulativa per prodotti "Seccchi" per prelevare tutto in un unico giro.
+- **Checklist Intelligente**: Controllo articolo per articolo durante l'imbustamento con calcolo del totale in tempo reale se mancano prodotti.
+- **Workflow Rigoroso**: Passaggio automatico di stato da "Nuovo" -> "In Preparazione" -> "Da Consegnare" -> "Concluso".
+- **Accesso Protetto**: Accesso tramite Shopper PIN personalizzabile.
+
 ---
 *Per visualizzare l'app durante i test, usa il link: **spesina.it/?preview=true***
 *Per lo sviluppo locale, apri il file **index.html** tramite il collegamento sul desktop.*

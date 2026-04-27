@@ -1955,8 +1955,14 @@
                         if (typeof sb !== 'undefined' && userData && userData.id) {
                             try {
                                 await sb.from('orders').insert({
-                                    client_id: userData.id, // Useremo il client_id come riferimento
-                                    order_data: { items: cart, total: totaleValore, delivery: giorno + " " + ora }
+                                    client_id: userData.id,
+                                    order_data: { 
+                                        items: cart, 
+                                        total: totaleValore, 
+                                        delivery: giorno + " " + ora,
+                                        status: 'nuovo',
+                                        total_amount: parseFloat(totaleValore.replace('Totale: ', '').replace('€', '').trim())
+                                    }
                                 });
                             } catch (err) { console.error("Errore salvataggio ordine cloud:", err); }
                         }
