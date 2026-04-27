@@ -366,34 +366,55 @@
 
         function renderMasterList() {
             const container = document.getElementById('master-list-container');
-            const dryCategories = ['pasta', 'bevande', 'condimenti', 'dispensa', 'farine', 'colazione', 'panificati', 'vegano', 'animali', 'igiene-p', 'igiene-c', 'surgelati'];
+            const dryCategories = ['pasta', 'bevande', 'condimenti', 'dispensa', 'farine', 'colazione', 'panificati', 'vegano', 'animali', 'igiene-p', 'igiene-c'];
             
-            // Aggreghiamo i prodotti dry di tutti gli ordini "nuovi" o "in preparazione"
-            let masterMap = {};
+            let dryMap = {};
+            let freshMap = {};
             
             allOrders.forEach(o => {
                 if (o.order_data.status === 'nuovo' || o.order_data.status === 'in preparazione') {
                     o.order_data.items.forEach(i => {
-                        if (dryCategories.includes(i.c)) {
-                            if (!masterMap[i.n]) masterMap[i.n] = { q: 0, ean: i.ean, size: i.l || i.size };
-                            masterMap[i.n].q += i.q;
-                        }
+                        let map = dryCategories.includes(i.c) ? dryMap : freshMap;
+                        if (!map[i.n]) map[i.n] = { q: 0, ean: i.ean, size: i.l || i.size };
+                        map[i.n].q += i.q;
                     });
                 }
             });
 
             let html = "";
-            Object.keys(masterMap).sort().forEach(name => {
-                html += `
-                    <div class="master-item">
-                        <div>
-                            <div style="font-weight:800; font-size:16px;">${masterMap[name].q}x</div>
-                            <div style="font-size:14px;">${name} ${masterMap[name].size ? '(' + masterMap[name].size + ')' : ''}</div>
-                            <div style="font-size:11px; color:var(--text-muted);">EAN: ${masterMap[name].ean || 'N/A'}</div>
-                        </div>
-                    </div>
-                `;
-            });
+            
+            // Sezione SECCO
+            if (Object.keys(dryMap).length > 0) {
+                html += `<h4 style="color:var(--primary); margin-bottom:10px;">📦 BOXING SECCO</h4>`;
+                Object.keys(dryMap).sort().forEach(name => {
+                    html += `
+                        <div class="master-item">
+                            <div>
+                                <div style="font-weight:800; font-size:16px;">${dryMap[name].q}x</div>
+                                <div style="font-size:14px;">${name} ${dryMap[name].size ? '('+dryMap[name].size+')' : ''}</div>
+                                <div style="font-size:11px; color:var(--text-muted);">EAN: ${dryMap[name].ean || 'N/A'}</div>
+                            </div>
+                        </div>`;
+                });
+            }
+
+            // Sezione FRESCO
+            if (Object.keys(freshMap).length > 0) {
+                html += `<h4 style="color:var(--success); margin:25px 0 10px 0;">🥗 BOXING FRESCO</h4>`;
+                Object.keys(freshMap).sort().forEach(name => {
+                    html += `
+                        <div class="master-item" style="border-left: 4px solid var(--success);">
+                            <div>
+                                <div style="font-weight:800; font-size:16px;">${freshMap[name].q}x</div>
+                                <div style="font-size:14px;">${name} ${freshMap[name].size ? '('+freshMap[name].size+')' : ''}</div>
+                                <div style="font-size:11px; color:var(--text-muted);">EAN: ${freshMap[name].ean || 'N/A'}</div>
+                            </div>
+                        </div>`;
+                });
+            }
+
+            container.innerHTML = html || "<div style='text-align:center; padding:50px; color:var(--text-muted);'>Nulla da prelevare al momento.</div>";
+        }
 
             container.innerHTML = html || "<div style='text-align:center; padding:50px; color:var(--text-muted);'>Nulla da prelevare al momento.</div>";
         }
