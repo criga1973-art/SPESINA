@@ -819,9 +819,19 @@
                     <input type="text" id="reg-address" class="select-box" placeholder="es: Via Mestrina" oninput="checkRegisterValidity()">
                 </div>
 
-                <div class="input-group">
-                    <label>Civico, Piano e Interno</label>
-                    <input type="text" id="reg-details" class="select-box" placeholder="es: Civico 10, Piano 2, Int. 5" oninput="checkRegisterValidity()" autocomplete="new-password">
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+                    <div class="input-group" style="margin-bottom:0;">
+                        <label>N° civico</label>
+                        <input type="text" id="reg-civico" class="select-box" placeholder="es: 10" oninput="checkRegisterValidity()">
+                    </div>
+                    <div class="input-group" style="margin-bottom:0;">
+                        <label>Piano</label>
+                        <input type="text" id="reg-piano" class="select-box" placeholder="es: 2" oninput="checkRegisterValidity()">
+                    </div>
+                    <div class="input-group" style="margin-bottom:0;">
+                        <label>Interno</label>
+                        <input type="text" id="reg-interno" class="select-box" placeholder="es: 5" oninput="checkRegisterValidity()">
+                    </div>
                 </div>
 
                 <div class="checkbox-group">
@@ -1773,7 +1783,10 @@
             const email = document.getElementById('reg-email').value.trim();
             const tel = document.getElementById('reg-phone').value.trim();
             const via = document.getElementById('reg-address').value.trim();
-            const dettagli = document.getElementById('reg-details').value.trim();
+            const civico = document.getElementById('reg-civico').value.trim();
+            const piano = document.getElementById('reg-piano').value.trim();
+            const interno = document.getElementById('reg-interno').value.trim();
+            const dettagli = `Civico: ${civico}, Piano: ${piano}, Interno: ${interno}`;
             const cap = document.getElementById('reg-cap').value;
             const privacy = document.getElementById('reg-privacy').checked;
 
@@ -1783,7 +1796,7 @@
             if (!/^\d{9,10}$/.test(tel)) return alert("⚠️ Inserisci un numero di cellulare valido (9 o 10 cifre).");
             if (!AUTHORIZED_CAPS.includes(cap)) return alert("⚠️ Seleziona un CAP valido tra quelli di Mestre.");
             if (via.length < 3) return alert("⚠️ Inserisci un indirizzo di consegna valido.");
-            if (dettagli.length < 1) return alert("⚠️ Inserisci il Numero Civico, Piano e Interno.");
+            if (civico.length < 1) return alert("⚠️ Inserisci il Numero Civico.");
             if (!privacy) return alert("⚠️ Devi accettare la Privacy Policy per continuare.");
             
             // Se arriviamo qui, i dati sono perfetti!
