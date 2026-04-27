@@ -1850,7 +1850,8 @@
                         delivery: data.delivery,
                         address: data.address,
                         phone: data.phone,
-                        orderItems: data.items,
+                        orderItems: data.itemsString, // Manteniamo per sicurezza
+                        items: data.items,           // Nuovo: Array strutturato
                         total: data.total
                     })
                 });
@@ -1975,7 +1976,8 @@
                             phone: userData.t,
                             delivery: giorno + " " + ora,
                             address: userData.a + " " + userData.d,
-                            items: elencoProdotti,
+                            items: cart, // Passiamo l'intero array
+                            itemsString: elencoProdotti, // Passiamo anche la stringa per backup
                             total: totaleValore
                         });
 

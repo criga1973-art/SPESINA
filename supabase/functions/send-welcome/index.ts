@@ -24,6 +24,24 @@ serve(async (req) => {
     if (type === 'order') {
       from = 'Spesina <ordini@spesina.it>'
       subject = `📦 Conferma Ordine Spesina - ${body.delivery}`
+      
+      // Costruzione righe prodotti (Supporta sia stringa che array per retrocompatibilità)
+      let itemsHtml = "";
+      if (Array.isArray(body.items)) {
+        itemsHtml = body.items.map(i => `
+          <div style="display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee;">
+            <img src="${i.image_url || i.img || ''}" alt="${i.name || i.n}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px; margin-right: 15px;">
+            <div style="flex: 1;">
+              <div style="font-weight: bold; font-size: 14px; color: #0f172a;">${i.name || i.n}</div>
+              <div style="font-size: 12px; color: #64748b;">Quantità: <b>${i.quantity || i.q}</b> | EAN: ${i.ean || 'N/A'}</div>
+            </div>
+            <div style="font-weight: bold; color: #0f172a;">${((i.price || i.p) * (i.quantity || i.q)).toFixed(2)}€</div>
+          </div>
+        `).join("");
+      } else {
+        itemsHtml = `<pre style="white-space: pre-wrap; font-family: inherit; font-size: 14px;">${body.orderItems}</pre>`;
+      }
+
       html = `
         <div style="font-family: sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px; border-radius: 15px;">
           <h1 style="color: #10b981; text-align: center;">Ordine Ricevuto!</h1>
@@ -35,7 +53,7 @@ serve(async (req) => {
           </div>
           <div style="background: #fff; padding: 15px; border: 1px solid #eee; border-radius: 10px;">
             <h4 style="margin: 0 0 10px 0;">Riepilogo Prodotti:</h4>
-            <pre style="white-space: pre-wrap; font-family: inherit; font-size: 14px;">${body.orderItems}</pre>
+            ${itemsHtml}
             <hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
             <p style="text-align: right; font-weight: bold; font-size: 18px; margin: 0;">${body.total}</p>
           </div>
@@ -71,7 +89,7 @@ serve(async (req) => {
       body: JSON.stringify({ 
         from, 
         to: [email], 
-        bcc: ['criga1973@gmail.com'], // Notifica automatica a Spesina (Gmail per ora)
+        bcc: ['criga1973@gmail.com'], 
         subject, 
         html 
       }),
