@@ -679,17 +679,17 @@
     <div id="cart-trigger" onclick="openCart()">🛒 Articoli: <span id="cart-limit-display">0 di 7</span> | <span id="cart-total-top">0.00€</span></div>
 
     <header>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; justify-content: center; align-items: center; padding-bottom: 10px;">
             <div style="display: flex; align-items: center; gap: 4px; position: relative;">
-                <h1 style="margin:0; font-size: 32px; color: #000000; font-family: 'Lora', serif; font-weight: 700; letter-spacing: -0.5px;">Spesina</h1>
+                <h1 style="margin:0; font-size: 32px; color: #000000; font-family: 'Lora', serif; font-weight: 700; letter-spacing: -0.5px; cursor: pointer;" onclick="adminClick()">Spesina</h1>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: absolute; top: -10px; right: 8px;">
                     <path d="M20.5 3C20.5 3 16 3 12 7C8 11 7 17 7 17C7 17 13 16 17 12C21 8 20.5 3 20.5 3Z" fill="#10b981"/>
                     <path d="M7 17L3 21" stroke="#10b981" stroke-width="2" stroke-linecap="round"/>
                 </svg>
             </div>
-            <button onclick="showPhilosophy()" style="background:var(--primary); color:white; border:none; border-radius:30px; padding:8px 16px; font-size:13px; font-weight:800; cursor:pointer; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);">PERCHÉ SPESINA? ➔</button>
         </div>
         <div class="top-nav">
+            <a onclick="showPhilosophy()">Perché Spesina?</a>
             <a onclick="showHowItWorks()">Come funziona</a>
             <a onclick="showAddress()">📍 Dove consegniamo</a>
             <a id="nav-login" onclick="showRegister()">🔑 Accedi</a>
