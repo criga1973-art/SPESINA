@@ -32,8 +32,9 @@ serve(async (req) => {
           <div style="display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee;">
             <img src="${i.image_url || i.img || ''}" alt="${i.name || i.n}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px; margin-right: 15px;">
             <div style="flex: 1;">
-              <div style="font-weight: bold; font-size: 14px; color: #0f172a;">[${i.quantity || i.q}x] ${i.name || i.n}</div>
-              <div style="font-size: 12px; color: #64748b;">EAN: ${i.ean || 'N/A'}</div>
+              <div style="font-weight: bold; font-size: 14px; color: #0f172a;">${i.name || i.n}</div>
+              <div style="font-weight: bold; font-size: 14px; color: #0f172a;">Quantità: ${i.quantity || i.q}</div>
+              <div style="font-size: 11px; color: #64748b;">EAN: ${i.ean || 'N/A'}</div>
             </div>
             <div style="font-weight: bold; color: #0f172a;">${((i.price || i.p) * (i.quantity || i.q)).toFixed(2)}€</div>
           </div>
