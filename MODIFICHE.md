@@ -60,6 +60,11 @@ Ecco un riepilogo delle ultime migliorie apportate al progetto:
 - **Gestione Dinamica**: Il sistema seleziona automaticamente il set di orari corretto in base al giorno scelto dall'utente.
 - **Limite per Fascia**: Ridotto il numero massimo di ordini per lo stesso ID utente nella stessa fascia oraria da 3 a **2**.
 
+## 🧹 Reset Totale Catalogo (27 Aprile 2026)
+- **Database**: Tutti i 485 prodotti precedenti sono stati spostati in archivio e i loro dati (EAN, immagini) sono stati rimossi per permettere una ripartenza da zero pulita.
+- **Immagini**: Cartella `img/` svuotata completamente dei vecchi file per ottimizzare lo spazio e la gestione dei nuovi caricamenti tramite bot.
+- **Punto di Partenza**: Il sito è ora vuoto e pronto per il caricamento del nuovo catalogo standardizzato.
+
 ---
 *Per visualizzare l'app durante i test, usa il link: **spesina.it/?preview=true***
 *Per lo sviluppo locale, apri il file **index.html** tramite il collegamento sul desktop.*
