@@ -1554,7 +1554,20 @@
             cart.forEach(i => {
                 total += (i.p * i.q);
                 if (i.c === 'orto') hasOrtofrutta = true;
-                listHtml += `<div class="cart-row"><span><b>${i.q}x</b> ${i.n}</span><span>${(i.p * i.q).toFixed(2)}€ <button onclick="remove(${i.id})" style="background:var(--red);color:white;border:none;border-radius:50%;width:20px;height:20px;cursor:pointer;">✕</button></span></div>`;
+                listHtml += `
+                    <div class="cart-row">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <img src="${i.img || 'img/placeholder.png'}" style="width:50px; height:50px; object-fit:cover; border-radius:8px; border:1px solid #eee;">
+                            <div>
+                                <div style="font-weight:700; font-size:14px;">${i.q}x ${i.n}</div>
+                                <div style="font-size:11px; color:var(--text-muted);">EAN: ${i.ean || 'N/A'}</div>
+                            </div>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-weight:700;">${(i.p * i.q).toFixed(2)}€</div>
+                            <button onclick="remove(${i.id})" style="background:var(--red);color:white;border:none;border-radius:50%;width:24px;height:24px;cursor:pointer;margin-top:4px;">✕</button>
+                        </div>
+                    </div>`;
             });
 
             // Se è il primo ordine, aggiungiamo l'abbonamento al totale e alla lista
