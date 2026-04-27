@@ -77,11 +77,12 @@ def fetch_off_data(ean):
                 p = d['product']
                 return {
                     'name': p.get('product_name_it') or p.get('product_name') or f"Prodotto {ean}",
-                    'image_url': p.get('image_url', ''),
+                    'image_url': '', # Non prendiamo più la foto dal web
+                    'size': p.get('quantity', ''),
                     'info': {'d': p.get('generic_name_it') or "", 'a': p.get('allergens') or "Nessuno"}
                 }
     except: pass
-    return {'name': f"Prodotto {ean}", 'image_url': "", 'info': {}}
+    return {'name': f"Prodotto {ean}", 'image_url': "", 'size': "", 'info': {}}
 
 def detect_barcode(image_path):
     try:
@@ -154,7 +155,7 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             new_prod = {
                 "ean": state['ean'], "name": state['name'], "price": state['price'],
                 "category": state['category'], "brand": state['brand'],
-                "image_url": state['image_url'], "info": state['info']
+                "image_url": state['image_url'], "size": state.get('size', ''), "info": state['info']
             }
             supabase.table('products').upsert(new_prod).execute()
             avvisa_github_per_foto(state['ean'], state['category'], state['brand'])
@@ -173,7 +174,7 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         new_prod = {
             "ean": state['ean'], "name": state['name'], "price": state['price'],
             "category": state['category'], "brand": state['brand'],
-            "image_url": state['image_url'], "info": state['info']
+            "image_url": state['image_url'], "size": state.get('size', ''), "info": state['info']
         }
         supabase.table('products').upsert(new_prod).execute()
         avvisa_github_per_foto(state['ean'], state['category'], state['brand'])
@@ -192,9 +193,9 @@ async def process_ean(ean, update):
         data = fetch_off_data(ean)
         user_states[chat_id] = {
             'ean': ean, 'name': data['name'], 'image_url': data['image_url'], 
-            'info': data['info'], 'step': 'waiting_price'
+            'size': data['size'], 'info': data['info'], 'step': 'waiting_price'
         }
-        await update.effective_message.reply_text(f"📦 **NUOVO**: {data['name']}\n💰 Prezzo di vendita?")
+        await update.effective_message.reply_text(f"📦 **NUOVO**: {data['name']} ({data['size']})\n💰 Prezzo di vendita?")
 
 async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.message.chat_id
