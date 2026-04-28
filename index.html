@@ -1992,6 +1992,8 @@
                             sb.from('orders').insert({
                                 client_id: userData.id,
                                 order_data: { 
+                                    name: userData.n,
+                                    address: userData.a + (userData.d ? ", " + userData.d : "") + ", " + userData.c + " Mestre",
                                     items: cart, 
                                     total: totaleValore, 
                                     delivery: giorno + " " + ora,
