@@ -1986,18 +1986,29 @@
 
                         // Registra ordine su Supabase
                         if (typeof sb !== 'undefined' && userData && userData.id) {
-                            try {
-                                await sb.from('orders').insert({
-                                    client_id: userData.id,
-                                    order_data: { 
-                                        items: cart, 
-                                        total: totaleValore, 
-                                        delivery: giorno + " " + ora,
-                                        status: 'nuovo',
-                                        total_amount: parseFloat(totaleValore.replace('Totale: ', '').replace('€', '').trim())
-                                    }
-                                });
-                            } catch (err) { console.error("Errore salvataggio ordine cloud:", err); }
+                            console.log("Salvataggio ordine su Supabase...");
+                            const totalClean = parseFloat(totaleValore.replace('Totale: ', '').replace('€', '').trim());
+                            
+                            sb.from('orders').insert({
+                                client_id: userData.id,
+                                order_data: { 
+                                    items: cart, 
+                                    total: totaleValore, 
+                                    delivery: giorno + " " + ora,
+                                    status: 'nuovo',
+                                    total_amount: totalClean
+                                }
+                            }).then(({ error }) => {
+                                if (error) {
+                                    console.error("Errore Supabase dettagliato:", error);
+                                    alert("⚠️ Errore Database:\n" + error.message + "\nCodice: " + error.code);
+                                } else {
+                                    console.log("✅ Ordine salvato correttamente su Supabase.");
+                                }
+                            });
+                        } else {
+                            console.error("Impossibile salvare: sb, userData o userData.id mancanti.");
+                            alert("⚠️ Errore critico: Sessione utente non valida. Prova a ricaricare la pagina.");
                         }
 
                         // Aggiorna la cronologia locale (già dichiarata all'inizio della funzione)
