@@ -1916,29 +1916,40 @@
         // --- FINE AUTOCOMPLETE ---
 
         function showPay() {
-            if (!checkSubscriptionStatus()) return;
+            console.log("Pulsante PROSEGUI cliccato...");
+            if (!checkSubscriptionStatus()) {
+                console.log("Validazione abbonamento fallita.");
+                return;
+            }
             if (getDailyOrderCount() >= 2) {
+                console.log("Limite ordini giornalieri raggiunto.");
                 alert("Hai raggiunto il limite di 2 spese per oggi. Ci vediamo domani!");
                 return;
             }
 
             const giorno = document.getElementById('select-giorno').value;
             const ora = document.getElementById('select-ora').value;
-            if (!ora || ora.includes("Esaurito")) return alert("Seleziona un orario valido!");
+            console.log(`Orario selezionato: ${giorno} ${ora}`);
+
+            if (!ora || ora === "" || ora.includes("Esaurito") || ora.includes("Nessun orario")) {
+                console.log("Orario non valido o non selezionato.");
+                return alert("Per favore, seleziona un orario di consegna valido prima di proseguire.");
+            }
 
             // NUOVA REGOLA: Massimo 2 spese dello stesso ID in un'ora
             const history = JSON.parse(localStorage.getItem('spesina_history') || "[]");
             const ordiniUtenteInFascia = history.filter(o => o.id === (userData ? userData.id : null) && o.slot === (giorno + " " + ora)).length;
             
             if (ordiniUtenteInFascia >= 2) {
+                console.log("Limite ordini in questa fascia oraria raggiunto.");
                 alert("⚠️ Hai già prenotato 2 consegne per questa fascia oraria. Seleziona un altro orario per i prossimi articoli!");
                 return;
             }
 
-            if (confirm(`Confermi l'ordine per ${giorno} alle ${ora}?`)) { 
-                closeModals(); 
-                document.getElementById('modalPay').style.display = 'flex'; 
-            }
+            // Rimosso confirm() per evitare blocchi browser e rendere il flusso più rapido
+            console.log("Passaggio al metodo di pagamento...");
+            closeModals(); 
+            document.getElementById('modalPay').style.display = 'flex'; 
         }
 
         async function finish(m) {
