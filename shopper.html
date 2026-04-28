@@ -382,9 +382,9 @@
                 if (!d || !d.items || (d.status !== 'nuovo' && d.status !== 'in preparazione')) return;
 
                 d.items.forEach(i => {
-                    // Consideriamo tutto ciò che è Dry + categorie richieste per il test
                     const cat = (i.c || '').toLowerCase();
-                    if (dryCategories.includes(cat) || cat === 'ortofrutta' || cat === 'surgelati') {
+                    // Solo categorie DRY originali
+                    if (dryCategories.includes(cat)) {
                         const name = i.n || 'Prodotto Sconosciuto';
                         if (!masterMap[name]) masterMap[name] = { q: 0, ean: i.ean, size: i.l || i.size };
                         masterMap[name].q += (parseInt(i.q) || 0);
