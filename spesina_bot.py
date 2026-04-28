@@ -1,7 +1,8 @@
 import os
 import threading
-from http.server import HTTPServer, BaseHTTPRequestHandler
+import asyncio
 import logging
+from http.server import HTTPServer, BaseHTTPRequestHandler
 import requests
 import cv2
 import numpy as np
@@ -136,65 +137,54 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = query.message.chat_id
     data = query.data
     
-    await query.answer() # Ferma il caricamento sul pulsante
+    await query.answer() 
 
     state = user_states.get(chat_id)
-
     if not state:
-        await query.message.reply_text("❌ Sessione scaduta o bot riavviato. Riprova da capo inviando il prodotto.")
+        await query.message.reply_text("❌ Sessione scaduta o bot riavviato. Riprova da capo.")
         return
 
-    if data.startswith("cat_"):
-        cat_id = data.replace("cat_", "")
-        state['category'] = cat_id
-        subfolders = CAT_MAP[cat_id]['sub']
+    try:
+        if data.startswith("cat_"):
+            cat_id = data.replace("cat_", "")
+            state['category'] = cat_id
+            subfolders = CAT_MAP.get(cat_id, {}).get('sub', [])
+            
+            if not subfolders:
+                state['brand'] = ""
+                new_prod = {
+                    "ean": state['ean'], "name": state['name'], "price": state['price'],
+                    "category": state['category'], "brand": state['brand'],
+                    "image_url": state['image_url'], "size": state.get('size', ''), "info": state.get('info', {})
+                }
+                supabase.table('products').upsert(new_prod).execute()
+                asyncio.create_task(asyncio.to_thread(avvisa_github_per_foto, state['ean'], state['category'], state['brand']))
+                await query.edit_message_text(f"✅ **SALVATO!**\n📦 {state['name']}\n📂 {CAT_MAP[state['category']]['n']}\n💰 {state['price']}€\n\nL'AI sta preparando la foto... 🚀")
+                if chat_id in user_states: del user_states[chat_id]
+            else:
+                state['step'] = 'waiting_brand'
+                buttons = [[InlineKeyboardButton(s, callback_data=f"sub_{s}")] for s in subfolders]
+                await query.edit_message_text(f"📁 **Categoria: {CAT_MAP[cat_id]['n']}**\nScegli la SOTTO-CARTELLA:", reply_markup=InlineKeyboardMarkup(buttons))
         
-        if not subfolders:
-            # Salta il passaggio del brand se la lista è vuota (es. Pasta)
-            state['brand'] = ""
+        elif data.startswith("sub_"):
+            sub_name = data.replace("sub_", "")
+            state['brand'] = sub_name
+            
             new_prod = {
                 "ean": state['ean'], "name": state['name'], "price": state['price'],
                 "category": state['category'], "brand": state['brand'],
-                "image_url": state['image_url'], "size": state.get('size', ''), "info": state['info']
+                "image_url": state['image_url'], "size": state.get('size', ''), "info": state.get('info', {})
             }
-            try:
-                supabase.table('products').upsert(new_prod).execute()
-                import asyncio
-                asyncio.create_task(asyncio.to_thread(avvisa_github_per_foto, state['ean'], state['category'], state['brand']))
-                await query.edit_message_text(f"✅ **SALVATO!**\n📦 {state['name']}\n📂 {CAT_MAP[state['category']]['n']}\n💰 {state['price']}€\n\nL'AI sta preparando la foto... 🚀")
-            except Exception as e:
-                logging.error(f"Supabase upsert error: {e}")
-                await query.edit_message_text(f"❌ Errore durante il salvataggio nel database: {e}")
-            finally:
-                if chat_id in user_states:
-                    del user_states[chat_id]
-        else:
-            state['step'] = 'waiting_brand'
-            buttons = [[InlineKeyboardButton(s, callback_data=f"sub_{s}")] for s in subfolders]
-            await query.edit_message_text(f"📁 **Categoria: {CAT_MAP[cat_id]['n']}**\nScegli la SOTTO-CARTELLA:", reply_markup=InlineKeyboardMarkup(buttons))
-    
-    elif data.startswith("sub_"):
-        sub_name = data.replace("sub_", "")
-        state['brand'] = sub_name
-        
-        # Salvataggio finale
-        new_prod = {
-            "ean": state['ean'], "name": state['name'], "price": state['price'],
-            "category": state['category'], "brand": state['brand'],
-            "image_url": state['image_url'], "size": state.get('size', ''), "info": state['info']
-        }
-        try:
             supabase.table('products').upsert(new_prod).execute()
-            import asyncio
             asyncio.create_task(asyncio.to_thread(avvisa_github_per_foto, state['ean'], state['category'], state['brand']))
             
             await query.edit_message_text(f"✅ **SALVATO!**\n📦 {state['name']}\n📂 {CAT_MAP[state['category']]['n']} > {sub_name}\n💰 {state['price']}€\n\nL'AI sta preparando la foto... 🚀")
-        except Exception as e:
-            logging.error(f"Supabase upsert error: {e}")
-            await query.edit_message_text(f"❌ Errore durante il salvataggio nel database: {e}")
-        finally:
-            if chat_id in user_states:
-                del user_states[chat_id]
+            if chat_id in user_states: del user_states[chat_id]
+
+    except Exception as e:
+        logging.error(f"CALLBACK ERROR: {e}", exc_info=True)
+        await query.message.reply_text(f"❌ Errore: {e}")
+        if chat_id in user_states: del user_states[chat_id]
 
 async def process_ean(ean, update):
     chat_id = update.effective_chat.id
