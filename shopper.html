@@ -266,6 +266,15 @@
                 <div id="checklist-subtitle" style="font-size:11px; color:var(--text-muted);">0 di 0 prodotti spuntati</div>
             </div>
         </div>
+        <div id="checklist-delivery-info" style="background: #334155; padding: 15px; border-bottom: 1px solid #475569; display: none;">
+            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 800; letter-spacing: 1px; margin-bottom: 5px;">📍 Dati Consegna</div>
+            <div id="info-client-name" style="font-size: 18px; font-weight: 800; margin-bottom: 5px;">Nome Cliente</div>
+            <div id="info-client-address" style="font-size: 14px; color: var(--success); font-weight: 600; margin-bottom: 10px;">Indirizzo...</div>
+            <div style="display: flex; gap: 10px;">
+                <a id="link-maps" href="#" target="_blank" style="flex: 1; background: var(--success); color: white; text-decoration: none; text-align: center; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 13px;">🗺️ APRI MAPS</a>
+                <a id="link-phone" href="#" style="flex: 1; background: var(--primary); color: white; text-decoration: none; text-align: center; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 13px;">📞 CHIAMA</a>
+            </div>
+        </div>
         <div id="checklist-items" style="flex: 1; overflow-y: auto;">
             <!-- Items loaded here -->
         </div>
@@ -411,6 +420,16 @@
         function openOrder(id) {
             currentOrder = allOrders.find(o => o.id === id);
             checkedItems = new Set();
+            
+            // Popolamento dati consegna
+            const d = currentOrder.order_data;
+            document.getElementById('info-client-name').innerText = d.name || 'Cliente Spesina';
+            document.getElementById('info-client-address').innerText = d.address || 'Indirizzo non specificato';
+            document.getElementById('link-maps').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d.address || '')}`;
+            document.getElementById('link-phone').href = d.phone ? `tel:${d.phone}` : '#';
+            document.getElementById('link-phone').style.display = d.phone ? 'block' : 'none';
+            document.getElementById('checklist-delivery-info').style.display = 'block';
+
             renderChecklist();
             document.getElementById('modalChecklist').style.display = 'flex';
             
