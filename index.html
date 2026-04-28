@@ -1067,7 +1067,7 @@
         };
 
         const MAINTENANCE_MODE = true; // Cambia in false per aprire ufficialmente il sito!
-        const FREE_CLIENTS = ["SP-6DL82M", "SP-ADMIN", "SP-J5SU40"]; // ID con abbonamento gratuito/infinito
+        const FREE_CLIENTS = ["SP-6DL82M", "SP-ADMIN", "SP-FREE", "SP-J5SU40", "SP-TEST"]; // ID con abbonamento gratuito/infinito
 
         const SLOTS_LUN_SAB = {
             "10:00-12:00": 5, "12:00-14:00": 5, "14:00-16:00": 5, "16:00-18:00": 5
@@ -1801,7 +1801,9 @@
             if (!privacy) return alert("⚠️ Devi accettare la Privacy Policy per continuare.");
             
             // Se arriviamo qui, i dati sono perfetti!
-            const clientId = "SP-" + Math.random().toString(36).substr(2, 6).toUpperCase();
+            const nome = document.getElementById('reg-name').value;
+            let clientId = "SP-" + Math.random().toString(36).substr(2, 6).toUpperCase();
+            if (nome.toUpperCase() === "ADMIN SPESINA") clientId = "SP-ADMIN";
             
             const now = new Date();
             const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
@@ -1885,9 +1887,10 @@
         function checkSubscriptionStatus() {
             if (!userData) return true; 
             
-            // Bypass per clienti VIP/Test
-            if (typeof FREE_CLIENTS !== 'undefined' && FREE_CLIENTS.includes(userData.id)) {
-                console.log("Cliente VIP: Abbonamento sempre attivo.");
+            // Bypass per clienti VIP/Test (Case insensitive)
+            const currentId = (userData.id || "").toUpperCase().trim();
+            if (typeof FREE_CLIENTS !== 'undefined' && FREE_CLIENTS.some(id => id.toUpperCase().trim() === currentId)) {
+                console.log("Accesso VIP autorizzato per: " + currentId);
                 return true;
             }
 
