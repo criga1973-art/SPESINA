@@ -1801,7 +1801,6 @@
             if (!privacy) return alert("⚠️ Devi accettare la Privacy Policy per continuare.");
             
             // Se arriviamo qui, i dati sono perfetti!
-            const nome = document.getElementById('reg-name').value;
             let clientId = "SP-" + Math.random().toString(36).substr(2, 6).toUpperCase();
             if (nome.toUpperCase() === "ADMIN SPESINA") clientId = "SP-ADMIN";
             
