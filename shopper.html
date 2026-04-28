@@ -311,8 +311,8 @@
                 const { data, error } = await sb.from('orders').select('*').order('created_at', { ascending: false });
                 if (error) throw error;
                 
-                // Filtriamo solo gli ordini che non sono chiusi
-                allOrders = data.filter(o => o.order_data.status !== 'concluso');
+                // Filtriamo solo gli ordini che hanno dati validi e non sono chiusi
+                allOrders = data.filter(o => o.order_data && o.order_data.status !== 'concluso');
                 
                 renderOrders();
                 renderMasterList();
