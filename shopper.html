@@ -335,30 +335,37 @@
             let html = "";
             
             allOrders.forEach(o => {
-                const d = o.order_data;
-                const statusClass = "status-" + (d.status || 'nuovo').replace(" ", "");
-                const itemCount = d.items.reduce((acc, i) => acc + i.q, 0);
-                
-                html += `
-                    <div class="order-card">
-                        <div class="order-header">
-                            <div>
-                                <div class="order-time">${d.delivery}</div>
-                                <div class="order-id">ID: ${o.id.split('-')[0].toUpperCase()}</div>
+                try {
+                    const d = o.order_data;
+                    if (!d || !d.items) return;
+
+                    const statusClass = "status-" + (d.status || 'nuovo').replace(/\s/g, "");
+                    const itemCount = Array.isArray(d.items) ? d.items.reduce((acc, i) => acc + (parseInt(i.q) || 0), 0) : 0;
+                    const displayTotal = (typeof d.total_amount === 'number') ? d.total_amount.toFixed(2) : (parseFloat(d.total_amount) || 0).toFixed(2);
+                    
+                    html += `
+                        <div class="order-card">
+                            <div class="order-header">
+                                <div>
+                                    <div class="order-time">${d.delivery || 'Da definire'}</div>
+                                    <div class="order-id">ID: ${o.id.substring(0, 8).toUpperCase()}</div>
+                                </div>
+                                <div class="status-badge ${statusClass}">${d.status || 'Nuovo'}</div>
                             </div>
-                            <div class="status-badge ${statusClass}">${d.status || 'Nuovo'}</div>
+                            <div class="client-info">
+                                <b>Cliente:</b> ${d.name || 'Cliente Spesina'}
+                                <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d.address || '')}" target="_blank" class="client-address">📍 ${d.address || 'Indirizzo non specificato'}</a>
+                            </div>
+                            <div class="order-stats">
+                                <div>📦 ${Array.isArray(d.items) ? d.items.length : 0} articoli (${itemCount} pezzi)</div>
+                                <div>💰 ${displayTotal}€</div>
+                            </div>
+                            <button class="btn-action" onclick="openOrder('${o.id}')">${d.status === 'da consegnare' ? 'GESTISCI CONSEGNA' : 'AVVIA ORDINE'}</button>
                         </div>
-                        <div class="client-info">
-                            <b>Cliente:</b> ${d.name || 'Anonimo'}
-                            <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d.address)}" target="_blank" class="client-address">📍 ${d.address}</a>
-                        </div>
-                        <div class="order-stats">
-                            <div>📦 ${d.items.length} articoli (${itemCount} pezzi)</div>
-                            <div>💰 ${d.total_amount ? d.total_amount.toFixed(2) : '0.00'}€</div>
-                        </div>
-                        <button class="btn-action" onclick="openOrder('${o.id}')">${d.status === 'da consegnare' ? 'GESTISCI CONSEGNA' : 'AVVIA ORDINE'}</button>
-                    </div>
-                `;
+                    `;
+                } catch (e) {
+                    console.error("Errore rendering singolo ordine:", e, o);
+                }
             });
             
             container.innerHTML = html || "<div style='text-align:center; padding:50px; color:var(--text-muted);'>Nessun ordine da fare 😴</div>";
@@ -371,14 +378,18 @@
             let masterMap = {};
             
             allOrders.forEach(o => {
-                if (o.order_data.status === 'nuovo' || o.order_data.status === 'in preparazione') {
-                    o.order_data.items.forEach(i => {
-                        if (dryCategories.includes(i.c)) {
-                            if (!masterMap[i.n]) masterMap[i.n] = { q: 0, ean: i.ean, size: i.l || i.size };
-                            masterMap[i.n].q += i.q;
-                        }
-                    });
-                }
+                const d = o.order_data;
+                if (!d || !d.items || (d.status !== 'nuovo' && d.status !== 'in preparazione')) return;
+
+                d.items.forEach(i => {
+                    // Consideriamo tutto ciò che è Dry + categorie richieste per il test
+                    const cat = (i.c || '').toLowerCase();
+                    if (dryCategories.includes(cat) || cat === 'ortofrutta' || cat === 'surgelati') {
+                        const name = i.n || 'Prodotto Sconosciuto';
+                        if (!masterMap[name]) masterMap[name] = { q: 0, ean: i.ean, size: i.l || i.size };
+                        masterMap[name].q += (parseInt(i.q) || 0);
+                    }
+                });
             });
 
             let html = "";
