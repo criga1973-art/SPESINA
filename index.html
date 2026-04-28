@@ -2005,7 +2005,8 @@
                                 order_data: { 
                                     name: userData.n,
                                     phone: userData.t,
-                                    address: userData.a + (userData.d ? ", " + userData.d : "") + ", " + userData.c + " Mestre",
+                                    address: userData.a + " " + userData.d.split(',')[0] + ", " + userData.c + " Mestre",
+                                    address_full: userData.a + " " + userData.d + ", " + userData.c + " Mestre",
                                     items: cart, 
                                     total: totaleValore, 
                                     delivery: giorno + " " + ora,
