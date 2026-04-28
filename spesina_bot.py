@@ -116,7 +116,19 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if state and state.get('step') in ['waiting_price', 'waiting_price_update']:
         try:
-            price = float(text.replace(',', '.'))
+            clean_text = text.replace(',', '.')
+            # Se l'utente invia un EAN invece del prezzo (es. 13 cifre), lo scartiamo
+            if len(text) >= 8 and text.isdigit():
+                await update.message.reply_text("⚠️ Sembra un codice a barre. Inserisci il **prezzo** (es: 1.50):")
+                return
+
+            price = float(clean_text)
+            
+            # Protezione overflow database (numeric 10,2)
+            if price > 999999:
+                await update.message.reply_text("❌ Prezzo troppo alto. Inserisci un valore realistico.")
+                return
+
             state['price'] = price
             if state['step'] == 'waiting_price_update':
                 supabase.table('products').update({'price': price}).eq('id', state['existing_id']).execute()
@@ -125,8 +137,8 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             else:
                 state['step'] = 'waiting_image'
                 await update.message.reply_text("📸 **Mi dai l'immagine del prodotto?**")
-        except:
-            await update.message.reply_text("❌ Inserisci un prezzo valido.")
+        except ValueError:
+            await update.message.reply_text("❌ Inserisci un prezzo valido (es: 1.50).")
         return
 
     if text.isdigit() and len(text) >= 8:

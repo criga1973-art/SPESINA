@@ -679,13 +679,12 @@
     <div id="cart-trigger" onclick="openCart()">🛒 Articoli: <span id="cart-limit-display">0 di 7</span> | <span id="cart-total-top">0.00€</span></div>
 
     <header>
-        <div style="display: flex; justify-content: center; align-items: center; padding-bottom: 10px;">
-            <div style="display: flex; align-items: center; gap: 4px; position: relative;">
-                <h1 style="margin:0; font-size: 32px; color: #000000; font-family: 'Lora', serif; font-weight: 700; letter-spacing: -0.5px; cursor: pointer;" onclick="adminClick()">Spesina</h1>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: absolute; top: -10px; right: 8px;">
-                    <path d="M20.5 3C20.5 3 16 3 12 7C8 11 7 17 7 17C7 17 13 16 17 12C21 8 20.5 3 20.5 3Z" fill="#10b981"/>
-                    <path d="M7 17L3 21" stroke="#10b981" stroke-width="2" stroke-linecap="round"/>
-                </svg>
+        <div style="display: flex; justify-content: center; align-items: center; padding-bottom: 5px;">
+            <div style="display: flex; align-items: center; cursor: pointer; color: #2d1b4d; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 38px; letter-spacing: -1.5px;" onclick="adminClick()">
+                Spes<span style="position: relative; display: inline-block;">ı<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: absolute; top: -14px; left: -2px; transform: rotate(-5deg);">
+                        <path d="M20.5 3C20.5 3 16 3 12 7C8 11 7 17 7 17C7 17 13 16 17 12C21 8 20.5 3 20.5 3Z" fill="#10b981"/>
+                        <path d="M7 17L3 21" stroke="#10b981" stroke-width="2" stroke-linecap="round"/>
+                    </svg></span>na
             </div>
         </div>
         <div class="top-nav">
@@ -1265,9 +1264,9 @@
             items.forEach(p => {
                 let imgHtml = p.img ? `<img class="product-img" style="display:none;" src="${p.img}" onload="this.style.display='block'; let next=this.nextElementSibling; if(next && next.classList.contains('product-emoji')) next.style.display='none';" alt="${p.n}">` : "";
                 let emojiHtml = p.icon ? `<div class="product-emoji">${p.icon}</div>` : "";
-                let weightHtml = p.l ? `<span style="font-size: 10px; color: #64748b; font-weight: 500; margin-right: 4px;">${p.l}</span>` : "";
+                let weightHtml = p.l ? `<div style="font-size: 12px; color: #64748b; font-weight: 500; margin-bottom: 4px;">${p.l}</div>` : "";
                 let descHtml = "";
-                html += `<div class="card"><button class="info-btn" onclick="showInfo(${p.id})">i</button><button class="add-btn" onclick="addToCart(${p.id})">+</button>${imgHtml}${emojiHtml}<div style="font-size:14px; font-weight:800; margin-bottom:4px;">${p.n}</div>${descHtml}<div style="color:var(--primary); font-weight:800; font-size:16px;">${weightHtml}${p.p.toFixed(2)}€</div></div>`;
+                html += `<div class="card"><button class="info-btn" onclick="showInfo(${p.id})">i</button><button class="add-btn" onclick="addToCart(${p.id})">+</button>${imgHtml}${emojiHtml}<div style="font-size:14px; font-weight:800; margin-bottom:4px; min-height:40px; display:flex; align-items:center; justify-content:center;">${p.n}</div>${weightHtml}<div style="color:var(--primary); font-weight:800; font-size:16px;">${p.p.toFixed(2)}€</div></div>`;
             });
             document.getElementById('sub-catalog').innerHTML = html;
         }
