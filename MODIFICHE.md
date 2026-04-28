@@ -1,4 +1,18 @@
-# 🚀 Ultime Modifiche - Spesina
+# 🚀 Ultime Modifiche - 28 Aprile 2026
+
+## ✅ Sessione Odierna (Completata)
+- **Dashboard Shopper**: Risolto crash caricamento e Master Pick List (Solo Dry).
+- **Checkout**: Fix blocco tasto Prosegui e limite ordini alzato a 10/giorno.
+- **Logo**: Ripristinato design Lora Serif con foglia Material (posizionamento 105% / -14px).
+- **Shopper Flow**: Aggiunti dati cliente (Nome, Tel, Maps) e Login Persistente (localStorage).
+- **Account VIP**: Sbloccato ID `SP-6DL82M` e creato ID `SP-ADMIN`.
+
+## 📅 Obiettivi Domani (29 Aprile)
+- **Email Ricevuta**: Sviluppo template HTML professionale e cordiale post-consegna.
+- **Test Finale**: Simulazione completa ordine -> preparazione -> consegna.
+
+---
+
 
 Ecco un riepilogo delle ultime migliorie apportate al progetto:
 
