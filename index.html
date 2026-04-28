@@ -1067,6 +1067,7 @@
         };
 
         const MAINTENANCE_MODE = true; // Cambia in false per aprire ufficialmente il sito!
+        const FREE_CLIENTS = ["SP-6DL82M", "SP-ADMIN", "SP-J5SU40"]; // ID con abbonamento gratuito/infinito
 
         const SLOTS_LUN_SAB = {
             "10:00-12:00": 5, "12:00-14:00": 5, "14:00-16:00": 5, "16:00-18:00": 5
@@ -1566,7 +1567,8 @@
                 const oDate = new Date(o.date);
                 return o.id === (userData ? userData.id : null) && oDate.getMonth() === currentMonth && oDate.getFullYear() === currentYear;
             }).length;
-            const isFirstOrder = (ordersThisMonth === 0 && cart.length > 0);
+            const isVip = (typeof FREE_CLIENTS !== 'undefined' && userData && FREE_CLIENTS.includes(userData.id));
+            const isFirstOrder = (ordersThisMonth === 0 && cart.length > 0 && !isVip);
 
             cart.forEach(i => {
                 total += (i.p * i.q);
@@ -1881,7 +1883,14 @@
         }
 
         function checkSubscriptionStatus() {
-            if (!userData) return true; // Permetti l'uso se non ancora registrato
+            if (!userData) return true; 
+            
+            // Bypass per clienti VIP/Test
+            if (typeof FREE_CLIENTS !== 'undefined' && FREE_CLIENTS.includes(userData.id)) {
+                console.log("Cliente VIP: Abbonamento sempre attivo.");
+                return true;
+            }
+
             const now = new Date().toISOString().split('T')[0];
             if (now > userData.subExpiry) {
                 alert("Il tuo abbonamento Spesina è scaduto. Rinnovalo ora per continuare a ordinare!");
@@ -1967,8 +1976,10 @@
                 return o.id === (userData ? userData.id : null) && oDate.getMonth() === currentMonth && oDate.getFullYear() === currentYear;
             }).length;
 
+            const isVip = (typeof FREE_CLIENTS !== 'undefined' && userData && FREE_CLIENTS.includes(userData.id));
             let elencoProdotti = cart.map(i => `${i.q}x ${i.n} (${(i.p * i.q).toFixed(2)}€)`).join("\n");
-            if (ordersThisMonth === 0 && cart.length > 0) {
+            
+            if (ordersThisMonth === 0 && cart.length > 0 && !isVip) {
                 elencoProdotti += "\n+ 🎟️ Abbonamento Mensile Spesina (19.99€)";
             }
 
