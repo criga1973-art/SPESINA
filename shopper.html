@@ -298,7 +298,7 @@
         let checkedItems = new Set();
 
         async function init() {
-            if (sessionStorage.getItem('shopper_auth') === 'true') {
+            if (localStorage.getItem('shopper_auth') === 'true') {
                 document.getElementById('login-screen').style.display = 'none';
                 loadData();
             }
@@ -307,7 +307,7 @@
         function checkPin() {
             const pin = document.getElementById('shopper-pin').value;
             if (pin === SHOPPER_PIN) {
-                sessionStorage.setItem('shopper_auth', 'true');
+                localStorage.setItem('shopper_auth', 'true');
                 document.getElementById('login-screen').style.display = 'none';
                 loadData();
             } else {
