@@ -1630,8 +1630,8 @@
         function remove(id) { cart = cart.filter(x => x.id !== id); updateUI(); if (cart.length === 0) closeModals(); }
         function openCart() { 
             if (!checkSubscriptionStatus()) return;
-            if (getDailyOrderCount() >= 2) {
-                alert("Hai raggiunto il limite di 2 spese per oggi. Ci vediamo domani!");
+            if (getDailyOrderCount() >= 10) {
+                alert("Hai raggiunto il limite di 10 spese per oggi. Ci vediamo domani!");
                 return;
             }
             caricaOrari(); 
@@ -1921,7 +1921,7 @@
                 console.log("Validazione abbonamento fallita.");
                 return;
             }
-            if (getDailyOrderCount() >= 2) {
+            if (getDailyOrderCount() >= 10) {
                 console.log("Limite ordini giornalieri raggiunto.");
                 alert("Hai raggiunto il limite di 2 spese per oggi. Ci vediamo domani!");
                 return;
