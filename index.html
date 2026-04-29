@@ -855,13 +855,7 @@
             <div style="margin-top:20px; text-align:left; border-top:1px solid #eee; padding-top:10px;">
                 <label style="font-size:12px; font-weight:bold;">🕒 QUANDO CONSEGNIAMO?</label>
                 <select id="select-giorno" class="select-box" onchange="caricaOrari()">
-                    <option value="Lunedì">Lunedì</option>
-                    <option value="Martedì">Martedì</option>
-                    <option value="Mercoledì">Mercoledì</option>
-                    <option value="Giovedì">Giovedì</option>
-                    <option value="Venerdì">Venerdì</option>
-                    <option value="Sabato">Sabato</option>
-                    <option value="Domenica">Domenica</option>
+                    <!-- Popolato dinamicamente da JS -->
                 </select>
                 <select id="select-ora" class="select-box" style="margin-top:10px;"></select>
             </div>
@@ -1507,20 +1501,56 @@
             document.getElementById('modalInfo').style.display = 'flex';
         }
 
+        function popolaGiorni() {
+            const selectGiorno = document.getElementById('select-giorno');
+            if (!selectGiorno) return;
+            
+            const days = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
+            const months = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
+            
+            let html = "";
+            for (let i = 0; i < 7; i++) {
+                const d = new Date();
+                d.setDate(d.getDate() + i);
+                
+                const dayName = days[d.getDay()];
+                const dayNum = d.getDate();
+                const monthName = months[d.getMonth()];
+                
+                const value = `${dayName} ${dayNum} ${monthName}`;
+                let label = value;
+                
+                if (i === 0) label = `Oggi (${dayName} ${dayNum})`;
+                else if (i === 1) label = `Domani (${dayName} ${dayNum})`;
+                
+                html += `<option value="${value}">${label}</option>`;
+            }
+            selectGiorno.innerHTML = html;
+        }
+
         function caricaOrari() {
-            const giorno = document.getElementById('select-giorno').value;
+            const giornoFull = document.getElementById('select-giorno').value;
+            if (!giornoFull) return;
+            
+            const giornoSettimana = giornoFull.split(' ')[0];
+            const d = new Date();
+            const days = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
+            const months = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
+            const oggiString = `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]}`;
+            const isToday = (giornoFull === oggiString);
+
             const oraAttuale = new Date().getHours();
             const history = JSON.parse(localStorage.getItem('spesina_history') || "[]");
             let options = "";
 
-            const slotsToUse = (giorno === "Domenica") ? SLOTS_DOM : SLOTS_LUN_SAB;
+            const slotsToUse = (giornoSettimana === "Domenica") ? SLOTS_DOM : SLOTS_LUN_SAB;
 
             for (const [fascia, capMassima] of Object.entries(slotsToUse)) {
                 const oraInizio = parseInt(fascia.split(":")[0]);
-                const scaduto = (giorno === "Oggi" && oraInizio <= oraAttuale);
+                const scaduto = (isToday && oraInizio <= oraAttuale);
                 
-                // Calcola ordini totali già presi per questa fascia
-                const ordiniPresi = history.filter(o => o.slot === (giorno + " " + fascia)).length;
+                // Calcola ordini totali già presi per questa fascia (conteggio locale)
+                const ordiniPresi = history.filter(o => o.slot === (giornoFull + " " + fascia)).length;
                 const postiDisponibili = capMassima - ordiniPresi;
 
                 if (postiDisponibili <= 0 || scaduto) {
@@ -1635,6 +1665,7 @@
                 alert("Hai raggiunto il limite di 10 spese per oggi. Ci vediamo domani!");
                 return;
             }
+            popolaGiorni();
             caricaOrari(); 
             document.getElementById('modalCart').style.display = 'flex'; 
         }
