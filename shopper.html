@@ -224,6 +224,44 @@
         .status-preparazione { background: #f59e0b; color: white; }
         .status-consegna { background: #10b981; color: white; }
 
+        /* Filtri dashboard */
+        .filter-chip {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            background: #334155;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: 0.2s;
+        }
+        .filter-chip.active {
+            border-color: var(--primary);
+            background: rgba(147, 51, 234, 0.1);
+            color: var(--primary);
+        }
+        .day-chip {
+            flex-shrink: 0;
+            padding: 10px 15px;
+            background: #334155;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            min-width: 70px;
+            border: 2px solid transparent;
+        }
+        .day-chip.active {
+            background: var(--primary);
+            color: white;
+            border-color: rgba(255,255,255,0.2);
+        }
+        .day-chip div:first-child { font-size: 10px; text-transform: uppercase; opacity: 0.8; font-weight: 800; }
+        .day-chip div:last-child { font-size: 18px; font-weight: 800; }
+
+        ::-webkit-scrollbar { display: none; }
+
     </style>
 </head>
 <body>
@@ -245,6 +283,17 @@
             <div class="tab" id="tab-orders" onclick="showTab('orders')">ORDINI</div>
         </div>
     </header>
+
+    <div id="filter-section" style="padding: 15px; background: var(--card); border-bottom: 1px solid #334155; display: none;">
+        <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 800; margin-bottom: 10px; letter-spacing: 1px;">📅 Filtro Consegne</div>
+        <div id="day-selector" style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 5px;">
+            <!-- Popolato da JS -->
+        </div>
+        <div id="slot-selector" style="display: flex; gap: 10px; margin-top: 5px;">
+            <div class="filter-chip active" id="slot-10-14" onclick="selectSlot('10-14')">Mattina 10-14</div>
+            <div class="filter-chip" id="slot-14-18" onclick="selectSlot('14-18')">Pomeriggio 14-18</div>
+        </div>
+    </div>
 
     <div class="container" id="content-master">
         <h3 style="margin-top: 0;">Master Pick List (Dry)</h3>
@@ -297,11 +346,78 @@
         let currentOrder = null;
         let checkedItems = new Set();
 
+        let selectedDay = "";
+        let selectedSlot = "10-14";
+
         async function init() {
             if (localStorage.getItem('shopper_auth') === 'true') {
                 document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('filter-section').style.display = 'block';
+                initFilters();
                 loadData();
             }
+        }
+
+        function initFilters() {
+            const container = document.getElementById('day-selector');
+            const days = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
+            const months = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
+            
+            let html = "";
+            for (let i = 0; i < 7; i++) {
+                const d = new Date();
+                d.setDate(d.getDate() + i);
+                
+                const dayName = days[d.getDay()];
+                const dayNum = d.getDate();
+                const monthName = months[d.getMonth()];
+                const value = `${dayName} ${dayNum} ${monthName}`;
+                
+                if (i === 0) selectedDay = value; 
+                
+                html += `
+                    <div class="day-chip ${i === 0 ? 'active' : ''}" onclick="selectDay(this, '${value}')">
+                        <div>${dayName.substring(0, 3)}</div>
+                        <div>${dayNum}</div>
+                    </div>
+                `;
+            }
+            container.innerHTML = html;
+        }
+
+        function selectDay(el, val) {
+            document.querySelectorAll('.day-chip').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            selectedDay = val;
+            renderOrders();
+            renderMasterList();
+        }
+
+        function selectSlot(val) {
+            document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+            document.getElementById('slot-' + val).classList.add('active');
+            selectedSlot = val;
+            renderOrders();
+            renderMasterList();
+        }
+
+        function getFilteredOrders() {
+            return allOrders.filter(o => {
+                const d = o.order_data;
+                if (!d || !d.delivery) return false;
+                
+                // Filtro Giorno
+                if (!d.delivery.includes(selectedDay)) return false;
+                
+                // Filtro Fascia (10-14 o 14-18)
+                const parts = d.delivery.split(' ');
+                const fascia = parts[parts.length - 1]; // es: "10:00-12:00"
+                const hour = parseInt(fascia.split(':')[0]);
+                
+                if (selectedSlot === '10-14') return hour < 14;
+                if (selectedSlot === '14-18') return hour >= 14;
+                return true;
+            });
         }
 
         function checkPin() {
@@ -309,6 +425,8 @@
             if (pin === SHOPPER_PIN) {
                 localStorage.setItem('shopper_auth', 'true');
                 document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('filter-section').style.display = 'block';
+                initFilters();
                 loadData();
             } else {
                 alert("PIN Errato!");
@@ -342,8 +460,9 @@
         function renderOrders() {
             const container = document.getElementById('content-orders');
             let html = "";
+            const filtered = getFilteredOrders();
             
-            allOrders.forEach(o => {
+            filtered.forEach(o => {
                 try {
                     const d = o.order_data;
                     if (!d || !d.items) return;
@@ -377,7 +496,7 @@
                 }
             });
             
-            container.innerHTML = html || "<div style='text-align:center; padding:50px; color:var(--text-muted);'>Nessun ordine da fare 😴</div>";
+            container.innerHTML = html || "<div style='text-align:center; padding:50px; color:var(--text-muted);'>Nessun ordine trovato per questo filtro 😴</div>";
         }
 
         function renderMasterList() {
@@ -385,8 +504,9 @@
             const dryCategories = ['pasta', 'bevande', 'condimenti', 'dispensa', 'farine', 'colazione', 'panificati', 'animali', 'igiene-p', 'igiene-c'];
             
             let masterMap = {};
+            const filtered = getFilteredOrders();
             
-            allOrders.forEach(o => {
+            filtered.forEach(o => {
                 const d = o.order_data;
                 if (!d || !d.items || (d.status !== 'nuovo' && d.status !== 'in preparazione')) return;
 
@@ -414,7 +534,7 @@
                 `;
             });
 
-            container.innerHTML = html || "<div style='text-align:center; padding:50px; color:var(--text-muted);'>Nulla da prelevare al momento.</div>";
+            container.innerHTML = html || "<div style='text-align:center; padding:50px; color:var(--text-muted);'>Nulla da prelevare per questo filtro.</div>";
         }
 
         function openOrder(id) {
@@ -493,10 +613,6 @@
                 // Ricalcolo totale
                 currentOrder.order_data.total_amount = currentOrder.order_data.items.reduce((acc, i) => acc + (i.p * i.q), 0);
                 
-                // Se è il primo ordine del mese e abbiamo l'abbonamento nel totale originale...
-                // Qui servirebbe una logica più fine se vogliamo gestire l'abbonamento separato.
-                // Per ora ricalcoliamo puramente i prodotti.
-                
                 await saveOrder();
                 checkedItems.delete(index);
                 renderChecklist();
@@ -523,12 +639,7 @@
             if (confirm("Confermi la consegna e l'incasso? L'ordine verrà archiviato.")) {
                 currentOrder.order_data.status = 'concluso';
                 await saveOrder();
-                
-                // Innesco ricevuta via Resend (Edge Function)
-                // Usiamo la stessa funzione send-welcome con un nuovo type se necessario, 
-                // o semplicemente ri-inviamo il riepilogo finale.
                 triggerReceipt();
-                
                 closeChecklist();
                 loadData();
             }
@@ -542,7 +653,7 @@
                 body: JSON.stringify({
                     type: 'order',
                     name: d.name || 'Cliente',
-                    email: d.email || '', // Se salvata nel JSON
+                    email: d.email || '',
                     delivery: d.delivery,
                     address: d.address,
                     items: d.items,
