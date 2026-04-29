@@ -227,11 +227,11 @@
         /* Filtri dashboard */
         .filter-chip {
             flex: 1;
-            padding: 10px;
+            padding: 8px 4px;
             text-align: center;
             background: #334155;
-            border-radius: 10px;
-            font-size: 13px;
+            border-radius: 8px;
+            font-size: 11px;
             font-weight: 600;
             cursor: pointer;
             border: 2px solid transparent;
@@ -244,12 +244,12 @@
         }
         .day-chip {
             flex-shrink: 0;
-            padding: 10px 15px;
+            padding: 6px 10px;
             background: #334155;
-            border-radius: 12px;
+            border-radius: 10px;
             text-align: center;
             cursor: pointer;
-            min-width: 70px;
+            min-width: 55px;
             border: 2px solid transparent;
         }
         .day-chip.active {
@@ -257,8 +257,8 @@
             color: white;
             border-color: rgba(255,255,255,0.2);
         }
-        .day-chip div:first-child { font-size: 10px; text-transform: uppercase; opacity: 0.8; font-weight: 800; }
-        .day-chip div:last-child { font-size: 18px; font-weight: 800; }
+        .day-chip div:first-child { font-size: 9px; text-transform: uppercase; opacity: 0.8; font-weight: 800; }
+        .day-chip div:last-child { font-size: 14px; font-weight: 800; }
 
         ::-webkit-scrollbar { display: none; }
 
@@ -289,9 +289,9 @@
         <div id="day-selector" style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 5px;">
             <!-- Popolato da JS -->
         </div>
-        <div id="slot-selector" style="display: flex; gap: 10px; margin-top: 5px;">
+        <div id="slot-selector" style="display: flex; gap: 8px; margin-top: 5px;">
             <div class="filter-chip active" id="slot-10-14" onclick="selectSlot('10-14')">Mattina 10-14</div>
-            <div class="filter-chip" id="slot-14-18" onclick="selectSlot('14-18')">Pomeriggio 14-18</div>
+            <div class="filter-chip active" id="slot-14-18" onclick="selectSlot('14-18')">Pomeriggio 14-18</div>
         </div>
     </div>
 
@@ -347,7 +347,7 @@
         let checkedItems = new Set();
 
         let selectedDay = "";
-        let selectedSlot = "10-14";
+        let selectedSlots = new Set(["10-14", "14-18"]); // Entrambe selezionate di default
 
         async function init() {
             if (localStorage.getItem('shopper_auth') === 'true') {
@@ -394,9 +394,16 @@
         }
 
         function selectSlot(val) {
-            document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-            document.getElementById('slot-' + val).classList.add('active');
-            selectedSlot = val;
+            if (selectedSlots.has(val)) {
+                // Impediamo di deselezionare se è l'ultima rimasta (opzionale, ma evita liste vuote per errore)
+                if (selectedSlots.size > 1) selectedSlots.delete(val);
+            } else {
+                selectedSlots.add(val);
+            }
+            
+            document.getElementById('slot-10-14').classList.toggle('active', selectedSlots.has('10-14'));
+            document.getElementById('slot-14-18').classList.toggle('active', selectedSlots.has('14-18'));
+            
             renderOrders();
             renderMasterList();
         }
@@ -409,14 +416,16 @@
                 // Filtro Giorno
                 if (!d.delivery.includes(selectedDay)) return false;
                 
-                // Filtro Fascia (10-14 o 14-18)
+                // Filtro Fascia (Multi-select)
                 const parts = d.delivery.split(' ');
-                const fascia = parts[parts.length - 1]; // es: "10:00-12:00"
+                const fascia = parts[parts.length - 1]; 
                 const hour = parseInt(fascia.split(':')[0]);
                 
-                if (selectedSlot === '10-14') return hour < 14;
-                if (selectedSlot === '14-18') return hour >= 14;
-                return true;
+                let match = false;
+                if (selectedSlots.has('10-14') && hour < 14) match = true;
+                if (selectedSlots.has('14-18') && hour >= 14) match = true;
+                
+                return match;
             });
         }
 
