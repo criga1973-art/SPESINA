@@ -138,20 +138,6 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text.strip()
     state = user_states.get(chat_id)
 
-    if state and state.get('step') == 'waiting_choice_update':
-        if text == "1": # Solo Prezzo
-            state['step'] = 'waiting_price_update'
-            await update.message.reply_text(f"💰 Inserisci il **NUOVO PREZZO** per {state['existing_name']}:")
-        elif text == "2": # Solo Immagine
-            state['step'] = 'waiting_image_update'
-            await update.message.reply_text(f"📸 Inviami la **NUOVA FOTO** per {state['existing_name']}:")
-        elif text == "3": # Entrambi
-            state['step'] = 'waiting_price_both'
-            await update.message.reply_text(f"💰 Inserisci il **NUOVO PREZZO** per {state['existing_name']}:")
-        else:
-            await update.message.reply_text("⚠️ Scegli 1, 2 o 3.")
-        return
-
     if state and state.get('step') in ['waiting_price', 'waiting_price_update', 'waiting_price_both']:
         try:
             clean_text = text.replace(',', '.')
@@ -195,7 +181,17 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     try:
-        if data.startswith("cat_"):
+        if data == "upd_price":
+            state['step'] = 'waiting_price_update'
+            await query.edit_message_text(f"💰 Inserisci il **NUOVO PREZZO** per {state['existing_name']}:")
+        elif data == "upd_image":
+            state['step'] = 'waiting_image_update'
+            await query.edit_message_text(f"📸 Inviami la **NUOVA FOTO** per {state['existing_name']}:")
+        elif data == "upd_both":
+            state['step'] = 'waiting_price_both'
+            await query.edit_message_text(f"💰 Inserisci il **NUOVO PREZZO** per {state['existing_name']}:")
+        
+        elif data.startswith("cat_"):
             cat_id = data.replace("cat_", "")
             state['category'] = cat_id
             subfolders = CAT_MAP.get(cat_id, {}).get('sub', [])
@@ -252,11 +248,13 @@ async def process_ean(ean, update):
             'step': 'waiting_choice_update'
         }
         msg = (f"🔄 **PRODOTTO GESTITO**\n🏷️ {p['name']}\n💰 Prezzo: {p['price']}€\n\n"
-               "Cosa vuoi fare?\n"
-               "1️⃣ Cambia solo **PREZZO**\n"
-               "2️⃣ Cambia solo **FOTO**\n"
-               "3️⃣ Cambia **ENTRAMBI**")
-        await update.effective_message.reply_text(msg)
+               "Cosa vuoi aggiornare?")
+        buttons = [
+            [InlineKeyboardButton("💰 Solo Prezzo", callback_data="upd_price")],
+            [InlineKeyboardButton("📸 Solo Foto", callback_data="upd_image")],
+            [InlineKeyboardButton("🔄 Entrambi", callback_data="upd_both")]
+        ]
+        await update.effective_message.reply_text(msg, reply_markup=InlineKeyboardMarkup(buttons))
     else:
         data = fetch_off_data(ean)
         user_states[chat_id] = {
