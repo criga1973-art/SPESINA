@@ -6,7 +6,7 @@ Questo documento riassume la sincronizzazione tra le opzioni del Bot Telegram e 
 | :--- | :--- | :--- | :--- |
 | **PASTA & RISO** | **Pasta & Riso** | *(Nessuna)* | **PIATTA** (Salvataggio diretto) |
 | **BEVANDE** | **Bevande** | Acqua, Succhi di Frutta, Birra, Vino, Bibite, Latte 1L, Latte 500ml, Alcolici, Altro | ✅ Allineata |
-| **FRESCHI & LATTICINI** | **Freschi & Latticini** | Salumi, Latticini, Yogurt, Uova, Altro | ✅ Allineata |
+| **FRESCHI & LATTICINI** | **Freschi & Latticini** | Salumi, Latticini, Yogurt, Uova, Piatti Pronti, Altro | ✅ Allineata |
 | **DISPENSA** | **Dispensa** | Tonno e Carne in scatola, Verdure e Legumi, Conserve, Insalatissime, Altro | ✅ Allineata |
 | **FARINE & PREPARATI** | **Farine & Preparati** | Farine, Preparati, Lieviti, Altro | ✅ Allineata |
 | **OLIO & CONDIMENTI** | **Olio & Condimenti** | Olio, Aceto, Sale, Sughi e Pesti, Salse, Spezie, Altro | ✅ Allineata |

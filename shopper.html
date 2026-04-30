@@ -647,6 +647,21 @@
 
         async function finishOrder() {
             if (confirm("Confermi la consegna e l'incasso? L'ordine verrà archiviato.")) {
+                const d = currentOrder.order_data;
+                
+                // Recupero email se mancante
+                if (!d.email && currentOrder.client_id) {
+                    try {
+                        const { data, error } = await sb.from('customers').select('email').eq('client_id', currentOrder.client_id).single();
+                        if (data && data.email) {
+                            d.email = data.email;
+                            console.log("Email recuperata:", d.email);
+                        }
+                    } catch (err) {
+                        console.error("Errore recupero email cliente:", err);
+                    }
+                }
+
                 currentOrder.order_data.status = 'concluso';
                 await saveOrder();
                 triggerReceipt();
@@ -657,19 +672,25 @@
 
         function triggerReceipt() {
             const d = currentOrder.order_data;
+            if (!d.email) {
+                console.warn("Impossibile inviare la ricevuta: email mancante.");
+                return;
+            }
+
             fetch("https://uldpnhmdjbbwwqwjsdoh.supabase.co/functions/v1/send-welcome", {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` },
                 body: JSON.stringify({
-                    type: 'order',
-                    name: d.name || 'Cliente',
-                    email: d.email || '',
+                    type: 'RECEIPT',
+                    name: (d.name || 'Cliente').split(' ')[0], // Solo il nome per un tono cordiale
+                    email: d.email,
                     delivery: d.delivery,
-                    address: d.address,
+                    address: d.address_full || d.address,
                     items: d.items,
-                    total: "Totale Finale: " + d.total_amount.toFixed(2) + "€"
+                    total: d.total_amount.toFixed(2)
                 })
-            }).catch(console.error);
+            }).then(r => console.log("Ricevuta inviata con successo"))
+              .catch(console.error);
         }
 
         function closeChecklist() {

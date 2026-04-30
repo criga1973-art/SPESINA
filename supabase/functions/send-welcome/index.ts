@@ -21,7 +21,124 @@ serve(async (req) => {
 
     let subject, html, from;
 
-    if (type === 'order') {
+    if (type === 'RECEIPT') {
+      from = 'Spesina <ricevute@spesina.it>'
+      subject = `🧾 La tua ricevuta Spesina - Grazie ${name}!`
+      
+      let itemsHtml = "";
+      if (Array.isArray(body.items)) {
+        itemsHtml = body.items.map(i => `
+          <tr>
+            <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+              <div style="display: flex; align-items: center;">
+                <img src="${i.img || 'https://spesina.it/img/placeholder.png'}" alt="${i.n}" style="width: 48px; height: 48px; object-fit: cover; border-radius: 10px; margin-right: 12px; border: 1px solid #f1f5f9;">
+                <div>
+                  <div style="font-weight: 700; font-size: 14px; color: #1e293b;">${i.q}x ${i.n}</div>
+                  <div style="font-size: 12px; color: #64748b;">${i.l || i.size || ''}</div>
+                </div>
+              </div>
+            </td>
+            <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; text-align: right; font-weight: 700; color: #1e293b;">
+              ${(i.p * i.q).toFixed(2)}€
+            </td>
+          </tr>
+        `).join("");
+      }
+
+      html = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&display=swap');
+          </style>
+        </head>
+        <body style="margin: 0; padding: 0; background-color: #f8fafc; font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+          <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #f8fafc; padding: 40px 20px;">
+            <tr>
+              <td align="center">
+                <!-- Main Card -->
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #ffffff; border-radius: 24px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+                  
+                  <!-- Header with Logo -->
+                  <tr>
+                    <td style="padding: 40px 40px 20px 40px; text-align: center;">
+                      <div style="color: #2d1b4d; font-size: 32px; font-weight: 800; letter-spacing: -1px; margin-bottom: 10px;">
+                        Spes<span style="color: #42d3a5;">i</span>na
+                      </div>
+                      <div style="width: 40px; height: 4px; background: #42d3a5; margin: 0 auto; border-radius: 2px;"></div>
+                    </td>
+                  </tr>
+
+                  <!-- Hero Message -->
+                  <tr>
+                    <td style="padding: 20px 40px 30px 40px; text-align: center;">
+                      <h1 style="margin: 0; font-size: 24px; font-weight: 800; color: #1e293b; line-height: 1.2;">Grazie ${name}! <br><span style="color: #42d3a5;">La tua spesa è a casa.</span></h1>
+                      <p style="margin: 15px 0 0 0; font-size: 16px; color: #64748b; line-height: 1.5;">Speriamo che i prodotti selezionati oggi ti piacciano. Ecco il riepilogo della tua consegna.</p>
+                    </td>
+                  </tr>
+
+                  <!-- Payment Box -->
+                  <tr>
+                    <td style="padding: 0 40px 30px 40px;">
+                      <div style="background: linear-gradient(135deg, #42d3a5, #10b981); padding: 25px; border-radius: 20px; text-align: center; color: #ffffff;">
+                        <div style="font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9;">Pagamento Ricevuto</div>
+                        <div style="font-size: 36px; font-weight: 800; margin-top: 5px;">${body.total}€</div>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <!-- Order Details -->
+                  <tr>
+                    <td style="padding: 0 40px 20px 40px;">
+                      <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background: #f8fafc; border-radius: 16px; padding: 20px;">
+                        <tr>
+                          <td style="padding-bottom: 10px;">
+                            <div style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px;">Indirizzo Consegna</div>
+                            <div style="font-size: 14px; font-weight: 700; color: #1e293b; margin-top: 4px;">${body.address}</div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <div style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px;">Data e Ora</div>
+                            <div style="font-size: 14px; font-weight: 700; color: #1e293b; margin-top: 4px;">${body.delivery}</div>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+
+                  <!-- Items Table -->
+                  <tr>
+                    <td style="padding: 20px 40px 40px 40px;">
+                      <h4 style="margin: 0 0 15px 0; font-size: 16px; font-weight: 800; color: #1e293b;">Riepilogo Prodotti</h4>
+                      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        ${itemsHtml}
+                      </table>
+                    </td>
+                  </tr>
+
+                  <!-- Footer -->
+                  <tr>
+                    <td style="padding: 30px 40px; background-color: #f1f5f9; text-align: center;">
+                      <p style="margin: 0; font-size: 14px; font-weight: 700; color: #1e293b;">Hai domande sul tuo ordine?</p>
+                      <p style="margin: 5px 0 0 0; font-size: 13px; color: #64748b;">Rispondi a questa email o chiamaci al +39 041 XXX XXXX</p>
+                      <div style="margin-top: 20px; font-size: 12px; color: #94a3b8; font-weight: 500;">
+                        Spesina S.r.l. - Mestre (VE)<br>
+                        La spesa intelligente, veloce e sostenibile.
+                      </div>
+                    </td>
+                  </tr>
+
+                </table>
+              </td>
+            </tr>
+          </table>
+        </body>
+        </html>
+      `
+    } else if (type === 'order') {
       from = 'Spesina <ordini@spesina.it>'
       subject = `📦 Conferma Ordine Spesina - ${body.delivery}`
       

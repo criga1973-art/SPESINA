@@ -28,7 +28,7 @@ GH_REPO = "SPESINA"
 CAT_MAP = {
     "pasta": {"n": "Pasta & Riso", "sub": []},  # PIATTA
     "bevande": {"n": "Bevande", "sub": ["Acqua", "Succhi di Frutta", "Birra", "Vino", "Bibite", "Latte 1L", "Latte 500ml", "Alcolici", "Altro"]},
-    "freschi": {"n": "Freschi & Latticini", "sub": ["Salumi", "Latticini", "Yogurt", "Uova", "Altro"]},
+    "freschi": {"n": "Freschi & Latticini", "sub": ["Salumi", "Latticini", "Yogurt", "Uova", "Piatti Pronti", "Altro"]},
     "dispensa": {"n": "Dispensa", "sub": ["Tonno e Carne in scatola", "Verdure e Legumi", "Conserve", "Insalatissime", "Altro"]},
     "farine": {"n": "Farine & Preparati", "sub": ["Farine", "Preparati", "Lieviti", "Altro"]},
     "condimenti": {"n": "Olio & Condimenti", "sub": ["Olio", "Aceto", "Sale", "Sughi e Pesti", "Salse", "Spezie", "Altro"]},
@@ -66,7 +66,8 @@ def upload_to_supabase(image_bytes, ean):
     
     headers = {
         "apikey": SUPABASE_KEY,
-        "Authorization": f"Bearer {SUPABASE_KEY}"
+        "Authorization": f"Bearer {SUPABASE_KEY}",
+        "Content-Type": "image/webp"
     }
     
     try:
