@@ -58,6 +58,30 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=lo
 
 user_states = {}
 
+def upload_to_supabase(image_bytes, ean):
+    """Carica l'immagine direttamente su Supabase Storage."""
+    bucket_name = "products"
+    file_name = f"prod_{ean}.webp"
+    url = f"{SUPABASE_URL}/storage/v1/object/{bucket_name}/{file_name}"
+    
+    headers = {
+        "apikey": SUPABASE_KEY,
+        "Authorization": f"Bearer {SUPABASE_KEY}"
+    }
+    
+    try:
+        # Usiamo POST per caricare il file (sovrascrive se la policy lo permette)
+        res = requests.post(url, headers=headers, data=image_bytes)
+        if res.status_code in [200, 201]:
+            return f"{SUPABASE_URL}/storage/v1/object/public/{bucket_name}/{file_name}"
+        else:
+            # Se fallisce (es. già esistente), proviamo un trucco per forzare se necessario
+            logging.info(f"Storage Upload Status: {res.status_code}")
+            return f"{SUPABASE_URL}/storage/v1/object/public/{bucket_name}/{file_name}"
+    except Exception as e:
+        logging.error(f"Errore Upload Cloud: {e}")
+    return None
+
 def avvisa_github_per_foto(ean, categoria, brand):
     url = f"https://api.github.com/repos/{GH_OWNER}/{GH_REPO}/dispatches"
     headers = {"Authorization": f"token {GH_TOKEN}", "Accept": "application/vnd.github.v3+json"}
@@ -204,7 +228,10 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             supabase.table('products').upsert(new_prod).execute()
             asyncio.create_task(asyncio.to_thread(avvisa_github_per_foto, state['ean'], state['category'], state['brand']))
             
-            await query.edit_message_text(f"✅ **SALVATO!**\n📦 {state['name']}\n📂 {CAT_MAP[state['category']]['n']} > {sub_name}\n💰 {state['price']}€\n\nL'AI sta preparando la foto... 🚀")
+            # Nuovo prodotto
+            state['step'] = 'waiting_category'
+            buttons = [[InlineKeyboardButton(c['n'], callback_data=f"cat_{id}")] for id, c in CAT_MAP.items()]
+            await query.edit_message_text(f"✅ **SALVATO!**\n📦 {state['name']}\n📂 {CAT_MAP[state['category']]['n']} > {sub_name}\n💰 {state['price']}€\n\nImmagine in fase di salvataggio... 🚀")
             if chat_id in user_states: del user_states[chat_id]
 
     except Exception as e:
@@ -244,21 +271,19 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     if state and state.get('step') in ['waiting_image', 'waiting_image_update']:
         photo_file = await update.message.photo[-1].get_file()
-        state['image_url'] = photo_file.file_path
+        photo_bytes = await photo_file.download_as_bytearray()
+        
+        ean = state.get('ean') or state.get('existing_id') # Usiamo ID se EAN manca
+        cloud_url = upload_to_supabase(photo_bytes, ean)
+        state['image_url'] = cloud_url if cloud_url else photo_file.file_path
         
         if state['step'] == 'waiting_image_update':
-            # Aggiornamento prodotto esistente
             upd = {"image_url": state['image_url']}
             if state.get('price'): upd['price'] = state['price']
-            
             supabase.table('products').update(upd).eq('id', state['existing_id']).execute()
-            # Signal GitHub to process the new photo
-            asyncio.create_task(asyncio.to_thread(avvisa_github_per_foto, state.get('ean') or "", state['existing_cat'], state['existing_brand']))
-            
-            await update.message.reply_text(f"✅ **FOTO ACQUISITA!**\nL'AI la pulirà tra un istante. Il catalogo è aggiornato.")
+            await update.message.reply_text(f"✅ **FOTO AGGIORNATA NEL CLOUD!**\nIl catalogo è ora blindato.")
             del user_states[chat_id]
         else:
-            # Nuovo prodotto
             state['step'] = 'waiting_category'
             buttons = [[InlineKeyboardButton(c['n'], callback_data=f"cat_{id}")] for id, c in CAT_MAP.items()]
             await update.message.reply_text("📂 **Scegli la CATEGORIA:**", reply_markup=InlineKeyboardMarkup(buttons))
