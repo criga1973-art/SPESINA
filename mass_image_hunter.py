@@ -8,6 +8,30 @@ SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 sb_headers = {"apikey": SUPABASE_KEY, "Authorization": f"Bearer {SUPABASE_KEY}", "Content-Type": "application/json"}
 OFF_HEADERS = {"User-Agent": "SpesinaEnrichment - Windows - Version 1.0"}
 
+def upload_to_supabase(local_path, ean):
+    """Carica il file su Supabase Storage e restituisce l'URL pubblico."""
+    bucket_name = "products"
+    file_name = f"prod_{ean}.webp"
+    url = f"{SUPABASE_URL}/storage/v1/object/{bucket_name}/{file_name}"
+    
+    headers = {
+        "apikey": SUPABASE_KEY,
+        "Authorization": f"Bearer {SUPABASE_KEY}"
+    }
+    
+    try:
+        with open(local_path, "rb") as f:
+            # Sovrascrive se esiste
+            res = requests.post(url, headers=headers, data=f)
+            if res.status_code in [200, 201]:
+                return f"{SUPABASE_URL}/storage/v1/object/public/{bucket_name}/{file_name}"
+            else:
+                # Se post fallisce, prova a fare l'upload (upsert non è standard via REST semplice, usiamo un trucco o ignoriamo se esiste)
+                logging.info(f"Upload status: {res.status_code}")
+    except Exception as e:
+        print(f"Errore Upload: {e}")
+    return None
+
 def get_product_data(ean):
     try:
         r = requests.get(f"https://world.openfoodfacts.org/api/v0/product/{ean}.json", headers=OFF_HEADERS, timeout=5)
@@ -80,7 +104,7 @@ if __name__ == "__main__":
     # 3. category is 'da-assegnare'
     try:
         # Using Supabase 'or' filter for maximum coverage - Batch of 5 - NEWEST FIRST
-        url = f"{SUPABASE_URL}/rest/v1/products?or=(image_url.is.null,image_url.ilike.http*,category.eq.da-assegnare)&select=id,ean,category,brand,name,image_url&limit=5&order=id.desc"
+        url = f"{SUPABASE_URL}/rest/v1/products?or=(image_url.is.null,image_url.ilike.http*,category.eq.da-assegnare)&select=id,ean,category,brand,name,image_url&limit=50&order=id.asc"
         res = requests.get(url, headers=sb_headers)
         products = res.json()
     except Exception as e:
@@ -129,28 +153,32 @@ if __name__ == "__main__":
                 cat = 'altro'
                 brand = brand or 'Generico'
             
-            # Process image
-            img_path = process_image(img_to_process, ean)
-            if img_path:
-                # Better name logic: if current name is just "Prodotto EAN", try to get a better one
-                final_name = p.get("name")
-                if not final_name or final_name.startswith("Prodotto"):
-                    if data and data.get("name"):
-                        final_name = data["name"]
-                
-                if not final_name:
-                    final_name = f"Prodotto {ean}"
+                # Process image
+                img_path = process_image(img_to_process, ean)
+                if img_path:
+                    # BLINDAGGIO: Upload su Supabase Storage
+                    cloud_url = upload_to_supabase(img_path, ean)
+                    final_url = cloud_url if cloud_url else img_path
 
-                upd = {
-                    "name": final_name,
-                    "category": cat,
-                    "brand": brand or "Altro",
-                    "size": (data["size"] if data else ""),
-                    "image_url": img_path
-                }
-                requests.patch(f"{SUPABASE_URL}/rest/v1/products?id=eq.{p['id']}", headers=sb_headers, json=upd)
-                print(f"  --> Updated DB and Image OK")
-                found += 1
+                    # Better name logic: if current name is just "Prodotto EAN", try to get a better one
+                    final_name = p.get("name")
+                    if not final_name or final_name.startswith("Prodotto"):
+                        if data and data.get("name"):
+                            final_name = data["name"]
+                    
+                    if not final_name:
+                        final_name = f"Prodotto {ean}"
+
+                    upd = {
+                        "name": final_name,
+                        "category": cat,
+                        "brand": brand or "Altro",
+                        "size": (data["size"] if data else ""),
+                        "image_url": final_url
+                    }
+                    requests.patch(f"{SUPABASE_URL}/rest/v1/products?id=eq.{p['id']}", headers=sb_headers, json=upd)
+                    print(f"  --> Updated DB and Cloud Image OK")
+                    found += 1
             else:
                 print(f"  --> Image processing failed FAIL")
         else:

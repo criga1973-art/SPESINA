@@ -114,19 +114,30 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text.strip()
     state = user_states.get(chat_id)
 
-    if state and state.get('step') in ['waiting_price', 'waiting_price_update']:
+    if state and state.get('step') == 'waiting_choice_update':
+        if text == "1": # Solo Prezzo
+            state['step'] = 'waiting_price_update'
+            await update.message.reply_text(f"💰 Inserisci il **NUOVO PREZZO** per {state['existing_name']}:")
+        elif text == "2": # Solo Immagine
+            state['step'] = 'waiting_image_update'
+            await update.message.reply_text(f"📸 Inviami la **NUOVA FOTO** per {state['existing_name']}:")
+        elif text == "3": # Entrambi
+            state['step'] = 'waiting_price_both'
+            await update.message.reply_text(f"💰 Inserisci il **NUOVO PREZZO** per {state['existing_name']}:")
+        else:
+            await update.message.reply_text("⚠️ Scegli 1, 2 o 3.")
+        return
+
+    if state and state.get('step') in ['waiting_price', 'waiting_price_update', 'waiting_price_both']:
         try:
             clean_text = text.replace(',', '.')
-            # Se l'utente invia un EAN invece del prezzo (es. 13 cifre), lo scartiamo
             if len(text) >= 8 and text.isdigit():
                 await update.message.reply_text("⚠️ Sembra un codice a barre. Inserisci il **prezzo** (es: 1.50):")
                 return
 
             price = float(clean_text)
-            
-            # Protezione overflow database (numeric 10,2)
             if price > 999999:
-                await update.message.reply_text("❌ Prezzo troppo alto. Inserisci un valore realistico.")
+                await update.message.reply_text("❌ Prezzo troppo alto.")
                 return
 
             state['price'] = price
@@ -134,6 +145,9 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 supabase.table('products').update({'price': price}).eq('id', state['existing_id']).execute()
                 await update.message.reply_text(f"✅ **PREZZO AGGIORNATO!** ({price}€)")
                 del user_states[chat_id]
+            elif state['step'] == 'waiting_price_both':
+                state['step'] = 'waiting_image_update'
+                await update.message.reply_text(f"✅ Prezzo memorizzato. Ora inviami la **NUOVA FOTO**:")
             else:
                 state['step'] = 'waiting_image'
                 await update.message.reply_text("📸 **Mi dai l'immagine del prodotto?**")
@@ -203,8 +217,19 @@ async def process_ean(ean, update):
     response = supabase.table('products').select('*').eq('ean', ean).execute()
     if response.data:
         p = response.data[0]
-        user_states[chat_id] = {'existing_id': p['id'], 'step': 'waiting_price_update'}
-        await update.effective_message.reply_text(f"🔄 **GIA' IN CATALOGO**\n🏷️ {p['name']}\n💰 Attuale: {p['price']}€\n\nInviami il **NUOVO PREZZO**:")
+        user_states[chat_id] = {
+            'existing_id': p['id'], 
+            'existing_name': p['name'],
+            'existing_cat': p.get('category'),
+            'existing_brand': p.get('brand'),
+            'step': 'waiting_choice_update'
+        }
+        msg = (f"🔄 **PRODOTTO GESTITO**\n🏷️ {p['name']}\n💰 Prezzo: {p['price']}€\n\n"
+               "Cosa vuoi fare?\n"
+               "1️⃣ Cambia solo **PREZZO**\n"
+               "2️⃣ Cambia solo **FOTO**\n"
+               "3️⃣ Cambia **ENTRAMBI**")
+        await update.effective_message.reply_text(msg)
     else:
         data = fetch_off_data(ean)
         user_states[chat_id] = {
@@ -217,13 +242,26 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.message.chat_id
     state = user_states.get(chat_id)
     
-    if state and state.get('step') == 'waiting_image':
+    if state and state.get('step') in ['waiting_image', 'waiting_image_update']:
         photo_file = await update.message.photo[-1].get_file()
         state['image_url'] = photo_file.file_path
         
-        state['step'] = 'waiting_category'
-        buttons = [[InlineKeyboardButton(c['n'], callback_data=f"cat_{id}")] for id, c in CAT_MAP.items()]
-        await update.message.reply_text("📂 **Scegli la CATEGORIA:**", reply_markup=InlineKeyboardMarkup(buttons))
+        if state['step'] == 'waiting_image_update':
+            # Aggiornamento prodotto esistente
+            upd = {"image_url": state['image_url']}
+            if state.get('price'): upd['price'] = state['price']
+            
+            supabase.table('products').update(upd).eq('id', state['existing_id']).execute()
+            # Signal GitHub to process the new photo
+            asyncio.create_task(asyncio.to_thread(avvisa_github_per_foto, state.get('ean') or "", state['existing_cat'], state['existing_brand']))
+            
+            await update.message.reply_text(f"✅ **FOTO ACQUISITA!**\nL'AI la pulirà tra un istante. Il catalogo è aggiornato.")
+            del user_states[chat_id]
+        else:
+            # Nuovo prodotto
+            state['step'] = 'waiting_category'
+            buttons = [[InlineKeyboardButton(c['n'], callback_data=f"cat_{id}")] for id, c in CAT_MAP.items()]
+            await update.message.reply_text("📂 **Scegli la CATEGORIA:**", reply_markup=InlineKeyboardMarkup(buttons))
         return
 
     photo_file = await update.message.photo[-1].get_file()

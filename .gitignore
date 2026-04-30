@@ -3,6 +3,12 @@ img/original_backup/
 .gemini/
 .system_generated/
 
+# --- PROTEZIONE IMMAGINI ---
+# Ci assicuriamo che la cartella img/ sia sempre tracciata
+!img/
+!img/*
+# ---------------------------
+
 # Escludi file di testo e bozze
 *.txt
 *.pdf
@@ -11,6 +17,7 @@ WEBSPESINA .html
 MEMO_REGOLE_APP.md
 
 # Escludi script Python e automazioni (mantieni solo l'app)
+# Se vuoi tracciare uno script specifico, usa: git add -f nome_script.py
 *.py
 Antigravity.exe
 
