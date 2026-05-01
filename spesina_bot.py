@@ -40,6 +40,7 @@ CAT_MAP = {
     "orto": {"n": "Frutta e Verdura", "sub": ["Frutta e Verdura", "Altro"]},
     "vegano": {"n": "Vegano", "sub": ["Vegano", "Altro"]},
     "animali": {"n": "Amici Domestici", "sub": ["Amici Domestici", "Altro"]},
+    "minestre-zuppe": {"n": "Minestre, Risotti e Zuppe", "sub": []},
     "varie": {"n": "VarIE", "sub": ["Varie"]}
 }
 
