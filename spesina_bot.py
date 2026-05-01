@@ -142,35 +142,41 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text.strip()
     state = user_states.get(chat_id)
 
-    if state and state.get('step') in ['waiting_price', 'waiting_price_update', 'waiting_price_both']:
-        try:
+    try:
+        if state and state.get('step') in ['waiting_price', 'waiting_price_update', 'waiting_price_both']:
             clean_text = text.replace(',', '.')
             if len(text) >= 8 and text.isdigit():
                 await update.message.reply_text("⚠️ Sembra un codice a barre. Inserisci il **prezzo** (es: 1.50):")
                 return
 
-            price = float(clean_text)
-            if price > 999999:
-                await update.message.reply_text("❌ Prezzo troppo alto.")
-                return
+            try:
+                price = float(clean_text)
+                if price > 999999:
+                    await update.message.reply_text("❌ Prezzo troppo alto.")
+                    return
 
-            state['price'] = price
-            if state['step'] == 'waiting_price_update':
-                supabase.table('products').update({'price': price}).eq('id', state['existing_id']).execute()
-                await update.message.reply_text(f"✅ **PREZZO AGGIORNATO!** ({price}€)")
-                del user_states[chat_id]
-            elif state['step'] == 'waiting_price_both':
-                state['step'] = 'waiting_image_update'
-                await update.message.reply_text(f"✅ Prezzo memorizzato. Ora inviami la **NUOVA FOTO**:")
-            else:
-                state['step'] = 'waiting_image'
-                await update.message.reply_text("📸 **Mi dai l'immagine del prodotto?**")
-        except ValueError:
-            await update.message.reply_text("❌ Inserisci un prezzo valido (es: 1.50).")
-        return
+                state['price'] = price
+                if state['step'] == 'waiting_price_update':
+                    supabase.table('products').update({'price': price}).eq('id', state['existing_id']).execute()
+                    await update.message.reply_text(f"✅ **PREZZO AGGIORNATO!** ({price}€)")
+                    del user_states[chat_id]
+                elif state['step'] == 'waiting_price_both':
+                    state['step'] = 'waiting_image_update'
+                    await update.message.reply_text(f"✅ Prezzo memorizzato. Ora inviami la **NUOVA FOTO**:")
+                else:
+                    state['step'] = 'waiting_image'
+                    await update.message.reply_text("📸 **Mi dai l'immagine del prodotto?**")
+            except ValueError:
+                await update.message.reply_text("❌ Inserisci un prezzo valido (es: 1.50).")
+            return
 
-    if text.isdigit() and len(text) >= 8:
-        await process_ean(text, update)
+        if text.isdigit() and len(text) >= 8:
+            await process_ean(text, update)
+            
+    except Exception as e:
+        logging.error(f"MESSAGE ERROR: {e}", exc_info=True)
+        await update.message.reply_text(f"❌ Errore imprevisto: {e}")
+        if chat_id in user_states: del user_states[chat_id]
 
 async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
@@ -280,44 +286,57 @@ async def process_ean(ean, update):
         }
         await update.effective_message.reply_text(f"📦 **NUOVO**: {data['name']} ({data['size']})\n💰 Prezzo di vendita?")
 
-async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    chat_id = update.message.chat_id
-    state = user_states.get(chat_id)
-    if state and state.get('step') in ['waiting_image', 'waiting_image_update']:
-        photo_file = await update.message.photo[-1].get_file()
-        photo_bytes = await photo_file.download_as_bytearray()
-        
-        if state['step'] == 'waiting_image_update':
-            # Per aggiornamenti, conosciamo gia' categoria e sotto-categoria (brand)
-            cat_id = state.get('existing_cat')
-            sub_name = state.get('existing_brand', "")
-            cat_obj = CAT_MAP.get(cat_id, {})
-            folder_name = cat_obj.get('f', cat_obj.get('n', ""))
-            ean_or_id = state.get('ean') or state.get('existing_id')
+    try:
+        chat_id = update.message.chat_id
+        state = user_states.get(chat_id)
+        if state and state.get('step') in ['waiting_image', 'waiting_image_update']:
+            photo_file = await update.message.photo[-1].get_file()
+            photo_bytes = await photo_file.download_as_bytearray()
             
-            cloud_url = upload_to_supabase(photo_bytes, ean_or_id, folder_name, sub_name)
-            if cloud_url: state['image_url'] = cloud_url
-            
-            upd = {"image_url": state['image_url']}
-            if state.get('price'): upd['price'] = state['price']
-            supabase.table('products').update(upd).eq('id', state['existing_id']).execute()
-            await update.message.reply_text(f"✅ **FOTO AGGIORNATA!**\nSalvata in: {folder_name}/{sub_name}")
-            del user_states[chat_id]
-        else:
-            # Per nuovi prodotti, memorizziamo i bytes e aspettiamo la scelta categoria
-            state['photo_bytes'] = photo_bytes
-            state['step'] = 'waiting_category'
-            buttons = [[InlineKeyboardButton(c['n'], callback_data=f"cat_{id}")] for id, c in CAT_MAP.items()]
-            await update.message.reply_text("📂 **Scegli la CATEGORIA:**", reply_markup=InlineKeyboardMarkup(buttons))
-        return
+            if state['step'] == 'waiting_image_update':
+                # Per aggiornamenti, conosciamo gia' categoria e sotto-categoria (brand)
+                cat_id = state.get('existing_cat')
+                sub_name = state.get('existing_brand', "")
+                cat_obj = CAT_MAP.get(cat_id, {})
+                folder_name = cat_obj.get('f', cat_obj.get('n', ""))
+                
+                if not folder_name:
+                    # Se la categoria non e' valida, chiediamola di nuovo per sicurezza
+                    state['photo_bytes'] = photo_bytes
+                    state['step'] = 'waiting_category'
+                    buttons = [[InlineKeyboardButton(c['n'], callback_data=f"cat_{id}")] for id, c in CAT_MAP.items()]
+                    await update.message.reply_text("⚠️ Categoria non trovata per l'aggiornamento. **Sceglila ora:**", reply_markup=InlineKeyboardMarkup(buttons))
+                    return
 
-    photo_file = await update.message.photo[-1].get_file()
-    path = f"tmp_{chat_id}.jpg"
-    await photo_file.download_to_drive(path)
-    ean = detect_barcode(path)
-    if ean: await process_ean(ean, update)
-    else: await update.message.reply_text("❌ Codice non letto.")
-    if os.path.exists(path): os.remove(path)
+                ean_or_id = state.get('ean') or state.get('existing_id')
+                cloud_url = upload_to_supabase(photo_bytes, ean_or_id, folder_name, sub_name)
+                if cloud_url: state['image_url'] = cloud_url
+                
+                upd = {"image_url": state['image_url']}
+                if state.get('price'): upd['price'] = state['price']
+                supabase.table('products').update(upd).eq('id', state['existing_id']).execute()
+                await update.message.reply_text(f"✅ **FOTO AGGIORNATA!**\nSalvata in: {folder_name}/{sub_name}")
+                if chat_id in user_states: del user_states[chat_id]
+            else:
+                # Per nuovi prodotti, memorizziamo i bytes e aspettiamo la scelta categoria
+                state['photo_bytes'] = photo_bytes
+                state['step'] = 'waiting_category'
+                buttons = [[InlineKeyboardButton(c['n'], callback_data=f"cat_{id}")] for id, c in CAT_MAP.items()]
+                await update.message.reply_text("📂 **Scegli la CATEGORIA:**", reply_markup=InlineKeyboardMarkup(buttons))
+            return
+
+        # Scansione Barcode
+        photo_file = await update.message.photo[-1].get_file()
+        path = f"tmp_{chat_id}.jpg"
+        await photo_file.download_to_drive(path)
+        ean = detect_barcode(path)
+        if ean: await process_ean(ean, update)
+        else: await update.message.reply_text("❌ Codice non letto.")
+        if os.path.exists(path): os.remove(path)
+    except Exception as e:
+        logging.error(f"PHOTO ERROR: {e}", exc_info=True)
+        await update.message.reply_text(f"❌ Errore durante l'elaborazione foto: {e}")
+        if chat_id in user_states: del user_states[chat_id]
 
 class DummyHandler(BaseHTTPRequestHandler):
     def do_GET(self):
