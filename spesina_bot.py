@@ -26,20 +26,20 @@ GH_REPO = "SPESINA"
 
 # --- STRUTTURA CATEGORIE ---
 CAT_MAP = {
-    "pasta": {"n": "Pasta & Riso", "sub": []},  # PIATTA
+    "pasta": {"n": "Pasta e Riso", "sub": []},
     "bevande": {"n": "Bevande", "sub": ["Acqua", "Succhi di Frutta", "Birra", "Vino", "Bibite", "Latte 1L", "Latte 500ml", "Alcolici", "Altro"]},
-    "freschi": {"n": "Freschi & Latticini", "sub": ["Salumi", "Latticini", "Yogurt", "Uova", "Piatti Pronti", "Altro"]},
+    "freschi": {"n": "Freschi", "sub": ["Salumi", "Latticini", "Yogurt", "Uova", "Piatti Pronti", "Altro"]},
     "dispensa": {"n": "Dispensa", "sub": ["Tonno e Carne in scatola", "Verdure e Legumi", "Conserve", "Insalatissime", "Altro"]},
-    "farine": {"n": "Farine & Preparati", "sub": ["Farine", "Preparati", "Lieviti", "Altro"]},
-    "condimenti": {"n": "Olio & Condimenti", "sub": ["Olio", "Aceto", "Sale", "Sughi e Pesti", "Salse", "Spezie", "Altro"]},
+    "farine": {"n": "Farine e Preparati", "sub": ["Farine", "Preparati", "Lieviti", "Altro"]},
+    "condimenti": {"n": "Condimenti e Spezie", "sub": ["Olio", "Aceto", "Sale", "Sughi e Pesti", "Salse", "Spezie", "Altro"]},
     "igiene-p": {"n": "Igiene Persona", "sub": ["Primo Soccorso", "Shampoo e Doccia", "Deodoranti", "Igiene Orale", "Assorbenti e Protezione", "Incontinenza Tena", "Carta e Fazzoletti", "Barba e Rasatura", "Altro"]},
-    "igiene-c": {"n": "Igiene Casa", "sub": ["Lavatrice", "Superfici", "Piatti", "Altro"]},
+    "igiene-c": {"n": "Igiene Casa e Detersivi", "sub": ["Lavatrice", "Superfici", "Piatti", "Altro"]},
     "surgelati": {"n": "Surgelati", "sub": ["Pizze e Panificati", "Verdure", "Pesce", "Piatti Pronti", "Gelati", "Altro"]},
-    "colazione": {"n": "Colazione & Dolci", "sub": ["Biscotti", "Merendine", "Cereali", "Caffè, Tè e Tisane", "Confetture e Creme", "Altro"]},
+    "colazione": {"n": "Colazione", "sub": ["Biscotti", "Merendine", "Cereali", "Caffè, Tè e Tisane", "Confetture e Creme", "Altro"]},
     "panificati": {"n": "Panificati", "sub": ["Panificati", "Altro"]},
-    "orto": {"n": "Ortofrutta", "sub": ["Frutta e Verdura", "Altro"]},
+    "orto": {"n": "Frutta e Verdura", "sub": ["Frutta e Verdura", "Altro"]},
     "vegano": {"n": "Vegano", "sub": ["Vegano", "Altro"]},
-    "animali": {"n": "Amici Animali", "sub": ["Amici Domestici", "Altro"]},
+    "animali": {"n": "Amici Domestici", "sub": ["Amici Domestici", "Altro"]},
     "varie": {"n": "VarIE", "sub": ["Varie"]}
 }
 
@@ -58,11 +58,18 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=lo
 
 user_states = {}
 
-def upload_to_supabase(image_bytes, ean):
-    """Carica l'immagine direttamente su Supabase Storage."""
+def upload_to_supabase(image_bytes, ean, folder_name="", sub_name=""):
+    """Carica l'immagine direttamente su Supabase Storage nella cartella categoria/sottocategoria."""
+    import urllib.parse
     bucket_name = "products"
-    file_name = f"prod_{ean}.webp"
-    url = f"{SUPABASE_URL}/storage/v1/object/{bucket_name}/{file_name}"
+    
+    # Costruiamo il percorso: Categoria / [Sottocategoria] / prod_EAN.webp
+    folder_prefix = f"{folder_name}/" if folder_name else ""
+    sub_prefix = f"{sub_name}/" if sub_name else ""
+    file_name = f"{folder_prefix}{sub_prefix}prod_{ean}.webp"
+    
+    encoded_file_name = urllib.parse.quote(file_name)
+    url = f"{SUPABASE_URL}/storage/v1/object/{bucket_name}/{encoded_file_name}"
     
     headers = {
         "apikey": SUPABASE_KEY,
@@ -71,14 +78,9 @@ def upload_to_supabase(image_bytes, ean):
     }
     
     try:
-        # Usiamo POST per caricare il file (sovrascrive se la policy lo permette)
         res = requests.post(url, headers=headers, data=image_bytes)
-        if res.status_code in [200, 201]:
-            return f"{SUPABASE_URL}/storage/v1/object/public/{bucket_name}/{file_name}"
-        else:
-            # Se fallisce (es. già esistente), proviamo un trucco per forzare se necessario
-            logging.info(f"Storage Upload Status: {res.status_code}")
-            return f"{SUPABASE_URL}/storage/v1/object/public/{bucket_name}/{file_name}"
+        # Se il caricamento va a buon fine (200 o 201), restituiamo l'URL pubblico
+        return f"{SUPABASE_URL}/storage/v1/object/public/{bucket_name}/{encoded_file_name}"
     except Exception as e:
         logging.error(f"Errore Upload Cloud: {e}")
     return None
@@ -195,10 +197,17 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         elif data.startswith("cat_"):
             cat_id = data.replace("cat_", "")
             state['category'] = cat_id
+            folder_name = CAT_MAP.get(cat_id, {}).get('n', "")
             subfolders = CAT_MAP.get(cat_id, {}).get('sub', [])
             
             if not subfolders:
                 state['brand'] = ""
+                
+                # Se abbiamo una foto in attesa, carichiamola ora nella cartella corretta
+                if state.get('photo_bytes'):
+                    cloud_url = upload_to_supabase(state['photo_bytes'], state['ean'], folder_name)
+                    if cloud_url: state['image_url'] = cloud_url
+
                 new_prod = {
                     "ean": state['ean'], "name": state['name'], "price": state['price'],
                     "category": state['category'], "brand": state['brand'],
@@ -206,17 +215,24 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 }
                 supabase.table('products').upsert(new_prod).execute()
                 asyncio.create_task(asyncio.to_thread(avvisa_github_per_foto, state['ean'], state['category'], state['brand']))
-                await query.edit_message_text(f"✅ **SALVATO!**\n📦 {state['name']}\n📂 {CAT_MAP[state['category']]['n']}\n💰 {state['price']}€\n\nL'AI sta preparando la foto... 🚀")
+                await query.edit_message_text(f"✅ **SALVATO!**\n📦 {state['name']}\n📂 {folder_name}\n💰 {state['price']}€\n\nImmagine salvata in: {folder_name} 🚀")
                 if chat_id in user_states: del user_states[chat_id]
             else:
                 state['step'] = 'waiting_brand'
                 buttons = [[InlineKeyboardButton(s, callback_data=f"sub_{s}")] for s in subfolders]
-                await query.edit_message_text(f"📁 **Categoria: {CAT_MAP[cat_id]['n']}**\nScegli la SOTTO-CARTELLA:", reply_markup=InlineKeyboardMarkup(buttons))
+                await query.edit_message_text(f"📁 **Categoria: {folder_name}**\nScegli la SOTTO-CARTELLA:", reply_markup=InlineKeyboardMarkup(buttons))
         
         elif data.startswith("sub_"):
             sub_name = data.replace("sub_", "")
             state['brand'] = sub_name
+            cat_id = state['category']
+            folder_name = CAT_MAP.get(cat_id, {}).get('n', "")
             
+            # Carichiamo la foto nel percorso ANNIDATO: Categoria / Sottocategoria / prod_EAN.webp
+            if state.get('photo_bytes'):
+                cloud_url = upload_to_supabase(state['photo_bytes'], state['ean'], folder_name, sub_name)
+                if cloud_url: state['image_url'] = cloud_url
+
             new_prod = {
                 "ean": state['ean'], "name": state['name'], "price": state['price'],
                 "category": state['category'], "brand": state['brand'],
@@ -225,10 +241,7 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             supabase.table('products').upsert(new_prod).execute()
             asyncio.create_task(asyncio.to_thread(avvisa_github_per_foto, state['ean'], state['category'], state['brand']))
             
-            # Nuovo prodotto
-            state['step'] = 'waiting_category'
-            buttons = [[InlineKeyboardButton(c['n'], callback_data=f"cat_{id}")] for id, c in CAT_MAP.items()]
-            await query.edit_message_text(f"✅ **SALVATO!**\n📦 {state['name']}\n📂 {CAT_MAP[state['category']]['n']} > {sub_name}\n💰 {state['price']}€\n\nImmagine in fase di salvataggio... 🚀")
+            await query.edit_message_text(f"✅ **SALVATO!**\n📦 {state['name']}\n📂 {folder_name} > {sub_name}\n💰 {state['price']}€\n\nImmagine salvata in: {folder_name}/{sub_name} 🚀")
             if chat_id in user_states: del user_states[chat_id]
 
     except Exception as e:
@@ -268,21 +281,24 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.message.chat_id
     state = user_states.get(chat_id)
     
-    if state and state.get('step') in ['waiting_image', 'waiting_image_update']:
-        photo_file = await update.message.photo[-1].get_file()
-        photo_bytes = await photo_file.download_as_bytearray()
-        
-        ean = state.get('ean') or state.get('existing_id') # Usiamo ID se EAN manca
-        cloud_url = upload_to_supabase(photo_bytes, ean)
-        state['image_url'] = cloud_url if cloud_url else photo_file.file_path
-        
         if state['step'] == 'waiting_image_update':
+            # Per aggiornamenti, conosciamo gia' categoria e sotto-categoria (brand)
+            cat_id = state.get('existing_cat')
+            sub_name = state.get('existing_brand', "")
+            folder_name = CAT_MAP.get(cat_id, {}).get('n', "")
+            ean_or_id = state.get('ean') or state.get('existing_id')
+            
+            cloud_url = upload_to_supabase(photo_bytes, ean_or_id, folder_name, sub_name)
+            if cloud_url: state['image_url'] = cloud_url
+            
             upd = {"image_url": state['image_url']}
             if state.get('price'): upd['price'] = state['price']
             supabase.table('products').update(upd).eq('id', state['existing_id']).execute()
-            await update.message.reply_text(f"✅ **FOTO AGGIORNATA NEL CLOUD!**\nIl catalogo è ora blindato.")
+            await update.message.reply_text(f"✅ **FOTO AGGIORNATA!**\nSalvata in: {folder_name}/{sub_name}")
             del user_states[chat_id]
         else:
+            # Per nuovi prodotti, memorizziamo i bytes e aspettiamo la scelta categoria
+            state['photo_bytes'] = photo_bytes
             state['step'] = 'waiting_category'
             buttons = [[InlineKeyboardButton(c['n'], callback_data=f"cat_{id}")] for id, c in CAT_MAP.items()]
             await update.message.reply_text("📂 **Scegli la CATEGORIA:**", reply_markup=InlineKeyboardMarkup(buttons))
