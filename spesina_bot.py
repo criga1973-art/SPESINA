@@ -280,7 +280,10 @@ async def process_ean(ean, update):
 async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.message.chat_id
     state = user_states.get(chat_id)
-    
+    if state and state.get('step') in ['waiting_image', 'waiting_image_update']:
+        photo_file = await update.message.photo[-1].get_file()
+        photo_bytes = await photo_file.download_as_bytearray()
+        
         if state['step'] == 'waiting_image_update':
             # Per aggiornamenti, conosciamo gia' categoria e sotto-categoria (brand)
             cat_id = state.get('existing_cat')
