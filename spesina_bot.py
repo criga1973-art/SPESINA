@@ -40,7 +40,7 @@ CAT_MAP = {
     "orto": {"n": "Frutta e Verdura", "sub": ["Frutta e Verdura", "Altro"]},
     "vegano": {"n": "Vegano", "sub": ["Vegano", "Altro"]},
     "animali": {"n": "Amici Domestici", "sub": ["Amici Domestici", "Altro"]},
-    "minestre-zuppe": {"n": "Minestre, Risotti e Zuppe", "sub": []},
+    "minestre-zuppe": {"n": "Minestre, Risotti e Zuppe", "f": "Minestre Risotti e Zuppe", "sub": []},
     "varie": {"n": "VarIE", "sub": ["Varie"]}
 }
 
@@ -198,8 +198,9 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         elif data.startswith("cat_"):
             cat_id = data.replace("cat_", "")
             state['category'] = cat_id
-            folder_name = CAT_MAP.get(cat_id, {}).get('n', "")
-            subfolders = CAT_MAP.get(cat_id, {}).get('sub', [])
+            cat_obj = CAT_MAP.get(cat_id, {})
+            folder_name = cat_obj.get('f', cat_obj.get('n', ""))
+            subfolders = cat_obj.get('sub', [])
             
             if not subfolders:
                 state['brand'] = ""
@@ -227,7 +228,8 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             sub_name = data.replace("sub_", "")
             state['brand'] = sub_name
             cat_id = state['category']
-            folder_name = CAT_MAP.get(cat_id, {}).get('n', "")
+            cat_obj = CAT_MAP.get(cat_id, {})
+            folder_name = cat_obj.get('f', cat_obj.get('n', ""))
             
             # Carichiamo la foto nel percorso ANNIDATO: Categoria / Sottocategoria / prod_EAN.webp
             if state.get('photo_bytes'):
@@ -289,7 +291,8 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
             # Per aggiornamenti, conosciamo gia' categoria e sotto-categoria (brand)
             cat_id = state.get('existing_cat')
             sub_name = state.get('existing_brand', "")
-            folder_name = CAT_MAP.get(cat_id, {}).get('n', "")
+            cat_obj = CAT_MAP.get(cat_id, {})
+            folder_name = cat_obj.get('f', cat_obj.get('n', ""))
             ean_or_id = state.get('ean') or state.get('existing_id')
             
             cloud_url = upload_to_supabase(photo_bytes, ean_or_id, folder_name, sub_name)
