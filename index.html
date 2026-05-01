@@ -1101,7 +1101,7 @@
         async function fetchProducts() {
             try {
                 // Carichiamo tutti i prodotti dalla tabella 'products' su Supabase
-                const { data, error } = await sb.from('products').select('*').order('brand').order('name');
+                const { data, error } = await sb.from('products').select('*').order('name');
                 
                 if (error) throw error;
 
