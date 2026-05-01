@@ -238,8 +238,10 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             folder_name = cat_obj.get('f', cat_obj.get('n', ""))
             
             # Carichiamo la foto nel percorso ANNIDATO: Categoria / Sottocategoria / prod_EAN.webp
+            # Puliamo il nome della sotto-cartella per lo storage (rimuoviamo accenti e virgole)
+            safe_sub = sub_name.replace("à", "a").replace("è", "e").replace("é", "e").replace("ì", "i").replace("ò", "o").replace("ù", "u").replace(",", "")
             if state.get('photo_bytes'):
-                cloud_url = upload_to_supabase(state['photo_bytes'], state['ean'], folder_name, sub_name)
+                cloud_url = upload_to_supabase(state['photo_bytes'], state['ean'], folder_name, safe_sub)
                 if cloud_url: state['image_url'] = cloud_url
 
             new_prod = {
@@ -309,7 +311,11 @@ async def process_ean(ean, update):
                     return
 
                 ean_or_id = state.get('ean') or state.get('existing_id')
-                cloud_url = upload_to_supabase(photo_bytes, ean_or_id, folder_name, sub_name)
+            
+                # Puliamo il nome della sotto-cartella per lo storage
+                safe_sub = sub_name.replace("à", "a").replace("è", "e").replace("é", "e").replace("ì", "i").replace("ò", "o").replace("ù", "u").replace(",", "")
+            
+                cloud_url = upload_to_supabase(photo_bytes, ean_or_id, folder_name, safe_sub)
                 if cloud_url: state['image_url'] = cloud_url
                 
                 upd = {"image_url": state['image_url']}
