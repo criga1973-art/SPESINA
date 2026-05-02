@@ -1895,9 +1895,13 @@
         }
 
         async function sendOrderEmail(data) {
-            console.log("Innesco invio email conferma ordine...");
+            if (!data.e) {
+                console.error("❌ Impossibile inviare email ordine: email mancante.");
+                return;
+            }
+            console.log("📧 Innesco invio email conferma ordine a:", data.e);
             try {
-                await fetch("https://uldpnhmdjbbwwqwjsdoh.supabase.co/functions/v1/send-welcome", {
+                const res = await fetch("https://uldpnhmdjbbwwqwjsdoh.supabase.co/functions/v1/send-welcome", {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` },
                     body: JSON.stringify({
@@ -1907,12 +1911,14 @@
                         delivery: data.delivery,
                         address: data.address,
                         phone: data.phone,
-                        orderItems: data.itemsString, // Manteniamo per sicurezza
-                        items: data.items,           // Nuovo: Array strutturato
+                        orderItems: data.itemsString,
+                        items: data.items,
                         total: data.total
                     })
                 });
-            } catch (err) { console.error("Errore invio email ordine:", err); }
+                const result = await res.json();
+                console.log("✅ Risposta server email ordine:", result);
+            } catch (err) { console.error("❌ Errore invio email ordine:", err); }
         }
 
         function checkSubscriptionStatus() {
@@ -2041,6 +2047,7 @@
                                     phone: userData.t,
                                     address: userData.a + " " + (userData.d ? userData.d.split(',')[0] : "") + ", " + userData.c + " Mestre",
                                     address_full: userData.a + " " + (userData.d || "") + ", " + userData.c + " Mestre",
+                                    email: userData.e,
                                     items: cart, 
                                     total: totaleValore, 
                                     delivery: giorno + " " + ora,

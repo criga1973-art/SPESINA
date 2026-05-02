@@ -705,25 +705,49 @@
 
         function triggerReceipt() {
             const d = currentOrder.order_data;
-            if (!d.email) {
-                console.warn("Impossibile inviare la ricevuta: email mancante.");
+            const email = d.email;
+            
+            if (!email) {
+                console.warn("⚠️ Impossibile inviare la ricevuta: email mancante nell'ordine.");
+                // Tentativo estremo di recupero se l'email non era salvata (vecchi ordini)
+                if (currentOrder.client_id) {
+                    sb.from('customers').select('email').eq('client_id', currentOrder.client_id).single()
+                      .then(({data}) => {
+                          if (data && data.email) {
+                              console.log("📧 Email recuperata in extremis, invio ricevuta...");
+                              executeReceiptFetch(data.email, d);
+                          } else {
+                              alert("⚠️ Attenzione: Non è stato possibile trovare l'email del cliente. La ricevuta non verrà inviata.");
+                          }
+                      });
+                }
                 return;
             }
 
-            fetch("https://uldpnhmdjbbwwqwjsdoh.supabase.co/functions/v1/send-welcome", {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` },
-                body: JSON.stringify({
-                    type: 'RECEIPT',
-                    name: (d.name || 'Cliente').split(' ')[0], // Solo il nome per un tono cordiale
-                    email: d.email,
-                    delivery: d.delivery,
-                    address: d.address_full || d.address,
-                    items: d.items,
-                    total: d.total_amount.toFixed(2)
-                })
-            }).then(r => console.log("Ricevuta inviata con successo"))
-              .catch(console.error);
+            console.log("📧 Innesco invio ricevuta a:", email);
+            executeReceiptFetch(email, d);
+        }
+
+        async function executeReceiptFetch(email, d) {
+            try {
+                const res = await fetch("https://uldpnhmdjbbwwqwjsdoh.supabase.co/functions/v1/send-welcome", {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` },
+                    body: JSON.stringify({
+                        type: 'RECEIPT',
+                        name: (d.name || 'Cliente').split(' ')[0],
+                        email: email,
+                        delivery: d.delivery,
+                        address: d.address_full || d.address,
+                        items: d.items,
+                        total: d.total_amount.toFixed(2)
+                    })
+                });
+                const result = await res.json();
+                console.log("✅ Risposta server ricevuta:", result);
+            } catch (err) {
+                console.error("❌ Errore critico invio ricevuta:", err);
+            }
         }
 
         function closeChecklist() {

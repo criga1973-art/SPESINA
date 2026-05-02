@@ -19,6 +19,8 @@ serve(async (req) => {
     const email = body.email
     const clientId = body.clientId || body.client_id
 
+    console.log(`📨 [MAIL ENGINE] Tipo: ${type} | Destinatario: ${email} | Nome: ${name}`);
+
     let subject, html, from;
 
     if (type === 'RECEIPT') {
