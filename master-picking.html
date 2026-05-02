@@ -360,7 +360,7 @@
 
     <header>
         <div class="logo">SPESINA <span>Master PIcking</span></div>
-        <button onclick="loadData()" style="background:none; border:none; color:var(--primary); font-size:14px; font-weight:800; cursor:pointer;">AGGIORNA</button>
+        <button id="btn-refresh" onclick="loadData()" style="background:none; border:none; color:var(--primary); font-size:14px; font-weight:800; cursor:pointer; transition: opacity 0.2s;">AGGIORNA</button>
     </header>
 
     <div class="date-strip" id="date-strip"></div>
@@ -474,6 +474,12 @@
         }
 
         async function loadData() {
+            const btn = document.getElementById('btn-refresh');
+            if (btn) {
+                btn.innerText = "CARICAMENTO...";
+                btn.style.opacity = "0.5";
+            }
+            
             try {
                 const [ordersRes, prodsRes] = await Promise.all([
                     sb.from('orders').select('*').neq('order_data->>status', 'completato').order('created_at', { ascending: false }),
@@ -499,6 +505,12 @@
                 renderOrders();
             } catch (err) {
                 console.error("Errore caricamento dati:", err);
+                alert("Errore durante l'aggiornamento. Riprova.");
+            } finally {
+                if (btn) {
+                    btn.innerText = "AGGIORNA";
+                    btn.style.opacity = "1";
+                }
             }
         }
 
