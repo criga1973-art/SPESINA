@@ -11,18 +11,19 @@
             --primary: #10b981;
             --primary-dark: #059669;
             --dark: #0f172a;
-            --gray: #f1f5f9;
-            --gray-dark: #e2e8f0;
+            --dark-lighter: #1e293b;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
             --red: #ef4444;
             --blue: #3b82f6;
-            --card-bg: #ffffff;
+            --accent: #f59e0b;
         }
 
         body {
             font-family: 'Outfit', sans-serif;
             margin: 0;
-            background: #f8fafc;
-            color: var(--dark);
+            background: var(--dark);
+            color: var(--text);
             height: 100vh;
             display: flex;
             flex-direction: column;
@@ -30,22 +31,51 @@
         }
 
         header {
-            background: var(--dark);
-            color: white;
-            padding: 15px 20px;
+            background: var(--dark-lighter);
+            padding: 12px 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
-        .logo {
-            font-weight: 800;
-            font-size: 20px;
-            letter-spacing: -0.5px;
-        }
-
+        .logo { font-weight: 800; font-size: 18px; color: white; }
         .logo span { color: var(--primary); }
+
+        .date-strip {
+            display: flex;
+            gap: 8px;
+            padding: 10px;
+            overflow-x: auto;
+            background: var(--dark);
+            scrollbar-width: none;
+        }
+        .date-strip::-webkit-scrollbar { display: none; }
+
+        .date-btn {
+            min-width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            background: var(--dark-lighter);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .date-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .date-btn span { font-size: 10px; opacity: 0.7; font-weight: 400; }
 
         .main-container {
             display: flex;
@@ -53,155 +83,130 @@
             overflow: hidden;
         }
 
-        /* Colonna Sinistra: Picking Cumulative */
         .picking-col {
-            width: 40%;
-            border-right: 2px solid var(--gray-dark);
+            width: 45%;
+            border-right: 1px solid rgba(255,255,255,0.1);
             display: flex;
             flex-direction: column;
-            background: white;
         }
 
-        /* Colonna Destra: Boxing & Delivery */
         .boxing-col {
-            width: 60%;
+            width: 55%;
             display: flex;
             flex-direction: column;
+            background: rgba(255,255,255,0.02);
         }
 
         .col-header {
-            padding: 20px;
-            background: var(--gray);
-            border-bottom: 1px solid var(--gray-dark);
-        }
-
-        .col-header h2 {
-            margin: 0;
-            font-size: 18px;
+            padding: 10px 15px;
+            background: rgba(255,255,255,0.05);
+            font-size: 12px;
             font-weight: 800;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary);
         }
 
         .scroll-area {
             flex: 1;
             overflow-y: auto;
-            padding: 20px;
+            padding: 10px;
         }
 
         /* Picking List Items */
         .picking-item {
             display: flex;
             align-items: center;
-            gap: 15px;
-            padding: 12px;
-            background: white;
+            gap: 10px;
+            padding: 10px;
+            background: var(--dark-lighter);
             border-radius: 12px;
-            border: 1px solid var(--gray-dark);
-            margin-bottom: 10px;
-            transition: transform 0.1s;
+            margin-bottom: 8px;
+            border: 1px solid rgba(255,255,255,0.05);
         }
 
         .picking-item img {
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             object-fit: contain;
-            background: #f8fafc;
+            background: white;
             border-radius: 8px;
         }
 
         .picking-qty {
-            background: var(--dark);
-            color: white;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
+            background: var(--accent);
+            color: var(--dark);
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 800;
-            font-size: 14px;
+            font-weight: 900;
+            font-size: 13px;
         }
 
         /* Order Cards */
         .order-card {
-            background: white;
-            border-radius: 16px;
-            border: 1px solid var(--gray-dark);
-            padding: 15px;
-            margin-bottom: 15px;
-            cursor: pointer;
-            transition: all 0.2s;
-            position: relative;
+            background: var(--dark-lighter);
+            border-radius: 14px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255,255,255,0.05);
         }
 
-        .order-card:hover {
-            border-color: var(--primary);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-
-        .order-card.selected {
-            border: 2px solid var(--primary);
-            background: rgba(16, 185, 129, 0.02);
-        }
+        .order-card.selected { border-color: var(--primary); }
 
         .order-meta {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 12px;
-            font-weight: 700;
-            color: #64748b;
-        }
-
-        .order-id { color: var(--primary); }
-
-        .order-customer {
-            font-size: 16px;
-            font-weight: 800;
+            font-size: 10px;
             margin-bottom: 5px;
         }
 
-        .order-address {
-            font-size: 13px;
-            color: #64748b;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+        .order-customer { font-size: 14px; font-weight: 800; }
+        .order-slot { color: var(--accent); font-weight: 700; font-size: 11px; }
+
+        .status-badge {
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 9px;
+            font-weight: 800;
         }
 
-        /* Detail Modal-like View */
-        .order-detail {
-            background: #f8fafc;
-            padding: 20px;
-            border-radius: 20px;
-            margin-bottom: 20px;
+        .status-nuovo { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+        .status-in_consegna { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+
+        /* Detail View */
+        #order-detail-overlay {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark);
+            z-index: 1000;
             display: none;
+            flex-direction: column;
         }
 
         .item-row {
             display: flex;
             align-items: center;
-            gap: 15px;
-            padding: 10px;
-            background: white;
+            gap: 12px;
+            padding: 12px;
+            background: var(--dark-lighter);
             border-radius: 12px;
             margin-bottom: 8px;
-            border: 1px solid var(--gray-dark);
         }
 
-        .item-row.checked {
-            opacity: 0.5;
-            background: #f1f5f9;
-        }
+        .item-row.checked { border: 1px solid var(--primary); background: rgba(16, 185, 129, 0.05); }
 
         .checkbox-custom {
-            width: 24px;
-            height: 24px;
-            border-radius: 6px;
-            border: 2px solid var(--gray-dark);
-            cursor: pointer;
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            border: 2px solid rgba(255,255,255,0.2);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -210,93 +215,50 @@
         .item-row.checked .checkbox-custom {
             background: var(--primary);
             border-color: var(--primary);
-            color: white;
         }
 
         .btn {
-            padding: 12px 20px;
-            border-radius: 12px;
+            padding: 15px;
+            border-radius: 14px;
             font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            cursor: pointer;
             border: none;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
-            transition: all 0.2s;
-            text-decoration: none;
             font-size: 14px;
+            color: white;
         }
 
-        .btn-maps { background: #4285F4; color: white; }
-        .btn-call { background: #34A853; color: white; }
-        .btn-delivery { background: var(--primary); color: white; width: 100%; margin-top: 20px; }
-        .btn-close { background: var(--dark); color: white; width: 100%; margin-top: 10px; }
+        .btn-maps { background: var(--blue); flex: 1; }
+        .btn-call { background: var(--primary); flex: 1; }
+        .btn-delivery { background: var(--primary); width: 100%; margin-top: 15px; font-size: 16px; }
+        .btn-close { background: var(--accent); color: var(--dark); width: 100%; margin-top: 10px; font-size: 16px; }
+        
+        .btn:disabled { opacity: 0.2; }
 
-        .btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-        }
-
-        .date-filter {
-            padding: 10px;
-            border-radius: 10px;
-            border: 1px solid var(--gray-dark);
-            font-family: inherit;
-            font-weight: 600;
-            margin-top: 10px;
-            width: 100%;
-        }
-
-        .status-badge {
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 10px;
-            font-weight: 800;
-            text-transform: uppercase;
-        }
-
-        .status-nuovo { background: #dcfce7; color: #16a34a; }
-        .status-in_consegna { background: #dbeafe; color: #1d4ed8; }
-        .status-completato { background: #f1f5f9; color: #64748b; }
-
-        @media (max-width: 900px) {
-            .main-container { flex-direction: column; }
-            .picking-col, .boxing-col { width: 100%; height: 50vh; }
-        }
     </style>
 </head>
 <body>
 
     <header>
         <div class="logo">SPESINA <span>SHOPPER</span></div>
-        <div id="auth-status" style="font-size: 12px; font-weight: 600; opacity: 0.7;">Dashboard Operativa v1.0</div>
+        <button onclick="loadData()" style="background:none; border:none; color:var(--primary); font-size:20px;">🔄</button>
     </header>
 
-    <div class="main-container">
-        <!-- Picking Area -->
-        <div class="picking-col">
-            <div class="col-header">
-                <h2>📦 Picking Cumulativo (Dry)</h2>
-                <select id="date-selector" class="date-filter" onchange="loadData()">
-                    <!-- Popolated by JS -->
-                </select>
-            </div>
-            <div class="scroll-area" id="picking-list">
-                <div style="text-align: center; color: #64748b; padding: 40px;">Seleziona una data per vedere il picking...</div>
-            </div>
-        </div>
+    <div class="date-strip" id="date-strip">
+        <!-- Pulsanti numerici popolati da JS -->
+    </div>
 
-        <!-- Boxing & Delivery Area -->
+    <div class="main-container">
+        <div class="picking-col">
+            <div class="col-header">Picking (Dry)</div>
+            <div class="scroll-area" id="picking-list"></div>
+        </div>
         <div class="boxing-col">
-            <div class="col-header">
-                <h2>📑 Gestione Ordini & Delivery</h2>
-            </div>
-            <div class="scroll-area" id="orders-list">
-                <!-- Ordini individuali -->
-            </div>
+            <div class="col-header">Ordini</div>
+            <div class="scroll-area" id="orders-list"></div>
         </div>
     </div>
 
@@ -338,52 +300,55 @@
         let selectedOrder = null;
         let checkedItems = new Set();
 
-        // Popola il selettore date per i prossimi 7 giorni
+        let selectedDate = "ALL";
+
         function initDateSelector() {
-            const select = document.getElementById('date-selector');
-            const days = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
-            const months = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
+            const strip = document.getElementById('date-strip');
+            const days = ["Dom", "Lun", "Mar", "Mer", "Gio", "Ven", "Sab"];
             
-            // Opzione cumulativa
-            const allOption = document.createElement('option');
-            allOption.value = "ALL";
-            allOption.text = "📊 TUTTA LA SETTIMANA (Cumulativo)";
-            select.appendChild(allOption);
+            // Pulsante ALL
+            const btnAll = document.createElement('div');
+            btnAll.className = "date-btn active";
+            btnAll.innerHTML = `ALL<span>Sett.</span>`;
+            btnAll.onclick = () => selectDate("ALL", btnAll);
+            strip.appendChild(btnAll);
 
             for (let i = 0; i < 7; i++) {
                 const d = new Date();
                 d.setDate(d.getDate() + i);
-                const val = `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]}`;
-                const option = document.createElement('option');
-                option.value = val;
-                option.text = (i === 0 ? "OGGI - " : i === 1 ? "DOMANI - " : "") + val;
-                select.appendChild(option);
+                const dayNum = d.getDate();
+                const dayName = days[d.getDay()];
+                const fullVal = `${["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"][d.getDay()]} ${dayNum} ${["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"][d.getMonth()]}`;
+                
+                const btn = document.createElement('div');
+                btn.className = "date-btn";
+                btn.innerHTML = `${dayNum}<span>${dayName}</span>`;
+                btn.onclick = () => selectDate(fullVal, btn);
+                strip.appendChild(btn);
             }
         }
 
+        function selectDate(val, btn) {
+            selectedDate = val;
+            document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            loadData();
+        }
+
         async function loadData() {
-            const selectedDate = document.getElementById('date-selector').value;
-            console.log("Caricamento dati per:", selectedDate);
-            
             const { data, error } = await sb.from('orders')
                 .select('*')
                 .neq('order_data->>status', 'completato')
                 .order('created_at', { ascending: false });
 
-            if (error) {
-                console.error("Errore:", error);
-                return;
-            }
+            if (error) return console.error(error);
 
-            // Filtro cumulativo o per singola data
             if (selectedDate === "ALL") {
-                // Prende tutti gli ordini non completati caricati (che sono quelli futuri/pendenti)
                 allOrders = data;
             } else {
                 allOrders = data.filter(o => o.order_data.delivery && o.order_data.delivery.startsWith(selectedDate));
             }
 
-            // Ordinamento per fascia oraria (l'orario è l'ultima parte della stringa delivery)
             allOrders.sort((a, b) => {
                 const getHour = (s) => parseInt(s.split(' ').slice(-1)[0].split(':')[0]) || 0;
                 return getHour(a.order_data.delivery) - getHour(b.order_data.delivery);
@@ -395,12 +360,11 @@
 
         function renderPicking() {
             const pickingList = document.getElementById('picking-list');
-            const dryProducts = {}; // Aggregate by EAN or Name
+            const dryProducts = {};
 
             allOrders.forEach(order => {
                 const items = order.order_data.items || [];
                 items.forEach(item => {
-                    // Escludi Freschi, Orto e Surgelati
                     const cat = (item.c || "").toLowerCase();
                     if (cat !== 'freschi' && cat !== 'orto' && cat !== 'surgelati') {
                         const key = item.ean || item.n;
@@ -413,18 +377,13 @@
             });
 
             const itemsArray = Object.values(dryProducts);
-            if (itemsArray.length === 0) {
-                pickingList.innerHTML = '<div style="text-align: center; color: #64748b; padding: 40px;">Nessun prodotto Dry da prelevare per questa data.</div>';
-                return;
-            }
-
-            pickingList.innerHTML = itemsArray.map(item => `
+            pickingList.innerHTML = itemsArray.length === 0 ? '<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:20px;">Vuoto</div>' : 
+                itemsArray.map(item => `
                 <div class="picking-item">
                     <div class="picking-qty">${item.q}</div>
-                    <img src="${item.img || 'img/placeholder.png'}" onerror="this.src='https://uldpnhmdjbbwwqwjsdoh.supabase.co/storage/v1/object/public/products/sub_icon.png'">
                     <div style="flex:1;">
-                        <div style="font-weight:700; font-size:14px;">${item.b ? item.b + ' - ' : ''}${item.n}</div>
-                        <div style="font-size:11px; color:#64748b;">EAN: ${item.ean || 'N/D'}</div>
+                        <div style="font-weight:700; font-size:12px; line-height:1.2;">${item.b ? item.b + ' ' : ''}${item.n}</div>
+                        <div style="font-size:9px; color:var(--text-muted);">EAN: ${item.ean || 'N/D'}</div>
                     </div>
                 </div>
             `).join('');
@@ -432,26 +391,19 @@
 
         function renderOrders() {
             const ordersList = document.getElementById('orders-list');
-            if (allOrders.length === 0) {
-                ordersList.innerHTML = '<div style="text-align: center; color: #64748b; padding: 40px;">Nessun ordine in programma per questa data.</div>';
-                return;
-            }
-
-            ordersList.innerHTML = allOrders.map(o => {
+            ordersList.innerHTML = allOrders.length === 0 ? '<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:20px;">Nessun ordine</div>' :
+                allOrders.map(o => {
                 const d = o.order_data;
                 const status = d.status || 'nuovo';
-                const shortId = o.id.toString().slice(0, 8).toUpperCase();
+                const shortId = o.id.toString().slice(0, 4).toUpperCase();
                 return `
                     <div class="order-card" onclick="openDetail(${o.id})">
                         <div class="order-meta">
-                            <span class="order-id">#${shortId}</span>
+                            <span style="color:var(--primary); font-weight:900;">#${shortId}</span>
                             <span class="status-badge status-${status}">${status}</span>
                         </div>
                         <div class="order-customer">${d.name}</div>
-                        <div class="order-address">📍 ${d.address}</div>
-                        <div style="margin-top:10px; font-size:11px; color:#64748b; font-weight:600;">
-                            Slot: ${d.delivery.split(' ').slice(-1)[0]} | Articoli: ${d.items.length}
-                        </div>
+                        <div class="order-slot">🕒 ${d.delivery.split(' ').slice(-1)[0]}</div>
                     </div>
                 `;
             }).join('');
@@ -464,9 +416,9 @@
             const d = selectedOrder.order_data;
             const shortId = selectedOrder.id.toString().slice(0, 8).toUpperCase();
             
-            document.getElementById('det-order-id').innerText = `Ordine #${shortId}`;
+            document.getElementById('det-order-id').innerText = `#${shortId}`;
             document.getElementById('det-customer').innerText = d.name;
-            document.getElementById('det-address').innerText = d.address_full || d.address;
+            document.getElementById('det-address').innerText = d.address;
             document.getElementById('det-maps-link').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d.address_full || d.address)}`;
             document.getElementById('det-phone-link').href = `tel:${d.phone}`;
             
@@ -474,13 +426,16 @@
             renderItemsDetail(d.items);
             
             const status = d.status || 'nuovo';
+            const btnStart = document.getElementById('btn-start-delivery');
+            const btnComplete = document.getElementById('btn-complete-order');
+
             if (status === 'in_consegna') {
-                document.getElementById('btn-start-delivery').style.display = 'none';
-                document.getElementById('btn-complete-order').style.display = 'block';
+                btnStart.style.display = 'none';
+                btnComplete.style.display = 'block';
             } else {
-                document.getElementById('btn-start-delivery').style.display = 'block';
-                document.getElementById('btn-start-delivery').disabled = true;
-                document.getElementById('btn-complete-order').style.display = 'none';
+                btnStart.style.display = 'block';
+                btnStart.disabled = true;
+                btnComplete.style.display = 'none';
             }
 
             document.getElementById('order-detail-overlay').style.display = 'flex';
@@ -491,10 +446,9 @@
             list.innerHTML = items.map((item, idx) => `
                 <div class="item-row" id="item-row-${idx}" onclick="toggleItem(${idx})">
                     <div class="checkbox-custom"></div>
-                    <img src="${item.img || 'img/placeholder.png'}" style="width:40px; height:40px; object-fit:contain;">
                     <div style="flex:1;">
-                        <div style="font-weight:700; font-size:13px;">${item.q}x ${item.n}</div>
-                        <div style="font-size:10px; color:#64748b;">EAN: ${item.ean || 'N/D'}</div>
+                        <div style="font-weight:800; font-size:14px;">${item.q}x ${item.n}</div>
+                        <div style="font-size:10px; color:var(--text-muted);">${item.b || ''} | EAN: ${item.ean || 'N/D'}</div>
                     </div>
                 </div>
             `).join('');
