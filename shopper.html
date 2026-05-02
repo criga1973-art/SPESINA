@@ -118,7 +118,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 10px;
+            padding: 8px;
             background: var(--dark-lighter);
             border-radius: 12px;
             margin-bottom: 8px;
@@ -126,56 +126,60 @@
         }
 
         .picking-item img {
-            width: 40px;
-            height: 40px;
+            width: 35px;
+            height: 35px;
             object-fit: contain;
             background: white;
-            border-radius: 8px;
+            border-radius: 6px;
         }
 
         .picking-qty {
             background: var(--accent);
             color: var(--dark);
-            width: 28px;
-            height: 28px;
-            border-radius: 8px;
+            min-width: 24px;
+            height: 24px;
+            padding: 0 4px;
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 900;
-            font-size: 13px;
+            font-size: 12px;
         }
 
         /* Order Cards */
         .order-card {
             background: var(--dark-lighter);
-            border-radius: 14px;
-            padding: 12px;
-            margin-bottom: 10px;
-            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
-        .order-card.selected { border-color: var(--primary); }
+        .order-info h3 { margin: 0; font-size: 16px; font-weight: 800; color: white; }
+        .order-info p { margin: 2px 0; font-size: 12px; color: var(--text-muted); }
+
+        .btn-avvia {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 12px;
+            width: 100%;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
 
         .order-meta {
             display: flex;
             justify-content: space-between;
-            font-size: 10px;
-            margin-bottom: 5px;
+            align-items: center;
         }
-
-        .order-customer { font-size: 14px; font-weight: 800; }
-        .order-slot { color: var(--accent); font-weight: 700; font-size: 11px; }
-
-        .status-badge {
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 9px;
-            font-weight: 800;
-        }
-
-        .status-nuovo { background: rgba(16, 185, 129, 0.2); color: #34d399; }
-        .status-in_consegna { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
 
         /* Detail View */
         #order-detail-overlay {
@@ -198,9 +202,21 @@
             background: var(--dark-lighter);
             border-radius: 12px;
             margin-bottom: 8px;
+            transition: opacity 0.3s;
         }
 
-        .item-row.checked { border: 1px solid var(--primary); background: rgba(16, 185, 129, 0.05); }
+        .item-row.checked {
+            opacity: 0.3; /* Effetto opaco richiesto */
+            border: 1px solid var(--primary);
+        }
+
+        .item-row img {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+            background: white;
+            border-radius: 8px;
+        }
 
         .checkbox-custom {
             width: 28px;
@@ -377,12 +393,13 @@
             });
 
             const itemsArray = Object.values(dryProducts);
-            pickingList.innerHTML = itemsArray.length === 0 ? '<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:20px;">Vuoto</div>' : 
+            pickingList.innerHTML = itemsArray.length === 0 ? '<div style="font-size:10px; color:var(--text-muted); text-align:center; padding:20px;">Vuoto</div>' : 
                 itemsArray.map(item => `
                 <div class="picking-item">
                     <div class="picking-qty">${item.q}</div>
+                    <img src="${item.img || 'img/placeholder.png'}" onerror="this.src='https://uldpnhmdjbbwwqwjsdoh.supabase.co/storage/v1/object/public/products/sub_icon.png'">
                     <div style="flex:1;">
-                        <div style="font-weight:700; font-size:12px; line-height:1.2;">${item.b ? item.b + ' ' : ''}${item.n}</div>
+                        <div style="font-weight:700; font-size:11px; line-height:1.2;">${item.b ? item.b + ' ' : ''}${item.n}</div>
                         <div style="font-size:9px; color:var(--text-muted);">EAN: ${item.ean || 'N/D'}</div>
                     </div>
                 </div>
@@ -395,15 +412,19 @@
                 allOrders.map(o => {
                 const d = o.order_data;
                 const status = d.status || 'nuovo';
-                const shortId = o.id.toString().slice(0, 4).toUpperCase();
+                const shortId = o.id.toString().slice(0, 8).toUpperCase();
                 return `
-                    <div class="order-card" onclick="openDetail(${o.id})">
+                    <div class="order-card">
                         <div class="order-meta">
-                            <span style="color:var(--primary); font-weight:900;">#${shortId}</span>
+                            <span style="color:var(--primary); font-weight:900; font-size:12px;">#${shortId}</span>
                             <span class="status-badge status-${status}">${status}</span>
                         </div>
-                        <div class="order-customer">${d.name}</div>
-                        <div class="order-slot">🕒 ${d.delivery.split(' ').slice(-1)[0]}</div>
+                        <div class="order-info">
+                            <h3>${d.name}</h3>
+                            <p>📍 ${d.address}</p>
+                            <p>🕒 Slot: ${d.delivery.split(' ').slice(-1)[0]}</p>
+                        </div>
+                        <button class="btn-avvia" onclick="openDetail(${o.id})">AVVIA ORDINE</button>
                     </div>
                 `;
             }).join('');
@@ -446,6 +467,7 @@
             list.innerHTML = items.map((item, idx) => `
                 <div class="item-row" id="item-row-${idx}" onclick="toggleItem(${idx})">
                     <div class="checkbox-custom"></div>
+                    <img src="${item.img || 'https://uldpnhmdjbbwwqwjsdoh.supabase.co/storage/v1/object/public/products/sub_icon.png'}" onerror="this.src='https://uldpnhmdjbbwwqwjsdoh.supabase.co/storage/v1/object/public/products/sub_icon.png'">
                     <div style="flex:1;">
                         <div style="font-weight:800; font-size:14px;">${item.q}x ${item.n}</div>
                         <div style="font-size:10px; color:var(--text-muted);">${item.b || ''} | EAN: ${item.ean || 'N/D'}</div>
