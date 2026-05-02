@@ -305,6 +305,30 @@
             </div>
 
             <h4 style="border-bottom:2px solid rgba(255,255,255,0.1); padding-bottom:10px; margin-bottom:15px; color:var(--primary);">COMPOSIZIONE SCATOLA</h4>
+            
+            <!-- Vista Consegna (visibile solo in-delivery) -->
+            <div id="delivery-info" style="display:none; background:rgba(59, 130, 246, 0.1); padding:20px; border-radius:16px; border:1px solid var(--blue); margin-bottom:20px;">
+                <div style="font-size:12px; text-transform:uppercase; color:var(--blue); font-weight:800; margin-bottom:10px;">🚚 Consegna in Corso</div>
+                <div id="del-dest" style="font-size:18px; font-weight:800; margin-bottom:5px;">Nome Cognome</div>
+                <div id="del-addr" style="font-size:14px; color:var(--text-muted); margin-bottom:15px;">Via Indirizzo, 123</div>
+                
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:20px;">
+                    <div style="background:var(--dark); padding:10px; border-radius:10px;">
+                        <div style="font-size:10px; opacity:0.6;">DA INCASSARE</div>
+                        <div id="del-total" style="font-size:18px; font-weight:900; color:var(--accent);">€ 0.00</div>
+                    </div>
+                    <div style="background:var(--dark); padding:10px; border-radius:10px;">
+                        <div style="font-size:10px; opacity:0.6;">ORARIO</div>
+                        <div id="del-time" style="font-size:14px; font-weight:800;">12:00-14:00</div>
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:10px;">
+                    <a id="del-maps-btn" href="#" target="_blank" class="btn btn-maps" style="flex:1;">📍 NAVIGA</a>
+                    <a id="del-call-btn" href="#" class="btn btn-call" style="flex:1;">📞 CHIAMA</a>
+                </div>
+            </div>
+
             <div id="det-items-list">
                 <!-- Lista prodotti dell'ordine -->
             </div>
@@ -467,11 +491,28 @@
             const status = d.status || 'nuovo';
             const btnStart = document.getElementById('btn-start-delivery');
             const btnComplete = document.getElementById('btn-complete-order');
+            const deliveryBox = document.getElementById('delivery-info');
+            const itemsBox = document.getElementById('det-items-list');
+            const itemsHeader = document.querySelector('h4[style*="COMPOSIZIONE SCATOLA"]');
+
+            // Popola i dati consegna comunque (anche se nascosti inizialmente)
+            document.getElementById('del-dest').innerText = d.name;
+            document.getElementById('del-addr').innerText = d.address;
+            document.getElementById('del-total').innerText = `€ ${parseFloat(d.total || 0).toFixed(2)}`;
+            document.getElementById('del-time').innerText = d.delivery.split(' ').slice(-1)[0];
+            document.getElementById('del-maps-btn').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d.address_full || d.address)}`;
+            document.getElementById('del-call-btn').href = `tel:${d.phone}`;
 
             if (status === 'in_consegna') {
+                if(deliveryBox) deliveryBox.style.display = 'block';
+                if(itemsBox) itemsBox.style.display = 'none'; // Nasconde i prodotti in consegna per focus
+                if(itemsHeader) itemsHeader.style.display = 'none';
                 if(btnStart) btnStart.style.display = 'none';
                 if(btnComplete) btnComplete.style.display = 'block';
             } else {
+                if(deliveryBox) deliveryBox.style.display = 'none';
+                if(itemsBox) itemsBox.style.display = 'block';
+                if(itemsHeader) itemsHeader.style.display = 'block';
                 if(btnStart) {
                     btnStart.style.display = 'block';
                     btnStart.disabled = true;
@@ -481,7 +522,7 @@
 
             const overlay = document.getElementById('order-detail-overlay');
             overlay.style.display = 'flex';
-            overlay.style.zIndex = "9999"; // Forza sopra tutto
+            overlay.style.zIndex = "9999"; 
         }
 
         function renderItemsDetail(items) {
