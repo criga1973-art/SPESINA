@@ -1,8 +1,0 @@
-requests
-supabase
-python-telegram-bot[job-queue]
-opencv-python-headless
-numpy
-zxing-cpp
-
-python-dotenv
