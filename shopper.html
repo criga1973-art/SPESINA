@@ -373,35 +373,35 @@
         </div>
     </div>
 
-    <!-- Sezione Dettaglio Ordine (Boxing & Consegna) -->
+    <!-- Sezione Dettaglio Ordine (Sober & Functional) -->
     <div id="order-detail-overlay">
-        <!-- Header con Naviga e Chiama affiancati -->
-        <div style="display:flex; width:100%; height:60px; border-bottom:1px solid rgba(255,255,255,0.1); background:var(--dark-lighter);">
-            <a id="del-maps-btn" href="#" target="_blank" class="btn btn-maps" style="flex:1; border-radius:0; height:100%; background:var(--blue);">NAVIGA</a>
-            <a id="del-call-btn" href="#" class="btn btn-call" style="flex:1; border-radius:0; height:100%; background:var(--primary);">CHIAMA</a>
-            <button onclick="closeDetail()" style="width:60px; background:rgba(255,255,255,0.05); border:none; color:white; font-size:14px; font-weight:700; cursor:pointer;">CHIUDI</button>
+        <!-- Header Navigazione: 50% e 50% -->
+        <div style="display:flex; width:100%; height:65px;">
+            <a id="del-maps-btn" href="#" target="_blank" class="btn btn-maps" style="flex:1; border-radius:0; height:100%; background:var(--blue); font-size:14px;">NAVIGA</a>
+            <a id="del-call-btn" href="#" class="btn btn-call" style="flex:1; border-radius:0; height:100%; background:var(--primary); font-size:14px;">CHIAMA</a>
         </div>
         
+        <!-- Tasto per tornare alla lista (Sobrio) -->
+        <div style="padding:10px 20px; display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2);">
+            <span id="det-order-id" style="font-size:11px; color:var(--text-muted); font-weight:700;">ORDINE #---</span>
+            <button onclick="closeDetail()" style="background:none; border:none; color:white; font-size:12px; font-weight:700; cursor:pointer; text-decoration:underline;">TORNA ALLA LISTA</button>
+        </div>
+
         <div class="det-content">
-            <div id="boxing-header" style="margin-bottom:15px; display:flex; justify-content:space-between; align-items:baseline;">
-                <h2 id="det-customer" style="margin:0; font-size:18px; font-weight:800;">Nome Cliente</h2>
-                <span id="det-order-id" style="font-size:11px; color:var(--text-muted);">#ID</span>
+            <h2 id="det-customer" style="margin:0 0 20px 0; font-size:22px; font-weight:800;">Nome Cliente</h2>
+
+            <div id="det-items-list" style="margin-bottom:30px;">
+                <!-- Lista prodotti sempre visibile -->
             </div>
 
-            <h4 style="color:var(--primary); font-size:10px; text-transform:uppercase; font-weight:900; margin-bottom:15px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:5px;">Checklist Prodotti</h4>
-            
-            <div id="det-items-list" style="margin-bottom:20px;">
-                <!-- Lista prodotti -->
-            </div>
-
-            <div style="background:rgba(255,255,255,0.02); padding:20px; border-radius:15px; border:1px solid rgba(255,255,255,0.05);">
+            <div style="border-top:1px solid rgba(255,255,255,0.1); padding-top:20px;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                     <span style="font-size:12px; font-weight:700; color:var(--text-muted);">TOTALE</span>
-                    <span id="del-total" style="font-size:24px; font-weight:900; color:var(--accent);">€ 0.00</span>
+                    <span id="del-total" style="font-size:26px; font-weight:900; color:var(--accent);">€ 0.00</span>
                 </div>
                 
-                <button id="btn-start-delivery" class="btn btn-delivery" disabled onclick="updateOrderStatus('in_consegna')" style="height:60px; font-size:16px;">VAI IN CONSEGNA</button>
-                <button id="btn-complete-order" class="btn btn-close" style="display:none; height:60px; font-size:16px;" onclick="updateOrderStatus('completato')">CHIUDI ORDINE</button>
+                <button id="btn-start-delivery" class="btn btn-delivery" disabled onclick="updateOrderStatus('in_consegna')" style="height:65px; font-size:16px; border-radius:12px;">VAI IN CONSEGNA</button>
+                <button id="btn-complete-order" class="btn btn-close" style="display:none; height:65px; font-size:16px; border-radius:12px;" onclick="updateOrderStatus('completato')">INCASSA E CHIUDI ORDINE</button>
             </div>
         </div>
     </div>
@@ -570,7 +570,7 @@
             const elId = document.getElementById('det-order-id');
             const elCust = document.getElementById('det-customer');
             
-            if(elId) elId.innerText = `#${shortId}`;
+            if(elId) elId.innerText = `ORDINE #${shortId}`;
             if(elCust) elCust.innerText = d.name;
             
             const elTotal = document.getElementById('del-total');
@@ -587,17 +587,16 @@
             const status = d.status || 'nuovo';
             const btnStart = document.getElementById('btn-start-delivery');
             const btnComplete = document.getElementById('btn-complete-order');
-            const itemsBox = document.getElementById('det-items-list');
 
+            // La lista prodotti è sempre visibile in questo nuovo layout
             if (status === 'in_consegna') {
-                if(itemsBox) itemsBox.style.display = 'none';
                 if(btnStart) btnStart.style.display = 'none';
                 if(btnComplete) btnComplete.style.display = 'block';
             } else {
-                if(itemsBox) itemsBox.style.display = 'block';
                 if(btnStart) {
                     btnStart.style.display = 'block';
                     btnStart.disabled = true;
+                    btnStart.style.opacity = "0.3";
                 }
                 if(btnComplete) btnComplete.style.display = 'none';
             }
@@ -619,20 +618,20 @@
             list.innerHTML = items.map((item, idx) => {
                 const isChecked = checkedItems.has(idx);
                 return `
-                    <div class="item-row ${isChecked ? 'checked' : ''}" onclick="toggleItem(${idx}, ${items.length})" style="display:flex; align-items:center; gap:12px; padding:12px; background:rgba(255,255,255,0.03); border-radius:12px; margin-bottom:8px; border:1px solid rgba(255,255,255,0.05);">
-                        <img src="${item.img || 'https://via.placeholder.com/45'}" style="width:45px; height:45px; object-fit:contain; background:white; border-radius:8px; padding:2px;">
+                    <div class="item-row ${isChecked ? 'checked' : ''}" onclick="toggleItem(${idx}, ${items.length})" style="display:flex; align-items:center; gap:10px; padding:10px; background:rgba(255,255,255,0.03); border-radius:10px; margin-bottom:8px; border:1px solid rgba(255,255,255,0.05); min-height:65px;">
+                        <img src="${item.img || 'https://via.placeholder.com/45'}" style="width:45px; height:45px; object-fit:contain; background:white; border-radius:6px; flex-shrink:0;">
                         
-                        <div style="flex:1; min-width:0;">
+                        <div style="flex:1; min-width:0; padding:0 5px;">
                             <div style="font-size:12px; font-weight:700; color:white; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${item.n}</div>
-                            <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase;">EAN: ${item.ean || '---'}</div>
+                            <div style="font-size:9px; color:var(--text-muted); text-transform:uppercase;">EAN: ${item.ean || '---'}</div>
                         </div>
 
-                        <div style="text-align:right; min-width:60px;">
-                            <div style="font-size:15px; font-weight:900; color:var(--accent);">${item.q}x</div>
+                        <div style="text-align:right; min-width:45px; flex-shrink:0;">
+                            <div style="font-size:14px; font-weight:800; color:var(--accent);">${item.q}x</div>
                             <div style="font-size:10px; opacity:0.6;">${parseFloat(item.p || 0).toFixed(2)}€</div>
                         </div>
 
-                        <div class="checkbox-custom">
+                        <div class="checkbox-custom" style="width:30px; height:30px; border:2px solid rgba(255,255,255,0.2); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:12px; font-weight:900;">
                             ${isChecked ? 'OK' : ''}
                         </div>
                     </div>
