@@ -423,7 +423,7 @@
                 const status = d.status || 'nuovo';
                 const shortId = o.id.toString().slice(0, 8).toUpperCase();
                 return `
-                    <div class="order-card" onclick="openDetail(${o.id})">
+                    <div class="order-card" onclick="openDetail('${o.id}')">
                         <div class="order-meta">
                             <span style="color:var(--primary); font-weight:900; font-size:12px;">#${shortId}</span>
                             <span class="status-badge status-${status}">${status}</span>
