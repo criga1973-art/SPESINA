@@ -2037,10 +2037,18 @@
 
 
                         // Registra ordine su Supabase e recupera l'ID
-                        if (typeof sb !== 'undefined' && userData && userData.id) {
-                            console.log("Salvataggio ordine su Supabase...");
-                            const totalClean = parseFloat(totaleValore.replace('Totale: ', '').replace('€', '').trim());
-                            
+                            const itemsToSave = [...cart];
+                            if (isFirstOrder) {
+                                itemsToSave.push({
+                                    id: 'SUB-' + Date.now(),
+                                    n: '🎟️ Abbonamento Mensile',
+                                    p: 19.99,
+                                    q: 1,
+                                    img: 'https://uldpnhmdjbbwwqwjsdoh.supabase.co/storage/v1/object/public/products/sub_icon.png', // Icona dedicata
+                                    c: 'servizio'
+                                });
+                            }
+
                             sb.from('orders').insert({
                                 client_id: userData.id,
                                 order_data: { 
@@ -2049,7 +2057,7 @@
                                     address: userData.a + " " + (userData.d ? userData.d.split(',')[0] : "") + ", " + userData.c + " Mestre",
                                     address_full: userData.a + " " + (userData.d || "") + ", " + userData.c + " Mestre",
                                     email: userData.e,
-                                    items: cart, 
+                                    items: itemsToSave, 
                                     total: totaleValore, 
                                     delivery: giorno + " " + ora,
                                     status: 'nuovo',
