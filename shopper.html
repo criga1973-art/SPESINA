@@ -102,38 +102,66 @@
             padding: 10px;
         }
 
-        /* Picking List Items */
+        /* Picking List Items XL */
         .picking-item {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 8px;
+            justify-content: space-between;
+            padding: 15px;
             background: var(--dark-lighter);
-            border-radius: 12px;
-            margin-bottom: 8px;
+            border-radius: 16px;
+            margin-bottom: 10px;
             border: 1px solid rgba(255,255,255,0.05);
         }
 
+        .picking-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+
         .picking-item img {
-            width: 35px;
-            height: 35px;
+            width: 55px;
+            height: 55px;
             object-fit: contain;
             background: white;
-            border-radius: 6px;
+            border-radius: 10px;
+            padding: 2px;
+        }
+
+        .picking-text {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .picking-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: white;
+            line-height: 1.2;
+            max-width: 180px;
+        }
+
+        .picking-ean {
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
         }
 
         .picking-qty {
-            background: var(--accent);
-            color: var(--dark);
-            min-width: 24px;
-            height: 24px;
-            padding: 0 4px;
-            border-radius: 6px;
+            font-size: 36px; /* Gigante per visibilità istantanea */
+            font-weight: 900;
+            color: var(--accent);
+            background: rgba(255, 187, 0, 0.1);
+            width: 65px;
+            height: 65px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 900;
-            font-size: 12px;
+            border-radius: 14px;
+            border: 1px solid var(--accent);
         }
 
         /* Example Inspired Tab Bar */
@@ -477,21 +505,23 @@
                         if (!dryProducts[key]) {
                             dryProducts[key] = { n: item.n, b: item.b || '', q: 0, img: item.img, ean: item.ean };
                         }
-                        dryProducts[key].q += (item.q || 1);
+                        dryProducts[key].q += (parseInt(item.q) || 1);
                     }
                 });
             });
 
-            const itemsArray = Object.values(dryProducts);
-            pickingList.innerHTML = itemsArray.length === 0 ? '<div style="font-size:10px; color:var(--text-muted); text-align:center; padding:20px;">Vuoto</div>' : 
+            const itemsArray = Object.values(dryProducts).sort((a, b) => a.n.localeCompare(b.n));
+            pickingList.innerHTML = itemsArray.length === 0 ? '<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:20px;">Nessun prodotto dry</div>' : 
                 itemsArray.map(item => `
                 <div class="picking-item">
-                    <div class="picking-qty">${item.q}</div>
-                    <img src="${item.img || 'img/placeholder.png'}" onerror="this.src='https://uldpnhmdjbbwwqwjsdoh.supabase.co/storage/v1/object/public/products/sub_icon.png'">
-                    <div style="flex:1;">
-                        <div style="font-weight:700; font-size:11px; line-height:1.2;">${item.b ? item.b + ' ' : ''}${item.n}</div>
-                        <div style="font-size:9px; color:var(--text-muted);">EAN: ${item.ean || 'N/D'}</div>
+                    <div class="picking-info">
+                        <img src="${item.img || 'https://uldpnhmdjbbwwqwjsdoh.supabase.co/storage/v1/object/public/products/sub_icon.png'}" onerror="this.src='https://via.placeholder.com/55?text=📦'">
+                        <div class="picking-text">
+                            <div class="picking-name">${item.b ? item.b + ' ' : ''}${item.n}</div>
+                            <div class="picking-ean">EAN: ${item.ean || '---'}</div>
+                        </div>
                     </div>
+                    <div class="picking-qty">${item.q}</div>
                 </div>
             `).join('');
         }
