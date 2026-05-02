@@ -292,51 +292,43 @@
         <div style="padding:20px; background:var(--dark); color:white; display:flex; justify-content:space-between; align-items:center;">
             <h3 id="det-order-id" style="margin:0;">Ordine #---</h3>
             <button onclick="closeDetail()" style="background:none; border:none; color:white; font-size:24px; cursor:pointer;">✕</button>
-        </div>
-        <div class="scroll-area">
-            <div style="margin-bottom:25px;">
-                <h2 id="det-customer" style="margin:0 0 5px 0;">Nome Cliente</h2>
-                <div id="det-address" style="color:#64748b; font-weight:500; font-size:15px;">Via Indirizzo, Mestre</div>
-                
-                <div style="display:flex; gap:10px; margin-top:20px;">
-                    <a id="det-maps-link" href="#" target="_blank" class="btn btn-maps">📍 Naviga</a>
-                    <a id="det-phone-link" href="#" class="btn btn-call">📞 Chiama</a>
-                </div>
+                <div class="scroll-area" style="padding:15px;">
+            <div id="boxing-header" style="margin-bottom:20px;">
+                <h2 id="det-customer" style="margin:0 0 5px 0; font-size:22px;">Nome Cliente</h2>
+                <div id="det-address" style="color:var(--text-muted); font-size:14px;">Via Indirizzo, Mestre</div>
             </div>
-
-            <h4 style="border-bottom:2px solid rgba(255,255,255,0.1); padding-bottom:10px; margin-bottom:15px; color:var(--primary);">COMPOSIZIONE SCATOLA</h4>
             
             <!-- Vista Consegna (visibile solo in-delivery) -->
-            <div id="delivery-info" style="display:none; background:rgba(59, 130, 246, 0.1); padding:20px; border-radius:16px; border:1px solid var(--blue); margin-bottom:20px;">
-                <div style="font-size:12px; text-transform:uppercase; color:var(--blue); font-weight:800; margin-bottom:10px;">🚚 Consegna in Corso</div>
-                <div id="del-dest" style="font-size:18px; font-weight:800; margin-bottom:5px;">Nome Cognome</div>
-                <div id="del-addr" style="font-size:14px; color:var(--text-muted); margin-bottom:15px;">Via Indirizzo, 123</div>
+            <div id="delivery-info" style="display:none; background:rgba(59, 130, 246, 0.15); padding:20px; border-radius:20px; border:1px solid var(--blue); margin-bottom:20px;">
+                <div style="font-size:11px; text-transform:uppercase; color:var(--blue); font-weight:800; margin-bottom:12px; letter-spacing:1px;">🚚 Consegna in Corso</div>
                 
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:20px;">
-                    <div style="background:var(--dark); padding:10px; border-radius:10px;">
-                        <div style="font-size:10px; opacity:0.6;">DA INCASSARE</div>
-                        <div id="del-total" style="font-size:18px; font-weight:900; color:var(--accent);">€ 0.00</div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:20px;">
+                    <div style="background:rgba(0,0,0,0.3); padding:12px; border-radius:15px; border:1px solid rgba(255,255,255,0.05);">
+                        <div style="font-size:10px; opacity:0.6; margin-bottom:4px;">DA INCASSARE</div>
+                        <div id="del-total" style="font-size:20px; font-weight:900; color:var(--accent);">€ 0.00</div>
                     </div>
-                    <div style="background:var(--dark); padding:10px; border-radius:10px;">
-                        <div style="font-size:10px; opacity:0.6;">ORARIO</div>
+                    <div style="background:rgba(0,0,0,0.3); padding:12px; border-radius:15px; border:1px solid rgba(255,255,255,0.05);">
+                        <div style="font-size:10px; opacity:0.6; margin-bottom:4px;">ORARIO SLOT</div>
                         <div id="del-time" style="font-size:14px; font-weight:800;">12:00-14:00</div>
                     </div>
                 </div>
 
-                <div style="display:flex; gap:10px;">
-                    <a id="del-maps-btn" href="#" target="_blank" class="btn btn-maps" style="flex:1;">📍 NAVIGA</a>
-                    <a id="del-call-btn" href="#" class="btn btn-call" style="flex:1;">📞 CHIAMA</a>
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                    <a id="del-maps-btn" href="#" target="_blank" class="btn btn-maps" style="font-size:16px; padding:18px;">📍 AVVIA NAVIGATORE</a>
+                    <a id="del-call-btn" href="#" class="btn btn-call" style="font-size:16px; padding:18px;">📞 CHIAMA CLIENTE</a>
                 </div>
             </div>
 
+            <h4 id="items-header" style="border-bottom:2px solid rgba(255,255,255,0.1); padding-bottom:10px; margin-bottom:15px; color:var(--primary); font-size:12px; text-transform:uppercase;">Composizione Scatola</h4>
             <div id="det-items-list">
-                <!-- Lista prodotti dell'ordine -->
+                <!-- Lista prodotti -->
             </div>
 
-            <div id="det-actions" style="margin-top:30px; padding:20px; background:var(--dark-lighter); border-radius:16px; border:1px solid rgba(255,255,255,0.1);">
-                <button id="btn-start-delivery" class="btn btn-delivery" disabled onclick="updateOrderStatus('in_consegna')">📦 INIZIA CONSEGNA</button>
-                <button id="btn-complete-order" class="btn btn-close" style="display:none;" onclick="updateOrderStatus('completato')">💰 INCASSA E CHIUDI</button>
+            <div id="det-actions" style="margin-top:20px;">
+                <button id="btn-start-delivery" class="btn btn-delivery" disabled onclick="updateOrderStatus('in_consegna')">📦 TUTTO PRONTO? VAI IN CONSEGNA</button>
+                <button id="btn-complete-order" class="btn btn-close" style="display:none; background:var(--accent); color:var(--dark); font-size:18px; padding:20px;" onclick="updateOrderStatus('completato')">💰 INCASSA E CHIUDI ORDINE</button>
             </div>
+        </div>        </div>
         </div>
     </div>
 
@@ -493,24 +485,25 @@
             const btnComplete = document.getElementById('btn-complete-order');
             const deliveryBox = document.getElementById('delivery-info');
             const itemsBox = document.getElementById('det-items-list');
-            const itemsHeader = document.querySelector('h4[style*="COMPOSIZIONE SCATOLA"]');
+            const itemsHeader = document.getElementById('items-header');
+            const boxingHeader = document.getElementById('boxing-header');
 
-            // Popola i dati consegna comunque (anche se nascosti inizialmente)
-            document.getElementById('del-dest').innerText = d.name;
-            document.getElementById('del-addr').innerText = d.address;
-            document.getElementById('del-total').innerText = `€ ${parseFloat(d.total || 0).toFixed(2)}`;
-            document.getElementById('del-time').innerText = d.delivery.split(' ').slice(-1)[0];
-            document.getElementById('del-maps-btn').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d.address_full || d.address)}`;
-            document.getElementById('del-call-btn').href = `tel:${d.phone}`;
+            // Popola i dati consegna
+            if(document.getElementById('del-total')) document.getElementById('del-total').innerText = `€ ${parseFloat(d.total || 0).toFixed(2)}`;
+            if(document.getElementById('del-time')) document.getElementById('del-time').innerText = d.delivery.split(' ').slice(-1)[0];
+            if(document.getElementById('del-maps-btn')) document.getElementById('del-maps-btn').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d.address_full || d.address)}`;
+            if(document.getElementById('del-call-btn')) document.getElementById('del-call-btn').href = `tel:${d.phone}`;
 
             if (status === 'in_consegna') {
                 if(deliveryBox) deliveryBox.style.display = 'block';
-                if(itemsBox) itemsBox.style.display = 'none'; // Nasconde i prodotti in consegna per focus
+                if(boxingHeader) boxingHeader.style.display = 'none';
+                if(itemsBox) itemsBox.style.display = 'none';
                 if(itemsHeader) itemsHeader.style.display = 'none';
                 if(btnStart) btnStart.style.display = 'none';
                 if(btnComplete) btnComplete.style.display = 'block';
             } else {
                 if(deliveryBox) deliveryBox.style.display = 'none';
+                if(boxingHeader) boxingHeader.style.display = 'block';
                 if(itemsBox) itemsBox.style.display = 'block';
                 if(itemsHeader) itemsHeader.style.display = 'block';
                 if(btnStart) {
