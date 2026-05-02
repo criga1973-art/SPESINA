@@ -1,4 +1,4 @@
-const CACHE_NAME = 'master-picking-v2';
+const CACHE_NAME = 'master-picking-v3';
 const ASSETS = [
     'master-picking-v2.html',
     'manifest.json'
