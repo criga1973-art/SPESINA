@@ -28,6 +28,7 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            touch-action: manipulation; /* Migliora reattività touch */
         }
 
         header {
@@ -157,6 +158,14 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
+            cursor: pointer;
+            position: relative;
+            z-index: 5;
+        }
+
+        .order-card:active {
+            transform: scale(0.98);
+            background: #2d3748;
         }
 
         .order-info h3 { margin: 0; font-size: 16px; font-weight: 800; color: white; }
@@ -414,7 +423,7 @@
                 const status = d.status || 'nuovo';
                 const shortId = o.id.toString().slice(0, 8).toUpperCase();
                 return `
-                    <div class="order-card">
+                    <div class="order-card" onclick="openDetail(${o.id})">
                         <div class="order-meta">
                             <span style="color:var(--primary); font-weight:900; font-size:12px;">#${shortId}</span>
                             <span class="status-badge status-${status}">${status}</span>
@@ -424,7 +433,7 @@
                             <p>📍 ${d.address}</p>
                             <p>🕒 Slot: ${d.delivery.split(' ').slice(-1)[0]}</p>
                         </div>
-                        <button class="btn-avvia" onclick="openDetail(${o.id})">AVVIA ORDINE</button>
+                        <button class="btn-avvia">AVVIA ORDINE</button>
                     </div>
                 `;
             }).join('');
