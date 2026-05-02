@@ -288,6 +288,7 @@ async def process_ean(ean, update):
         }
         await update.effective_message.reply_text(f"📦 **NUOVO**: {data['name']} ({data['size']})\n💰 Prezzo di vendita?")
 
+async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         chat_id = update.message.chat_id
         state = user_states.get(chat_id)
