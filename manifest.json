@@ -8,12 +8,12 @@
   "theme_color": "#9333ea",
   "icons": [
     {
-      "src": "https://uldpnhmdjbbwwqwjsdoh.supabase.co/storage/v1/object/public/products/sub_icon.png",
+      "src": "https://via.placeholder.com/192x192/9333ea/ffffff?text=SPESINA",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "https://uldpnhmdjbbwwqwjsdoh.supabase.co/storage/v1/object/public/products/sub_icon.png",
+      "src": "https://via.placeholder.com/512x512/9333ea/ffffff?text=SPESINA",
       "sizes": "512x512",
       "type": "image/png"
     }
