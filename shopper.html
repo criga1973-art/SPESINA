@@ -44,12 +44,12 @@
 
         .tab {
             flex: 1;
-            padding: 6px;
+            padding: 8px;
             text-align: center;
             background: #334155;
             border-radius: 8px;
             font-weight: 600;
-            font-size: 11px;
+            font-size: 13px;
             cursor: pointer;
             transition: 0.3s;
         }
@@ -99,13 +99,13 @@
 
         .btn-action {
             width: 100%;
-            padding: 15px;
+            padding: 18px;
             border: none;
             border-radius: 14px;
             background: var(--primary);
             color: white;
             font-weight: 800;
-            font-size: 16px;
+            font-size: 19px;
             cursor: pointer;
             transition: transform 0.1s;
         }
@@ -155,7 +155,7 @@
         .item-controls { display: flex; gap: 8px; }
 
         .btn-check {
-            width: 40px; height: 40px;
+            width: 48px; height: 48px;
             border-radius: 10px;
             border: 2px solid var(--success);
             background: transparent;
@@ -167,7 +167,7 @@
         .btn-check.active { background: var(--success); color: white; }
 
         .btn-delete {
-            width: 40px; height: 40px;
+            width: 48px; height: 48px;
             border-radius: 10px;
             border: 2px solid var(--danger);
             background: transparent;
@@ -228,11 +228,11 @@
         /* Filtri dashboard */
         .filter-chip {
             flex: 1;
-            padding: 4px 2px;
+            padding: 5px 3px;
             text-align: center;
             background: #334155;
             border-radius: 4px;
-            font-size: 9px;
+            font-size: 11px;
             font-weight: 600;
             cursor: pointer;
             border: 2px solid transparent;
@@ -245,12 +245,12 @@
         }
         .day-chip {
             flex-shrink: 0;
-            padding: 3px 6px;
+            padding: 4px 8px;
             background: #334155;
             border-radius: 6px;
             text-align: center;
             cursor: pointer;
-            min-width: 40px;
+            min-width: 48px;
             border: 2px solid transparent;
         }
         .day-chip.active {
@@ -321,8 +321,8 @@
             <div id="info-client-name" style="font-size: 18px; font-weight: 800; margin-bottom: 5px;">Nome Cliente</div>
             <div id="info-client-address" style="font-size: 14px; color: var(--success); font-weight: 600; margin-bottom: 10px;">Indirizzo...</div>
             <div style="display: flex; gap: 10px;">
-                <a id="link-maps" href="#" target="_blank" style="flex: 1; background: var(--success); color: white; text-decoration: none; text-align: center; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 13px;">🗺️ APRI MAPS</a>
-                <a id="link-phone" href="#" style="flex: 1; background: var(--primary); color: white; text-decoration: none; text-align: center; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 13px;">📞 CHIAMA</a>
+                <a id="link-maps" href="#" target="_blank" style="flex: 1; background: var(--success); color: white; text-decoration: none; text-align: center; padding: 12px; border-radius: 8px; font-weight: 700; font-size: 16px;">🗺️ APRI MAPS</a>
+                <a id="link-phone" href="#" style="flex: 1; background: var(--primary); color: white; text-decoration: none; text-align: center; padding: 12px; border-radius: 8px; font-weight: 700; font-size: 16px;">📞 CHIAMA</a>
             </div>
         </div>
         <div id="checklist-items" style="flex: 1; overflow-y: auto;">
@@ -347,7 +347,7 @@
         let currentOrder = null;
         let checkedItems = new Set();
 
-        let selectedDay = "";
+        let selectedDays = new Set();
         let selectedSlots = new Set(["10-14", "14-18"]); // Entrambe selezionate di default
 
         async function init() {
@@ -374,7 +374,7 @@
                 const monthName = months[d.getMonth()];
                 const value = `${dayName} ${dayNum} ${monthName}`;
                 
-                if (i === 0) selectedDay = value; 
+                if (i === 0) selectedDays.add(value); 
                 
                 html += `
                     <div class="day-chip ${i === 0 ? 'active' : ''}" onclick="selectDay(this, '${value}')">
@@ -387,9 +387,12 @@
         }
 
         function selectDay(el, val) {
-            document.querySelectorAll('.day-chip').forEach(c => c.classList.remove('active'));
-            el.classList.add('active');
-            selectedDay = val;
+            if (selectedDays.has(val)) {
+                if (selectedDays.size > 1) selectedDays.delete(val);
+            } else {
+                selectedDays.add(val);
+            }
+            el.classList.toggle('active', selectedDays.has(val));
             renderOrders();
             renderMasterList();
         }
@@ -414,19 +417,23 @@
                 const d = o.order_data;
                 if (!d || !d.delivery) return false;
                 
-                // Filtro Giorno
-                if (!d.delivery.includes(selectedDay)) return false;
+                // Filtro Giorno (Multi-select)
+                let dayMatch = false;
+                selectedDays.forEach(day => {
+                    if (d.delivery.includes(day)) dayMatch = true;
+                });
+                if (!dayMatch) return false;
                 
                 // Filtro Fascia (Multi-select)
                 const parts = d.delivery.split(' ');
                 const fascia = parts[parts.length - 1]; 
                 const hour = parseInt(fascia.split(':')[0]);
                 
-                let match = false;
-                if (selectedSlots.has('10-14') && hour < 14) match = true;
-                if (selectedSlots.has('14-18') && hour >= 14) match = true;
+                let slotMatch = false;
+                if (selectedSlots.has('10-14') && hour < 14) slotMatch = true;
+                if (selectedSlots.has('14-18') && hour >= 14) slotMatch = true;
                 
-                return match;
+                return slotMatch;
             });
         }
 
