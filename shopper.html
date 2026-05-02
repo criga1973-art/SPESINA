@@ -8,15 +8,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #10b981; /* Verde Smeraldo */
+            --primary: #10b981;
             --primary-dark: #059669;
-            --dark: #0f172a; /* Ardesia Profondo */
+            --dark: #0f172a;
             --dark-lighter: #1e293b;
             --text: #f8fafc;
             --text-muted: #94a3b8;
             --red: #ef4444;
             --blue: #3b82f6;
-            --accent: #f59e0b; /* Ambra per accenti */
+            --accent: #f59e0b;
         }
 
         body {
@@ -79,21 +79,33 @@
         .date-btn span { font-size: 10px; opacity: 0.7; font-weight: 400; }
 
         .main-container {
-            flex: 1;
             display: flex;
+            flex: 1;
             overflow: hidden;
-            position: relative;
         }
 
-        .view-pane {
-            display: none;
-            width: 100%;
-            height: 100%;
+        .picking-col {
+            width: 45%;
+            border-right: 1px solid rgba(255,255,255,0.1);
+            display: flex;
             flex-direction: column;
         }
 
-        .view-pane.active {
+        .boxing-col {
+            width: 55%;
             display: flex;
+            flex-direction: column;
+            background: rgba(255,255,255,0.02);
+        }
+
+        .col-header {
+            padding: 10px 15px;
+            background: rgba(255,255,255,0.05);
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary);
         }
 
         .scroll-area {
@@ -102,66 +114,38 @@
             padding: 10px;
         }
 
-        /* Picking List Items XL */
+        /* Picking List Items */
         .picking-item {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 15px;
+            gap: 10px;
+            padding: 8px;
             background: var(--dark-lighter);
-            border-radius: 16px;
-            margin-bottom: 10px;
+            border-radius: 12px;
+            margin-bottom: 8px;
             border: 1px solid rgba(255,255,255,0.05);
         }
 
-        .picking-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex: 1;
-        }
-
         .picking-item img {
-            width: 55px;
-            height: 55px;
+            width: 35px;
+            height: 35px;
             object-fit: contain;
             background: white;
-            border-radius: 10px;
-            padding: 2px;
-        }
-
-        .picking-text {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .picking-name {
-            font-size: 14px;
-            font-weight: 700;
-            color: white;
-            line-height: 1.2;
-            max-width: 180px;
-        }
-
-        .picking-ean {
-            font-size: 11px;
-            color: var(--text-muted);
-            letter-spacing: 0.5px;
+            border-radius: 6px;
         }
 
         .picking-qty {
-            font-size: 36px;
-            font-weight: 900;
-            color: var(--primary);
-            background: rgba(16, 185, 129, 0.1);
-            width: 65px;
-            height: 65px;
+            background: var(--accent);
+            color: var(--dark);
+            min-width: 24px;
+            height: 24px;
+            padding: 0 4px;
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 14px;
-            border: 1px solid rgba(16, 185, 129, 0.3);
+            font-weight: 900;
+            font-size: 12px;
         }
 
         /* Example Inspired Tab Bar */
@@ -244,95 +228,6 @@
             font-weight: 400;
         }
 
-        /* Detail View Fullscreen */
-        #order-detail-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--dark);
-            z-index: 10000;
-            display: none;
-            flex-direction: column;
-        }
-
-        .det-header {
-            padding: 15px 20px;
-            background: var(--dark-lighter);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .det-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-        }
-
-        .item-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            background: var(--dark-lighter);
-            border-radius: 12px;
-            margin-bottom: 8px;
-            transition: opacity 0.3s;
-        }
-
-        .item-row.checked {
-            opacity: 0.3;
-            border: 1px solid var(--primary);
-        }
-
-        .item-row img {
-            width: 45px;
-            height: 45px;
-            object-fit: contain;
-            background: white;
-            border-radius: 8px;
-        }
-
-        .checkbox-custom {
-            width: 28px;
-            height: 28px;
-            border-radius: 8px;
-            border: 2px solid rgba(255,255,255,0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .item-row.checked .checkbox-custom {
-            background: var(--primary);
-            border-color: var(--primary);
-        }
-
-        .btn {
-            padding: 18px;
-            border-radius: 16px;
-            font-weight: 800;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            font-size: 16px;
-            color: white;
-            width: 100%;
-            text-decoration: none;
-        }
-
-        .btn-call { background: var(--primary); }
-        .btn-delivery { background: var(--primary); margin-top: 15px; }
-        .btn-close { background: var(--accent); color: var(--dark); margin-top: 15px; }
-        
-        .btn:disabled { opacity: 0.2; }
-
         .btn-avvia {
             background: var(--primary);
             color: white;
@@ -346,21 +241,23 @@
             cursor: pointer;
         }
 
+        .btn:disabled { opacity: 0.2; }
+
     </style>
 </head>
 <body>
 
     <header>
         <div class="logo">SPESINA <span>SHOPPER</span></div>
-        <button onclick="loadData()" style="background:none; border:none; color:var(--primary); font-size:14px; font-weight:800; cursor:pointer;">AGGIORNA</button>
+        <button onclick="loadData()" style="background:none; border:none; color:var(--primary); font-size:20px;">🔄</button>
     </header>
 
     <div class="date-strip" id="date-strip">
     </div>
 
     <div class="tab-bar">
-        <button class="tab-btn active" id="tab-picking" onclick="switchTab('picking')">PICKING</button>
-        <button class="tab-btn" id="tab-orders" onclick="switchTab('orders')">ORDINI</button>
+        <button class="tab-btn active" id="tab-picking" onclick="switchTab('picking')">🛒 PICKING</button>
+        <button class="tab-btn" id="tab-orders" onclick="switchTab('orders')">📦 ORDINI</button>
     </div>
 
     <div class="main-container">
@@ -372,35 +269,41 @@
         </div>
     </div>
 
-    <!-- Sezione Dettaglio Ordine -->
     <div id="order-detail-overlay">
-        <!-- Riga 1: Navigazione (Stretti, Centrati, Snelli) -->
-        <div style="display:flex; width:100%; height:60px; gap:15px; padding:0; align-items:center; justify-content:center; background:var(--dark); box-sizing:border-box; flex-shrink:0;">
-            <a id="del-maps-btn" href="#" target="_blank" style="width:130px; height:42px; border-radius:10px; background:var(--blue); color:white; font-size:12px; font-weight:800; display:flex; align-items:center; justify-content:center; text-decoration:none; text-transform:uppercase; letter-spacing:1px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">NAVIGA</a>
-            <a id="del-call-btn" href="#" style="width:130px; height:42px; border-radius:10px; background:var(--primary); color:white; font-size:12px; font-weight:800; display:flex; align-items:center; justify-content:center; text-decoration:none; text-transform:uppercase; letter-spacing:1px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">CHIAMA</a>
+        <div class="det-header">
+            <h3 id="det-order-id" style="margin:0; font-size:16px; color:var(--primary);">#ORDINE</h3>
+            <button onclick="closeDetail()" style="background:none; border:none; color:white; font-size:28px;">✕</button>
         </div>
         
-        <!-- Riga 2: Info e Ritorno (Sfondo pieno) -->
-        <div style="padding:12px 15px; display:flex; justify-content:space-between; align-items:center; background:var(--dark-lighter); border-bottom:1px solid rgba(255,255,255,0.1); flex-shrink:0;">
-            <span id="det-order-id" style="font-size:12px; color:var(--text-muted); font-weight:900; text-transform:uppercase; letter-spacing:1px;">ORDINE #---</span>
-            <button onclick="closeDetail()" style="background:var(--accent); border:none; color:var(--dark); font-size:11px; font-weight:800; padding:8px 16px; border-radius:8px; cursor:pointer; text-transform:uppercase;">Torna alla lista</button>
-        </div>
-
         <div class="det-content">
-            <h2 id="det-customer" style="margin:0 0 20px 0; font-size:24px; font-weight:800; text-transform:uppercase;">Nome Cliente</h2>
-
-            <div id="det-items-list" style="margin-bottom:30px;">
-                <!-- Lista prodotti sempre visibile -->
+            <div id="boxing-header" style="margin-bottom:25px;">
+                <h2 id="det-customer" style="margin:0 0 5px 0; font-size:26px; font-weight:800;">Nome Cliente</h2>
+                <div id="det-address" style="color:var(--text-muted); font-size:16px;">Via Indirizzo, Mestre</div>
+            </div>
+            
+            <div id="delivery-info" style="display:none; background:rgba(59, 130, 246, 0.2); padding:25px; border-radius:24px; border:1px solid var(--blue); margin-bottom:30px;">
+                <div style="font-size:11px; text-transform:uppercase; color:var(--blue); font-weight:900; margin-bottom:15px;">🚚 CONSEGNA IN CORSO</div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:25px;">
+                    <div style="background:rgba(0,0,0,0.4); padding:15px; border-radius:18px;">
+                        <div style="font-size:10px; opacity:0.6; margin-bottom:5px;">DA INCASSARE</div>
+                        <div id="del-total" style="font-size:22px; font-weight:900; color:var(--accent);">€ 0.00</div>
+                    </div>
+                    <div style="background:rgba(0,0,0,0.4); padding:15px; border-radius:18px;">
+                        <div style="font-size:10px; opacity:0.6; margin-bottom:5px;">ORARIO</div>
+                        <div id="del-time" style="font-size:16px; font-weight:800;">--:--</div>
+                    </div>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:12px;">
+                    <a id="del-maps-btn" href="#" target="_blank" class="btn btn-maps">📍 AVVIA NAVIGATORE</a>
+                    <a id="del-call-btn" href="#" class="btn btn-call">📞 CHIAMA CLIENTE</a>
+                </div>
             </div>
 
-            <div style="border-top:1px solid rgba(255,255,255,0.1); padding-top:20px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                    <span style="font-size:12px; font-weight:700; color:var(--text-muted);">TOTALE</span>
-                    <span id="del-total" style="font-size:26px; font-weight:900; color:var(--accent);">€ 0.00</span>
-                </div>
-                
-                <button id="btn-start-delivery" class="btn btn-delivery" disabled onclick="updateOrderStatus('in_consegna')" style="height:65px; font-size:16px; border-radius:12px;">VAI IN CONSEGNA</button>
-                <button id="btn-complete-order" class="btn btn-close" style="display:none; height:65px; font-size:16px; border-radius:12px;" onclick="updateOrderStatus('completato')">INCASSA E CHIUDI ORDINE</button>
+            <h4 id="items-header" style="border-bottom:2px solid rgba(255,255,255,0.1); padding-bottom:10px; margin-bottom:15px; color:var(--primary); font-size:12px; text-transform:uppercase; font-weight:900;">Composizione Scatola</h4>
+            <div id="det-items-list" style="margin-bottom:30px;"></div>
+            <div id="det-actions">
+                <button id="btn-start-delivery" class="btn btn-delivery" disabled onclick="updateOrderStatus('in_consegna')">📦 VAI IN CONSEGNA</button>
+                <button id="btn-complete-order" class="btn btn-close" style="display:none;" onclick="updateOrderStatus('completato')">💰 INCASSA E CHIUDI</button>
             </div>
         </div>
     </div>
@@ -498,23 +401,21 @@
                         if (!dryProducts[key]) {
                             dryProducts[key] = { n: item.n, b: item.b || '', q: 0, img: item.img, ean: item.ean };
                         }
-                        dryProducts[key].q += (parseInt(item.q) || 1);
+                        dryProducts[key].q += (item.q || 1);
                     }
                 });
             });
 
-            const itemsArray = Object.values(dryProducts).sort((a, b) => a.n.localeCompare(b.n));
-            pickingList.innerHTML = itemsArray.length === 0 ? '<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:20px;">Nessun prodotto dry</div>' : 
+            const itemsArray = Object.values(dryProducts);
+            pickingList.innerHTML = itemsArray.length === 0 ? '<div style="font-size:10px; color:var(--text-muted); text-align:center; padding:20px;">Vuoto</div>' : 
                 itemsArray.map(item => `
                 <div class="picking-item">
-                    <div class="picking-info">
-                        <img src="${item.img || 'https://uldpnhmdjbbwwqwjsdoh.supabase.co/storage/v1/object/public/products/sub_icon.png'}" onerror="this.src='https://via.placeholder.com/55?text=📦'">
-                        <div class="picking-text">
-                            <div class="picking-name">${item.b ? item.b + ' ' : ''}${item.n}</div>
-                            <div class="picking-ean">EAN: ${item.ean || '---'}</div>
-                        </div>
-                    </div>
                     <div class="picking-qty">${item.q}</div>
+                    <img src="${item.img || 'img/placeholder.png'}" onerror="this.src='https://uldpnhmdjbbwwqwjsdoh.supabase.co/storage/v1/object/public/products/sub_icon.png'">
+                    <div style="flex:1;">
+                        <div style="font-weight:700; font-size:11px; line-height:1.2;">${item.b ? item.b + ' ' : ''}${item.n}</div>
+                        <div style="font-size:9px; color:var(--text-muted);">EAN: ${item.ean || 'N/D'}</div>
+                    </div>
                 </div>
             `).join('');
         }
@@ -532,7 +433,7 @@
                 return `
                     <div class="order-card">
                         <div class="card-slot">Consegna ${d.delivery.includes('oggi') ? 'oggi' : ''}, ${d.delivery.split(' ').slice(-1)[0]}</div>
-                        <div class="card-id">ID ${shortId}</div>
+                        <div class="card-id">ID ${shortId} 📋</div>
                         
                         <div style="font-size:11px; font-weight:700; color:var(--text-muted); margin-bottom:10px; text-transform:uppercase;">Sintesi</div>
                         
@@ -568,15 +469,20 @@
             
             const elId = document.getElementById('det-order-id');
             const elCust = document.getElementById('det-customer');
+            const elAddr = document.getElementById('det-address');
             
-            if(elId) elId.innerText = `ORDINE #${shortId}`;
+            if(elId) elId.innerText = `#${shortId}`;
             if(elCust) elCust.innerText = d.name;
+            if(elAddr) elAddr.innerText = d.address;
             
+            // Popola i dati consegna (nuova scheda blu)
             const elTotal = document.getElementById('del-total');
+            const elTime = document.getElementById('del-time');
             const elMaps = document.getElementById('del-maps-btn');
             const elCall = document.getElementById('del-call-btn');
 
             if(elTotal) elTotal.innerText = `€ ${parseFloat(d.total || 0).toFixed(2)}`;
+            if(elTime && d.delivery) elTime.innerText = d.delivery.split(' ').slice(-1)[0];
             if(elMaps) elMaps.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d.address_full || d.address)}`;
             if(elCall) elCall.href = `tel:${d.phone}`;
             
@@ -586,16 +492,26 @@
             const status = d.status || 'nuovo';
             const btnStart = document.getElementById('btn-start-delivery');
             const btnComplete = document.getElementById('btn-complete-order');
+            const deliveryBox = document.getElementById('delivery-info');
+            const itemsBox = document.getElementById('det-items-list');
+            const itemsHeader = document.getElementById('items-header');
+            const boxingHeader = document.getElementById('boxing-header');
 
-            // La lista prodotti è sempre visibile in questo nuovo layout
             if (status === 'in_consegna') {
+                if(deliveryBox) deliveryBox.style.display = 'block';
+                if(boxingHeader) boxingHeader.style.display = 'none';
+                if(itemsBox) itemsBox.style.display = 'none';
+                if(itemsHeader) itemsHeader.style.display = 'none';
                 if(btnStart) btnStart.style.display = 'none';
                 if(btnComplete) btnComplete.style.display = 'block';
             } else {
+                if(deliveryBox) deliveryBox.style.display = 'none';
+                if(boxingHeader) boxingHeader.style.display = 'block';
+                if(itemsBox) itemsBox.style.display = 'block';
+                if(itemsHeader) itemsHeader.style.display = 'block';
                 if(btnStart) {
                     btnStart.style.display = 'block';
                     btnStart.disabled = true;
-                    btnStart.style.opacity = "0.3";
                 }
                 if(btnComplete) btnComplete.style.display = 'none';
             }
@@ -609,56 +525,31 @@
 
         function renderItemsDetail(items) {
             const list = document.getElementById('det-items-list');
-            if (!items || items.length === 0) {
-                list.innerHTML = '<div style="color:var(--text-muted); font-size:12px; text-align:center; padding:20px;">Nessun prodotto</div>';
-                return;
-            }
-
-            list.innerHTML = items.map((item, idx) => {
-                const isChecked = checkedItems.has(idx);
-                return `
-                    <div class="item-row ${isChecked ? 'checked' : ''}" id="item-row-${idx}" onclick="toggleItem(${idx})" style="display:flex; align-items:center; gap:10px; padding:10px; background:rgba(255,255,255,0.03); border-radius:10px; margin-bottom:8px; border:1px solid rgba(255,255,255,0.05); min-height:65px;">
-                        <img src="${item.img || 'https://via.placeholder.com/45'}" style="width:45px; height:45px; object-fit:contain; background:white; border-radius:6px; flex-shrink:0;">
-                        
-                        <div style="flex:1; min-width:0; padding:0 5px;">
-                            <div style="font-size:12px; font-weight:700; color:white; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${item.n}</div>
-                            <div style="font-size:9px; color:var(--text-muted); text-transform:uppercase;">EAN: ${item.ean || '---'}</div>
-                        </div>
-
-                        <div style="text-align:right; min-width:45px; flex-shrink:0;">
-                            <div style="font-size:14px; font-weight:800; color:var(--accent);">${item.q}x</div>
-                            <div style="font-size:10px; opacity:0.6;">${parseFloat(item.p || 0).toFixed(2)}€</div>
-                        </div>
-
-                        <div class="checkbox-custom" style="width:30px; height:30px; border:2px solid rgba(255,255,255,0.2); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:12px; font-weight:900;">
-                            ${isChecked ? 'OK' : ''}
-                        </div>
+            list.innerHTML = items.map((item, idx) => `
+                <div class="item-row" id="item-row-${idx}" onclick="toggleItem(${idx})">
+                    <div class="checkbox-custom"></div>
+                    <img src="${item.img || 'https://uldpnhmdjbbwwqwjsdoh.supabase.co/storage/v1/object/public/products/sub_icon.png'}" onerror="this.src='https://uldpnhmdjbbwwqwjsdoh.supabase.co/storage/v1/object/public/products/sub_icon.png'">
+                    <div style="flex:1;">
+                        <div style="font-weight:800; font-size:14px;">${item.q}x ${item.n}</div>
+                        <div style="font-size:10px; color:var(--text-muted);">${item.b || ''} | EAN: ${item.ean || 'N/D'}</div>
                     </div>
-                `;
-            }).join('');
+                </div>
+            `).join('');
         }
 
         function toggleItem(idx) {
             const row = document.getElementById(`item-row-${idx}`);
-            if (!row) return;
-
             if (checkedItems.has(idx)) {
                 checkedItems.delete(idx);
                 row.classList.remove('checked');
-                row.querySelector('.checkbox-custom').innerText = '';
             } else {
                 checkedItems.add(idx);
                 row.classList.add('checked');
-                row.querySelector('.checkbox-custom').innerText = 'OK';
             }
-            
+
             const totalItems = selectedOrder.order_data.items.length;
-            const btnStart = document.getElementById('btn-start-delivery');
-            if (btnStart) {
-                const allDone = checkedItems.size === totalItems;
-                btnStart.disabled = !allDone;
-                btnStart.style.opacity = allDone ? "1" : "0.3";
-            }
+            const btn = document.getElementById('btn-start-delivery');
+            btn.disabled = (checkedItems.size < totalItems);
         }
 
         async function updateOrderStatus(newStatus) {
