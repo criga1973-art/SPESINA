@@ -278,8 +278,8 @@
         </div>
     </div>
 
-    <!-- Sezione Dettaglio Ordine (Overlay o In-page) -->
-    <div id="order-detail-overlay" style="display:none; position:fixed; top:0; right:0; width:60%; height:100%; background:white; z-index:1000; box-shadow:-10px 0 30px rgba(0,0,0,0.1); display:none; flex-direction:column;">
+    <!-- Sezione Dettaglio Ordine (Overlay) -->
+    <div id="order-detail-overlay" style="display:none;">
         <div style="padding:20px; background:var(--dark); color:white; display:flex; justify-content:space-between; align-items:center;">
             <h3 id="det-order-id" style="margin:0;">Ordine #---</h3>
             <button onclick="closeDetail()" style="background:none; border:none; color:white; font-size:24px; cursor:pointer;">✕</button>
@@ -295,12 +295,12 @@
                 </div>
             </div>
 
-            <h4 style="border-bottom:2px solid var(--gray); padding-bottom:10px; margin-bottom:15px;">COMPOSIZIONE SCATOLA</h4>
+            <h4 style="border-bottom:2px solid rgba(255,255,255,0.1); padding-bottom:10px; margin-bottom:15px; color:var(--primary);">COMPOSIZIONE SCATOLA</h4>
             <div id="det-items-list">
                 <!-- Lista prodotti dell'ordine -->
             </div>
 
-            <div id="det-actions" style="margin-top:30px; padding:20px; background:var(--gray); border-radius:16px;">
+            <div id="det-actions" style="margin-top:30px; padding:20px; background:var(--dark-lighter); border-radius:16px; border:1px solid rgba(255,255,255,0.1);">
                 <button id="btn-start-delivery" class="btn btn-delivery" disabled onclick="updateOrderStatus('in_consegna')">📦 INIZIA CONSEGNA</button>
                 <button id="btn-complete-order" class="btn btn-close" style="display:none;" onclick="updateOrderStatus('completato')">💰 INCASSA E CHIUDI</button>
             </div>
