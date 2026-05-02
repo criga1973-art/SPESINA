@@ -16,33 +16,32 @@
             --primary: #10b981;
             --primary-light: #34d399;
             --primary-dark: #059669;
-            --dark: #0f172a; /* Ardesia Profondo */
-            --gray: #0f172a; /* Sfondo scuro */
-            --gray-dark: #1e293b;
+            --dark: #0f172a;
+            --gray: #f8fafc;
+            --gray-dark: #e2e8f0;
             --red: #ef4444;
-            --card-bg: #1e293b; /* Card scure */
-            --text: #f8fafc;
+            --card-bg: #ffffff;
         }
 
         body {
             font-family: 'Outfit', sans-serif;
             margin: 0;
-            background: var(--dark);
+            background: var(--gray);
             padding-bottom: 120px;
-            color: var(--text);
+            color: var(--dark);
         }
 
         header {
-            background: rgba(15, 23, 42, 0.85);
+            background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             padding: 16px 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             text-align: center;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
         }
 
         .top-nav {
@@ -54,7 +53,7 @@
 
         .top-nav a {
             text-decoration: none;
-            color: var(--text);
+            color: var(--dark);
             font-size: 13px;
             font-weight: 600;
             cursor: pointer;
@@ -97,7 +96,7 @@
             border: none;
             font-size: 16px;
             font-weight: 700;
-            color: var(--text);
+            color: var(--dark);
             cursor: pointer;
             padding: 8px 12px;
             display: flex;
@@ -115,13 +114,13 @@
             display: flex;
             align-items: center;
             padding: 15px 20px;
-            background: rgba(15, 23, 42, 0.9);
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             margin-bottom: 20px;
             border-radius: 0 0 24px 24px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.02);
             position: sticky;
             top: 73px;
             z-index: 90;
@@ -139,16 +138,16 @@
             border-radius: 20px;
             padding: 20px 16px;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.03);
             position: relative;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         .card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4);
-        }    border-color: rgba(16, 185, 129, 0.2);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08);
+            border-color: rgba(16, 185, 129, 0.2);
         }
 
         .product-emoji {
