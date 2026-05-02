@@ -511,13 +511,16 @@
                 const items = order.order_data.items || [];
                 items.forEach(item => {
                     const cat = (item.c || "").toLowerCase();
-                    // Filtriamo per mostrare solo i prodotti "dry"
                     if (cat !== 'freschi' && cat !== 'orto' && cat !== 'surgelati') {
                         const key = item.ean || item.n;
                         if (!dryProducts[key]) {
-                            // Cerchiamo i dati freschi dal catalogo prodotti se possibile
-                            const catalogProd = allProducts.find(p => p.ean === item.ean || p.name === item.n);
-                            const imageUrl = catalogProd ? catalogProd.image_url : (item.img || item.image_url || '');
+                            // Confronto EAN intelligente (converte entrambi in stringa)
+                            const catalogProd = allProducts.find(p => 
+                                (p.ean && item.ean && String(p.ean).trim() === String(item.ean).trim()) || 
+                                (p.name && item.n && p.name.toLowerCase() === item.n.toLowerCase())
+                            );
+                            
+                            const imageUrl = catalogProd ? catalogProd.image_url : (item.img || item.image_url || item.image || '');
                             const brand = catalogProd ? catalogProd.brand : (item.b || '');
                             
                             dryProducts[key] = { n: item.n, b: brand, q: 0, img: imageUrl, ean: item.ean };
@@ -531,7 +534,7 @@
             pickingList.innerHTML = itemsArray.length === 0 ? '<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:20px;">Nessun prodotto dry</div>' : 
                 itemsArray.map(item => `
                 <div class="picking-item" style="display:flex; align-items:center; gap:15px; background:var(--dark-lighter); padding:12px; margin-bottom:5px; border-radius:8px;">
-                    <img src="${item.img || 'https://uldpnhmdjbbwwqwjsdoh.supabase.co/storage/v1/object/public/products/sub_icon.png'}" 
+                    <img src="${item.img || 'https://via.placeholder.com/55?text=📦'}" 
                          style="width:55px; height:55px; object-fit:contain; background:white; border-radius:8px; flex-shrink:0;"
                          onerror="this.src='https://via.placeholder.com/55?text=📦'">
                     
@@ -612,7 +615,10 @@
                 const isChecked = checkedItems.has(idx);
                 
                 // Logica EAN-Centric: cerchiamo i dati ufficiali dal catalogo
-                const catalogProd = allProducts.find(p => p.ean === item.ean);
+                const catalogProd = allProducts.find(p => 
+                    (p.ean && item.ean && String(p.ean).trim() === String(item.ean).trim()) || 
+                    (p.name && item.n && p.name.toLowerCase() === item.n.toLowerCase())
+                );
                 const imageUrl = catalogProd ? catalogProd.image_url : (item.img || item.image_url || item.image || 'https://via.placeholder.com/45');
                 const itemName = catalogProd ? catalogProd.name : item.n;
                 
