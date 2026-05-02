@@ -2131,6 +2131,11 @@
                             alert("⚠️ Errore critico: Sessione utente non valida. Prova a ricaricare la pagina.");
                         }
 
+                        // ✅ Salva l'ordine in history per evitare doppio addebito abbonamento
+                        const historyToSave = JSON.parse(localStorage.getItem('spesina_history') || "[]");
+                        historyToSave.push({ id: userData ? userData.id : 'unknown', date: new Date().toISOString(), slot: giorno + " " + ora });
+                        localStorage.setItem('spesina_history', JSON.stringify(historyToSave));
+
                         cart = [];
                         updateUI();
                         closeModals();
