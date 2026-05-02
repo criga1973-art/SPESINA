@@ -440,35 +440,48 @@
         }
 
         function openDetail(orderId) {
-            selectedOrder = allOrders.find(o => o.id === orderId);
-            if (!selectedOrder) return;
+            // alert("Apro ordine: " + orderId); // Debug
+            selectedOrder = allOrders.find(o => o.id == orderId);
+            if (!selectedOrder) {
+                console.error("Ordine non trovato:", orderId);
+                return;
+            }
 
             const d = selectedOrder.order_data;
             const shortId = selectedOrder.id.toString().slice(0, 8).toUpperCase();
             
-            document.getElementById('det-order-id').innerText = `#${shortId}`;
-            document.getElementById('det-customer').innerText = d.name;
-            document.getElementById('det-address').innerText = d.address;
+            const elId = document.getElementById('det-order-id');
+            const elCust = document.getElementById('det-customer');
+            const elAddr = document.getElementById('det-address');
+            
+            if(elId) elId.innerText = `#${shortId}`;
+            if(elCust) elCust.innerText = d.name;
+            if(elAddr) elAddr.innerText = d.address;
+            
             document.getElementById('det-maps-link').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d.address_full || d.address)}`;
             document.getElementById('det-phone-link').href = `tel:${d.phone}`;
             
             checkedItems.clear();
-            renderItemsDetail(d.items);
+            renderItemsDetail(d.items || []);
             
             const status = d.status || 'nuovo';
             const btnStart = document.getElementById('btn-start-delivery');
             const btnComplete = document.getElementById('btn-complete-order');
 
             if (status === 'in_consegna') {
-                btnStart.style.display = 'none';
-                btnComplete.style.display = 'block';
+                if(btnStart) btnStart.style.display = 'none';
+                if(btnComplete) btnComplete.style.display = 'block';
             } else {
-                btnStart.style.display = 'block';
-                btnStart.disabled = true;
-                btnComplete.style.display = 'none';
+                if(btnStart) {
+                    btnStart.style.display = 'block';
+                    btnStart.disabled = true;
+                }
+                if(btnComplete) btnComplete.style.display = 'none';
             }
 
-            document.getElementById('order-detail-overlay').style.display = 'flex';
+            const overlay = document.getElementById('order-detail-overlay');
+            overlay.style.display = 'flex';
+            overlay.style.zIndex = "9999"; // Forza sopra tutto
         }
 
         function renderItemsDetail(items) {
