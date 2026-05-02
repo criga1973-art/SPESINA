@@ -118,15 +118,17 @@
             flex: 1;
             display: flex;
             position: relative;
-            min-height: 0; /* Importante per flex scroll */
+            height: calc(100vh - 120px); /* Altezza dinamica togliendo header e tabs */
+            overflow: hidden;
         }
 
         .view-pane {
             display: none;
             width: 100%;
-            flex-direction: column;
-            overflow-y: auto; /* Permette lo scroll della singola scheda */
+            height: 100%;
+            overflow-y: auto;
             -webkit-overflow-scrolling: touch;
+            padding-bottom: 80px; /* Spazio extra in fondo per non coprire l'ultimo elemento */
         }
 
         .view-pane.active {
@@ -509,7 +511,9 @@
                     if (cat !== 'freschi' && cat !== 'orto' && cat !== 'surgelati') {
                         const key = item.ean || item.n;
                         if (!dryProducts[key]) {
-                            dryProducts[key] = { n: item.n, b: item.b || '', q: 0, img: item.img, ean: item.ean };
+                            // Cerchiamo l'immagine in tutti i campi possibili
+                            const imageUrl = item.img || item.image_url || item.image || '';
+                            dryProducts[key] = { n: item.n, b: item.b || '', q: 0, img: imageUrl, ean: item.ean };
                         }
                         dryProducts[key].q += (parseInt(item.q) || 1);
                     }
@@ -599,9 +603,10 @@
             const list = document.getElementById('det-items-list');
             list.innerHTML = items.map((item, idx) => {
                 const isChecked = checkedItems.has(idx);
+                const imageUrl = item.img || item.image_url || item.image || 'https://via.placeholder.com/45';
                 return `
                     <div class="detail-item" id="item-row-${idx}">
-                        <img src="${item.img || item.image_url || 'https://via.placeholder.com/45'}" onerror="this.src='https://via.placeholder.com/45'">
+                        <img src="${imageUrl}" onerror="this.src='https://via.placeholder.com/45'">
                         <div class="item-info">
                             <div class="item-name">${item.n}</div>
                             <div class="item-sub">${item.q}x | EAN: ${item.ean || '---'} | ${parseFloat(item.p || 0).toFixed(2)}€</div>
