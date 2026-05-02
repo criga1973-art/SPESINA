@@ -44,12 +44,12 @@
 
         .tab {
             flex: 1;
-            padding: 8px;
+            padding: 10px;
             text-align: center;
             background: #334155;
             border-radius: 8px;
             font-weight: 600;
-            font-size: 13px;
+            font-size: 16px;
             cursor: pointer;
             transition: 0.3s;
         }
@@ -99,13 +99,13 @@
 
         .btn-action {
             width: 100%;
-            padding: 18px;
+            padding: 22px;
             border: none;
             border-radius: 14px;
             background: var(--primary);
             color: white;
             font-weight: 800;
-            font-size: 19px;
+            font-size: 23px;
             cursor: pointer;
             transition: transform 0.1s;
         }
@@ -155,7 +155,7 @@
         .item-controls { display: flex; gap: 8px; }
 
         .btn-check {
-            width: 48px; height: 48px;
+            width: 58px; height: 58px;
             border-radius: 10px;
             border: 2px solid var(--success);
             background: transparent;
@@ -167,7 +167,7 @@
         .btn-check.active { background: var(--success); color: white; }
 
         .btn-delete {
-            width: 48px; height: 48px;
+            width: 58px; height: 58px;
             border-radius: 10px;
             border: 2px solid var(--danger);
             background: transparent;
@@ -228,11 +228,11 @@
         /* Filtri dashboard */
         .filter-chip {
             flex: 1;
-            padding: 5px 3px;
+            padding: 6px 4px;
             text-align: center;
             background: #334155;
             border-radius: 4px;
-            font-size: 11px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             border: 2px solid transparent;
@@ -245,12 +245,12 @@
         }
         .day-chip {
             flex-shrink: 0;
-            padding: 4px 8px;
+            padding: 5px 10px;
             background: #334155;
             border-radius: 6px;
             text-align: center;
             cursor: pointer;
-            min-width: 48px;
+            min-width: 58px;
             border: 2px solid transparent;
         }
         .day-chip.active {
@@ -388,11 +388,14 @@
 
         function selectDay(el, val) {
             if (selectedDays.has(val)) {
-                if (selectedDays.size > 1) selectedDays.delete(val);
+                if (selectedDays.size > 1) {
+                    selectedDays.delete(val);
+                    el.classList.remove('active');
+                }
             } else {
                 selectedDays.add(val);
+                el.classList.add('active');
             }
-            el.classList.toggle('active', selectedDays.has(val));
             renderOrders();
             renderMasterList();
         }
@@ -417,17 +420,21 @@
                 const d = o.order_data;
                 if (!d || !d.delivery) return false;
                 
-                // Filtro Giorno (Multi-select)
+                // Filtro Giorno (Multi-select) - Confronto flessibile
                 let dayMatch = false;
+                const deliveryStr = d.delivery.toLowerCase();
                 selectedDays.forEach(day => {
-                    if (d.delivery.includes(day)) dayMatch = true;
+                    if (deliveryStr.includes(day.toLowerCase().trim())) dayMatch = true;
                 });
                 if (!dayMatch) return false;
                 
                 // Filtro Fascia (Multi-select)
                 const parts = d.delivery.split(' ');
                 const fascia = parts[parts.length - 1]; 
-                const hour = parseInt(fascia.split(':')[0]);
+                const hourPart = fascia.split(':')[0];
+                const hour = parseInt(hourPart);
+                
+                if (isNaN(hour)) return true; // Se non riusciamo a leggere l'ora, lo mostriamo comunque
                 
                 let slotMatch = false;
                 if (selectedSlots.has('10-14') && hour < 14) slotMatch = true;
