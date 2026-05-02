@@ -1614,22 +1614,32 @@
             updateUI();
         }
 
+        let ordersInCurrentMonthFromDB = 0;
+        async function syncOrdersFromDB() {
+            if (!userData || !userData.id || !sb) return;
+            const now = new Date();
+            const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+            
+            try {
+                const { count, error } = await sb.from('orders')
+                    .select('id', { count: 'exact', head: true })
+                    .eq('client_id', userData.id)
+                    .gte('created_at', firstDayOfMonth);
+                
+                if (!error) {
+                    ordersInCurrentMonthFromDB = count || 0;
+                    updateUI(); // Rinfresca la UI con il dato certo
+                }
+            } catch (e) { console.error("Errore sincronizzazione ordini:", e); }
+        }
+
         function updateUI() {
             let total = 0;
             let listHtml = "";
             let hasOrtofrutta = false;
             
-            // Calcolo primo ordine del mese
-            const history = JSON.parse(localStorage.getItem('spesina_history') || "[]");
-            const now = new Date();
-            const currentMonth = now.getMonth();
-            const currentYear = now.getFullYear();
-            const ordersThisMonth = history.filter(o => {
-                const oDate = new Date(o.date);
-                return o.id === (userData ? userData.id : null) && oDate.getMonth() === currentMonth && oDate.getFullYear() === currentYear;
-            }).length;
             const isVip = (typeof FREE_CLIENTS !== 'undefined' && userData && FREE_CLIENTS.includes(userData.id));
-            const isFirstOrder = (ordersThisMonth === 0 && cart.length > 0 && !isVip);
+            const isFirstOrder = (ordersInCurrentMonthFromDB === 0 && cart.length > 0 && !isVip);
 
             cart.forEach(i => {
                 total += (i.p * i.q);
@@ -1699,6 +1709,7 @@
             }
             popolaGiorni();
             caricaOrari(); 
+            syncOrdersFromDB(); // Sincronizza sempre con il DB all'apertura del carrello
             document.getElementById('modalCart').style.display = 'flex'; 
         }
         function showAddress() {
@@ -1787,6 +1798,7 @@
                 alert(`Bentornato, ${userData.n}! Accesso eseguito con successo.`);
                 closeModals();
                 updateAuthUI();
+                syncOrdersFromDB(); // Scarica subito il conteggio ordini
                 goHome();
             } catch (err) {
                 console.error("Errore Login:", err);
