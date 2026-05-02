@@ -16,16 +16,24 @@ serve(async (req) => {
     const body = await req.json()
     const type = body.type || 'welcome' 
     const name = body.name || body.full_name
-    const email = body.email
+    const email = body.email ? body.email.trim() : null
     const clientId = body.clientId || body.client_id
 
-    console.log(`📨 [MAIL ENGINE] Tipo: ${type} | Destinatario: ${email} | Nome: ${name}`);
+    console.log(`📨 [MAIL ENGINE] Inizio elaborazione - Tipo: ${type} | Destinatario: ${email}`);
 
-    let subject, html, from;
+    if (!email || !email.includes('@')) {
+      console.error("❌ [MAIL ENGINE] Email destinatario mancante o non valida.");
+      return new Response(JSON.stringify({ error: "Email non valida" }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    let subject, html;
+    const from = 'Spesina <ordini@spesina.it>'; // Mittente unico verificato
 
     if (type === 'RECEIPT') {
-      from = 'Spesina <ricevute@spesina.it>'
-      subject = `🧾 La tua ricevuta Spesina - Grazie ${name}!`
+      subject = `🧾 Ricevuta Ordine #${body.orderId || ''} - Grazie ${name}!`
       
       let itemsHtml = "";
       if (Array.isArray(body.items)) {
@@ -85,7 +93,7 @@ serve(async (req) => {
                   <tr>
                     <td style="padding: 0 40px 30px 40px;">
                       <div style="background: linear-gradient(135deg, #42d3a5, #10b981); padding: 25px; border-radius: 20px; text-align: center; color: #ffffff;">
-                        <div style="font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9;">Pagamento Ricevuto</div>
+                        <div style="font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9;">Pagamento Ricevuto - ORD #${body.orderId || ''}</div>
                         <div style="font-size: 36px; font-weight: 800; margin-top: 5px;">${body.total}€</div>
                       </div>
                     </td>
@@ -125,7 +133,7 @@ serve(async (req) => {
                   <tr>
                     <td style="padding: 30px 40px; background-color: #f1f5f9; text-align: center;">
                       <p style="margin: 0; font-size: 14px; font-weight: 700; color: #1e293b;">Hai domande sul tuo ordine?</p>
-                      <p style="margin: 5px 0 0 0; font-size: 13px; color: #64748b;">Rispondi a questa email o chiamaci al +39 041 XXX XXXX</p>
+                      <p style="margin: 5px 0 0 0; font-size: 13px; color: #64748b;">Rispondi a questa email citando l'ordine #${body.orderId || ''}</p>
                       <div style="margin-top: 20px; font-size: 12px; color: #94a3b8; font-weight: 500;">
                         Spesina S.r.l. - Mestre (VE)<br>
                         La spesa intelligente, veloce e sostenibile.
@@ -141,10 +149,8 @@ serve(async (req) => {
         </html>
       `
     } else if (type === 'order') {
-      from = 'Spesina <ordini@spesina.it>'
-      subject = `📦 Conferma Ordine Spesina - ${body.delivery}`
+      subject = `📦 Conferma Ordine #${body.orderId || ''} - Spesina`
       
-      // Costruzione righe prodotti (Supporta sia stringa che array per retrocompatibilità)
       let itemsHtml = "";
       if (Array.isArray(body.items)) {
         itemsHtml = body.items.map(i => `
@@ -164,7 +170,7 @@ serve(async (req) => {
 
       html = `
         <div style="font-family: sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px; border-radius: 15px;">
-          <h1 style="color: #10b981; text-align: center;">Ordine Ricevuto!</h1>
+          <h1 style="color: #10b981; text-align: center;">Ordine #${body.orderId || ''} Ricevuto!</h1>
           <p>Ciao <b>${name}</b>, il tuo ordine è stato preso in carico.</p>
           <div style="background: #f9fafb; padding: 20px; border-radius: 10px; border: 1px solid #e5e7eb; margin-bottom: 20px;">
             <p style="margin: 5px 0;">🚚 <b>Consegna prevista:</b> ${body.delivery}</p>
@@ -182,48 +188,44 @@ serve(async (req) => {
           <p style="font-size: 12px; color: #6b7280; text-align: center;">Spesina S.r.l. - Mestre (VE)</p>
         </div>
       `
-    } else {
-      from = 'Spesina <benvenuto@spesina.it>'
-      subject = `🎉 Benvenuto in Spesina, ${name}!`
-      html = `
-        <div style="font-family: sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px; border-radius: 15px;">
-          <h1 style="color: #10b981; text-align: center;">Benvenuto in Spesina!</h1>
-          <p>Ciao <b>${name}</b>, la tua registrazione è stata completata con successo.</p>
-          <div style="background: #f9fafb; padding: 20px; border-radius: 10px; border: 1px solid #e5e7eb;">
-            <p style="margin: 5px 0;">🆔 <b>ID CLIENTE:</b> <span style="font-family: monospace; font-size: 18px; color: #0f172a;">${clientId}</span></p>
-            <p style="margin: 5px 0;">📅 <b>Scadenza Abbonamento:</b> ${body.subExpiry || body.sub_expiry}</p>
-          </div>
-          <p style="margin-top: 20px;">Usa il tuo ID per accedere da qualsiasi dispositivo e iniziare a fare la spesa!</p>
-          <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
-          <p style="font-size: 12px; color: #6b7280; text-align: center;">Spesina S.r.l. - Mestre (VE)</p>
-        </div>
-      `
     }
 
-    const res = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${RESEND_API_KEY}`,
-      },
-      body: JSON.stringify({ 
-        from, 
-        to: [email], 
-        bcc: ['criga1973@gmail.com'], 
-        subject, 
-        html 
-      }),
-    })
+    try {
+      const res = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${RESEND_API_KEY}`,
+        },
+        body: JSON.stringify({ 
+          from, 
+          to: [email], 
+          bcc: ['criga1973@gmail.com'], 
+          subject, 
+          html 
+        }),
+      });
 
-    const data = await res.json()
-    return new Response(JSON.stringify(data), {
-      status: 200,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    })
-  } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 400,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    })
-  }
+      const data = await res.json();
+      
+      if (!res.ok) {
+        console.error("❌ [RESEND ERROR]", data);
+        return new Response(JSON.stringify({ error: "Errore Resend", details: data }), {
+          status: res.status,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      console.log(`✅ [MAIL ENGINE] Email inviata con successo a ${email}. ID: ${data.id}`);
+      return new Response(JSON.stringify(data), {
+        status: 200,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    } catch (error) {
+      console.error("❌ [MAIL ENGINE] Errore critico:", error.message);
+      return new Response(JSON.stringify({ error: error.message }), {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
 })

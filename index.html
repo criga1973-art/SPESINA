@@ -1899,13 +1899,14 @@
                 console.error("❌ Impossibile inviare email ordine: email mancante.");
                 return;
             }
-            console.log("📧 Innesco invio email conferma ordine a:", data.e);
+            console.log(`📧 Innesco invio email conferma ordine #${data.orderId} a:`, data.e);
             try {
                 const res = await fetch("https://uldpnhmdjbbwwqwjsdoh.supabase.co/functions/v1/send-welcome", {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` },
                     body: JSON.stringify({
                         type: 'order',
+                        orderId: data.orderId,
                         name: data.n,
                         email: data.e,
                         delivery: data.delivery,
@@ -2035,7 +2036,7 @@
             }
 
 
-                        // Registra ordine su Supabase
+                        // Registra ordine su Supabase e recupera l'ID
                         if (typeof sb !== 'undefined' && userData && userData.id) {
                             console.log("Salvataggio ordine su Supabase...");
                             const totalClean = parseFloat(totaleValore.replace('Totale: ', '').replace('€', '').trim());
@@ -2054,38 +2055,35 @@
                                     status: 'nuovo',
                                     total_amount: totalClean
                                 }
-                            }).then(({ error }) => {
+                            }).select().then(({ data, error }) => {
                                 if (error) {
                                     console.error("Errore Supabase dettagliato:", error);
                                     alert("⚠️ Errore Database:\n" + error.message + "\nCodice: " + error.code);
-                                } else {
-                                    console.log("✅ Ordine salvato correttamente su Supabase.");
+                                } else if (data && data[0]) {
+                                    const orderId = data[0].id;
+                                    console.log(`✅ Ordine #${orderId} salvato correttamente.`);
+                                    
+                                    // Aggiorna UI successo con l'ID ordine
+                                    document.getElementById('success-title').innerText = `Ordine #${orderId} Ricevuto!`;
+                                    
+                                    // Invio Email Conferma con ID Ordine
+                                    sendOrderEmail({
+                                        orderId: orderId,
+                                        n: userData.n,
+                                        e: userData.e,
+                                        phone: userData.t,
+                                        delivery: giorno + " " + ora,
+                                        address: userData.a + " " + userData.d,
+                                        items: cart,
+                                        itemsString: elencoProdotti,
+                                        total: totaleValore
+                                    });
                                 }
                             });
                         } else {
                             console.error("Impossibile salvare: sb, userData o userData.id mancanti.");
                             alert("⚠️ Errore critico: Sessione utente non valida. Prova a ricaricare la pagina.");
                         }
-
-                        // Aggiorna la cronologia locale (già dichiarata all'inizio della funzione)
-                        history.push({ 
-                            date: new Date().toISOString().split('T')[0], 
-                            id: userData.id,
-                            slot: giorno + " " + ora 
-                        });
-                        localStorage.setItem('spesina_history', JSON.stringify(history));
-
-                        // Invio Email Professionale al Cliente
-                        sendOrderEmail({
-                            n: userData.n,
-                            e: userData.e,
-                            phone: userData.t,
-                            delivery: giorno + " " + ora,
-                            address: userData.a + " " + userData.d,
-                            items: cart, // Passiamo l'intero array
-                            itemsString: elencoProdotti, // Passiamo anche la stringa per backup
-                            total: totaleValore
-                        });
 
                         cart = [];
                         updateUI();
