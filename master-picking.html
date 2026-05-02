@@ -504,6 +504,7 @@
                 const items = order.order_data.items || [];
                 items.forEach(item => {
                     const cat = (item.c || "").toLowerCase();
+                    // Filtriamo per mostrare solo i prodotti "dry"
                     if (cat !== 'freschi' && cat !== 'orto' && cat !== 'surgelati') {
                         const key = item.ean || item.n;
                         if (!dryProducts[key]) {
@@ -517,12 +518,17 @@
             const itemsArray = Object.values(dryProducts).sort((a, b) => a.n.localeCompare(b.n));
             pickingList.innerHTML = itemsArray.length === 0 ? '<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:20px;">Nessun prodotto dry</div>' : 
                 itemsArray.map(item => `
-                <div class="picking-item">
-                    <div class="picking-qty">${item.q}x</div>
-                    <div class="picking-details">
-                        <div class="picking-name">${item.b ? item.b + ' ' : ''}${item.n}</div>
-                        <div class="picking-ean">EAN: ${item.ean || '---'}</div>
+                <div class="picking-item" style="display:flex; align-items:center; gap:15px;">
+                    <img src="${item.img || 'https://uldpnhmdjbbwwqwjsdoh.supabase.co/storage/v1/object/public/products/sub_icon.png'}" 
+                         style="width:50px; height:50px; object-fit:contain; background:white; border-radius:8px; flex-shrink:0;"
+                         onerror="this.src='https://via.placeholder.com/50?text=📦'">
+                    
+                    <div class="picking-details" style="flex:1;">
+                        <div class="picking-name" style="font-size:14px; font-weight:700;">${item.b ? item.b + ' ' : ''}${item.n}</div>
+                        <div class="picking-ean" style="font-size:11px; color:var(--text-muted);">EAN: ${item.ean || '---'}</div>
                     </div>
+                    
+                    <div class="picking-qty" style="font-size:24px; font-weight:900; color:white; min-width:45px; text-align:right;">${item.q}x</div>
                 </div>
             `).join('');
         }
