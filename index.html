@@ -2068,15 +2068,16 @@
                                     console.error("Errore Supabase dettagliato:", error);
                                     alert("⚠️ Errore Database:\n" + error.message + "\nCodice: " + error.code);
                                 } else if (data && data[0]) {
-                                    const orderId = data[0].id;
-                                    console.log(`✅ Ordine #${orderId} salvato correttamente.`);
+                                    const orderIdFull = data[0].id;
+                                    const orderIdShort = orderIdFull.toString().slice(0, 8).toUpperCase();
+                                    console.log(`✅ Ordine #${orderIdShort} salvato correttamente.`);
                                     
                                     // Aggiorna UI successo con l'ID ordine
-                                    document.getElementById('success-title').innerText = `Ordine #${orderId} Ricevuto!`;
+                                    document.getElementById('success-title').innerText = `Ordine #${orderIdShort} Ricevuto!`;
                                     
                                     // Invio Email Conferma con ID Ordine
                                     sendOrderEmail({
-                                        orderId: orderId,
+                                        orderId: orderIdShort,
                                         n: userData.n,
                                         e: userData.e,
                                         phone: userData.t,

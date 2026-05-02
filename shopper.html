@@ -586,7 +586,7 @@
             checkedItems = new Set();
             
             const d = currentOrder.order_data;
-            document.getElementById('checklist-title').innerText = `Dettaglio Ordine #${currentOrder.id}`;
+            document.getElementById('checklist-title').innerText = `Dettaglio Ordine #${currentOrder.id.toString().slice(0, 8).toUpperCase()}`;
             document.getElementById('info-client-name').innerText = d.name || 'Cliente Spesina';
             document.getElementById('info-client-address').innerText = d.address_full || d.address || 'Indirizzo non specificato';
             document.getElementById('link-maps').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d.address || '')}`;
@@ -736,7 +736,7 @@
                     headers: { 'Content-Type': 'application/json', 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` },
                     body: JSON.stringify({
                         type: 'RECEIPT',
-                        orderId: currentOrder.id,
+                        orderId: currentOrder.id.toString().slice(0, 8).toUpperCase(),
                         name: (d.name || 'Cliente').split(' ')[0],
                         email: email,
                         delivery: d.delivery,
