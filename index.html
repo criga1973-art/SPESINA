@@ -2049,26 +2049,18 @@
             if (!checkSubscriptionStatus()) return;
             if (getDailyOrderCount() >= 2) return;
 
-            // Calcolo se aggiungere abbonamento nel riepilogo email
-            const history = JSON.parse(localStorage.getItem('spesina_history') || "[]");
-            const now = new Date();
-            const currentMonth = now.getMonth();
-            const currentYear = now.getFullYear();
-            const ordersThisMonth = history.filter(o => {
-                const oDate = new Date(o.date);
-                return o.id === (userData ? userData.id : null) && oDate.getMonth() === currentMonth && oDate.getFullYear() === currentYear;
-            }).length;
-
             const isVip = (typeof FREE_CLIENTS !== 'undefined' && userData && FREE_CLIENTS.includes(userData.id));
             let elencoProdotti = cart.map(i => `${i.q}x ${i.n} (${(i.p * i.q).toFixed(2)}€)`).join("\n");
             
-            const isFirstOrder = (ordersThisMonth === 0 && cart.length > 0 && !isVip);
+            // ✅ Usa il dato certo dal Database sincronizzato in updateUI
+            const isFirstOrder = (ordersInCurrentMonthFromDB === 0 && cart.length > 0 && !isVip);
             
             if (isFirstOrder) {
                 elencoProdotti += "\n+ 🎟️ Abbonamento Mensile Spesina (19.99€)";
             }
 
-            let totaleValore = document.getElementById('final-price').innerText;
+            // Pulisce il totale per evitare doppioni "Totale: Totale:"
+            let totaleValore = document.getElementById('final-price').innerText.replace("Totale: ", "").trim();
             let giorno = document.getElementById('select-giorno').value;
             let ora = document.getElementById('select-ora').value;
 
@@ -2124,7 +2116,7 @@
                                     // Aggiorna UI successo con l'ID ordine
                                     document.getElementById('success-title').innerText = `Ordine #${orderIdShort} Ricevuto!`;
                                     
-                                    // Invio Email Conferma con ID Ordine
+                                    // Invio Email Conferma con ID Ordine e lista prodotti completa
                                     sendOrderEmail({
                                         orderId: orderIdShort,
                                         n: userData.n,
@@ -2132,7 +2124,7 @@
                                         phone: userData.t,
                                         delivery: giorno + " " + ora,
                                         address: userData.a + " " + userData.d,
-                                        items: cart,
+                                        items: itemsToSave,
                                         itemsString: elencoProdotti,
                                         total: totaleValore
                                     });
