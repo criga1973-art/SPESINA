@@ -1128,7 +1128,8 @@
             { id: "panificati", n: "Panificati", icon: "🍞", img: "" },
             { id: "vegano", n: "Vegano", icon: "🥗", img: "" },
             { id: "animali", n: "Amici Domestici", icon: "🐾", img: "" },
-            { id: "minestre-zuppe", n: "Minestre, Risotti e Zuppe", icon: "🥣", img: "" }
+            { id: "minestre-zuppe", n: "Minestre, Risotti e Zuppe", icon: "🥣", img: "" },
+            { id: "varie", n: "VarIE", icon: "🛍️", img: "" }
         ];
 
         let PRODS = [];
@@ -1619,21 +1620,35 @@
         }
 
         let ordersInCurrentMonthFromDB = 0;
+        let ordersTodayFromDB = 0;
         async function syncOrdersFromDB() {
             if (!userData || !userData.id || !sb) return;
             const now = new Date();
             const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
             
+            // Inizio giornata di oggi (ora locale mezzanotte)
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            const todayISO = today.toISOString();
+            
             try {
-                const { count, error } = await sb.from('orders')
+                // 1. Ordini nel mese corrente (per abbonamento)
+                const { count: monthCount } = await sb.from('orders')
                     .select('id', { count: 'exact', head: true })
                     .eq('client_id', userData.id)
                     .gte('created_at', firstDayOfMonth);
                 
-                if (!error) {
-                    ordersInCurrentMonthFromDB = count || 0;
-                    updateUI(); // Rinfresca la UI con il dato certo
-                }
+                // 2. Ordini oggi (per limite giornaliero)
+                const { count: todayCount } = await sb.from('orders')
+                    .select('id', { count: 'exact', head: true })
+                    .eq('client_id', userData.id)
+                    .gte('created_at', todayISO);
+                
+                ordersInCurrentMonthFromDB = monthCount || 0;
+                ordersTodayFromDB = todayCount || 0;
+                
+                console.log(`📊 Sync Supabase: Mese=${ordersInCurrentMonthFromDB}, Oggi=${ordersTodayFromDB}`);
+                updateUI(); 
             } catch (e) { console.error("Errore sincronizzazione ordini:", e); }
         }
 
@@ -1989,9 +2004,9 @@
 
         function getDailyOrderCount() {
             if (!userData || !userData.id) return 0;
-            const today = new Date().toISOString().split('T')[0];
-            const history = JSON.parse(localStorage.getItem('spesina_history') || "[]");
-            return history.filter(o => o.date === today && o.id === userData.id).length;
+            const isVip = (typeof FREE_CLIENTS !== 'undefined' && FREE_CLIENTS.includes(userData.id));
+            if (isVip) return 0; // I VIP non hanno limiti
+            return ordersTodayFromDB;
         }
 
         function showHowItWorks() { document.getElementById('modalHowItWorks').style.display = 'flex'; }
@@ -2011,13 +2026,13 @@
 
         // --- FINE AUTOCOMPLETE ---
 
-        function showPay() {
+        async function showPay() {
             console.log("Pulsante PROSEGUI cliccato...");
             if (!checkSubscriptionStatus()) {
                 console.log("Validazione abbonamento fallita.");
                 return;
             }
-            if (getDailyOrderCount() >= 10) {
+            if (getDailyOrderCount() >= 2) {
                 console.log("Limite ordini giornalieri raggiunto.");
                 alert("Hai raggiunto il limite di 2 spese per oggi. Ci vediamo domani!");
                 return;
@@ -2032,17 +2047,22 @@
                 return alert("Per favore, seleziona un orario di consegna valido prima di proseguire.");
             }
 
-            // NUOVA REGOLA: Massimo 2 spese dello stesso ID in un'ora
-            const history = JSON.parse(localStorage.getItem('spesina_history') || "[]");
-            const ordiniUtenteInFascia = history.filter(o => o.id === (userData ? userData.id : null) && o.slot === (giorno + " " + ora)).length;
-            
-            if (ordiniUtenteInFascia >= 2) {
-                console.log("Limite ordini in questa fascia oraria raggiunto.");
-                alert("⚠️ Hai già prenotato 2 consegne per questa fascia oraria. Seleziona un altro orario per i prossimi articoli!");
-                return;
-            }
+            // NUOVA REGOLA SERVER-SIDE: Massimo 2 spese dello stesso ID in un'ora (slot)
+            try {
+                const { data: ordiniSlot, error } = await sb.from('orders')
+                    .select('id')
+                    .eq('client_id', userData.id)
+                    .filter('order_data->>delivery', 'eq', giorno + " " + ora);
+                
+                const countInSlot = ordiniSlot ? ordiniSlot.length : 0;
+                
+                if (countInSlot >= 2) {
+                    console.log("Limite ordini in questa fascia oraria raggiunto (da DB).");
+                    alert("⚠️ Hai già prenotato 2 consegne per questa fascia oraria. Seleziona un altro orario per i prossimi articoli!");
+                    return;
+                }
+            } catch (e) { console.error("Errore verifica slot:", e); }
 
-            // Rimosso confirm() per evitare blocchi browser e rendere il flusso più rapido
             console.log("Passaggio al metodo di pagamento...");
             closeModals(); 
             document.getElementById('modalPay').style.display = 'flex'; 
@@ -2143,6 +2163,9 @@
                         const historyToSave = JSON.parse(localStorage.getItem('spesina_history') || "[]");
                         historyToSave.push({ id: userData ? userData.id : 'unknown', date: new Date().toISOString(), slot: giorno + " " + ora });
                         localStorage.setItem('spesina_history', JSON.stringify(historyToSave));
+
+                        // ✅ Sincronizza subito i contatori da DB
+                        syncOrdersFromDB();
 
                         cart = [];
                         updateUI();

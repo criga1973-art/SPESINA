@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPESINA Shopper - Dashboard Operativa</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --dark: #0f172a;
+            --gray: #f1f5f9;
+            --gray-dark: #e2e8f0;
+            --red: #ef4444;
+            --blue: #3b82f6;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            background: #f8fafc;
+            color: var(--dark);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        header {
+            background: var(--dark);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        .logo span { color: var(--primary); }
+
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Colonna Sinistra: Picking Cumulative */
+        .picking-col {
+            width: 40%;
+            border-right: 2px solid var(--gray-dark);
+            display: flex;
+            flex-direction: column;
+            background: white;
+        }
+
+        /* Colonna Destra: Boxing & Delivery */
+        .boxing-col {
+            width: 60%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .col-header {
+            padding: 20px;
+            background: var(--gray);
+            border-bottom: 1px solid var(--gray-dark);
+        }
+
+        .col-header h2 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .scroll-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        /* Picking List Items */
+        .picking-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--gray-dark);
+            margin-bottom: 10px;
+            transition: transform 0.1s;
+        }
+
+        .picking-item img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+
+        .picking-qty {
+            background: var(--dark);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 14px;
+        }
+
+        /* Order Cards */
+        .order-card {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid var(--gray-dark);
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .order-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .order-card.selected {
+            border: 2px solid var(--primary);
+            background: rgba(16, 185, 129, 0.02);
+        }
+
+        .order-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #64748b;
+        }
+
+        .order-id { color: var(--primary); }
+
+        .order-customer {
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .order-address {
+            font-size: 13px;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Detail Modal-like View */
+        .order-detail {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .item-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            border: 1px solid var(--gray-dark);
+        }
+
+        .item-row.checked {
+            opacity: 0.5;
+            background: #f1f5f9;
+        }
+
+        .checkbox-custom {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            border: 2px solid var(--gray-dark);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .item-row.checked .checkbox-custom {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.2s;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .btn-maps { background: #4285F4; color: white; }
+        .btn-call { background: #34A853; color: white; }
+        .btn-delivery { background: var(--primary); color: white; width: 100%; margin-top: 20px; }
+        .btn-close { background: var(--dark); color: white; width: 100%; margin-top: 10px; }
+
+        .btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .date-filter {
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid var(--gray-dark);
+            font-family: inherit;
+            font-weight: 600;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .status-nuovo { background: #dcfce7; color: #16a34a; }
+        .status-in_consegna { background: #dbeafe; color: #1d4ed8; }
+        .status-completato { background: #f1f5f9; color: #64748b; }
+
+        @media (max-width: 900px) {
+            .main-container { flex-direction: column; }
+            .picking-col, .boxing-col { width: 100%; height: 50vh; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">SPESINA <span>SHOPPER</span></div>
+        <div id="auth-status" style="font-size: 12px; font-weight: 600; opacity: 0.7;">Dashboard Operativa v1.0</div>
+    </header>
+
+    <div class="main-container">
+        <!-- Picking Area -->
+        <div class="picking-col">
+            <div class="col-header">
+                <h2>📦 Picking Cumulativo (Dry)</h2>
+                <select id="date-selector" class="date-filter" onchange="loadData()">
+                    <!-- Popolated by JS -->
+                </select>
+            </div>
+            <div class="scroll-area" id="picking-list">
+                <div style="text-align: center; color: #64748b; padding: 40px;">Seleziona una data per vedere il picking...</div>
+            </div>
+        </div>
+
+        <!-- Boxing & Delivery Area -->
+        <div class="boxing-col">
+            <div class="col-header">
+                <h2>📑 Gestione Ordini & Delivery</h2>
+            </div>
+            <div class="scroll-area" id="orders-list">
+                <!-- Ordini individuali -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Sezione Dettaglio Ordine (Overlay o In-page) -->
+    <div id="order-detail-overlay" style="display:none; position:fixed; top:0; right:0; width:60%; height:100%; background:white; z-index:1000; box-shadow:-10px 0 30px rgba(0,0,0,0.1); display:none; flex-direction:column;">
+        <div style="padding:20px; background:var(--dark); color:white; display:flex; justify-content:space-between; align-items:center;">
+            <h3 id="det-order-id" style="margin:0;">Ordine #---</h3>
+            <button onclick="closeDetail()" style="background:none; border:none; color:white; font-size:24px; cursor:pointer;">✕</button>
+        </div>
+        <div class="scroll-area">
+            <div style="margin-bottom:25px;">
+                <h2 id="det-customer" style="margin:0 0 5px 0;">Nome Cliente</h2>
+                <div id="det-address" style="color:#64748b; font-weight:500; font-size:15px;">Via Indirizzo, Mestre</div>
+                
+                <div style="display:flex; gap:10px; margin-top:20px;">
+                    <a id="det-maps-link" href="#" target="_blank" class="btn btn-maps">📍 Naviga</a>
+                    <a id="det-phone-link" href="#" class="btn btn-call">📞 Chiama</a>
+                </div>
+            </div>
+
+            <h4 style="border-bottom:2px solid var(--gray); padding-bottom:10px; margin-bottom:15px;">COMPOSIZIONE SCATOLA</h4>
+            <div id="det-items-list">
+                <!-- Lista prodotti dell'ordine -->
+            </div>
+
+            <div id="det-actions" style="margin-top:30px; padding:20px; background:var(--gray); border-radius:16px;">
+                <button id="btn-start-delivery" class="btn btn-delivery" disabled onclick="updateOrderStatus('in_consegna')">📦 INIZIA CONSEGNA</button>
+                <button id="btn-complete-order" class="btn btn-close" style="display:none;" onclick="updateOrderStatus('completato')">💰 INCASSA E CHIUDI</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = "https://uldpnhmdjbbwwqwjsdoh.supabase.co";
+        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsZHBuaG1kamJid3dxd2pzZG9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4NDE5ODQsImV4cCI6MjA5MjQxNzk4NH0.yXcJBcZtiaDbPl2IyDUBK-Ndoyu0unmEzfY8xZrogzM";
+        const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let allOrders = [];
+        let selectedOrder = null;
+        let checkedItems = new Set();
+
+        // Popola il selettore date per i prossimi 7 giorni
+        function initDateSelector() {
+            const select = document.getElementById('date-selector');
+            const days = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
+            const months = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
+            
+            // Opzione cumulativa
+            const allOption = document.createElement('option');
+            allOption.value = "ALL";
+            allOption.text = "📊 TUTTA LA SETTIMANA (Cumulativo)";
+            select.appendChild(allOption);
+
+            for (let i = 0; i < 7; i++) {
+                const d = new Date();
+                d.setDate(d.getDate() + i);
+                const val = `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]}`;
+                const option = document.createElement('option');
+                option.value = val;
+                option.text = (i === 0 ? "OGGI - " : i === 1 ? "DOMANI - " : "") + val;
+                select.appendChild(option);
+            }
+        }
+
+        async function loadData() {
+            const selectedDate = document.getElementById('date-selector').value;
+            console.log("Caricamento dati per:", selectedDate);
+            
+            const { data, error } = await sb.from('orders')
+                .select('*')
+                .neq('order_data->>status', 'completato')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error("Errore:", error);
+                return;
+            }
+
+            // Filtro cumulativo o per singola data
+            if (selectedDate === "ALL") {
+                // Prende tutti gli ordini non completati caricati (che sono quelli futuri/pendenti)
+                allOrders = data;
+            } else {
+                allOrders = data.filter(o => o.order_data.delivery && o.order_data.delivery.startsWith(selectedDate));
+            }
+
+            // Ordinamento per fascia oraria (l'orario è l'ultima parte della stringa delivery)
+            allOrders.sort((a, b) => {
+                const getHour = (s) => parseInt(s.split(' ').slice(-1)[0].split(':')[0]) || 0;
+                return getHour(a.order_data.delivery) - getHour(b.order_data.delivery);
+            });
+            
+            renderPicking();
+            renderOrders();
+        }
+
+        function renderPicking() {
+            const pickingList = document.getElementById('picking-list');
+            const dryProducts = {}; // Aggregate by EAN or Name
+
+            allOrders.forEach(order => {
+                const items = order.order_data.items || [];
+                items.forEach(item => {
+                    // Escludi Freschi, Orto e Surgelati
+                    const cat = (item.c || "").toLowerCase();
+                    if (cat !== 'freschi' && cat !== 'orto' && cat !== 'surgelati') {
+                        const key = item.ean || item.n;
+                        if (!dryProducts[key]) {
+                            dryProducts[key] = { n: item.n, b: item.b || '', q: 0, img: item.img, ean: item.ean };
+                        }
+                        dryProducts[key].q += (item.q || 1);
+                    }
+                });
+            });
+
+            const itemsArray = Object.values(dryProducts);
+            if (itemsArray.length === 0) {
+                pickingList.innerHTML = '<div style="text-align: center; color: #64748b; padding: 40px;">Nessun prodotto Dry da prelevare per questa data.</div>';
+                return;
+            }
+
+            pickingList.innerHTML = itemsArray.map(item => `
+                <div class="picking-item">
+                    <div class="picking-qty">${item.q}</div>
+                    <img src="${item.img || 'img/placeholder.png'}" onerror="this.src='https://uldpnhmdjbbwwqwjsdoh.supabase.co/storage/v1/object/public/products/sub_icon.png'">
+                    <div style="flex:1;">
+                        <div style="font-weight:700; font-size:14px;">${item.b ? item.b + ' - ' : ''}${item.n}</div>
+                        <div style="font-size:11px; color:#64748b;">EAN: ${item.ean || 'N/D'}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderOrders() {
+            const ordersList = document.getElementById('orders-list');
+            if (allOrders.length === 0) {
+                ordersList.innerHTML = '<div style="text-align: center; color: #64748b; padding: 40px;">Nessun ordine in programma per questa data.</div>';
+                return;
+            }
+
+            ordersList.innerHTML = allOrders.map(o => {
+                const d = o.order_data;
+                const status = d.status || 'nuovo';
+                const shortId = o.id.toString().slice(0, 8).toUpperCase();
+                return `
+                    <div class="order-card" onclick="openDetail(${o.id})">
+                        <div class="order-meta">
+                            <span class="order-id">#${shortId}</span>
+                            <span class="status-badge status-${status}">${status}</span>
+                        </div>
+                        <div class="order-customer">${d.name}</div>
+                        <div class="order-address">📍 ${d.address}</div>
+                        <div style="margin-top:10px; font-size:11px; color:#64748b; font-weight:600;">
+                            Slot: ${d.delivery.split(' ').slice(-1)[0]} | Articoli: ${d.items.length}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openDetail(orderId) {
+            selectedOrder = allOrders.find(o => o.id === orderId);
+            if (!selectedOrder) return;
+
+            const d = selectedOrder.order_data;
+            const shortId = selectedOrder.id.toString().slice(0, 8).toUpperCase();
+            
+            document.getElementById('det-order-id').innerText = `Ordine #${shortId}`;
+            document.getElementById('det-customer').innerText = d.name;
+            document.getElementById('det-address').innerText = d.address_full || d.address;
+            document.getElementById('det-maps-link').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d.address_full || d.address)}`;
+            document.getElementById('det-phone-link').href = `tel:${d.phone}`;
+            
+            checkedItems.clear();
+            renderItemsDetail(d.items);
+            
+            const status = d.status || 'nuovo';
+            if (status === 'in_consegna') {
+                document.getElementById('btn-start-delivery').style.display = 'none';
+                document.getElementById('btn-complete-order').style.display = 'block';
+            } else {
+                document.getElementById('btn-start-delivery').style.display = 'block';
+                document.getElementById('btn-start-delivery').disabled = true;
+                document.getElementById('btn-complete-order').style.display = 'none';
+            }
+
+            document.getElementById('order-detail-overlay').style.display = 'flex';
+        }
+
+        function renderItemsDetail(items) {
+            const list = document.getElementById('det-items-list');
+            list.innerHTML = items.map((item, idx) => `
+                <div class="item-row" id="item-row-${idx}" onclick="toggleItem(${idx})">
+                    <div class="checkbox-custom"></div>
+                    <img src="${item.img || 'img/placeholder.png'}" style="width:40px; height:40px; object-fit:contain;">
+                    <div style="flex:1;">
+                        <div style="font-weight:700; font-size:13px;">${item.q}x ${item.n}</div>
+                        <div style="font-size:10px; color:#64748b;">EAN: ${item.ean || 'N/D'}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleItem(idx) {
+            const row = document.getElementById(`item-row-${idx}`);
+            if (checkedItems.has(idx)) {
+                checkedItems.delete(idx);
+                row.classList.remove('checked');
+            } else {
+                checkedItems.add(idx);
+                row.classList.add('checked');
+            }
+
+            const totalItems = selectedOrder.order_data.items.length;
+            const btn = document.getElementById('btn-start-delivery');
+            btn.disabled = (checkedItems.size < totalItems);
+        }
+
+        async function updateOrderStatus(newStatus) {
+            if (!selectedOrder) return;
+
+            const updatedData = { ...selectedOrder.order_data, status: newStatus };
+            
+            const { error } = await sb.from('orders')
+                .update({ order_data: updatedData })
+                .eq('id', selectedOrder.id);
+
+            if (error) {
+                alert("Errore aggiornamento ordine: " + error.message);
+                return;
+            }
+
+            if (newStatus === 'completato') {
+                sendThanksEmail(updatedData);
+                alert("✅ Ordine Chiuso! Email di ringraziamento inviata.");
+                closeDetail();
+            } else {
+                alert("🚀 Consegna avviata!");
+                openDetail(selectedOrder.id); // Refresh view
+            }
+            
+            loadData(); // Refresh lists
+        }
+
+        async function sendThanksEmail(data) {
+            try {
+                await fetch("https://uldpnhmdjbbwwqwjsdoh.supabase.co/functions/v1/send-welcome", {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` },
+                    body: JSON.stringify({
+                        type: 'thanks',
+                        name: data.name,
+                        email: data.email,
+                        total: data.total
+                    })
+                });
+            } catch (err) { console.error("Errore invio email ringraziamento:", err); }
+        }
+
+        function closeDetail() {
+            document.getElementById('order-detail-overlay').style.display = 'none';
+            selectedOrder = null;
+        }
+
+        // Init
+        initDateSelector();
+        loadData();
+    </script>
+</body>
+</html>
