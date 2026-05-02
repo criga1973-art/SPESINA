@@ -936,6 +936,36 @@
         </div>
     </div>
 
+    <!-- MODAL PROFILO -->
+    <div class="modal" id="modalProfile">
+        <div class="modal-content" style="max-width:400px; text-align:center; padding:30px;">
+            <div style="font-size:60px; margin-bottom:15px;">👤</div>
+            <h2 id="profile-name" style="margin:0; font-size:26px; font-weight:900; color:var(--dark);">Nome Utente</h2>
+            <div id="profile-id-tag" style="display:inline-block; background:var(--primary-light); color:var(--primary); padding:4px 12px; border-radius:20px; font-size:12px; font-weight:800; margin-top:5px; margin-bottom:20px;">ID: SP-XXXXXX</div>
+            
+            <div style="background:#f8fafc; border-radius:15px; padding:20px; margin-bottom:20px; border:1px solid #e2e8f0; text-align:left;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <span style="font-weight:700; color:#64748b;">Stato Abbonamento</span>
+                    <span id="sub-status-badge" style="padding:4px 10px; border-radius:10px; font-size:12px; font-weight:800;">---</span>
+                </div>
+                <div id="sub-countdown-box" style="margin-top:10px;">
+                    <div style="font-size:11px; color:#94a3b8; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">Scadenza tra</div>
+                    <div id="sub-countdown-text" style="font-size:22px; font-weight:900; color:var(--dark);">-- giorni</div>
+                </div>
+            </div>
+
+            <div style="text-align:left; font-size:14px; color:#64748b; margin-bottom:25px; padding:0 10px;">
+                <div style="margin-bottom:8px;">📧 <span id="profile-email" style="color:var(--dark); font-weight:600;">---</span></div>
+                <div>📍 <span id="profile-address" style="color:var(--dark); font-weight:600;">---</span></div>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                <button onclick="logout()" style="width:100%; padding:14px; background:#fee2e2; color:#ef4444; border:none; border-radius:12px; font-weight:800; cursor:pointer;">Esci dall'account 🚪</button>
+                <button onclick="closeModals()" style="width:100%; padding:14px; background:#f1f5f9; color:#64748b; border:none; border-radius:12px; font-weight:700; cursor:pointer;">Chiudi</button>
+            </div>
+        </div>
+    </div>
+
     <div class="modal" id="modalAdmin">
         <div class="modal-content" style="max-width:400px; padding:30px 20px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
@@ -2117,40 +2147,79 @@
             if (userData && userData.id) {
                 if (loginLink) {
                     loginLink.innerHTML = `👤 Profilo`;
-                    loginLink.onclick = handleLogout; // Cliccando su Profilo ora chiede il logout
+                    loginLink.onclick = () => {
+                        updateProfile();
+                        document.getElementById('modalProfile').style.display = 'flex';
+                    };
                 }
                 if (welcomeBanner) {
                     welcomeBanner.style.display = 'block';
                     document.getElementById('welcome-name').innerText = userData.n.split(' ')[0];
                     document.getElementById('welcome-id').innerText = userData.id;
-                    document.getElementById('welcome-expiry').innerText = userData.subExpiry;
                     
-                    // Aggiungiamo un tasto Logout visibile nel banner
-                    if (!document.getElementById('btn-logout-banner')) {
-                        const logoutBtn = document.createElement('button');
-                        logoutBtn.id = 'btn-logout-banner';
-                        logoutBtn.innerText = "Esci ✕";
-                        logoutBtn.style = "background:rgba(255,255,255,0.2); border:none; color:white; padding:4px 10px; border-radius:8px; font-size:10px; font-weight:800; cursor:pointer; margin-left:10px; vertical-align:middle;";
-                        logoutBtn.onclick = handleLogout;
-                        welcomeBanner.querySelector('div').appendChild(logoutBtn);
-                    }
-                }
-                // Update footer if exists
-                const companyData = document.getElementById('company-data');
-                if (companyData && !companyData.innerHTML.includes('🆔')) {
-                    companyData.innerHTML += `<br><span style="font-size:11px; opacity:0.8;">🆔 ID Cliente: <b>${userData.id}</b></span>`;
+                    // Calcolo scadenza (fine mese corrente)
+                    const now = new Date();
+                    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+                    document.getElementById('welcome-expiry').innerText = lastDay.toLocaleDateString('it-IT');
                 }
             } else {
                 if (loginLink) {
-                    loginLink.innerHTML = `🔑 Accedi / Registrati`;
-                    loginLink.onclick = openLogin;
+                    loginLink.innerHTML = `🔑 Accedi`;
+                    loginLink.onclick = showRegister;
                 }
-                if (welcomeBanner) {
-                    welcomeBanner.style.display = 'none';
-                    const oldBtn = document.getElementById('btn-logout-banner');
-                    if (oldBtn) oldBtn.remove();
-                }
+                if (welcomeBanner) welcomeBanner.style.display = 'none';
             }
+        }
+
+        function updateProfile() {
+            if (!userData) return;
+            
+            document.getElementById('profile-name').innerText = userData.n;
+            document.getElementById('profile-email').innerText = userData.e;
+            document.getElementById('profile-address').innerText = userData.a + ", " + userData.c;
+            document.getElementById('profile-id-tag').innerText = "ID: " + userData.id;
+
+            // Logica Abbonamento
+            const badge = document.getElementById('sub-status-badge');
+            const countdownText = document.getElementById('sub-countdown-text');
+            const isVip = (typeof FREE_CLIENTS !== 'undefined' && FREE_CLIENTS.includes(userData.id));
+
+            if (isVip) {
+                badge.innerText = "⭐ VIP UNLIMITED";
+                badge.style.background = "#fef3c7";
+                badge.style.color = "#d97706";
+                countdownText.innerText = "Sempre Attivo";
+            } else {
+                const now = new Date();
+                const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+                const diff = lastDay.getDate() - now.getDate();
+                
+                // Verifichiamo se ha già ordini questo mese (per lo stato Attivo)
+                const history = JSON.parse(localStorage.getItem('spesina_history') || "[]");
+                const currentMonth = now.getMonth();
+                const ordersThisMonth = history.filter(o => {
+                    const oDate = new Date(o.date);
+                    return o.id === userData.id && oDate.getMonth() === currentMonth;
+                }).length;
+
+                if (ordersThisMonth > 0) {
+                    badge.innerText = "✅ ATTIVO";
+                    badge.style.background = "#dcfce7";
+                    badge.style.color = "#16a34a";
+                } else {
+                    badge.innerText = "⏳ DA RINNOVARE";
+                    badge.style.background = "#f1f5f9";
+                    badge.style.color = "#64748b";
+                }
+                
+                countdownText.innerText = diff === 0 ? "Scade OGGI" : diff + (diff === 1 ? " giorno" : " giorni");
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('spesina_user');
+            localStorage.removeItem('spesina_history');
+            location.reload();
         }
 
         // Funzione per gestire la modalità manutenzione
