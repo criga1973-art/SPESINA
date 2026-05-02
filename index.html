@@ -2020,7 +2020,9 @@
             const isVip = (typeof FREE_CLIENTS !== 'undefined' && userData && FREE_CLIENTS.includes(userData.id));
             let elencoProdotti = cart.map(i => `${i.q}x ${i.n} (${(i.p * i.q).toFixed(2)}€)`).join("\n");
             
-            if (ordersThisMonth === 0 && cart.length > 0 && !isVip) {
+            const isFirstOrder = (ordersThisMonth === 0 && cart.length > 0 && !isVip);
+            
+            if (isFirstOrder) {
                 elencoProdotti += "\n+ 🎟️ Abbonamento Mensile Spesina (19.99€)";
             }
 
@@ -2039,7 +2041,8 @@
                         // Registra ordine su Supabase e recupera l'ID
                         if (typeof sb !== 'undefined' && userData && userData.id) {
                             console.log("Salvataggio ordine su Supabase...");
-                            const totalClean = parseFloat(totaleValore.replace('Totale: ', '').replace('€', '').trim());
+                            // Pulizia stringa totale per ottenere solo il numero
+                            const totalClean = parseFloat(totaleValore.replace(/[^\d.,]/g, '').replace(',', '.'));
                             
                             const itemsToSave = [...cart];
                             if (isFirstOrder) {
