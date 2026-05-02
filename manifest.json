@@ -2,7 +2,7 @@
   "name": "Master PIcking",
   "short_name": "PIcking",
   "description": "Dashboard Operativa Spesina",
-  "start_url": "master-picking-v2.html",
+  "start_url": "master-picking-v3.html",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#9333ea",

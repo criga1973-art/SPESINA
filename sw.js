@@ -1,6 +1,6 @@
 const CACHE_NAME = 'master-picking-v3';
 const ASSETS = [
-    'master-picking-v2.html',
+    'master-picking-v3.html',
     'manifest.json'
 ];
 
