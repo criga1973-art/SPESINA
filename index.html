@@ -2037,6 +2037,10 @@
 
 
                         // Registra ordine su Supabase e recupera l'ID
+                        if (typeof sb !== 'undefined' && userData && userData.id) {
+                            console.log("Salvataggio ordine su Supabase...");
+                            const totalClean = parseFloat(totaleValore.replace('Totale: ', '').replace('€', '').trim());
+                            
                             const itemsToSave = [...cart];
                             if (isFirstOrder) {
                                 itemsToSave.push({
