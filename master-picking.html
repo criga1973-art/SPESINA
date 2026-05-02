@@ -421,12 +421,11 @@
         const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let allOrders = [];
-        let allProducts = []; // Cache dei prodotti per le immagini
+        let allProducts = [];
         let selectedOrder = null;
         let checkedItems = new Set();
         let selectedDate = "ALL";
 
-        // Registrazione Service Worker per PWA
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js');
         }
@@ -434,7 +433,6 @@
         function switchTab(tab) {
             document.querySelectorAll('.view-pane').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            
             if (tab === 'picking') {
                 document.getElementById('view-picking').classList.add('active');
                 document.getElementById('tab-picking').classList.add('active');
@@ -447,7 +445,6 @@
         function initDateSelector() {
             const strip = document.getElementById('date-strip');
             const days = ["Dom", "Lun", "Mar", "Mer", "Gio", "Ven", "Sab"];
-            
             strip.innerHTML = '';
             const btnAll = document.createElement('div');
             btnAll.className = "date-btn active";
@@ -461,7 +458,6 @@
                 const dayNum = d.getDate();
                 const dayName = days[d.getDay()];
                 const fullVal = `${["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"][d.getDay()]} ${dayNum} ${["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"][d.getMonth()]}`;
-                
                 const btn = document.createElement('div');
                 btn.className = "date-btn";
                 btn.innerHTML = `${dayNum}<span>${dayName}</span>`;
@@ -478,29 +474,44 @@
         }
 
         async function loadData() {
-            // Carichiamo sia ordini che prodotti
-            const [ordersRes, prodsRes] = await Promise.all([
-                sb.from('orders').select('*').neq('order_data->>status', 'completato').order('created_at', { ascending: false }),
-                sb.from('products').select('*')
-            ]);
+            try {
+                const [ordersRes, prodsRes] = await Promise.all([
+                    sb.from('orders').select('*').neq('order_data->>status', 'completato').order('created_at', { ascending: false }),
+                    sb.from('products').select('*')
+                ]);
 
-            if (ordersRes.error) return console.error(ordersRes.error);
-            if (prodsRes.data) allProducts = prodsRes.data;
+                if (ordersRes.error) throw ordersRes.error;
+                allProducts = prodsRes.data || [];
+                
+                const data = ordersRes.data || [];
+                if (selectedDate === "ALL") {
+                    allOrders = data;
+                } else {
+                    allOrders = data.filter(o => o.order_data.delivery && o.order_data.delivery.startsWith(selectedDate));
+                }
 
-            const data = ordersRes.data;
-            if (selectedDate === "ALL") {
-                allOrders = data;
-            } else {
-                allOrders = data.filter(o => o.order_data.delivery && o.order_data.delivery.startsWith(selectedDate));
+                allOrders.sort((a, b) => {
+                    const getHour = (s) => parseInt(s.split(' ').slice(-1)[0].split(':')[0]) || 0;
+                    return getHour(a.order_data.delivery) - getHour(b.order_data.delivery);
+                });
+                
+                renderPicking();
+                renderOrders();
+            } catch (err) {
+                console.error("Errore caricamento dati:", err);
             }
+        }
 
-            allOrders.sort((a, b) => {
-                const getHour = (s) => parseInt(s.split(' ').slice(-1)[0].split(':')[0]) || 0;
-                return getHour(a.order_data.delivery) - getHour(b.order_data.delivery);
-            });
-            
-            renderPicking();
-            renderOrders();
+        function getProductData(item) {
+            const catalogProd = allProducts.find(p => 
+                (p.ean && item.ean && String(p.ean).trim() === String(item.ean).trim()) || 
+                (p.name && item.n && p.name.toLowerCase() === item.n.toLowerCase())
+            );
+            return {
+                img: catalogProd ? catalogProd.image_url : (item.img || item.image_url || item.image || ''),
+                name: catalogProd ? catalogProd.name : item.n,
+                brand: catalogProd ? catalogProd.brand : (item.b || '')
+            };
         }
 
         function renderPicking() {
@@ -513,17 +524,9 @@
                     const cat = (item.c || "").toLowerCase();
                     if (cat !== 'freschi' && cat !== 'orto' && cat !== 'surgelati') {
                         const key = item.ean || item.n;
+                        const pData = getProductData(item);
                         if (!dryProducts[key]) {
-                            // Confronto EAN intelligente (converte entrambi in stringa)
-                            const catalogProd = allProducts.find(p => 
-                                (p.ean && item.ean && String(p.ean).trim() === String(item.ean).trim()) || 
-                                (p.name && item.n && p.name.toLowerCase() === item.n.toLowerCase())
-                            );
-                            
-                            const imageUrl = catalogProd ? catalogProd.image_url : (item.img || item.image_url || item.image || '');
-                            const brand = catalogProd ? catalogProd.brand : (item.b || '');
-                            
-                            dryProducts[key] = { n: item.n, b: brand, q: 0, img: imageUrl, ean: item.ean };
+                            dryProducts[key] = { n: pData.name, b: pData.brand, q: 0, img: pData.img, ean: item.ean };
                         }
                         dryProducts[key].q += (parseInt(item.q) || 1);
                     }
@@ -537,12 +540,10 @@
                     <img src="${item.img || 'https://via.placeholder.com/55?text=📦'}" 
                          style="width:55px; height:55px; object-fit:contain; background:white; border-radius:8px; flex-shrink:0;"
                          onerror="this.src='https://via.placeholder.com/55?text=📦'">
-                    
                     <div class="picking-details" style="flex:1;">
                         <div class="picking-name" style="font-size:14px; font-weight:700;">${item.b ? item.b + ' ' : ''}${item.n}</div>
                         <div class="picking-ean" style="font-size:11px; color:var(--text-muted);">EAN: ${item.ean || '---'}</div>
                     </div>
-                    
                     <div class="picking-qty" style="font-size:24px; font-weight:900; color:white; min-width:45px; text-align:right;">${item.q}x</div>
                 </div>
             `).join('');
@@ -556,7 +557,6 @@
                 const status = d.status || 'nuovo';
                 const shortId = o.id.toString().slice(0, 8).toUpperCase();
                 const totalPezzi = d.items ? d.items.reduce((acc, curr) => acc + (parseInt(curr.q) || 0), 0) : 0;
-                
                 return `
                     <div class="order-card">
                         <div class="card-header">
@@ -578,34 +578,22 @@
         function openDetail(orderId) {
             selectedOrder = allOrders.find(o => o.id == orderId);
             if (!selectedOrder) return;
-
             const d = selectedOrder.order_data;
             const shortId = selectedOrder.id.toString().slice(0, 8).toUpperCase();
-            
             document.getElementById('det-order-id').innerText = `DETTAGLIO ORDINE #${shortId}`;
             document.getElementById('det-customer').innerText = d.name;
             document.getElementById('det-address').innerText = d.address;
             document.getElementById('del-total').innerText = `${parseFloat(d.total || 0).toFixed(2)} €`;
             document.getElementById('del-maps-btn').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d.address_full || d.address)}`;
             document.getElementById('del-call-btn').href = `tel:${d.phone}`;
-            
             checkedItems.clear();
             renderItemsDetail(d.items || []);
             updateProgress();
-            
             const status = d.status || 'nuovo';
             const btnStart = document.getElementById('btn-start-delivery');
             const btnComplete = document.getElementById('btn-complete-order');
-
-            if (status === 'in_consegna') {
-                btnStart.style.display = 'none';
-                btnComplete.style.display = 'block';
-            } else {
-                btnStart.style.display = 'block';
-                btnStart.disabled = true;
-                btnComplete.style.display = 'none';
-            }
-
+            if (status === 'in_consegna') { btnStart.style.display = 'none'; btnComplete.style.display = 'block'; }
+            else { btnStart.style.display = 'block'; btnStart.disabled = true; btnComplete.style.display = 'none'; }
             document.getElementById('order-detail-overlay').style.display = 'flex';
         }
 
@@ -613,20 +601,12 @@
             const list = document.getElementById('det-items-list');
             list.innerHTML = items.map((item, idx) => {
                 const isChecked = checkedItems.has(idx);
-                
-                // Logica EAN-Centric: cerchiamo i dati ufficiali dal catalogo
-                const catalogProd = allProducts.find(p => 
-                    (p.ean && item.ean && String(p.ean).trim() === String(item.ean).trim()) || 
-                    (p.name && item.n && p.name.toLowerCase() === item.n.toLowerCase())
-                );
-                const imageUrl = catalogProd ? catalogProd.image_url : (item.img || item.image_url || item.image || 'https://via.placeholder.com/45');
-                const itemName = catalogProd ? catalogProd.name : item.n;
-                
+                const pData = getProductData(item);
                 return `
                     <div class="detail-item" id="item-row-${idx}">
-                        <img src="${imageUrl}" onerror="this.src='https://via.placeholder.com/45'">
+                        <img src="${pData.img || 'https://via.placeholder.com/45?text=📦'}" onerror="this.src='https://via.placeholder.com/45?text=📦'">
                         <div class="item-info">
-                            <div class="item-name">${itemName}</div>
+                            <div class="item-name">${pData.name}</div>
                             <div class="item-sub">${item.q}x | EAN: ${item.ean || '---'} | ${parseFloat(item.p || 0).toFixed(2)}€</div>
                         </div>
                         <div class="item-actions">
@@ -640,13 +620,8 @@
 
         function toggleItem(idx) {
             const btn = document.querySelector(`#item-row-${idx} .circle-btn.check`);
-            if (checkedItems.has(idx)) {
-                checkedItems.delete(idx);
-                btn.classList.remove('active');
-            } else {
-                checkedItems.add(idx);
-                btn.classList.add('active');
-            }
+            if (checkedItems.has(idx)) { checkedItems.delete(idx); btn.classList.remove('active'); }
+            else { checkedItems.add(idx); btn.classList.add('active'); }
             updateProgress();
         }
 
@@ -654,7 +629,6 @@
             const total = selectedOrder.order_data.items.length;
             const done = checkedItems.size;
             document.getElementById('det-progress').innerText = `${done} di ${total} prodotti spuntati`;
-            
             const btnStart = document.getElementById('btn-start-delivery');
             if (btnStart) {
                 const allDone = done === total;
@@ -667,21 +641,13 @@
             if (!selectedOrder) return;
             const updatedData = { ...selectedOrder.order_data, status: newStatus };
             const { error } = await sb.from('orders').update({ order_data: updatedData }).eq('id', selectedOrder.id);
-
             if (error) return alert("Errore: " + error.message);
-            if (newStatus === 'completato') {
-                closeDetail();
-            } else {
-                openDetail(selectedOrder.id);
-            }
+            if (newStatus === 'completato') { closeDetail(); }
+            else { openDetail(selectedOrder.id); }
             loadData();
         }
 
-        function closeDetail() {
-            document.getElementById('order-detail-overlay').style.display = 'none';
-            selectedOrder = null;
-        }
-
+        function closeDetail() { document.getElementById('order-detail-overlay').style.display = 'none'; selectedOrder = null; }
         initDateSelector();
         loadData();
     </script>
