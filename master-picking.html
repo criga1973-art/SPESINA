@@ -421,6 +421,7 @@
         const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let allOrders = [];
+        let allProducts = []; // Cache dei prodotti per le immagini
         let selectedOrder = null;
         let checkedItems = new Set();
         let selectedDate = "ALL";
@@ -477,13 +478,16 @@
         }
 
         async function loadData() {
-            const { data, error } = await sb.from('orders')
-                .select('*')
-                .neq('order_data->>status', 'completato')
-                .order('created_at', { ascending: false });
+            // Carichiamo sia ordini che prodotti
+            const [ordersRes, prodsRes] = await Promise.all([
+                sb.from('orders').select('*').neq('order_data->>status', 'completato').order('created_at', { ascending: false }),
+                sb.from('products').select('*')
+            ]);
 
-            if (error) return console.error(error);
+            if (ordersRes.error) return console.error(ordersRes.error);
+            if (prodsRes.data) allProducts = prodsRes.data;
 
+            const data = ordersRes.data;
             if (selectedDate === "ALL") {
                 allOrders = data;
             } else {
@@ -511,9 +515,12 @@
                     if (cat !== 'freschi' && cat !== 'orto' && cat !== 'surgelati') {
                         const key = item.ean || item.n;
                         if (!dryProducts[key]) {
-                            // Cerchiamo l'immagine in tutti i campi possibili
-                            const imageUrl = item.img || item.image_url || item.image || '';
-                            dryProducts[key] = { n: item.n, b: item.b || '', q: 0, img: imageUrl, ean: item.ean };
+                            // Cerchiamo i dati freschi dal catalogo prodotti se possibile
+                            const catalogProd = allProducts.find(p => p.ean === item.ean || p.name === item.n);
+                            const imageUrl = catalogProd ? catalogProd.image_url : (item.img || item.image_url || '');
+                            const brand = catalogProd ? catalogProd.brand : (item.b || '');
+                            
+                            dryProducts[key] = { n: item.n, b: brand, q: 0, img: imageUrl, ean: item.ean };
                         }
                         dryProducts[key].q += (parseInt(item.q) || 1);
                     }
@@ -523,10 +530,10 @@
             const itemsArray = Object.values(dryProducts).sort((a, b) => a.n.localeCompare(b.n));
             pickingList.innerHTML = itemsArray.length === 0 ? '<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:20px;">Nessun prodotto dry</div>' : 
                 itemsArray.map(item => `
-                <div class="picking-item" style="display:flex; align-items:center; gap:15px;">
-                    <img src="${item.img || item.image_url || 'https://uldpnhmdjbbwwqwjsdoh.supabase.co/storage/v1/object/public/products/sub_icon.png'}" 
-                         style="width:50px; height:50px; object-fit:contain; background:white; border-radius:8px; flex-shrink:0;"
-                         onerror="this.src='https://via.placeholder.com/50?text=📦'">
+                <div class="picking-item" style="display:flex; align-items:center; gap:15px; background:var(--dark-lighter); padding:12px; margin-bottom:5px; border-radius:8px;">
+                    <img src="${item.img || 'https://uldpnhmdjbbwwqwjsdoh.supabase.co/storage/v1/object/public/products/sub_icon.png'}" 
+                         style="width:55px; height:55px; object-fit:contain; background:white; border-radius:8px; flex-shrink:0;"
+                         onerror="this.src='https://via.placeholder.com/55?text=📦'">
                     
                     <div class="picking-details" style="flex:1;">
                         <div class="picking-name" style="font-size:14px; font-weight:700;">${item.b ? item.b + ' ' : ''}${item.n}</div>
@@ -603,12 +610,17 @@
             const list = document.getElementById('det-items-list');
             list.innerHTML = items.map((item, idx) => {
                 const isChecked = checkedItems.has(idx);
-                const imageUrl = item.img || item.image_url || item.image || 'https://via.placeholder.com/45';
+                
+                // Logica EAN-Centric: cerchiamo i dati ufficiali dal catalogo
+                const catalogProd = allProducts.find(p => p.ean === item.ean);
+                const imageUrl = catalogProd ? catalogProd.image_url : (item.img || item.image_url || item.image || 'https://via.placeholder.com/45');
+                const itemName = catalogProd ? catalogProd.name : item.n;
+                
                 return `
                     <div class="detail-item" id="item-row-${idx}">
                         <img src="${imageUrl}" onerror="this.src='https://via.placeholder.com/45'">
                         <div class="item-info">
-                            <div class="item-name">${item.n}</div>
+                            <div class="item-name">${itemName}</div>
                             <div class="item-sub">${item.q}x | EAN: ${item.ean || '---'} | ${parseFloat(item.p || 0).toFixed(2)}€</div>
                         </div>
                         <div class="item-actions">
