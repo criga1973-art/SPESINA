@@ -216,6 +216,96 @@
             font-weight: 400;
         }
 
+        /* Detail View Fullscreen */
+        #order-detail-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark);
+            z-index: 10000;
+            display: none;
+            flex-direction: column;
+        }
+
+        .det-header {
+            padding: 15px 20px;
+            background: var(--dark-lighter);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .det-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .item-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--dark-lighter);
+            border-radius: 12px;
+            margin-bottom: 8px;
+            transition: opacity 0.3s;
+        }
+
+        .item-row.checked {
+            opacity: 0.3;
+            border: 1px solid var(--primary);
+        }
+
+        .item-row img {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .checkbox-custom {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            border: 2px solid rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .item-row.checked .checkbox-custom {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .btn {
+            padding: 18px;
+            border-radius: 16px;
+            font-weight: 800;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 16px;
+            color: white;
+            width: 100%;
+            text-decoration: none;
+        }
+
+        .btn-maps { background: var(--blue); }
+        .btn-call { background: var(--primary); }
+        .btn-delivery { background: var(--primary); margin-top: 15px; }
+        .btn-close { background: var(--accent); color: var(--dark); margin-top: 15px; }
+        
+        .btn:disabled { opacity: 0.2; }
+
         .btn-avvia {
             background: var(--primary);
             color: white;
@@ -228,8 +318,6 @@
             margin-top: 15px;
             cursor: pointer;
         }
-
-        .btn:disabled { opacity: 0.2; }
 
     </style>
 </head>
