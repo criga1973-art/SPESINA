@@ -456,12 +456,8 @@
         }
 
         function openDetail(orderId) {
-            // alert("Apro ordine: " + orderId); // Debug
             selectedOrder = allOrders.find(o => o.id == orderId);
-            if (!selectedOrder) {
-                console.error("Ordine non trovato:", orderId);
-                return;
-            }
+            if (!selectedOrder) return;
 
             const d = selectedOrder.order_data;
             const shortId = selectedOrder.id.toString().slice(0, 8).toUpperCase();
@@ -474,8 +470,16 @@
             if(elCust) elCust.innerText = d.name;
             if(elAddr) elAddr.innerText = d.address;
             
-            document.getElementById('det-maps-link').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d.address_full || d.address)}`;
-            document.getElementById('det-phone-link').href = `tel:${d.phone}`;
+            // Popola i dati consegna (nuova scheda blu)
+            const elTotal = document.getElementById('del-total');
+            const elTime = document.getElementById('del-time');
+            const elMaps = document.getElementById('del-maps-btn');
+            const elCall = document.getElementById('del-call-btn');
+
+            if(elTotal) elTotal.innerText = `€ ${parseFloat(d.total || 0).toFixed(2)}`;
+            if(elTime && d.delivery) elTime.innerText = d.delivery.split(' ').slice(-1)[0];
+            if(elMaps) elMaps.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d.address_full || d.address)}`;
+            if(elCall) elCall.href = `tel:${d.phone}`;
             
             checkedItems.clear();
             renderItemsDetail(d.items || []);
@@ -487,12 +491,6 @@
             const itemsBox = document.getElementById('det-items-list');
             const itemsHeader = document.getElementById('items-header');
             const boxingHeader = document.getElementById('boxing-header');
-
-            // Popola i dati consegna
-            if(document.getElementById('del-total')) document.getElementById('del-total').innerText = `€ ${parseFloat(d.total || 0).toFixed(2)}`;
-            if(document.getElementById('del-time')) document.getElementById('del-time').innerText = d.delivery.split(' ').slice(-1)[0];
-            if(document.getElementById('del-maps-btn')) document.getElementById('del-maps-btn').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d.address_full || d.address)}`;
-            if(document.getElementById('del-call-btn')) document.getElementById('del-call-btn').href = `tel:${d.phone}`;
 
             if (status === 'in_consegna') {
                 if(deliveryBox) deliveryBox.style.display = 'block';
@@ -514,8 +512,10 @@
             }
 
             const overlay = document.getElementById('order-detail-overlay');
-            overlay.style.display = 'flex';
-            overlay.style.zIndex = "9999"; 
+            if(overlay) {
+                overlay.style.display = 'flex';
+                overlay.style.zIndex = "9999"; 
+            }
         }
 
         function renderItemsDetail(items) {
