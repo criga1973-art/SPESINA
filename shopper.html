@@ -44,12 +44,12 @@
 
         .tab {
             flex: 1;
-            padding: 10px;
+            padding: 12px;
             text-align: center;
             background: #334155;
             border-radius: 8px;
-            font-weight: 600;
-            font-size: 16px;
+            font-weight: 800;
+            font-size: 18px;
             cursor: pointer;
             transition: 0.3s;
         }
@@ -99,15 +99,16 @@
 
         .btn-action {
             width: 100%;
-            padding: 22px;
+            padding: 26px;
             border: none;
-            border-radius: 14px;
+            border-radius: 16px;
             background: var(--primary);
             color: white;
             font-weight: 800;
-            font-size: 23px;
+            font-size: 26px;
             cursor: pointer;
             transition: transform 0.1s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
         .btn-action:active { transform: scale(0.98); }
@@ -155,24 +156,26 @@
         .item-controls { display: flex; gap: 8px; }
 
         .btn-check {
-            width: 58px; height: 58px;
-            border-radius: 10px;
-            border: 2px solid var(--success);
+            width: 65px; height: 65px;
+            border-radius: 12px;
+            border: 3px solid var(--success);
             background: transparent;
             color: var(--success);
-            font-weight: bold;
+            font-weight: 900;
+            font-size: 24px;
             cursor: pointer;
         }
 
         .btn-check.active { background: var(--success); color: white; }
 
         .btn-delete {
-            width: 58px; height: 58px;
-            border-radius: 10px;
-            border: 2px solid var(--danger);
+            width: 65px; height: 65px;
+            border-radius: 12px;
+            border: 3px solid var(--danger);
             background: transparent;
             color: var(--danger);
-            font-weight: bold;
+            font-weight: 900;
+            font-size: 24px;
             cursor: pointer;
         }
 
@@ -245,12 +248,12 @@
         }
         .day-chip {
             flex-shrink: 0;
-            padding: 5px 10px;
+            padding: 8px 12px;
             background: #334155;
-            border-radius: 6px;
+            border-radius: 10px;
             text-align: center;
             cursor: pointer;
-            min-width: 58px;
+            min-width: 65px;
             border: 2px solid transparent;
         }
         .day-chip.active {
@@ -525,40 +528,56 @@
 
         function renderMasterList() {
             const container = document.getElementById('master-list-container');
-            const dryCategories = ['pasta', 'bevande', 'condimenti', 'dispensa', 'farine', 'colazione', 'panificati', 'animali', 'igiene-p', 'igiene-c'];
+            // Escludiamo solo il fresco/surgelato, tutto il resto è DRY
+            const excludeFromMaster = ['freschi', 'orto', 'surgelati'];
             
             let masterMap = {};
             const filtered = getFilteredOrders();
             
+            console.log("Master List Debug - Ordini Filtrati:", filtered.length);
+
             filtered.forEach(o => {
                 const d = o.order_data;
+                // Includiamo sia Nuovo che In Preparazione
                 if (!d || !d.items || (d.status !== 'nuovo' && d.status !== 'in preparazione')) return;
 
                 d.items.forEach(i => {
-                    const cat = (i.c || '').toLowerCase();
-                    // Solo categorie DRY originali
-                    if (dryCategories.includes(cat)) {
+                    const cat = (i.c || '').toLowerCase().trim();
+                    
+                    // Se non è tra gli esclusi, lo mettiamo in lista prelievo
+                    if (!excludeFromMaster.includes(cat)) {
                         const name = i.n || 'Prodotto Sconosciuto';
-                        if (!masterMap[name]) masterMap[name] = { q: 0, ean: i.ean, size: i.l || i.size };
-                        masterMap[name].q += (parseInt(i.q) || 0);
+                        const key = name + "_" + (i.l || i.size || "");
+                        
+                        if (!masterMap[key]) {
+                            masterMap[key] = { 
+                                n: name, 
+                                q: 0, 
+                                ean: i.ean, 
+                                size: i.l || i.size 
+                            };
+                        }
+                        masterMap[key].q += (parseInt(i.q) || 1);
                     }
                 });
             });
 
             let html = "";
-            Object.keys(masterMap).sort().forEach(name => {
+            const items = Object.values(masterMap).sort((a, b) => a.n.localeCompare(b.n));
+            
+            items.forEach(item => {
                 html += `
                     <div class="master-item">
                         <div>
-                            <div style="font-weight:800; font-size:16px;">${masterMap[name].q}x</div>
-                            <div style="font-size:14px;">${name} ${masterMap[name].size ? '(' + masterMap[name].size + ')' : ''}</div>
-                            <div style="font-size:11px; color:var(--text-muted);">EAN: ${masterMap[name].ean || 'N/A'}</div>
+                            <div style="font-weight:900; font-size:20px; color:var(--primary);">${item.q}x</div>
+                            <div style="font-size:16px; font-weight:700;">${item.n} ${item.size ? '(' + item.size + ')' : ''}</div>
+                            <div style="font-size:12px; color:var(--text-muted);">EAN: ${item.ean || 'N/A'}</div>
                         </div>
                     </div>
                 `;
             });
 
-            container.innerHTML = html || "<div style='text-align:center; padding:50px; color:var(--text-muted);'>Nulla da prelevare per questo filtro.</div>";
+            container.innerHTML = html || "<div style='text-align:center; padding:50px; color:var(--text-muted); font-weight:600;'>Nessun prodotto da prelevare per i giorni selezionati.</div>";
         }
 
         function openOrder(id) {
