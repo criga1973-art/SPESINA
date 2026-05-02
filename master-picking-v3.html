@@ -138,7 +138,9 @@
         .scroll-area {
             flex: 1;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
             padding: 10px;
+            min-height: 0; /* Fondamentale per flexbox scroll su mobile */
         }
 
         /* Master Pick List Style */
@@ -403,7 +405,7 @@
             <a id="del-call-btn" href="#" class="btn-action btn-chiama">📞 CHIAMA</a>
         </div>
 
-        <div class="scroll-area" id="det-items-list"></div>
+        <div class="scroll-area" id="det-items-list" style="padding-bottom: 40px;"></div>
 
         <div class="footer-actions">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
