@@ -1,0 +1,6 @@
+requests
+opencv-python-headless
+zxing-cpp
+python-telegram-bot
+supabase
+python-dotenv

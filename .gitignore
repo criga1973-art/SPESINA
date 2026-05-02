@@ -11,6 +11,7 @@ img/original_backup/
 
 # Escludi file di testo e bozze
 *.txt
+!requirements.txt
 *.pdf
 prova.html
 WEBSPESINA .html
