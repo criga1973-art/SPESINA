@@ -243,23 +243,25 @@
         }
 
         .btn {
-            padding: 15px;
-            border-radius: 14px;
+            padding: 18px;
+            border-radius: 16px;
             font-weight: 800;
             border: none;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            font-size: 14px;
+            gap: 12px;
+            font-size: 16px;
             color: white;
+            width: 100%;
+            text-decoration: none;
         }
 
-        .btn-maps { background: var(--blue); flex: 1; }
-        .btn-call { background: var(--primary); flex: 1; }
-        .btn-delivery { background: var(--primary); width: 100%; margin-top: 15px; font-size: 16px; }
-        .btn-close { background: var(--accent); color: var(--dark); width: 100%; margin-top: 10px; font-size: 16px; }
+        .btn-maps { background: var(--blue); }
+        .btn-call { background: var(--primary); }
+        .btn-delivery { background: var(--primary); margin-top: 15px; }
+        .btn-close { background: var(--accent); color: var(--dark); margin-top: 15px; }
         
         .btn:disabled { opacity: 0.2; }
 
@@ -273,37 +275,36 @@
     </header>
 
     <div class="date-strip" id="date-strip">
-        <!-- Pulsanti numerici popolati da JS -->
+    </div>
+
+    <div class="tab-bar">
+        <button class="tab-btn active" id="tab-picking" onclick="switchTab('picking')">🛒 PICKING</button>
+        <button class="tab-btn" id="tab-orders" onclick="switchTab('orders')">📦 ORDINI</button>
     </div>
 
     <div class="main-container">
-        <div class="picking-col">
-            <div class="col-header">Picking (Dry)</div>
+        <div id="view-picking" class="view-pane active">
             <div class="scroll-area" id="picking-list"></div>
         </div>
-        <div class="boxing-col">
-            <div class="col-header">Ordini</div>
+        <div id="view-orders" class="view-pane">
             <div class="scroll-area" id="orders-list"></div>
         </div>
     </div>
 
-    <!-- Sezione Dettaglio Ordine (Overlay Fullscreen) -->
     <div id="order-detail-overlay">
-        <div style="padding:15px 20px; background:var(--dark-lighter); border-bottom:1px solid rgba(255,255,255,0.1); display:flex; justify-content:space-between; align-items:center;">
+        <div class="det-header">
             <h3 id="det-order-id" style="margin:0; font-size:16px; color:var(--primary);">#ORDINE</h3>
-            <button onclick="closeDetail()" style="background:none; border:none; color:white; font-size:28px; cursor:pointer;">✕</button>
+            <button onclick="closeDetail()" style="background:none; border:none; color:white; font-size:28px;">✕</button>
         </div>
         
-        <div class="scroll-area" style="padding:20px;">
+        <div class="det-content">
             <div id="boxing-header" style="margin-bottom:25px;">
                 <h2 id="det-customer" style="margin:0 0 5px 0; font-size:26px; font-weight:800;">Nome Cliente</h2>
-                <div id="det-address" style="color:var(--text-muted); font-size:16px; line-height:1.4;">Via Indirizzo, Mestre</div>
+                <div id="det-address" style="color:var(--text-muted); font-size:16px;">Via Indirizzo, Mestre</div>
             </div>
             
-            <!-- Vista Consegna (Blu) -->
             <div id="delivery-info" style="display:none; background:rgba(59, 130, 246, 0.2); padding:25px; border-radius:24px; border:1px solid var(--blue); margin-bottom:30px;">
-                <div style="font-size:11px; text-transform:uppercase; color:var(--blue); font-weight:900; margin-bottom:15px; letter-spacing:1px;">🚚 CONSEGNA IN CORSO</div>
-                
+                <div style="font-size:11px; text-transform:uppercase; color:var(--blue); font-weight:900; margin-bottom:15px;">🚚 CONSEGNA IN CORSO</div>
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom:25px;">
                     <div style="background:rgba(0,0,0,0.4); padding:15px; border-radius:18px;">
                         <div style="font-size:10px; opacity:0.6; margin-bottom:5px;">DA INCASSARE</div>
@@ -314,22 +315,17 @@
                         <div id="del-time" style="font-size:16px; font-weight:800;">--:--</div>
                     </div>
                 </div>
-
                 <div style="display:flex; flex-direction:column; gap:12px;">
-                    <a id="del-maps-btn" href="#" target="_blank" class="btn btn-maps" style="height:60px; font-size:16px;">📍 AVVIA NAVIGATORE</a>
-                    <a id="del-call-btn" href="#" class="btn btn-call" style="height:60px; font-size:16px;">📞 CHIAMA CLIENTE</a>
+                    <a id="del-maps-btn" href="#" target="_blank" class="btn btn-maps">📍 AVVIA NAVIGATORE</a>
+                    <a id="del-call-btn" href="#" class="btn btn-call">📞 CHIAMA CLIENTE</a>
                 </div>
             </div>
 
             <h4 id="items-header" style="border-bottom:2px solid rgba(255,255,255,0.1); padding-bottom:10px; margin-bottom:15px; color:var(--primary); font-size:12px; text-transform:uppercase; font-weight:900;">Composizione Scatola</h4>
-            
-            <div id="det-items-list" style="margin-bottom:30px;">
-                <!-- Lista prodotti -->
-            </div>
-
+            <div id="det-items-list" style="margin-bottom:30px;"></div>
             <div id="det-actions">
-                <button id="btn-start-delivery" class="btn btn-delivery" disabled onclick="updateOrderStatus('in_consegna')" style="height:65px; font-size:16px;">📦 TUTTO PRONTO? VAI IN CONSEGNA</button>
-                <button id="btn-complete-order" class="btn btn-close" style="display:none; height:65px; font-size:18px;" onclick="updateOrderStatus('completato')">💰 INCASSA E CHIUDI ORDINE</button>
+                <button id="btn-start-delivery" class="btn btn-delivery" disabled onclick="updateOrderStatus('in_consegna')">📦 VAI IN CONSEGNA</button>
+                <button id="btn-complete-order" class="btn btn-close" style="display:none;" onclick="updateOrderStatus('completato')">💰 INCASSA E CHIUDI</button>
             </div>
         </div>
     </div>
@@ -344,6 +340,19 @@
         let checkedItems = new Set();
 
         let selectedDate = "ALL";
+
+        function switchTab(tab) {
+            document.querySelectorAll('.view-pane').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            
+            if (tab === 'picking') {
+                document.getElementById('view-picking').classList.add('active');
+                document.getElementById('tab-picking').classList.add('active');
+            } else {
+                document.getElementById('view-orders').classList.add('active');
+                document.getElementById('tab-orders').classList.add('active');
+            }
+        }
 
         function initDateSelector() {
             const strip = document.getElementById('date-strip');
