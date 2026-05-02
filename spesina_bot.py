@@ -5,7 +5,6 @@ import logging
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import requests
 import cv2
-import numpy as np
 import zxingcpp
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, ContextTypes, MessageHandler, CallbackQueryHandler, filters
@@ -83,7 +82,7 @@ def upload_to_supabase(image_bytes, ean, folder_name="", sub_name=""):
     }
     
     try:
-        res = requests.post(url, headers=headers, data=image_bytes)
+        requests.post(url, headers=headers, data=image_bytes)
         # Se il caricamento va a buon fine (200 o 201), restituiamo l'URL pubblico
         return f"{SUPABASE_URL}/storage/v1/object/public/{bucket_name}/{encoded_file_name}"
     except Exception as e:
@@ -311,7 +310,7 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     # Se la categoria non e' valida, chiediamola di nuovo per sicurezza
                     state['photo_bytes'] = photo_bytes
                     state['step'] = 'waiting_category'
-                    buttons = [[InlineKeyboardButton(c['n'], callback_data=f"cat_{id}")] for id, c in CAT_MAP.items()]
+                    buttons = [[InlineKeyboardButton(c['n'], callback_data=f"cat_{cat_id}")] for cat_id, c in CAT_MAP.items()]
                     await update.message.reply_text("⚠️ Categoria non trovata per l'aggiornamento. **Sceglila ora:**", reply_markup=InlineKeyboardMarkup(buttons))
                     return
 
@@ -332,7 +331,7 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 # Per nuovi prodotti, memorizziamo i bytes e aspettiamo la scelta categoria
                 state['photo_bytes'] = photo_bytes
                 state['step'] = 'waiting_category'
-                buttons = [[InlineKeyboardButton(c['n'], callback_data=f"cat_{id}")] for id, c in CAT_MAP.items()]
+                buttons = [[InlineKeyboardButton(c['n'], callback_data=f"cat_{cat_id}")] for cat_id, c in CAT_MAP.items()]
                 await update.message.reply_text("📂 **Scegli la CATEGORIA:**", reply_markup=InlineKeyboardMarkup(buttons))
             return
 
