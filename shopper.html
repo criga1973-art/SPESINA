@@ -148,121 +148,99 @@
             font-size: 12px;
         }
 
-        /* Order Cards */
-        .order-card {
-            background: var(--dark-lighter);
-            border-radius: 16px;
-            padding: 15px;
-            margin-bottom: 12px;
-            border: 1px solid rgba(255,255,255,0.1);
+        /* Example Inspired Tab Bar */
+        .tab-bar {
             display: flex;
-            flex-direction: column;
-            gap: 8px;
+            background: var(--dark-lighter);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 18px 0;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-weight: 800;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             cursor: pointer;
             position: relative;
-            z-index: 5;
         }
 
-        .order-card:active {
-            transform: scale(0.98);
-            background: #2d3748;
+        .tab-btn.active {
+            color: white;
         }
 
-        .order-info h3 { margin: 0; font-size: 16px; font-weight: 800; color: white; }
-        .order-info p { margin: 2px 0; font-size: 12px; color: var(--text-muted); }
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20%;
+            right: 20%;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 4px 4px 0 0;
+        }
+
+        /* Example Inspired Order Card */
+        .order-card {
+            background: var(--dark-lighter);
+            margin-bottom: 15px;
+            padding: 20px;
+            border-radius: 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .card-slot {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 5px;
+            color: white;
+        }
+
+        .card-id {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .info-row {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .info-label {
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .info-value {
+            color: white;
+            font-weight: 400;
+        }
 
         .btn-avvia {
             background: var(--primary);
             color: white;
             border: none;
-            padding: 10px;
-            border-radius: 10px;
-            font-weight: 800;
-            font-size: 12px;
-            width: 100%;
-            cursor: pointer;
-            text-transform: uppercase;
-        }
-
-        .order-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* Detail View Fullscreen */
-        #order-detail-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--dark);
-            z-index: 10000;
-            display: none;
-            flex-direction: column;
-        }
-
-        .item-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            background: var(--dark-lighter);
-            border-radius: 12px;
-            margin-bottom: 8px;
-            transition: opacity 0.3s;
-        }
-
-        .item-row.checked {
-            opacity: 0.3; /* Effetto opaco richiesto */
-            border: 1px solid var(--primary);
-        }
-
-        .item-row img {
-            width: 45px;
-            height: 45px;
-            object-fit: contain;
-            background: white;
-            border-radius: 8px;
-        }
-
-        .checkbox-custom {
-            width: 28px;
-            height: 28px;
-            border-radius: 8px;
-            border: 2px solid rgba(255,255,255,0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .item-row.checked .checkbox-custom {
-            background: var(--primary);
-            border-color: var(--primary);
-        }
-
-        .btn {
             padding: 18px;
-            border-radius: 16px;
-            font-weight: 800;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            font-size: 16px;
-            color: white;
+            border-radius: 12px;
             width: 100%;
-            text-decoration: none;
+            font-weight: 800;
+            font-size: 16px;
+            margin-top: 15px;
+            cursor: pointer;
         }
 
-        .btn-maps { background: var(--blue); }
-        .btn-call { background: var(--primary); }
-        .btn-delivery { background: var(--primary); margin-top: 15px; }
-        .btn-close { background: var(--accent); color: var(--dark); margin-top: 15px; }
-        
         .btn:disabled { opacity: 0.2; }
 
     </style>
@@ -449,18 +427,34 @@
                 const d = o.order_data;
                 const status = d.status || 'nuovo';
                 const shortId = o.id.toString().slice(0, 8).toUpperCase();
+                const itemsCount = d.items ? d.items.length : 0;
+                const totalPezzi = d.items ? d.items.reduce((acc, curr) => acc + (parseInt(curr.q) || 0), 0) : 0;
+                
                 return `
-                    <div class="order-card" onclick="openDetail('${o.id}')">
-                        <div class="order-meta">
-                            <span style="color:var(--primary); font-weight:900; font-size:12px;">#${shortId}</span>
-                            <span class="status-badge status-${status}">${status}</span>
+                    <div class="order-card">
+                        <div class="card-slot">Consegna ${d.delivery.includes('oggi') ? 'oggi' : ''}, ${d.delivery.split(' ').slice(-1)[0]}</div>
+                        <div class="card-id">ID ${shortId} 📋</div>
+                        
+                        <div style="font-size:11px; font-weight:700; color:var(--text-muted); margin-bottom:10px; text-transform:uppercase;">Sintesi</div>
+                        
+                        <div class="info-row">
+                            <div class="info-label">Cliente</div>
+                            <div class="info-value">${d.name}</div>
                         </div>
-                        <div class="order-info">
-                            <h3>${d.name}</h3>
-                            <p>📍 ${d.address}</p>
-                            <p>🕒 Slot: ${d.delivery.split(' ').slice(-1)[0]}</p>
+                        <div class="info-row" style="color:var(--primary); font-weight:bold;">
+                            <div class="info-label">Indirizzo</div>
+                            <div class="info-value">${d.address}</div>
                         </div>
-                        <button class="btn-avvia">AVVIA ORDINE</button>
+                        <div class="info-row">
+                            <div class="info-label">Quantità</div>
+                            <div class="info-value">${itemsCount} (${totalPezzi} pezzi)</div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Prezzo</div>
+                            <div class="info-value">${parseFloat(d.total || 0).toFixed(2)} €</div>
+                        </div>
+
+                        <button class="btn-avvia" onclick="openDetail('${o.id}')">Avvia ordine</button>
                     </div>
                 `;
             }).join('');
