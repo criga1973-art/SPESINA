@@ -10,9 +10,6 @@
     <meta name="theme-color" content="#C71585">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -177,9 +174,10 @@
         .picking-qty-container {
             display: flex;
             align-items: center;
-            gap: 10px;
-            min-width: 90px;
-            justify-content: flex-end;
+            gap: 8px;
+            width: 110px; /* Larghezza fissa per allineamento perfetto */
+            justify-content: space-between;
+            flex-shrink: 0;
         }
 
         .picking-qty {
@@ -417,7 +415,7 @@
 <body>
 
     <header>
-        <div class="logo">SPESINA <span>Master PIcking</span> <small style="font-size: 10px; opacity: 0.5; vertical-align: middle;">v2.1</small></div>
+        <div class="logo">SPESINA <span>Master PIcking</span></div>
         <button id="btn-refresh" onclick="loadData()" style="background:none; border:none; color:var(--primary); font-size:14px; font-weight:800; cursor:pointer; transition: opacity 0.2s;">AGGIORNA</button>
     </header>
 
@@ -487,7 +485,7 @@
         let selectedDate = "ALL";
 
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js?v=4');
+            navigator.serviceWorker.register('sw.js');
         }
 
         function switchTab(tab) {
