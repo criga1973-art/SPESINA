@@ -1,24 +1,28 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Master PIcking - Dashboard Operativa</title>
-    
+
     <!-- PWA Meta -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#C71585">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #C71585; /* MediumVioletRed */
+            --primary: #C71585;
+            /* MediumVioletRed */
             --primary-dark: #9e116a;
-            --success: #10b981; /* Verde Mappe */
-            --dark: #0f172a; /* Sfondo Ardesia */
+            --success: #10b981;
+            /* Verde Mappe */
+            --dark: #0f172a;
+            /* Sfondo Ardesia */
             --dark-lighter: #1e293b;
             --dark-card: #111827;
             --text: #f8fafc;
@@ -28,7 +32,10 @@
             --accent: #f59e0b;
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -47,11 +54,18 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .logo { font-weight: 600; font-size: 18px; color: white; }
-        .logo span { color: var(--primary); }
+        .logo {
+            font-weight: 600;
+            font-size: 18px;
+            color: white;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
 
         .date-strip {
             display: flex;
@@ -62,14 +76,17 @@
             scrollbar-width: none;
             flex-shrink: 0;
         }
-        .date-strip::-webkit-scrollbar { display: none; }
+
+        .date-strip::-webkit-scrollbar {
+            display: none;
+        }
 
         .date-btn {
             min-width: 50px;
             height: 50px;
             border-radius: 12px;
             background: var(--dark-lighter);
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             color: var(--text);
             display: flex;
             flex-direction: column;
@@ -85,7 +102,12 @@
             border-color: var(--primary);
             color: white;
         }
-        .date-btn span { font-size: 10px; opacity: 0.6; font-weight: 400; }
+
+        .date-btn span {
+            font-size: 10px;
+            opacity: 0.6;
+            font-weight: 400;
+        }
 
         /* Tabs Style Screenshots */
         .tab-bar {
@@ -118,7 +140,8 @@
             flex: 1;
             display: flex;
             position: relative;
-            height: calc(100vh - 120px); /* Altezza dinamica togliendo header e tabs */
+            height: calc(100vh - 120px);
+            /* Altezza dinamica togliendo header e tabs */
             overflow: hidden;
         }
 
@@ -128,7 +151,8 @@
             height: 100%;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
-            padding-bottom: 80px; /* Spazio extra in fondo per non coprire l'ultimo elemento */
+            padding-bottom: 80px;
+            /* Spazio extra in fondo per non coprire l'ultimo elemento */
         }
 
         .view-pane.active {
@@ -140,7 +164,8 @@
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
             padding: 10px;
-            min-height: 0; /* Fondamentale per flexbox scroll su mobile */
+            min-height: 0;
+            /* Fondamentale per flexbox scroll su mobile */
         }
 
         /* Master Pick List Style */
@@ -175,7 +200,8 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-left: auto; /* Spinge tutto a fondo barra */
+            margin-left: auto;
+            /* Spinge tutto a fondo barra */
             justify-content: flex-end;
             flex-shrink: 0;
         }
@@ -239,7 +265,7 @@
             border-radius: 16px;
             margin-bottom: 20px;
             padding: 32px;
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             position: relative;
         }
 
@@ -258,7 +284,12 @@
             flex-direction: column;
             line-height: 1.2;
         }
-        .card-date span { font-size: 13px; opacity: 0.8; font-weight: 400; }
+
+        .card-date span {
+            font-size: 13px;
+            opacity: 0.8;
+            font-weight: 400;
+        }
 
         .card-status {
             font-size: 10px;
@@ -269,8 +300,15 @@
             background: var(--blue);
             color: white;
         }
-        .card-status.nuovo { background: var(--blue); }
-        .card-status.in_preparazione { background: rgba(255,255,255,0.1); border: 1px solid white; }
+
+        .card-status.nuovo {
+            background: var(--blue);
+        }
+
+        .card-status.in_preparazione {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid white;
+        }
 
         .card-info {
             display: flex;
@@ -279,9 +317,21 @@
             margin-bottom: 26px;
         }
 
-        .info-row { display: flex; align-items: center; gap: 8px; font-size: 13px; }
-        .info-row b { color: white; }
-        .info-address { color: var(--success); font-weight: 600; }
+        .info-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .info-row b {
+            color: white;
+        }
+
+        .info-address {
+            color: var(--success);
+            font-weight: 600;
+        }
 
         .btn-avvia {
             background: var(--primary);
@@ -326,18 +376,48 @@
             cursor: pointer;
         }
 
-        .detail-title-container { flex: 1; }
-        .detail-title { font-size: 14px; font-weight: 600; color: white; margin: 0; }
-        .detail-subtitle { font-size: 10px; color: var(--text-muted); }
+        .detail-title-container {
+            flex: 1;
+        }
+
+        .detail-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            margin: 0;
+        }
+
+        .detail-subtitle {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
 
         .consegna-section {
             padding: 15px;
-            background: rgba(255,255,255,0.02);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
-        .consegna-label { font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px; }
-        .consegna-name { font-size: 18px; font-weight: 600; color: white; text-transform: uppercase; }
-        .consegna-addr { font-size: 12px; color: var(--success); margin-top: 4px; }
+
+        .consegna-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .consegna-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        .consegna-addr {
+            font-size: 12px;
+            color: var(--success);
+            margin-top: 4px;
+        }
 
         .action-grid {
             display: grid;
@@ -360,16 +440,22 @@
             gap: 8px;
             text-decoration: none;
         }
-        .btn-maps { background: var(--success); }
-        .btn-chiama { background: var(--primary); }
+
+        .btn-maps {
+            background: var(--success);
+        }
+
+        .btn-chiama {
+            background: var(--primary);
+        }
 
         .detail-item {
             display: flex;
             align-items: center;
             gap: 12px;
             padding: 10px;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
-            background: rgba(255,255,255,0.01);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.01);
             transition: opacity 0.2s;
             min-height: 80px;
         }
@@ -389,7 +475,10 @@
             padding: 5px;
             opacity: 0.6;
         }
-        .trash-btn:hover { opacity: 1; }
+
+        .trash-btn:hover {
+            opacity: 1;
+        }
 
         .detail-item img {
             width: 60px;
@@ -400,23 +489,36 @@
             flex-shrink: 0;
         }
 
-        .item-info { flex: 1; }
-        .item-name { font-size: 13px; font-weight: 500; color: white; }
-        .item-sub { font-size: 10px; color: #cbd5e1; }
+        .item-info {
+            flex: 1;
+        }
+
+        .item-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: white;
+        }
+
+        .item-sub {
+            font-size: 10px;
+            color: #cbd5e1;
+        }
 
         .footer-actions {
             padding: 12px 15px;
-            border-top: 1px solid rgba(255,255,255,0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
             background: var(--dark-lighter);
             flex-shrink: 0;
         }
     </style>
 </head>
+
 <body>
 
     <header>
         <div class="logo">SPESINA <span>Master PIcking</span></div>
-        <button id="btn-refresh" onclick="loadData()" style="background:none; border:none; color:var(--primary); font-size:14px; font-weight:800; cursor:pointer; transition: opacity 0.2s;">AGGIORNA</button>
+        <button id="btn-refresh" onclick="loadData()"
+            style="background:none; border:none; color:var(--primary); font-size:14px; font-weight:800; cursor:pointer; transition: opacity 0.2s;">AGGIORNA</button>
     </header>
 
     <div class="date-strip" id="date-strip"></div>
@@ -466,8 +568,10 @@
                 <span style="font-size:11px; color:white; font-weight:600;">TOTALE ORDINE</span>
                 <span id="del-total" style="font-size:20px; font-weight:600; color:white;">0.00 €</span>
             </div>
-            <button id="btn-start-delivery" class="btn-avvia" disabled onclick="updateOrderStatus('in_consegna')">VAI IN CONSEGNA</button>
-            <button id="btn-complete-order" class="btn-avvia" style="display:none; background:var(--success);" onclick="updateOrderStatus('completato')">INCASSA E CHIUDI</button>
+            <button id="btn-start-delivery" class="btn-avvia" disabled onclick="updateOrderStatus('in_consegna')">VAI IN
+                CONSEGNA</button>
+            <button id="btn-complete-order" class="btn-avvia" style="display:none; background:var(--success);"
+                onclick="updateOrderStatus('completato')">INCASSA E CHIUDI</button>
         </div>
     </div>
 
@@ -537,7 +641,7 @@
                 btn.innerText = "CARICAMENTO...";
                 btn.style.opacity = "0.5";
             }
-            
+
             try {
                 const [ordersRes, prodsRes] = await Promise.all([
                     sb.from('orders').select('*').neq('order_data->>status', 'completato').order('created_at', { ascending: false }),
@@ -546,7 +650,7 @@
 
                 if (ordersRes.error) throw ordersRes.error;
                 allProducts = prodsRes.data || [];
-                
+
                 const data = ordersRes.data || [];
                 if (selectedDate === "ALL") {
                     allOrders = data;
@@ -562,12 +666,12 @@
                             const p = s.split(' '); // [GiornoSett, Num, Mese, OraRange]
                             const dNum = parseInt(p[1]) || 0;
                             const mNum = monthsMap[p[2]] || 0;
-                            
+
                             // Gestione orario (es: "16:00-18:00" -> prende "16:00")
                             const timePart = p[3] || "00:00";
-                            const firstTime = timePart.split('-')[0]; 
+                            const firstTime = timePart.split('-')[0];
                             const [h, m] = firstTime.split(':').map(val => parseInt(val) || 0);
-                            
+
                             const d = new Date();
                             d.setMonth(mNum, dNum);
                             d.setHours(h, m, 0, 0);
@@ -578,7 +682,7 @@
                     };
                     return parseD(a.order_data.delivery) - parseD(b.order_data.delivery);
                 });
-                
+
                 renderPicking();
                 renderOrders();
             } catch (err) {
@@ -593,8 +697,8 @@
         }
 
         function getProductData(item) {
-            const catalogProd = allProducts.find(p => 
-                (p.ean && item.ean && String(p.ean).trim() === String(item.ean).trim()) || 
+            const catalogProd = allProducts.find(p =>
+                (p.ean && item.ean && String(p.ean).trim() === String(item.ean).trim()) ||
                 (p.name && item.n && p.name.toLowerCase() === item.n.toLowerCase())
             );
             return {
@@ -624,7 +728,7 @@
             });
 
             const itemsArray = Object.values(dryProducts).sort((a, b) => a.n.localeCompare(b.n));
-            pickingList.innerHTML = itemsArray.length === 0 ? '<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:20px;">Nessun prodotto dry</div>' : 
+            pickingList.innerHTML = itemsArray.length === 0 ? '<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:20px;">Nessun prodotto dry</div>' :
                 itemsArray.map(item => {
                     const key = item.ean || item.n;
                     const isChecked = checkedPickingItems.has(key);
@@ -655,14 +759,14 @@
             const ordersList = document.getElementById('orders-list');
             ordersList.innerHTML = allOrders.length === 0 ? '<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:20px;">Nessun ordine</div>' :
                 allOrders.map(o => {
-                const d = o.order_data;
-                const status = d.status || 'nuovo';
-                const shortId = o.id.toString().slice(0, 8).toUpperCase();
-                const totalPezzi = d.items ? d.items.reduce((acc, curr) => acc + (parseInt(curr.q) || 0), 0) : 0;
-                const deliveryParts = d.delivery.split(' ');
-                const timeStr = deliveryParts.pop(); // Prende l'ultimo elemento (l'ora)
-                const dateStr = deliveryParts.join(' '); // Tutto il resto è la data
-                return `
+                    const d = o.order_data;
+                    const status = d.status || 'nuovo';
+                    const shortId = o.id.toString().slice(0, 8).toUpperCase();
+                    const totalPezzi = d.items ? d.items.reduce((acc, curr) => acc + (parseInt(curr.q) || 0), 0) : 0;
+                    const deliveryParts = d.delivery.split(' ');
+                    const timeStr = deliveryParts.pop(); // Prende l'ultimo elemento (l'ora)
+                    const dateStr = deliveryParts.join(' '); // Tutto il resto è la data
+                    return `
                     <div class="order-card">
                         <div class="card-header">
                             <div class="card-date">${dateStr}<span>${timeStr}</span></div>
@@ -677,7 +781,7 @@
                         <button class="btn-avvia" onclick="openDetail('${o.id}')">AVVIA ORDINE</button>
                     </div>
                 `;
-            }).join('');
+                }).join('');
         }
 
         function openDetail(orderId) {
@@ -782,9 +886,9 @@
             // Salva anche i prodotti rimossi se necessario
             const finalItems = selectedOrder.order_data.items.filter((_, idx) => !removedItems.has(idx));
             const newTotal = finalItems.reduce((acc, curr) => acc + (parseFloat(curr.p) || 0) * (parseInt(curr.q) || 1), 0);
-            
-            const updatedData = { 
-                ...selectedOrder.order_data, 
+
+            const updatedData = {
+                ...selectedOrder.order_data,
                 status: newStatus,
                 items: finalItems,
                 total: newTotal
@@ -801,4 +905,5 @@
         loadData();
     </script>
 </body>
+
 </html>
