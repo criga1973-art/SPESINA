@@ -1,10 +1,11 @@
-const CACHE_NAME = 'master-picking-v3';
+const CACHE_NAME = 'master-picking-v4';
 const ASSETS = [
     'master-picking-v3.html',
     'manifest.json'
 ];
 
 self.addEventListener('install', (event) => {
+    self.skipWaiting();
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
             return cache.addAll(ASSETS);
@@ -24,8 +25,8 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
     event.respondWith(
-        caches.match(event.request).then((response) => {
-            return response || fetch(event.request);
+        fetch(event.request).catch(() => {
+            return caches.match(event.request);
         })
     );
 });
