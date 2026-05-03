@@ -710,7 +710,8 @@
                         <img src="${pData.img || 'https://via.placeholder.com/60?text=📦'}" onerror="this.src='https://via.placeholder.com/60?text=📦'">
                         <div class="item-info">
                             <div class="item-name">${pData.name}</div>
-                            <div class="item-sub">EAN: ${item.ean || '---'} | ${parseFloat(item.p || 0).toFixed(2)}€</div>
+                            <div class="item-sub">EAN: ${item.ean || '---'}</div>
+                            <div class="item-sub">${parseFloat(item.p || 0).toFixed(2)}€ / cad.</div>
                         </div>
                         <div class="picking-qty-container">
                             <span class="qta-label">Qta:</span>
