@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,15 +9,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #10b981; /* Verde Smeraldo */
+            --primary: #10b981;
+            /* Verde Smeraldo */
             --primary-dark: #059669;
-            --dark: #0f172a; /* Ardesia Profondo */
+            --dark: #0f172a;
+            /* Ardesia Profondo */
             --dark-lighter: #1e293b;
             --text: #f8fafc;
             --text-muted: #94a3b8;
             --red: #ef4444;
             --blue: #3b82f6;
-            --accent: #f59e0b; /* Ambra per accenti */
+            --accent: #f59e0b;
+            /* Ambra per accenti */
         }
 
         body {
@@ -28,7 +32,8 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            touch-action: manipulation; /* Migliora reattività touch */
+            touch-action: manipulation;
+            /* Migliora reattività touch */
         }
 
         header {
@@ -37,11 +42,18 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .logo { font-weight: 800; font-size: 18px; color: white; }
-        .logo span { color: var(--primary); }
+        .logo {
+            font-weight: 800;
+            font-size: 18px;
+            color: white;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
 
         .date-strip {
             display: flex;
@@ -51,14 +63,17 @@
             background: var(--dark);
             scrollbar-width: none;
         }
-        .date-strip::-webkit-scrollbar { display: none; }
+
+        .date-strip::-webkit-scrollbar {
+            display: none;
+        }
 
         .date-btn {
             min-width: 45px;
             height: 45px;
             border-radius: 12px;
             background: var(--dark-lighter);
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             color: var(--text);
             display: flex;
             flex-direction: column;
@@ -76,7 +91,11 @@
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
         }
 
-        .date-btn span { font-size: 10px; opacity: 0.7; font-weight: 400; }
+        .date-btn span {
+            font-size: 10px;
+            opacity: 0.7;
+            font-weight: 400;
+        }
 
         .main-container {
             flex: 1;
@@ -111,7 +130,7 @@
             background: var(--dark-lighter);
             border-radius: 16px;
             margin-bottom: 10px;
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .picking-info {
@@ -168,7 +187,7 @@
         .tab-bar {
             display: flex;
             background: var(--dark-lighter);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .tab-btn {
@@ -206,7 +225,7 @@
             margin-bottom: 15px;
             padding: 20px;
             border-radius: 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .card-slot {
@@ -260,7 +279,7 @@
         .det-header {
             padding: 15px 20px;
             background: var(--dark-lighter);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -300,7 +319,7 @@
             width: 28px;
             height: 28px;
             border-radius: 8px;
-            border: 2px solid rgba(255,255,255,0.2);
+            border: 2px solid rgba(255, 255, 255, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -327,11 +346,24 @@
             text-decoration: none;
         }
 
-        .btn-call { background: var(--primary); }
-        .btn-delivery { background: var(--primary); margin-top: 15px; }
-        .btn-close { background: var(--accent); color: var(--dark); margin-top: 15px; }
-        
-        .btn:disabled { opacity: 0.2; }
+        .btn-call {
+            background: var(--primary);
+        }
+
+        .btn-delivery {
+            background: var(--primary);
+            margin-top: 15px;
+        }
+
+        .btn-close {
+            background: var(--accent);
+            color: var(--dark);
+            margin-top: 15px;
+        }
+
+        .btn:disabled {
+            opacity: 0.2;
+        }
 
         .btn-avvia {
             background: var(--primary);
@@ -345,14 +377,15 @@
             margin-top: 15px;
             cursor: pointer;
         }
-
     </style>
 </head>
+
 <body>
 
     <header>
         <div class="logo">SPESINA <span>MasterPicking</span></div>
-        <button onclick="loadData()" style="background:none; border:none; color:var(--primary); font-size:14px; font-weight:800; cursor:pointer;">AGGIORNA</button>
+        <button onclick="loadData()"
+            style="background:none; border:none; color:var(--primary); font-size:14px; font-weight:800; cursor:pointer;">AGGIORNA</button>
     </header>
 
     <div class="date-strip" id="date-strip">
@@ -375,19 +408,28 @@
     <!-- Sezione Dettaglio Ordine -->
     <div id="order-detail-overlay">
         <!-- Riga 1: Navigazione (Stretti, Centrati, Snelli) -->
-        <div style="display:flex; width:100%; height:60px; gap:15px; padding:0; align-items:center; justify-content:center; background:var(--dark); box-sizing:border-box; flex-shrink:0;">
-            <a id="del-maps-btn" href="#" target="_blank" style="width:130px; height:42px; border-radius:10px; background:var(--blue); color:white; font-size:12px; font-weight:800; display:flex; align-items:center; justify-content:center; text-decoration:none; text-transform:uppercase; letter-spacing:1px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">NAVIGA</a>
-            <a id="del-call-btn" href="#" style="width:130px; height:42px; border-radius:10px; background:var(--primary); color:white; font-size:12px; font-weight:800; display:flex; align-items:center; justify-content:center; text-decoration:none; text-transform:uppercase; letter-spacing:1px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">CHIAMA</a>
+        <div
+            style="display:flex; width:100%; height:60px; gap:15px; padding:0; align-items:center; justify-content:center; background:var(--dark); box-sizing:border-box; flex-shrink:0;">
+            <a id="del-maps-btn" href="#" target="_blank"
+                style="width:130px; height:42px; border-radius:10px; background:var(--blue); color:white; font-size:12px; font-weight:800; display:flex; align-items:center; justify-content:center; text-decoration:none; text-transform:uppercase; letter-spacing:1px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">NAVIGA</a>
+            <a id="del-call-btn" href="#"
+                style="width:130px; height:42px; border-radius:10px; background:var(--primary); color:white; font-size:12px; font-weight:800; display:flex; align-items:center; justify-content:center; text-decoration:none; text-transform:uppercase; letter-spacing:1px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">CHIAMA</a>
         </div>
-        
+
         <!-- Riga 2: Info e Ritorno (Sfondo pieno) -->
-        <div style="padding:12px 15px; display:flex; justify-content:space-between; align-items:center; background:var(--dark-lighter); border-bottom:1px solid rgba(255,255,255,0.1); flex-shrink:0;">
-            <span id="det-order-id" style="font-size:12px; color:var(--text-muted); font-weight:900; text-transform:uppercase; letter-spacing:1px;">ORDINE #---</span>
-            <button onclick="closeDetail()" style="background:var(--accent); border:none; color:var(--dark); font-size:11px; font-weight:800; padding:8px 16px; border-radius:8px; cursor:pointer; text-transform:uppercase;">Torna alla lista</button>
+        <div
+            style="padding:12px 15px; display:flex; justify-content:space-between; align-items:center; background:var(--dark-lighter); border-bottom:1px solid rgba(255,255,255,0.1); flex-shrink:0;">
+            <span id="det-order-id"
+                style="font-size:12px; color:var(--text-muted); font-weight:900; text-transform:uppercase; letter-spacing:1px;">ORDINE
+                #---</span>
+            <button onclick="closeDetail()"
+                style="background:var(--accent); border:none; color:var(--dark); font-size:11px; font-weight:800; padding:8px 16px; border-radius:8px; cursor:pointer; text-transform:uppercase;">Torna
+                alla lista</button>
         </div>
 
         <div class="det-content">
-            <h2 id="det-customer" style="margin:0 0 20px 0; font-size:24px; font-weight:800; text-transform:uppercase;">Nome Cliente</h2>
+            <h2 id="det-customer" style="margin:0 0 20px 0; font-size:24px; font-weight:800; text-transform:uppercase;">
+                Nome Cliente</h2>
 
             <div id="det-items-list" style="margin-bottom:30px;">
                 <!-- Lista prodotti sempre visibile -->
@@ -398,9 +440,13 @@
                     <span style="font-size:12px; font-weight:700; color:var(--text-muted);">TOTALE</span>
                     <span id="del-total" style="font-size:26px; font-weight:900; color:var(--accent);">€ 0.00</span>
                 </div>
-                
-                <button id="btn-start-delivery" class="btn btn-delivery" disabled onclick="updateOrderStatus('in_consegna')" style="height:65px; font-size:16px; border-radius:12px;">VAI IN CONSEGNA</button>
-                <button id="btn-complete-order" class="btn btn-close" style="display:none; height:65px; font-size:16px; border-radius:12px;" onclick="updateOrderStatus('completato')">INCASSA E CHIUDI ORDINE</button>
+
+                <button id="btn-start-delivery" class="btn btn-delivery" disabled
+                    onclick="updateOrderStatus('in_consegna')"
+                    style="height:65px; font-size:16px; border-radius:12px;">VAI IN CONSEGNA</button>
+                <button id="btn-complete-order" class="btn btn-close"
+                    style="display:none; height:65px; font-size:16px; border-radius:12px;"
+                    onclick="updateOrderStatus('completato')">INCASSA E CHIUDI ORDINE</button>
             </div>
         </div>
     </div>
@@ -419,7 +465,7 @@
         function switchTab(tab) {
             document.querySelectorAll('.view-pane').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            
+
             if (tab === 'picking') {
                 document.getElementById('view-picking').classList.add('active');
                 document.getElementById('tab-picking').classList.add('active');
@@ -432,7 +478,7 @@
         function initDateSelector() {
             const strip = document.getElementById('date-strip');
             const days = ["Dom", "Lun", "Mar", "Mer", "Gio", "Ven", "Sab"];
-            
+
             // Pulsante ALL
             const btnAll = document.createElement('div');
             btnAll.className = "date-btn active";
@@ -446,7 +492,7 @@
                 const dayNum = d.getDate();
                 const dayName = days[d.getDay()];
                 const fullVal = `${["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"][d.getDay()]} ${dayNum} ${["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"][d.getMonth()]}`;
-                
+
                 const btn = document.createElement('div');
                 btn.className = "date-btn";
                 btn.innerHTML = `${dayNum}<span>${dayName}</span>`;
@@ -480,7 +526,7 @@
                 const getHour = (s) => parseInt(s.split(' ').slice(-1)[0].split(':')[0]) || 0;
                 return getHour(a.order_data.delivery) - getHour(b.order_data.delivery);
             });
-            
+
             renderPicking();
             renderOrders();
         }
@@ -504,7 +550,7 @@
             });
 
             const itemsArray = Object.values(dryProducts).sort((a, b) => a.n.localeCompare(b.n));
-            pickingList.innerHTML = itemsArray.length === 0 ? '<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:20px;">Nessun prodotto dry</div>' : 
+            pickingList.innerHTML = itemsArray.length === 0 ? '<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:20px;">Nessun prodotto dry</div>' :
                 itemsArray.map(item => `
                 <div class="picking-item">
                     <div class="picking-info">
@@ -523,13 +569,13 @@
             const ordersList = document.getElementById('orders-list');
             ordersList.innerHTML = allOrders.length === 0 ? '<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:20px;">Nessun ordine</div>' :
                 allOrders.map(o => {
-                const d = o.order_data;
-                const status = d.status || 'nuovo';
-                const shortId = o.id.toString().slice(0, 8).toUpperCase();
-                const itemsCount = d.items ? d.items.length : 0;
-                const totalPezzi = d.items ? d.items.reduce((acc, curr) => acc + (parseInt(curr.q) || 0), 0) : 0;
-                
-                return `
+                    const d = o.order_data;
+                    const status = d.status || 'nuovo';
+                    const shortId = o.id.toString().slice(0, 8).toUpperCase();
+                    const itemsCount = d.items ? d.items.length : 0;
+                    const totalPezzi = d.items ? d.items.reduce((acc, curr) => acc + (parseInt(curr.q) || 0), 0) : 0;
+
+                    return `
                     <div class="order-card">
                         <div class="card-slot">Consegna ${d.delivery.includes('oggi') ? 'oggi' : ''}, ${d.delivery.split(' ').slice(-1)[0]}</div>
                         <div class="card-id">ID ${shortId}</div>
@@ -556,7 +602,7 @@
                         <button class="btn-avvia" onclick="openDetail('${o.id}')">Avvia ordine</button>
                     </div>
                 `;
-            }).join('');
+                }).join('');
         }
 
         function openDetail(orderId) {
@@ -565,45 +611,45 @@
 
             const d = selectedOrder.order_data;
             const shortId = selectedOrder.id.toString().slice(0, 8).toUpperCase();
-            
+
             const elId = document.getElementById('det-order-id');
             const elCust = document.getElementById('det-customer');
-            
-            if(elId) elId.innerText = `ORDINE #${shortId}`;
-            if(elCust) elCust.innerText = d.name;
-            
+
+            if (elId) elId.innerText = `ORDINE #${shortId}`;
+            if (elCust) elCust.innerText = d.name;
+
             const elTotal = document.getElementById('del-total');
             const elMaps = document.getElementById('del-maps-btn');
             const elCall = document.getElementById('del-call-btn');
 
-            if(elTotal) elTotal.innerText = `€ ${parseFloat(d.total || 0).toFixed(2)}`;
-            if(elMaps) elMaps.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d.address_full || d.address)}`;
-            if(elCall) elCall.href = `tel:${d.phone}`;
-            
+            if (elTotal) elTotal.innerText = `€ ${parseFloat(d.total || 0).toFixed(2)}`;
+            if (elMaps) elMaps.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d.address_full || d.address)}`;
+            if (elCall) elCall.href = `tel:${d.phone}`;
+
             checkedItems.clear();
             renderItemsDetail(d.items || []);
-            
+
             const status = d.status || 'nuovo';
             const btnStart = document.getElementById('btn-start-delivery');
             const btnComplete = document.getElementById('btn-complete-order');
 
             // La lista prodotti è sempre visibile in questo nuovo layout
             if (status === 'in_consegna') {
-                if(btnStart) btnStart.style.display = 'none';
-                if(btnComplete) btnComplete.style.display = 'block';
+                if (btnStart) btnStart.style.display = 'none';
+                if (btnComplete) btnComplete.style.display = 'block';
             } else {
-                if(btnStart) {
+                if (btnStart) {
                     btnStart.style.display = 'block';
                     btnStart.disabled = true;
                     btnStart.style.opacity = "0.3";
                 }
-                if(btnComplete) btnComplete.style.display = 'none';
+                if (btnComplete) btnComplete.style.display = 'none';
             }
 
             const overlay = document.getElementById('order-detail-overlay');
-            if(overlay) {
+            if (overlay) {
                 overlay.style.display = 'flex';
-                overlay.style.zIndex = "9999"; 
+                overlay.style.zIndex = "9999";
             }
         }
 
@@ -651,7 +697,7 @@
                 row.classList.add('checked');
                 row.querySelector('.checkbox-custom').innerText = 'OK';
             }
-            
+
             const totalItems = selectedOrder.order_data.items.length;
             const btnStart = document.getElementById('btn-start-delivery');
             if (btnStart) {
@@ -665,7 +711,7 @@
             if (!selectedOrder) return;
 
             const updatedData = { ...selectedOrder.order_data, status: newStatus };
-            
+
             const { error } = await sb.from('orders')
                 .update({ order_data: updatedData })
                 .eq('id', selectedOrder.id);
@@ -683,7 +729,7 @@
                 alert("🚀 Consegna avviata!");
                 openDetail(selectedOrder.id); // Refresh view
             }
-            
+
             loadData(); // Refresh lists
         }
 
@@ -712,4 +758,5 @@
         loadData();
     </script>
 </body>
+
 </html>

@@ -8,7 +8,8 @@
     <title>SPESINA</title>
     <!-- Supabase Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Lora:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Lora:wght@700&display=swap"
+        rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
 
@@ -647,7 +648,7 @@
             background: white;
             padding: 30px 25px;
             border-radius: 28px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
             margin-bottom: 20px;
             border: 1px solid #f1f5f9;
             transition: transform 0.2s;
@@ -676,13 +677,18 @@
 
 <body>
 
-    <div id="cart-trigger" onclick="openCart()">🛒 Articoli: <span id="cart-limit-display">0 di 7</span> | <span id="cart-total-top">0.00€</span></div>
+    <div id="cart-trigger" onclick="openCart()">🛒 Articoli: <span id="cart-limit-display">0 di 7</span> | <span
+            id="cart-total-top">0.00€</span></div>
 
     <header>
         <div style="display: flex; justify-content: center; align-items: center; padding-bottom: 5px;">
-            <div style="display: flex; align-items: center; cursor: pointer; color: #2d1b4d; font-family: 'Lora', serif; font-weight: 700; font-size: 42px; letter-spacing: -1.5px;" onclick="adminClick()">
-                Spes<span style="position: relative; display: inline-block;">ı<svg viewBox="0 0 24 24" fill="#42d3a5" xmlns="http://www.w3.org/2000/svg" style="position: absolute; top: -14px; left: 105%; transform: translateX(-50%); width: 28px; height: 28px;">
-                        <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/>
+            <div style="display: flex; align-items: center; cursor: pointer; color: #2d1b4d; font-family: 'Lora', serif; font-weight: 700; font-size: 42px; letter-spacing: -1.5px;"
+                onclick="adminClick()">
+                Spes<span style="position: relative; display: inline-block;">ı<svg viewBox="0 0 24 24" fill="#42d3a5"
+                        xmlns="http://www.w3.org/2000/svg"
+                        style="position: absolute; top: -14px; left: 105%; transform: translateX(-50%); width: 28px; height: 28px;">
+                        <path
+                            d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z" />
                     </svg></span>na
             </div>
         </div>
@@ -697,11 +703,16 @@
     <div id="home-view">
         <!-- Banner Benvenuto Utente -->
         <div id="user-welcome-banner" style="display:none; padding:15px 20px 0 20px;">
-            <div style="background:linear-gradient(135deg, #f8fafc, #f1f5f9); border:1px solid #e2e8f0; border-radius:18px; padding:15px; display:flex; align-items:center; gap:12px; box-shadow:0 4px 6px rgba(0,0,0,0.02);">
-                <div style="background:var(--primary); color:white; width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px;">👤</div>
+            <div
+                style="background:linear-gradient(135deg, #f8fafc, #f1f5f9); border:1px solid #e2e8f0; border-radius:18px; padding:15px; display:flex; align-items:center; gap:12px; box-shadow:0 4px 6px rgba(0,0,0,0.02);">
+                <div
+                    style="background:var(--primary); color:white; width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px;">
+                    👤</div>
                 <div style="flex-grow:1;">
-                    <div style="font-size:14px; font-weight:800; color:var(--dark);">Ciao, <span id="welcome-name">...</span>!</div>
-                    <div style="font-size:11px; color:#64748b; font-weight:600; margin-top:2px;">ID: <span id="welcome-id">...</span> | Scade: <span id="welcome-expiry">...</span></div>
+                    <div style="font-size:14px; font-weight:800; color:var(--dark);">Ciao, <span
+                            id="welcome-name">...</span>!</div>
+                    <div style="font-size:11px; color:#64748b; font-weight:600; margin-top:2px;">ID: <span
+                            id="welcome-id">...</span> | Scade: <span id="welcome-expiry">...</span></div>
                 </div>
             </div>
         </div>
@@ -734,28 +745,32 @@
             <h3 style="margin: 0; flex-grow: 1; text-align: center;">Filosofia</h3>
             <div style="width: 80px;"></div>
         </div>
-        
+
         <div class="philosophy-hero">
-            <h2 style="font-size:26px; font-weight:800; color:var(--dark); line-height:1.2;">Spesina: La tua spesa intelligente a Mestre.</h2>
+            <h2 style="font-size:26px; font-weight:800; color:var(--dark); line-height:1.2;">Spesina: La tua spesa
+                intelligente a Mestre.</h2>
         </div>
 
         <div style="padding:0 20px 40px 20px;">
             <div class="philosophy-card">
                 <span class="philosophy-icon">🎟️</span>
                 <h4>Abbonamento Mensile</h4>
-                <p>Nessun costo di consegna, mai. Con 19,99€ al mese ordini quante volte vuoi. Ti basta un solo ordine a settimana per iniziare a risparmiare.</p>
+                <p>Nessun costo di consegna, mai. Con 19,99€ al mese ordini quante volte vuoi. Ti basta un solo ordine a
+                    settimana per iniziare a risparmiare.</p>
             </div>
 
             <div class="philosophy-card">
                 <span class="philosophy-icon">⚡</span>
                 <h4>Il limite dei 7 pezzi</h4>
-                <p>Perché solo 7 pezzi? Perché vogliamo essere fulminei. Meno peso per i nostri rider significa più velocità per te e meno traffico per Mestre.</p>
+                <p>Perché solo 7 pezzi? Perché vogliamo essere fulminei. Meno peso per i nostri rider significa più
+                    velocità per te e meno traffico per Mestre.</p>
             </div>
 
             <div class="philosophy-card">
                 <span class="philosophy-icon">💎</span>
                 <h4>Qualità Garantita</h4>
-                <p>Selezioniamo solo il meglio, dalla frutta fresca ai prodotti locali, pronti per essere consegnati a casa tua.</p>
+                <p>Selezioniamo solo il meglio, dalla frutta fresca ai prodotti locali, pronti per essere consegnati a
+                    casa tua.</p>
             </div>
 
             <button class="btn-confirm" onclick="goHome();" style="margin-top:20px;">INIZIA LA SPESA</button>
@@ -778,15 +793,20 @@
             <div style="width: 80px;"></div>
         </div>
         <div class="form-container">
-            <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px; line-height:1.4; border-bottom: 1px solid #eee; padding-bottom: 15px;">Completa i dati per attivare il tuo account <b>Spesina</b>. Ricorda: abbonamento mensile 19,99€, consegne illimitate, max 7 articoli per ordine.</p>
+            <p
+                style="font-size:13px; color:var(--text-muted); margin-bottom:20px; line-height:1.4; border-bottom: 1px solid #eee; padding-bottom: 15px;">
+                Completa i dati per attivare il tuo account <b>Spesina</b>. Ricorda: abbonamento mensile 19,99€,
+                consegne illimitate, max 7 articoli per ordine.</p>
             <form id="register-form" onsubmit="handleRegister(event)" autocomplete="off">
                 <div class="input-group">
                     <label>Nome e Cognome</label>
-                    <input type="text" id="reg-name" class="select-box" placeholder="Mario Rossi" oninput="checkRegisterValidity()" autocomplete="new-password">
+                    <input type="text" id="reg-name" class="select-box" placeholder="Mario Rossi"
+                        oninput="checkRegisterValidity()" autocomplete="new-password">
                 </div>
                 <div class="input-group">
                     <label>Email (Per ricevere il riepilogo spesa)</label>
-                    <input type="email" id="reg-email" class="select-box" placeholder="mario.rossi@esempio.it" oninput="checkRegisterValidity()" autocomplete="new-password">
+                    <input type="email" id="reg-email" class="select-box" placeholder="mario.rossi@esempio.it"
+                        oninput="checkRegisterValidity()" autocomplete="new-password">
                 </div>
                 <div class="input-group">
                     <label>Numero di Cellulare</label>
@@ -814,21 +834,25 @@
 
                 <div class="input-group">
                     <label>Indirizzo di Consegna (Mestre)</label>
-                    <input type="text" id="reg-address" class="select-box" placeholder="es: Via Mestrina" oninput="checkRegisterValidity()">
+                    <input type="text" id="reg-address" class="select-box" placeholder="es: Via Mestrina"
+                        oninput="checkRegisterValidity()">
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px;">
                     <div class="input-group" style="margin-bottom:0;">
                         <label>N° civico</label>
-                        <input type="text" id="reg-civico" class="select-box" placeholder="es: 10" oninput="checkRegisterValidity()">
+                        <input type="text" id="reg-civico" class="select-box" placeholder="es: 10"
+                            oninput="checkRegisterValidity()">
                     </div>
                     <div class="input-group" style="margin-bottom:0;">
                         <label>Piano</label>
-                        <input type="text" id="reg-piano" class="select-box" placeholder="es: 2" oninput="checkRegisterValidity()">
+                        <input type="text" id="reg-piano" class="select-box" placeholder="es: 2"
+                            oninput="checkRegisterValidity()">
                     </div>
                     <div class="input-group" style="margin-bottom:0;">
                         <label>Interno</label>
-                        <input type="text" id="reg-interno" class="select-box" placeholder="es: 5" oninput="checkRegisterValidity()">
+                        <input type="text" id="reg-interno" class="select-box" placeholder="es: 5"
+                            oninput="checkRegisterValidity()">
                     </div>
                 </div>
 
@@ -847,8 +871,10 @@
     <div class="modal" id="modalCart">
         <div class="modal-content">
             <h3>🛒 Il tuo Carrello</h3>
-            <div id="first-order-msg" style="display:none; background:var(--primary-light); border:1px solid var(--primary); color:var(--dark); padding:15px; border-radius:12px; font-size:13px; font-weight:700; margin-bottom:15px; border-left: 5px solid var(--primary);">
-                ℹ️ Stai effettuando la prima spesa del mese: l'abbonamento per l'accesso illimitato a Spesina viene aggiunto a questo ordine.
+            <div id="first-order-msg"
+                style="display:none; background:var(--primary-light); border:1px solid var(--primary); color:var(--dark); padding:15px; border-radius:12px; font-size:13px; font-weight:700; margin-bottom:15px; border-left: 5px solid var(--primary);">
+                ℹ️ Stai effettuando la prima spesa del mese: l'abbonamento per l'accesso illimitato a Spesina viene
+                aggiunto a questo ordine.
             </div>
             <div id="cart-items-list"></div>
 
@@ -860,8 +886,12 @@
                 <select id="select-ora" class="select-box" style="margin-top:10px;"></select>
             </div>
 
-            <h3 id="final-price" style="margin-top:20px; border-top:2px solid #eee; padding-top:10px;">Totale: 0.00€</h3>
-            <p id="weight-disclaimer" style="font-size:12px; color:var(--text-muted); margin-bottom:15px; font-style:italic; line-height:1.4; display:none; background: #f1f5f9; padding: 10px; border-radius: 8px; border-left: 4px solid var(--primary);">⚠️ <b>Nota Ortofrutta:</b> I prodotti sono venduti a pezzo/confezione e il peso è indicativo. L'acquisto si intende perfezionato per l'unità e non per il peso esatto (Art. 4 T&C).</p>
+            <h3 id="final-price" style="margin-top:20px; border-top:2px solid #eee; padding-top:10px;">Totale: 0.00€
+            </h3>
+            <p id="weight-disclaimer"
+                style="font-size:12px; color:var(--text-muted); margin-bottom:15px; font-style:italic; line-height:1.4; display:none; background: #f1f5f9; padding: 10px; border-radius: 8px; border-left: 4px solid var(--primary);">
+                ⚠️ <b>Nota Ortofrutta:</b> I prodotti sono venduti a pezzo/confezione e il peso è indicativo. L'acquisto
+                si intende perfezionato per l'unità e non per il peso esatto (Art. 4 T&C).</p>
             <button class="btn-confirm" onclick="showPay()">PROSEGUI</button>
             <button onclick="closeModals()"
                 style="border:none;background:none;color:gray;margin-top:10px;cursor:pointer">Chiudi</button>
@@ -871,7 +901,9 @@
     <div class="modal" id="modalPay">
         <div class="modal-content">
             <h3>Metodo di Pagamento</h3>
-            <div class="pay-option" onclick="finish('Contanti')" style="display: flex; align-items: center; justify-content: center; gap: 10px;">💵 Contanti alla consegna</div>
+            <div class="pay-option" onclick="finish('Contanti')"
+                style="display: flex; align-items: center; justify-content: center; gap: 10px;">💵 Contanti alla
+                consegna</div>
             <button onclick="closeModals()"
                 style="border:none;background:none;color:gray;margin-top:10px;cursor:pointer">Indietro</button>
         </div>
@@ -881,16 +913,21 @@
     <div class="modal" id="modalLogin">
         <div class="modal-content">
             <h3 style="margin-top:0;">🔑 Accedi a Spesina</h3>
-            <p style="font-size:14px; color:var(--text-muted); margin-bottom:20px;">Inserisci il tuo ID Cliente per recuperare il tuo profilo e i tuoi ordini.</p>
-            
+            <p style="font-size:14px; color:var(--text-muted); margin-bottom:20px;">Inserisci il tuo ID Cliente per
+                recuperare il tuo profilo e i tuoi ordini.</p>
+
             <div class="input-group">
                 <label>ID Cliente (es: SP-XXXXXX)</label>
-                <input type="text" id="login-id" class="select-box" placeholder="Inserisci il tuo ID..." style="text-transform:uppercase;">
+                <input type="text" id="login-id" class="select-box" placeholder="Inserisci il tuo ID..."
+                    style="text-transform:uppercase;">
             </div>
 
             <button class="btn-confirm" style="margin-top:10px;" onclick="handleLogin()">ACCEDI ORA</button>
-            <p style="font-size:12px; margin-top:15px; color:var(--text-muted);">Non hai un ID? <a onclick="closeModals(); showRegister()" style="color:var(--primary); font-weight:700; cursor:pointer;">Registrati qui</a></p>
-            <button onclick="closeModals()" style="border:none;background:none;color:var(--text-muted);margin-top:10px;cursor:pointer;font-weight:700;">Chiudi</button>
+            <p style="font-size:12px; margin-top:15px; color:var(--text-muted);">Non hai un ID? <a
+                    onclick="closeModals(); showRegister()"
+                    style="color:var(--primary); font-weight:700; cursor:pointer;">Registrati qui</a></p>
+            <button onclick="closeModals()"
+                style="border:none;background:none;color:var(--text-muted);margin-top:10px;cursor:pointer;font-weight:700;">Chiudi</button>
         </div>
     </div>
 
@@ -941,27 +978,38 @@
         <div class="modal-content" style="max-width:400px; text-align:center; padding:30px;">
             <div style="font-size:60px; margin-bottom:15px;">👤</div>
             <h2 id="profile-name" style="margin:0; font-size:26px; font-weight:900; color:var(--dark);">Nome Utente</h2>
-            <div id="profile-id-tag" style="display:inline-block; background:var(--primary-light); color:var(--primary); padding:4px 12px; border-radius:20px; font-size:12px; font-weight:800; margin-top:5px; margin-bottom:20px;">ID: SP-XXXXXX</div>
-            
-            <div style="background:#f8fafc; border-radius:15px; padding:20px; margin-bottom:20px; border:1px solid #e2e8f0; text-align:left;">
+            <div id="profile-id-tag"
+                style="display:inline-block; background:var(--primary-light); color:var(--primary); padding:4px 12px; border-radius:20px; font-size:12px; font-weight:800; margin-top:5px; margin-bottom:20px;">
+                ID: SP-XXXXXX</div>
+
+            <div
+                style="background:#f8fafc; border-radius:15px; padding:20px; margin-bottom:20px; border:1px solid #e2e8f0; text-align:left;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                     <span style="font-weight:700; color:#64748b;">Stato Abbonamento</span>
-                    <span id="sub-status-badge" style="padding:4px 10px; border-radius:10px; font-size:12px; font-weight:800;">---</span>
+                    <span id="sub-status-badge"
+                        style="padding:4px 10px; border-radius:10px; font-size:12px; font-weight:800;">---</span>
                 </div>
                 <div id="sub-countdown-box" style="margin-top:10px;">
-                    <div style="font-size:11px; color:#94a3b8; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">Scadenza tra</div>
-                    <div id="sub-countdown-text" style="font-size:22px; font-weight:900; color:var(--dark);">-- giorni</div>
+                    <div
+                        style="font-size:11px; color:#94a3b8; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">
+                        Scadenza tra</div>
+                    <div id="sub-countdown-text" style="font-size:22px; font-weight:900; color:var(--dark);">-- giorni
+                    </div>
                 </div>
             </div>
 
             <div style="text-align:left; font-size:14px; color:#64748b; margin-bottom:25px; padding:0 10px;">
-                <div style="margin-bottom:8px;">📧 <span id="profile-email" style="color:var(--dark); font-weight:600;">---</span></div>
+                <div style="margin-bottom:8px;">📧 <span id="profile-email"
+                        style="color:var(--dark); font-weight:600;">---</span></div>
                 <div>📍 <span id="profile-address" style="color:var(--dark); font-weight:600;">---</span></div>
             </div>
 
             <div style="display:flex; flex-direction:column; gap:10px;">
-                <button onclick="logout()" style="width:100%; padding:14px; background:#fee2e2; color:#ef4444; border:none; border-radius:12px; font-weight:800; cursor:pointer;">Esci dall'account 🚪</button>
-                <button onclick="closeModals()" style="width:100%; padding:14px; background:#f1f5f9; color:#64748b; border:none; border-radius:12px; font-weight:700; cursor:pointer;">Chiudi</button>
+                <button onclick="logout()"
+                    style="width:100%; padding:14px; background:#fee2e2; color:#ef4444; border:none; border-radius:12px; font-weight:800; cursor:pointer;">Esci
+                    dall'account 🚪</button>
+                <button onclick="closeModals()"
+                    style="width:100%; padding:14px; background:#f1f5f9; color:#64748b; border:none; border-radius:12px; font-weight:700; cursor:pointer;">Chiudi</button>
             </div>
         </div>
     </div>
@@ -970,7 +1018,9 @@
         <div class="modal-content" style="max-width:400px; padding:30px 20px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                 <h3 style="margin:0; font-size:22px; font-weight:800;">🕵️ Admin Dashboard</h3>
-                <button onclick="loadAdminStats()" style="background:none; border:none; color:var(--primary); font-weight:800; cursor:pointer; font-size:12px;">Aggiorna 🔄</button>
+                <button onclick="loadAdminStats()"
+                    style="background:none; border:none; color:var(--primary); font-weight:800; cursor:pointer; font-size:12px;">Aggiorna
+                    🔄</button>
             </div>
             <div id="admin-stats-content"></div>
         </div>
@@ -981,16 +1031,23 @@
         <div class="modal-content" style="text-align:center; padding: 40px 25px;">
             <div style="font-size:70px; margin-bottom:15px; animation: bounce 1s ease;">🎉</div>
             <h3 style="margin-top:0; color:var(--primary); font-size:26px;" id="success-title">Ordine Confermato!</h3>
-            <div id="id-display-box" style="display:none; background: #f8fafc; border: 2px dashed var(--primary); padding: 20px; border-radius: 16px; margin: 20px 0;">
-                <div style="font-size: 12px; color: #64748b; font-weight: 700; text-transform: uppercase; margin-bottom: 5px;">Il tuo ID Cliente Spesina</div>
-                <div id="display-client-id" style="font-size: 28px; font-weight: 900; color: var(--dark); letter-spacing: 2px;">SP-XXXXXX</div>
+            <div id="id-display-box"
+                style="display:none; background: #f8fafc; border: 2px dashed var(--primary); padding: 20px; border-radius: 16px; margin: 20px 0;">
+                <div
+                    style="font-size: 12px; color: #64748b; font-weight: 700; text-transform: uppercase; margin-bottom: 5px;">
+                    Il tuo ID Cliente Spesina</div>
+                <div id="display-client-id"
+                    style="font-size: 28px; font-weight: 900; color: var(--dark); letter-spacing: 2px;">SP-XXXXXX</div>
                 <div style="display:flex; justify-content:center; margin-top:15px;">
-                    <button onclick="copyID()" style="background:var(--primary); color:white; border:none; padding:8px 15px; border-radius:8px; font-weight:700; cursor:pointer; font-size:12px;">📋 Copia</button>
+                    <button onclick="copyID()"
+                        style="background:var(--primary); color:white; border:none; padding:8px 15px; border-radius:8px; font-weight:700; cursor:pointer; font-size:12px;">📋
+                        Copia</button>
                 </div>
             </div>
             <p style="font-size:16px; line-height:1.5; color:var(--text-muted); font-weight:500; margin:20px 0;"
                 id="success-desc">Prepareremo la tua spesa con cura.</p>
-            <button class="btn-confirm" onclick="closeModals(); window.scrollTo(0,0);" style="margin-top:20px;">Torna alla Home</button>
+            <button class="btn-confirm" onclick="closeModals(); window.scrollTo(0,0);" style="margin-top:20px;">Torna
+                alla Home</button>
         </div>
     </div>
 
@@ -1058,19 +1115,22 @@
             <div class="footer-section">
                 <h4>Link Obbligatori</h4>
                 <div style="font-size:12px; color:#94a3b8; line-height:1.6;">
-                <b>Spesina S.r.l.s.</b><br>
-                Via Mestre Centrale 12, 30171 Mestre (VE)<br>
-                P.IVA: 01234567890 | REA: VE-123456<br>
-                Cap. Soc: 10.000 € i.v.<br>
-                PEC: spesina@legalmail.it
-            </div>
-            <div style="margin-top:20px; display:flex; justify-content:center; gap:20px; font-size:12px;">
-                <a onclick="showLegalPage('privacy')" style="color:#64748b; text-decoration:none; cursor:pointer;">Privacy Policy</a>
-                <a onclick="showLegalPage('cookie')" style="color:#64748b; text-decoration:none; cursor:pointer;">Cookie Policy</a>
-                <a onclick="showLegalPage('termini')" style="color:#64748b; text-decoration:none; cursor:pointer;">Termini e Condizioni</a>
-            </div>
+                    <b>Spesina S.r.l.s.</b><br>
+                    Via Mestre Centrale 12, 30171 Mestre (VE)<br>
+                    P.IVA: 01234567890 | REA: VE-123456<br>
+                    Cap. Soc: 10.000 € i.v.<br>
+                    PEC: spesina@legalmail.it
+                </div>
+                <div style="margin-top:20px; display:flex; justify-content:center; gap:20px; font-size:12px;">
+                    <a onclick="showLegalPage('privacy')"
+                        style="color:#64748b; text-decoration:none; cursor:pointer;">Privacy Policy</a>
+                    <a onclick="showLegalPage('cookie')"
+                        style="color:#64748b; text-decoration:none; cursor:pointer;">Cookie Policy</a>
+                    <a onclick="showLegalPage('termini')"
+                        style="color:#64748b; text-decoration:none; cursor:pointer;">Termini e Condizioni</a>
                 </div>
             </div>
+        </div>
         </div>
         <div class="footer-bottom">
             &copy; <span id="footer-year"></span> Spesina - Tutti i diritti riservati.
@@ -1138,7 +1198,7 @@
             try {
                 // Carichiamo tutti i prodotti dalla tabella 'products' su Supabase
                 const { data, error } = await sb.from('products').select('*').order('name');
-                
+
                 if (error) throw error;
 
                 if (data) {
@@ -1541,25 +1601,25 @@
         function popolaGiorni() {
             const selectGiorno = document.getElementById('select-giorno');
             if (!selectGiorno) return;
-            
+
             const days = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
             const months = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
-            
+
             let html = "";
             for (let i = 0; i < 7; i++) {
                 const d = new Date();
                 d.setDate(d.getDate() + i);
-                
+
                 const dayName = days[d.getDay()];
                 const dayNum = d.getDate();
                 const monthName = months[d.getMonth()];
-                
+
                 const value = `${dayName} ${dayNum} ${monthName}`;
                 let label = value;
-                
+
                 if (i === 0) label = `Oggi (${dayName} ${dayNum})`;
                 else if (i === 1) label = `Domani (${dayName} ${dayNum})`;
-                
+
                 html += `<option value="${value}">${label}</option>`;
             }
             selectGiorno.innerHTML = html;
@@ -1568,7 +1628,7 @@
         function caricaOrari() {
             const giornoFull = document.getElementById('select-giorno').value;
             if (!giornoFull) return;
-            
+
             const giornoSettimana = giornoFull.split(' ')[0];
             const d = new Date();
             const days = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
@@ -1585,7 +1645,7 @@
             for (const [fascia, capMassima] of Object.entries(slotsToUse)) {
                 const oraInizio = parseInt(fascia.split(":")[0]);
                 const scaduto = (isToday && oraInizio <= oraAttuale);
-                
+
                 // Calcola ordini totali già presi per questa fascia (conteggio locale)
                 const ordiniPresi = history.filter(o => o.slot === (giornoFull + " " + fascia)).length;
                 const postiDisponibili = capMassima - ordiniPresi;
@@ -1625,30 +1685,30 @@
             if (!userData || !userData.id || !sb) return;
             const now = new Date();
             const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-            
+
             // Inizio giornata di oggi (ora locale mezzanotte)
             const today = new Date();
-            today.setHours(0,0,0,0);
+            today.setHours(0, 0, 0, 0);
             const todayISO = today.toISOString();
-            
+
             try {
                 // 1. Ordini nel mese corrente (per abbonamento)
                 const { count: monthCount } = await sb.from('orders')
                     .select('id', { count: 'exact', head: true })
                     .eq('client_id', userData.id)
                     .gte('created_at', firstDayOfMonth);
-                
+
                 // 2. Ordini oggi (per limite giornaliero)
                 const { count: todayCount } = await sb.from('orders')
                     .select('id', { count: 'exact', head: true })
                     .eq('client_id', userData.id)
                     .gte('created_at', todayISO);
-                
+
                 ordersInCurrentMonthFromDB = monthCount || 0;
                 ordersTodayFromDB = todayCount || 0;
-                
+
                 console.log(`📊 Sync Supabase: Mese=${ordersInCurrentMonthFromDB}, Oggi=${ordersTodayFromDB}`);
-                updateUI(); 
+                updateUI();
             } catch (e) { console.error("Errore sincronizzazione ordini:", e); }
         }
 
@@ -1656,7 +1716,7 @@
             let total = 0;
             let listHtml = "";
             let hasOrtofrutta = false;
-            
+
             const isVip = (typeof FREE_CLIENTS !== 'undefined' && userData && FREE_CLIENTS.includes(userData.id));
             const isFirstOrder = (ordersInCurrentMonthFromDB === 0 && cart.length > 0 && !isVip);
 
@@ -1691,7 +1751,7 @@
             document.getElementById('cart-trigger').style.display = cart.length > 0 ? 'block' : 'none';
             document.getElementById('cart-total-top').innerText = total.toFixed(2) + "€";
             document.getElementById('final-price').innerText = "Totale: " + total.toFixed(2) + "€";
-            
+
             const firstOrderMsg = document.getElementById('first-order-msg');
             if (firstOrderMsg) {
                 firstOrderMsg.style.display = isFirstOrder ? 'block' : 'none';
@@ -1720,16 +1780,16 @@
         }
 
         function remove(id) { cart = cart.filter(x => x.id !== id); updateUI(); if (cart.length === 0) closeModals(); }
-        function openCart() { 
+        function openCart() {
             if (!checkSubscriptionStatus()) return;
             if (getDailyOrderCount() >= 10) {
                 alert("Hai raggiunto il limite di 10 spese per oggi. Ci vediamo domani!");
                 return;
             }
             popolaGiorni();
-            caricaOrari(); 
+            caricaOrari();
             syncOrdersFromDB(); // Sincronizza sempre con il DB all'apertura del carrello
-            document.getElementById('modalCart').style.display = 'flex'; 
+            document.getElementById('modalCart').style.display = 'flex';
         }
         function showAddress() {
             document.getElementById('cap-check').value = "";
@@ -1765,7 +1825,7 @@
         function showRegister() {
             // Se l'utente è loggato, chiediamo se vuole uscire prima di registrarne uno nuovo
             if (userData && userData.id) {
-                if(confirm(`Sei già loggato come ${userData.n}. Vuoi uscire per creare un nuovo account?`)) {
+                if (confirm(`Sei già loggato come ${userData.n}. Vuoi uscire per creare un nuovo account?`)) {
                     localStorage.removeItem('spesina_user');
                     userData = null;
                     updateAuthUI();
@@ -1773,7 +1833,7 @@
                     return;
                 }
             }
-            
+
             closeModals();
             currentRegisterPage = true;
             document.getElementById('home-view').style.display = 'none';
@@ -1795,24 +1855,24 @@
             try {
                 // Cerchiamo il profilo su Supabase
                 const { data, error } = await sb.from('customers').select('*').eq('client_id', id).single();
-                
+
                 if (error || !data) {
                     alert("ID Cliente non trovato. Verifica il codice o registrati come nuovo cliente.");
                     return;
                 }
 
                 // Ripristiniamo l'utente
-                userData = { 
-                    id: data.client_id, 
-                    n: data.full_name, 
+                userData = {
+                    id: data.client_id,
+                    n: data.full_name,
                     e: data.email,
-                    t: data.phone, 
-                    a: data.address, 
+                    t: data.phone,
+                    a: data.address,
                     d: data.details,
-                    c: data.cap, 
-                    subExpiry: data.sub_expiry 
+                    c: data.cap,
+                    subExpiry: data.sub_expiry
                 };
-                
+
                 localStorage.setItem('spesina_user', JSON.stringify(userData));
                 alert(`Bentornato, ${userData.n}! Accesso eseguito con successo.`);
                 closeModals();
@@ -1872,7 +1932,7 @@
         async function handleRegister(e) {
             e.preventDefault();
             console.log("Tentativo di registrazione avviato...");
-            
+
             const nome = document.getElementById('reg-name').value.trim();
             const email = document.getElementById('reg-email').value.trim();
             const tel = document.getElementById('reg-phone').value.trim();
@@ -1892,17 +1952,17 @@
             if (via.length < 3) return alert("⚠️ Inserisci un indirizzo di consegna valido.");
             if (civico.length < 1) return alert("⚠️ Inserisci il Numero Civico.");
             if (!privacy) return alert("⚠️ Devi accettare la Privacy Policy per continuare.");
-            
+
             // Se arriviamo qui, i dati sono perfetti!
             let clientId = "SP-" + Math.random().toString(36).substr(2, 6).toUpperCase();
             if (nome.toUpperCase() === "ADMIN SPESINA") clientId = "SP-ADMIN";
-            
+
             const now = new Date();
             const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
             const subExpiry = lastDay.getFullYear() + "-" + String(lastDay.getMonth() + 1).padStart(2, '0') + "-" + String(lastDay.getDate()).padStart(2, '0');
 
             userData = { id: clientId, n: nome, e: email, t: tel, a: via, d: dettagli, c: cap, subExpiry: subExpiry };
-            
+
             // Salvataggio su Supabase
             if (typeof sb !== 'undefined') {
                 try {
@@ -1920,7 +1980,7 @@
             }
 
             localStorage.setItem('spesina_user', JSON.stringify(userData));
-            
+
 
 
             // UI Successo per Registrazione
@@ -1929,12 +1989,12 @@
             document.getElementById('display-client-id').innerText = clientId;
             document.getElementById('id-display-box').style.display = 'block';
             document.getElementById('modalSuccess').style.display = 'flex';
-            
+
             updateAuthUI();
-            
+
             // Invio automatico email al cliente via Supabase Edge Function
             sendWelcomeEmail(userData);
-            
+
             goHome();
         }
 
@@ -1984,8 +2044,8 @@
         }
 
         function checkSubscriptionStatus() {
-            if (!userData) return true; 
-            
+            if (!userData) return true;
+
             // Bypass per clienti VIP/Test (Case insensitive)
             const currentId = (userData.id || "").toUpperCase().trim();
             if (typeof FREE_CLIENTS !== 'undefined' && FREE_CLIENTS.some(id => id.toUpperCase().trim() === currentId)) {
@@ -2016,7 +2076,7 @@
         let debounceTimer;
 
         // Chiusura suggerimenti al click esterno
-        window.addEventListener('click', function(e) {
+        window.addEventListener('click', function (e) {
             const container = document.getElementById('address-suggestions');
             const input = document.getElementById('reg-address');
             if (container && e.target !== input && !container.contains(e.target)) {
@@ -2053,9 +2113,9 @@
                     .select('id')
                     .eq('client_id', userData.id)
                     .filter('order_data->>delivery', 'eq', giorno + " " + ora);
-                
+
                 const countInSlot = ordiniSlot ? ordiniSlot.length : 0;
-                
+
                 if (countInSlot >= 2) {
                     console.log("Limite ordini in questa fascia oraria raggiunto (da DB).");
                     alert("⚠️ Hai già prenotato 2 consegne per questa fascia oraria. Seleziona un altro orario per i prossimi articoli!");
@@ -2064,8 +2124,8 @@
             } catch (e) { console.error("Errore verifica slot:", e); }
 
             console.log("Passaggio al metodo di pagamento...");
-            closeModals(); 
-            document.getElementById('modalPay').style.display = 'flex'; 
+            closeModals();
+            document.getElementById('modalPay').style.display = 'flex';
         }
 
         async function finish(m) {
@@ -2075,10 +2135,10 @@
 
             const isVip = (typeof FREE_CLIENTS !== 'undefined' && userData && FREE_CLIENTS.includes(userData.id));
             let elencoProdotti = cart.map(i => `${i.q}x ${i.n} (${(i.p * i.q).toFixed(2)}€)`).join("\n");
-            
+
             // ✅ Usa il dato certo dal Database sincronizzato in updateUI
             const isFirstOrder = (ordersInCurrentMonthFromDB === 0 && cart.length > 0 && !isVip);
-            
+
             if (isFirstOrder) {
                 elencoProdotti += "\n+ 🎟️ Abbonamento Mensile Spesina (19.99€)";
             }
@@ -2096,90 +2156,90 @@
             }
 
 
-                        // Registra ordine su Supabase e recupera l'ID
-                        if (typeof sb !== 'undefined' && userData && userData.id) {
-                            console.log("Salvataggio ordine su Supabase...");
-                            // Pulizia stringa totale per ottenere solo il numero
-                            const totalClean = parseFloat(totaleValore.replace(/[^\d.,]/g, '').replace(',', '.'));
-                            
-                            const itemsToSave = [...cart];
-                            if (isFirstOrder) {
-                                itemsToSave.push({
-                                    id: 'SUB-' + Date.now(),
-                                    n: '🎟️ Abbonamento Mensile',
-                                    p: 19.99,
-                                    q: 1,
-                                    img: 'https://uldpnhmdjbbwwqwjsdoh.supabase.co/storage/v1/object/public/products/sub_icon.png', // Icona dedicata
-                                    c: 'servizio'
-                                });
-                            }
+            // Registra ordine su Supabase e recupera l'ID
+            if (typeof sb !== 'undefined' && userData && userData.id) {
+                console.log("Salvataggio ordine su Supabase...");
+                // Pulizia stringa totale per ottenere solo il numero
+                const totalClean = parseFloat(totaleValore.replace(/[^\d.,]/g, '').replace(',', '.'));
 
-                            sb.from('orders').insert({
-                                client_id: userData.id,
-                                order_data: { 
-                                    name: userData.n,
-                                    phone: userData.t,
-                                    address: userData.a + " " + (userData.d ? userData.d.split(',')[0] : "") + ", " + userData.c + " Mestre",
-                                    address_full: userData.a + " " + (userData.d || "") + ", " + userData.c + " Mestre",
-                                    email: userData.e,
-                                    items: itemsToSave, 
-                                    total: totaleValore, 
-                                    delivery: giorno + " " + ora,
-                                    status: 'nuovo',
-                                    total_amount: totalClean
-                                }
-                            }).select().then(({ data, error }) => {
-                                if (error) {
-                                    console.error("Errore Supabase dettagliato:", error);
-                                    alert("⚠️ Errore Database:\n" + error.message + "\nCodice: " + error.code);
-                                } else if (data && data[0]) {
-                                    const orderIdFull = data[0].id;
-                                    const orderIdShort = orderIdFull.toString().slice(0, 8).toUpperCase();
-                                    console.log(`✅ Ordine #${orderIdShort} salvato correttamente.`);
-                                    
-                                    // Aggiorna UI successo con l'ID ordine
-                                    document.getElementById('success-title').innerText = `Ordine #${orderIdShort} Ricevuto!`;
-                                    
-                                    // Invio Email Conferma con ID Ordine e lista prodotti completa
-                                    sendOrderEmail({
-                                        orderId: orderIdShort,
-                                        n: userData.n,
-                                        e: userData.e,
-                                        phone: userData.t,
-                                        delivery: giorno + " " + ora,
-                                        address: userData.a + " " + userData.d,
-                                        items: itemsToSave,
-                                        itemsString: elencoProdotti,
-                                        total: totaleValore
-                                    });
-                                }
-                            });
-                        } else {
-                            console.error("Impossibile salvare: sb, userData o userData.id mancanti.");
-                            alert("⚠️ Errore critico: Sessione utente non valida. Prova a ricaricare la pagina.");
-                        }
+                const itemsToSave = [...cart];
+                if (isFirstOrder) {
+                    itemsToSave.push({
+                        id: 'SUB-' + Date.now(),
+                        n: '🎟️ Abbonamento Mensile',
+                        p: 19.99,
+                        q: 1,
+                        img: 'https://uldpnhmdjbbwwqwjsdoh.supabase.co/storage/v1/object/public/products/sub_icon.png', // Icona dedicata
+                        c: 'servizio'
+                    });
+                }
 
-                        // ✅ Salva l'ordine in history per evitare doppio addebito abbonamento
-                        const historyToSave = JSON.parse(localStorage.getItem('spesina_history') || "[]");
-                        historyToSave.push({ id: userData ? userData.id : 'unknown', date: new Date().toISOString(), slot: giorno + " " + ora });
-                        localStorage.setItem('spesina_history', JSON.stringify(historyToSave));
+                sb.from('orders').insert({
+                    client_id: userData.id,
+                    order_data: {
+                        name: userData.n,
+                        phone: userData.t,
+                        address: userData.a + " " + (userData.d ? userData.d.split(',')[0] : "") + ", " + userData.c + " Mestre",
+                        address_full: userData.a + " " + (userData.d || "") + ", " + userData.c + " Mestre",
+                        email: userData.e,
+                        items: itemsToSave,
+                        total: totaleValore,
+                        delivery: giorno + " " + ora,
+                        status: 'nuovo',
+                        total_amount: totalClean
+                    }
+                }).select().then(({ data, error }) => {
+                    if (error) {
+                        console.error("Errore Supabase dettagliato:", error);
+                        alert("⚠️ Errore Database:\n" + error.message + "\nCodice: " + error.code);
+                    } else if (data && data[0]) {
+                        const orderIdFull = data[0].id;
+                        const orderIdShort = orderIdFull.toString().slice(0, 8).toUpperCase();
+                        console.log(`✅ Ordine #${orderIdShort} salvato correttamente.`);
 
-                        // ✅ Sincronizza subito i contatori da DB
-                        syncOrdersFromDB();
+                        // Aggiorna UI successo con l'ID ordine
+                        document.getElementById('success-title').innerText = `Ordine #${orderIdShort} Ricevuto!`;
 
-                        cart = [];
-                        updateUI();
-                        closeModals();
-                        document.getElementById('success-title').innerText = "Ordine Confermato!";
-                        document.getElementById('id-display-box').style.display = 'none';
-                        document.getElementById('success-desc').innerHTML = "La consegna è in programma per<br><b style='color:var(--dark);'>" + giorno + " alle " + ora + "</b><br><br>Ti abbiamo inviato il riepilogo via Email!";
-                        document.getElementById('modalSuccess').style.display = 'flex';
+                        // Invio Email Conferma con ID Ordine e lista prodotti completa
+                        sendOrderEmail({
+                            orderId: orderIdShort,
+                            n: userData.n,
+                            e: userData.e,
+                            phone: userData.t,
+                            delivery: giorno + " " + ora,
+                            address: userData.a + " " + userData.d,
+                            items: itemsToSave,
+                            itemsString: elencoProdotti,
+                            total: totaleValore
+                        });
+                    }
+                });
+            } else {
+                console.error("Impossibile salvare: sb, userData o userData.id mancanti.");
+                alert("⚠️ Errore critico: Sessione utente non valida. Prova a ricaricare la pagina.");
+            }
+
+            // ✅ Salva l'ordine in history per evitare doppio addebito abbonamento
+            const historyToSave = JSON.parse(localStorage.getItem('spesina_history') || "[]");
+            historyToSave.push({ id: userData ? userData.id : 'unknown', date: new Date().toISOString(), slot: giorno + " " + ora });
+            localStorage.setItem('spesina_history', JSON.stringify(historyToSave));
+
+            // ✅ Sincronizza subito i contatori da DB
+            syncOrdersFromDB();
+
+            cart = [];
+            updateUI();
+            closeModals();
+            document.getElementById('success-title').innerText = "Ordine Confermato!";
+            document.getElementById('id-display-box').style.display = 'none';
+            document.getElementById('success-desc').innerHTML = "La consegna è in programma per<br><b style='color:var(--dark);'>" + giorno + " alle " + ora + "</b><br><br>Ti abbiamo inviato il riepilogo via Email!";
+            document.getElementById('modalSuccess').style.display = 'flex';
         }
 
         function updateAuthUI() {
             const loginLink = document.getElementById('nav-login');
             const welcomeBanner = document.getElementById('user-welcome-banner');
-            
+
             if (userData && userData.id) {
                 if (loginLink) {
                     loginLink.innerHTML = `👤 Profilo`;
@@ -2192,7 +2252,7 @@
                     welcomeBanner.style.display = 'block';
                     document.getElementById('welcome-name').innerText = userData.n.split(' ')[0];
                     document.getElementById('welcome-id').innerText = userData.id;
-                    
+
                     // Calcolo scadenza (fine mese corrente)
                     const now = new Date();
                     const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
@@ -2209,7 +2269,7 @@
 
         function updateProfile() {
             if (!userData) return;
-            
+
             document.getElementById('profile-name').innerText = userData.n;
             document.getElementById('profile-email').innerText = userData.e;
             document.getElementById('profile-address').innerText = userData.a + ", " + userData.c;
@@ -2229,7 +2289,7 @@
                 const now = new Date();
                 const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
                 const diff = lastDay.getDate() - now.getDate();
-                
+
                 // Verifichiamo se ha già ordini questo mese (per lo stato Attivo)
                 const history = JSON.parse(localStorage.getItem('spesina_history') || "[]");
                 const currentMonth = now.getMonth();
@@ -2247,7 +2307,7 @@
                     badge.style.background = "#f1f5f9";
                     badge.style.color = "#64748b";
                 }
-                
+
                 countdownText.innerText = diff === 0 ? "Scade OGGI" : diff + (diff === 1 ? " giorno" : " giorni");
             }
         }
@@ -2265,10 +2325,10 @@
                 if (urlParams.get('preview') === 'true') {
                     sessionStorage.setItem('spesina_preview', 'true');
                 }
-            } catch(e) {}
-            
+            } catch (e) { }
+
             let isPreview = false;
-            try { isPreview = sessionStorage.getItem('spesina_preview') === 'true'; } catch(e) {}
+            try { isPreview = sessionStorage.getItem('spesina_preview') === 'true'; } catch (e) { }
             if (isPreview) return;
 
             if (typeof MAINTENANCE_MODE !== 'undefined' && MAINTENANCE_MODE) {
@@ -2313,8 +2373,8 @@
         } catch (e) { console.error("Database connection error:", e); }
 
         // Forza il rendering delle categorie prima di tutto
-        renderCategories(); 
-        
+        renderCategories();
+
         // Esegue il resto delle operazioni dopo un brevissimo delay
         // --- ADMIN DASHBOARD SECRET ---
         let adminClicks = 0;
@@ -2337,17 +2397,17 @@
         async function loadAdminStats() {
             const statsContent = document.getElementById('admin-stats-content');
             statsContent.innerHTML = '<div style="padding:40px; text-align:center;"><div class="loading-spinner" style="margin:auto;"></div><p style="margin-top:15px; font-size:14px; color:#64748b;">Interrogazione Supabase...</p></div>';
-            
+
             try {
                 // 1. Clienti
                 const { count: customersCount } = await sb.from('customers').select('*', { count: 'exact', head: true });
-                
+
                 // 2. Ordini e Incasso
                 const { data: orders, error } = await sb.from('orders').select('*');
-                
+
                 let totalRevenue = 0;
                 let ordersCount = orders ? orders.length : 0;
-                
+
                 if (orders) {
                     orders.forEach(o => {
                         if (o.order_data && o.order_data.total) {
@@ -2361,7 +2421,7 @@
                 let recentOrdersHtml = "";
                 if (orders && orders.length > 0) {
                     orders.slice(-5).reverse().forEach(o => {
-                        const date = new Date(o.created_at).toLocaleString('it-IT', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+                        const date = new Date(o.created_at).toLocaleString('it-IT', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
                         recentOrdersHtml += `
                             <div style="background:#f8fafc; padding:12px; border-radius:12px; margin-bottom:8px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center;">
                                 <div>
@@ -2401,7 +2461,7 @@
 
         setTimeout(() => {
             checkMaintenance();
-            fetchProducts();    
+            fetchProducts();
             renderFooter();
             updateUI();
             updateAuthUI();
