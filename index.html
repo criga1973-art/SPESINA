@@ -846,14 +846,21 @@
                     </div>
                     <div class="input-group" style="margin-bottom:0;">
                         <label>Piano</label>
-                        <input type="text" id="reg-piano" class="select-box" placeholder="es: 2"
+                        <input type="text" id="reg-piano" class="select-box" placeholder="es: 2 (o 0)"
                             oninput="checkRegisterValidity()">
                     </div>
                     <div class="input-group" style="margin-bottom:0;">
                         <label>Interno</label>
-                        <input type="text" id="reg-interno" class="select-box" placeholder="es: 5"
+                        <input type="text" id="reg-interno" class="select-box" placeholder="es: 5 (o 0)"
                             oninput="checkRegisterValidity()">
                     </div>
+                </div>
+
+                <div class="input-group" style="margin-bottom: 20px;">
+                    <label>Nome sul Campanello</label>
+                    <input type="text" id="reg-campanello" class="select-box"
+                        placeholder="Se diverso dal nome registrato (es. Famiglia Rossi)"
+                        oninput="checkRegisterValidity()">
                 </div>
 
                 <div class="checkbox-group">
@@ -1650,7 +1657,7 @@
                     const { data, error } = await sb.from('orders')
                         .select('order_data')
                         .filter('order_data->>delivery', 'ilike', giornoFull + '%');
-                    
+
                     if (data) {
                         data.forEach(row => {
                             if (row.order_data && row.order_data.delivery) {
@@ -1961,7 +1968,11 @@
             const civico = document.getElementById('reg-civico').value.trim();
             const piano = document.getElementById('reg-piano').value.trim();
             const interno = document.getElementById('reg-interno').value.trim();
-            const dettagli = `Civico: ${civico}, Piano: ${piano}, Interno: ${interno}`;
+            const campanello = document.getElementById('reg-campanello') ? document.getElementById('reg-campanello').value.trim() : "";
+
+            let dettagli = `Civico: ${civico}, Piano: ${piano}, Interno: ${interno}`;
+            if (campanello) dettagli += `, Campanello: ${campanello}`;
+
             const cap = document.getElementById('reg-cap').value;
             const privacy = document.getElementById('reg-privacy').checked;
 
@@ -1971,7 +1982,9 @@
             if (!/^\d{9,10}$/.test(tel)) return alert("⚠️ Inserisci un numero di cellulare valido (9 o 10 cifre).");
             if (!AUTHORIZED_CAPS.includes(cap)) return alert("⚠️ Seleziona un CAP valido tra quelli di Mestre.");
             if (via.length < 3) return alert("⚠️ Inserisci un indirizzo di consegna valido.");
-            if (civico.length < 1) return alert("⚠️ Inserisci il Numero Civico.");
+            if (civico.length < 1 || piano.length < 1 || interno.length < 1) {
+                return alert("⚠️ Inserisci Civico, Piano e Interno. Se vivi in una casa singola o al piano terra, puoi scrivere '0' o 'PT'.");
+            }
             if (!privacy) return alert("⚠️ Devi accettare la Privacy Policy per continuare.");
 
             // Se arriviamo qui, i dati sono perfetti!
@@ -2219,8 +2232,8 @@
                     order_data: {
                         name: userData.n,
                         phone: userData.t,
-                        address: userData.a + " " + (userData.d ? userData.d.split(',')[0] : "") + ", " + userData.c + " Mestre",
-                        address_full: userData.a + " " + (userData.d || "") + ", " + userData.c + " Mestre",
+                        address: userData.a + " | " + (userData.d || "") + " | " + userData.c + " Mestre",
+                        address_full: userData.a + " | " + (userData.d || "") + " | " + userData.c + " Mestre",
                         email: userData.e,
                         items: itemsToSave,
                         total: totaleValore,
