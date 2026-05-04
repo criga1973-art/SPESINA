@@ -1574,12 +1574,33 @@
         function renderProducts(filter) {
             let html = "";
             let items = PRODS.filter(p => p.c === filter);
+            
+            // Ordinamento alfabetico per Marca solo per la categoria Pasta e Riso
+            if (filter === "pasta") {
+                items.sort((a, b) => (a.b || "").localeCompare(b.b || ""));
+            }
+            
             items.forEach(p => {
                 let imgHtml = p.img ? `<img class="product-img" style="display:none;" src="${p.img}" onload="this.style.display='block'; let next=this.nextElementSibling; if(next && next.classList.contains('product-emoji')) next.style.display='none';" alt="${p.n}">` : "";
                 let emojiHtml = p.icon ? `<div class="product-emoji">${p.icon}</div>` : "";
                 let weightHtml = p.l ? `<span style="font-size: 10px; color: #64748b; font-weight: 500; margin-right: 4px;">${p.l}</span>` : "";
                 let descHtml = "";
-                html += `<div class="card"><button class="info-btn" onclick="showInfo(${p.id})">i</button><button class="add-btn" onclick="addToCart(${p.id})">+</button>${imgHtml}${emojiHtml}<div style="font-size:14px; font-weight:800; margin-bottom:4px;">${p.n}</div>${descHtml}<div style="color:var(--primary); font-weight:800; font-size:16px;">${weightHtml}${p.p.toFixed(2)}€</div></div>`;
+                
+                if (filter === "pasta") {
+                    html += `<div class="card" style="display:flex; flex-direction:column; justify-content:flex-end;">
+                                <button class="info-btn" onclick="showInfo(${p.id})">i</button>
+                                <button class="add-btn" onclick="addToCart(${p.id})">+</button>
+                                <div style="flex-grow:1; display:flex; align-items:center; justify-content:center;">
+                                    ${imgHtml}${emojiHtml}
+                                </div>
+                                <div style="font-size:11px; font-weight:800; color:#94a3b8; text-transform:uppercase; margin-top:5px; letter-spacing:0.5px;">${p.b || ''}</div>
+                                <div style="font-size:14px; font-weight:800; margin:2px 0; line-height:1.2;">${p.n}</div>
+                                <div style="font-size:12px; color:#64748b; font-weight:600; margin-bottom:8px;">${p.l || ''}</div>
+                                <div style="color:var(--primary); font-weight:800; font-size:16px;">${p.p.toFixed(2)}€</div>
+                             </div>`;
+                } else {
+                    html += `<div class="card"><button class="info-btn" onclick="showInfo(${p.id})">i</button><button class="add-btn" onclick="addToCart(${p.id})">+</button>${imgHtml}${emojiHtml}<div style="font-size:14px; font-weight:800; margin-bottom:4px;">${p.n}</div>${descHtml}<div style="color:var(--primary); font-weight:800; font-size:16px;">${weightHtml}${p.p.toFixed(2)}€</div></div>`;
+                }
             });
             document.getElementById('sub-catalog').innerHTML = html;
         }
