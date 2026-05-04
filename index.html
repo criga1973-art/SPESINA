@@ -1625,9 +1625,12 @@
             selectGiorno.innerHTML = html;
         }
 
-        function caricaOrari() {
+        async function caricaOrari() {
             const giornoFull = document.getElementById('select-giorno').value;
             if (!giornoFull) return;
+
+            const selectOra = document.getElementById('select-ora');
+            selectOra.innerHTML = "<option disabled>Caricamento disponibilità...</option>";
 
             const giornoSettimana = giornoFull.split(' ')[0];
             const d = new Date();
@@ -1637,17 +1640,35 @@
             const isToday = (giornoFull === oggiString);
 
             const oraAttuale = new Date().getHours();
-            const history = JSON.parse(localStorage.getItem('spesina_history') || "[]");
             let options = "";
 
             const slotsToUse = (giornoSettimana === "Domenica") ? SLOTS_DOM : SLOTS_LUN_SAB;
+
+            let dbCounts = {};
+            if (typeof sb !== 'undefined') {
+                try {
+                    const { data, error } = await sb.from('orders')
+                        .select('order_data')
+                        .filter('order_data->>delivery', 'ilike', giornoFull + '%');
+                    
+                    if (data) {
+                        data.forEach(row => {
+                            if (row.order_data && row.order_data.delivery) {
+                                const fascia = row.order_data.delivery.split(' ').pop();
+                                dbCounts[fascia] = (dbCounts[fascia] || 0) + 1;
+                            }
+                        });
+                    }
+                } catch (e) {
+                    console.error("Errore fetch capacità orari:", e);
+                }
+            }
 
             for (const [fascia, capMassima] of Object.entries(slotsToUse)) {
                 const oraInizio = parseInt(fascia.split(":")[0]);
                 const scaduto = (isToday && oraInizio <= oraAttuale);
 
-                // Calcola ordini totali già presi per questa fascia (conteggio locale)
-                const ordiniPresi = history.filter(o => o.slot === (giornoFull + " " + fascia)).length;
+                const ordiniPresi = dbCounts[fascia] || 0;
                 const postiDisponibili = capMassima - ordiniPresi;
 
                 if (postiDisponibili <= 0 || scaduto) {
@@ -1656,7 +1677,7 @@
                     options += `<option value="${fascia}">${fascia} (${postiDisponibili} posti rimasti)</option>`;
                 }
             }
-            document.getElementById('select-ora').innerHTML = options || "<option disabled>Nessun orario disponibile</option>";
+            selectOra.innerHTML = options || "<option disabled>Nessun orario disponibile</option>";
         }
 
         function addToCart(id) {
@@ -2107,6 +2128,19 @@
                 return alert("Per favore, seleziona un orario di consegna valido prima di proseguire.");
             }
 
+            // Controllo se l'orario è già scaduto (nel caso l'utente abbia lasciato la pagina aperta)
+            const d = new Date();
+            const days = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
+            const months = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
+            const oggiString = `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]}`;
+            if (giorno === oggiString) {
+                const oraInizio = parseInt(ora.split(":")[0]);
+                if (oraInizio <= d.getHours()) {
+                    caricaOrari(); // Ricarica le opzioni aggiornate
+                    return alert("⚠️ Attenzione: questa fascia oraria è appena scaduta. Seleziona un nuovo orario.");
+                }
+            }
+
             // NUOVA REGOLA SERVER-SIDE: Massimo 2 spese dello stesso ID in un'ora (slot)
             try {
                 const { data: ordiniSlot, error } = await sb.from('orders')
@@ -2291,12 +2325,8 @@
                 const diff = lastDay.getDate() - now.getDate();
 
                 // Verifichiamo se ha già ordini questo mese (per lo stato Attivo)
-                const history = JSON.parse(localStorage.getItem('spesina_history') || "[]");
-                const currentMonth = now.getMonth();
-                const ordersThisMonth = history.filter(o => {
-                    const oDate = new Date(o.date);
-                    return o.id === userData.id && oDate.getMonth() === currentMonth;
-                }).length;
+                // Usiamo il contatore ordini sincronizzato dal DB invece della cronologia locale
+                const ordersThisMonth = ordersInCurrentMonthFromDB;
 
                 if (ordersThisMonth > 0) {
                     badge.innerText = "✅ ATTIVO";

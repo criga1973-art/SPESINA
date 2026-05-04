@@ -895,7 +895,31 @@
             };
             const { error } = await sb.from('orders').update({ order_data: updatedData }).eq('id', selectedOrder.id);
             if (error) return alert("Errore: " + error.message);
-            if (newStatus === 'completato') { closeDetail(); }
+            
+            if (newStatus === 'completato') { 
+                try {
+                    await fetch("https://uldpnhmdjbbwwqwjsdoh.supabase.co/functions/v1/send-welcome", {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json', 
+                            'apikey': SUPABASE_KEY, 
+                            'Authorization': `Bearer ${SUPABASE_KEY}` 
+                        },
+                        body: JSON.stringify({
+                            type: 'RECEIPT',
+                            orderId: selectedOrder.id.toString().slice(0, 8).toUpperCase(),
+                            name: updatedData.name,
+                            email: updatedData.email,
+                            address: updatedData.address,
+                            total: newTotal.toFixed(2),
+                            items: updatedData.items
+                        })
+                    });
+                } catch (e) {
+                    console.error("Errore invio ricevuta:", e);
+                }
+                closeDetail(); 
+            }
             else { openDetail(selectedOrder.id); }
             loadData();
         }
