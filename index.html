@@ -696,7 +696,7 @@
             <a onclick="showPhilosophy()">Perché Spesina?</a>
             <a onclick="showHowItWorks()">Come funziona</a>
             <a onclick="showAddress()">📍 Dove consegniamo</a>
-            <a id="nav-login" onclick="showRegister()">🔑 Accedi</a>
+            <a id="nav-login" onclick="showRegister()">🔑 Accedi / Registrati</a>
         </div>
     </header>
 
@@ -2313,7 +2313,7 @@
                 }
             } else {
                 if (loginLink) {
-                    loginLink.innerHTML = `🔑 Accedi`;
+                    loginLink.innerHTML = `🔑 Accedi / Registrati`;
                     loginLink.onclick = openLogin;
                 }
                 if (welcomeBanner) welcomeBanner.style.display = 'none';
