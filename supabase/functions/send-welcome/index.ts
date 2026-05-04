@@ -90,8 +90,35 @@ serve(async (req) => {
           <p style="text-align:center; color:#94a3b8; font-size:12px; margin-top:40px;">Spesina - Mestre</p>
         </div>`;
     } else {
-      subject = body.subject || `Benvenuto in Spesina, ${name}!`
-      html = body.html || `<h2>Ciao ${name}, benvenuto su Spesina!</h2><p>Il tuo account è attivo.</p>`
+      subject = body.subject || `Benvenuto su Spesina! Il tuo Account è attivo`
+      const cId = body.clientId || 'N/A';
+      html = body.html || `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 12px; padding: 25px; color: #1e293b;">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <h2 style="color: #10b981; margin: 0;">Benvenuto in Spesina! 🛒</h2>
+            <p style="color: #64748b; font-size: 16px;">Il tuo account è attivo e pronto.</p>
+          </div>
+          
+          <p style="font-size: 15px; line-height: 1.5;">Ciao <b>${name}</b>, grazie per esserti registrato. Abbiamo creato il tuo <b>Codice Cliente</b> univoco, da usare per le tue spese:</p>
+          
+          <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; text-align: center; margin: 25px 0; border: 1px dashed #cbd5e1;">
+            <span style="font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 1px;">Il tuo ID Cliente</span><br>
+            <strong style="font-size: 32px; color: #10b981; letter-spacing: 2px;">${cId}</strong>
+          </div>
+          
+          <p style="font-size: 15px; text-align: center; margin-bottom: 25px;">Puoi subito iniziare a esplorare i nostri prodotti!</p>
+          
+          <div style="text-align: center;">
+            <a href="https://spesina.it" style="display: inline-block; background-color: #10b981; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">
+              Fai la tua prima spesa
+            </a>
+          </div>
+          
+          <p style="margin-top: 40px; font-size: 12px; color: #94a3b8; text-align: center; border-top: 1px solid #f1f5f9; padding-top: 20px;">
+            Spesina - La tua spesa intelligente a Mestre
+          </p>
+        </div>
+      `;
     }
 
     const res = await fetch('https://api.resend.com/emails', {

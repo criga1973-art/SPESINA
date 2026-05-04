@@ -1975,8 +1975,14 @@
             if (!privacy) return alert("⚠️ Devi accettare la Privacy Policy per continuare.");
 
             // Se arriviamo qui, i dati sono perfetti!
-            let clientId = "SP-" + Math.random().toString(36).substr(2, 6).toUpperCase();
-            if (nome.toUpperCase() === "ADMIN SPESINA") clientId = "SP-ADMIN";
+            let clientId = "SP-TEST";
+            if (nome.toUpperCase() === "ADMIN SPESINA") {
+                clientId = "SP-ADMIN";
+            } else if (typeof sb !== 'undefined') {
+                // Recupera il prossimo ID progressivo dal database!
+                const { data, error } = await sb.rpc('generate_customer_id');
+                if (!error && data) clientId = data;
+            }
 
             const now = new Date();
             const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
