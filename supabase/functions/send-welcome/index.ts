@@ -35,12 +35,15 @@ serve(async (req) => {
     // Funzione helper per generare la lista prodotti in formato tabella (più compatibile)
     const generateItemsTable = (items) => {
       if (!Array.isArray(items)) return "<tr><td>Nessun prodotto in elenco</td></tr>";
-      return items.map(i => `
+      return items.map(i => {
+        const isAbb = (i.n || i.name || '').toLowerCase().includes('abbonamento');
+        const imgCell = (i.img || i.image)
+          ? `<img src="${i.img || i.image}" width="50" height="50" style="border-radius:8px; object-fit:contain; background:#f8fafc; border:1px solid #eee;">`
+          : `<div style="width:50px; height:50px; border-radius:8px; background:${isAbb ? '#fdf2f8' : '#f8fafc'}; border:1px solid #eee; display:flex; align-items:center; justify-content:center; font-size:26px; line-height:1;">${isAbb ? '🎟️' : '📦'}</div>`;
+        return `
         <tr>
           <td style="padding: 10px 0; border-bottom: 1px solid #f1f5f9; width: 60px;">
-            <img src="${i.img || i.image || 'https://uldpnhmdjbbwwqwjsdoh.supabase.co/storage/v1/object/public/products/placeholder.png'}" 
-                 width="50" height="50" 
-                 style="border-radius:8px; object-fit:contain; background:#f8fafc; border:1px solid #eee;">
+            ${imgCell}
           </td>
           <td style="padding: 10px 10px; border-bottom: 1px solid #f1f5f9;">
             <div style="font-size: 14px; font-weight: 700; color: #1e293b;">${i.q || 1}x ${i.n || i.name}</div>
@@ -50,7 +53,8 @@ serve(async (req) => {
             ${((i.p || 0) * (i.q || 1)).toFixed(2)}€
           </td>
         </tr>
-      `).join("");
+      `;
+      }).join("");
     };
 
     if (type === 'RECEIPT') {

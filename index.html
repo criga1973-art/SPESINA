@@ -123,7 +123,7 @@
             border-radius: 0 0 24px 24px;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.02);
             position: sticky;
-            top: 73px;
+            top: 0;
             z-index: 90;
         }
 
@@ -1241,6 +1241,7 @@
             document.getElementById('home-view').style.display = 'none';
             document.getElementById('subcategory-view').style.display = 'block';
             document.getElementById('subcategory-title').innerText = catObj ? catObj.n : "Prodotti";
+            document.querySelector('header').style.display = 'none';
 
             if (catId === "bevande" || catId === "condimenti" || catId === "igiene-p" || catId === "freschi" || catId === "colazione" || catId === "dispensa" || catId === "igiene-c" || catId === "surgelati" || catId === "farine") {
                 renderSubFolders(catId);
@@ -1399,6 +1400,7 @@
             document.getElementById('philosophy-view').style.display = 'none';
             document.getElementById('home-view').style.display = 'block';
             document.getElementById('main-footer').style.display = 'block';
+            document.querySelector('header').style.display = 'block';
             document.getElementById('search-bar').value = '';
             handleSearch();
             window.scrollTo(0, 0);
@@ -1574,18 +1576,18 @@
         function renderProducts(filter) {
             let html = "";
             let items = PRODS.filter(p => p.c === filter);
-            
+
             // Ordinamento alfabetico per Marca solo per la categoria Pasta e Riso
             if (filter === "pasta") {
                 items.sort((a, b) => (a.b || "").localeCompare(b.b || ""));
             }
-            
+
             items.forEach(p => {
                 let imgHtml = p.img ? `<img class="product-img" style="display:none;" src="${p.img}" onload="this.style.display='block'; let next=this.nextElementSibling; if(next && next.classList.contains('product-emoji')) next.style.display='none';" alt="${p.n}">` : "";
                 let emojiHtml = p.icon ? `<div class="product-emoji">${p.icon}</div>` : "";
                 let weightHtml = p.l ? `<span style="font-size: 10px; color: #64748b; font-weight: 500; margin-right: 4px;">${p.l}</span>` : "";
                 let descHtml = "";
-                
+
                 if (filter === "pasta") {
                     html += `<div class="card" style="display:flex; flex-direction:column; justify-content:flex-end;">
                                 <button class="info-btn" onclick="showInfo(${p.id})">i</button>

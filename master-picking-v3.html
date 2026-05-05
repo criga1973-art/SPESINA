@@ -576,6 +576,66 @@
     </div>
 
     <script>
+        // --- Utility: formattazione indirizzo ---
+        // L'indirizzo è salvato nel formato: "Via X | Civico: N, Piano: P, Interno: I | CAP Città"
+        // oppure come stringa libera. Queste funzioni lo normalizzano.
+        function formatAddressDisplay(addr) {
+            if (!addr) return 'Indirizzo non specificato';
+            // Sostituisce i separatori | con virgole e rimuove label ridondanti
+            return addr
+                .replace(/\s*\|\s*/g, ', ')
+                .replace(/Civico:\s*/gi, '')
+                .trim();
+        }
+
+        function buildMapsAddress(addr) {
+            if (!addr) return '';
+            // Estrae solo la parte navigabile: via + civico + CAP + città
+            // Rimuove Piano, Interno, Scala che rompono il geocoder
+            const cleaned = addr
+                .replace(/\s*\|\s*/g, ', ')          // | → ,
+                .replace(/Piano:\s*\S+,?/gi, '')      // Piano: N
+                .replace(/Interno:\s*\S+,?/gi, '')    // Interno: N
+                .replace(/Int\.?:\s*\S+,?/gi, '')     // Int.: N
+                .replace(/Scala:\s*\S+,?/gi, '')      // Scala: N
+                .replace(/Sc\.?:\s*\S+,?/gi, '')      // Sc.: N
+                .replace(/Civico:\s*/gi, '')           // Civico: (solo label)
+                .replace(/,\s*,/g, ',')               // virgole doppie
+                .replace(/,\s*$/g, '')                // virgola finale
+                .trim();
+            return cleaned;
+        }
+
+        // --- Utility: formattazione indirizzo ---
+        // L'indirizzo è salvato con separatori | (es: "Via X | Civico: 10, Piano: 3, Interno: 2 | 30173 Mestre")
+        // formatAddressDisplay → mostra tutto con virgole (leggibile)
+        // buildMapsAddress → solo via+civico+CAP+città per il geocoder Google Maps
+
+        function formatAddressDisplay(addr) {
+            if (!addr) return 'Indirizzo non specificato';
+            return addr
+                .replace(/\s*\|\s*/g, ',  ')   // | → virgola con spazio
+                .replace(/Civico:\s*/gi, '')    // rimuove solo la label "Civico:"
+                .trim();
+        }
+
+        function buildMapsAddress(addr) {
+            if (!addr) return '';
+            // Converte i | in virgole poi rimuove Piano/Interno/Scala
+            // che rompono la geolocalizzazione di Google Maps
+            return addr
+                .replace(/\s*\|\s*/g, ', ')
+                .replace(/Piano:\s*\S+,?\s*/gi, '')
+                .replace(/Interno:\s*\S+,?\s*/gi, '')
+                .replace(/Int\.?:\s*\S+,?\s*/gi, '')
+                .replace(/Scala:\s*\S+,?\s*/gi, '')
+                .replace(/Sc\.?:\s*\S+,?\s*/gi, '')
+                .replace(/Civico:\s*/gi, '')
+                .replace(/,\s*,/g, ',')
+                .replace(/,\s*$/g, '')
+                .trim();
+        }
+
         const SUPABASE_URL = "https://uldpnhmdjbbwwqwjsdoh.supabase.co";
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsZHBuaG1kamJid3dxd2pzZG9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4NDE5ODQsImV4cCI6MjA5MjQxNzk4NH0.yXcJBcZtiaDbPl2IyDUBK-Ndoyu0unmEzfY8xZrogzM";
         const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -696,6 +756,16 @@
             }
         }
 
+        function productImageHtml(item) {
+            if (item.img) {
+                return `<img src="${item.img}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" style="width:60px;height:60px;object-fit:contain;background:white;border-radius:8px;flex-shrink:0;">
+                        <div style="display:none; width:60px; height:60px; background:#1e293b; border-radius:8px; flex-shrink:0; align-items:center; justify-content:center; font-size:28px;">📦</div>`;
+            }
+            const isAbb = (item.n || '').toLowerCase().includes('abbonamento');
+            const emoji = isAbb ? '🎟️' : '📦';
+            return `<div style="width:60px; height:60px; background:#1e293b; border-radius:8px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:28px;">${emoji}</div>`;
+        }
+
         function getProductData(item) {
             const catalogProd = allProducts.find(p =>
                 (p.ean && item.ean && String(p.ean).trim() === String(item.ean).trim()) ||
@@ -734,8 +804,7 @@
                     const isChecked = checkedPickingItems.has(key);
                     return `
                     <div class="picking-item">
-                        <img src="${item.img || 'https://via.placeholder.com/60?text=📦'}" 
-                             onerror="this.src='https://via.placeholder.com/60?text=📦'">
+                        ${productImageHtml(item)}
                         <div class="picking-details" style="flex:1;">
                             <div class="picking-name">${item.b ? item.b + ' ' : ''}${item.n}</div>
                             <div class="picking-ean">EAN: ${item.ean || '---'}</div>
@@ -775,7 +844,7 @@
                         <div class="card-info">
                             <div class="info-row">ID: <b>${shortId}</b></div>
                             <div class="info-row">Cliente: <b>${d.name}</b></div>
-                            <div class="info-row info-address">📍 ${d.address}</div>
+                            <div class="info-row info-address">📍 ${formatAddressDisplay(d.address)}</div>
                             <div class="info-row">Articoli: ${d.items ? d.items.length : 0} (${totalPezzi} pezzi) &nbsp;&nbsp; Totale: ${parseFloat(d.total || 0).toFixed(2)}€</div>
                         </div>
                         <button class="btn-avvia" onclick="openDetail('${o.id}')">AVVIA ORDINE</button>
@@ -791,13 +860,9 @@
             const shortId = selectedOrder.id.toString().slice(0, 8).toUpperCase();
             document.getElementById('det-order-id').innerText = `DETTAGLIO ORDINE #${shortId}`;
             document.getElementById('det-customer').innerText = d.name;
-            document.getElementById('det-address').innerText = d.address;
+            document.getElementById('det-address').innerText = formatAddressDisplay(d.address);
             document.getElementById('del-total').innerText = `${parseFloat(d.total || 0).toFixed(2)} €`;
-            const cleanAddr = (d.address_full || d.address || "")
-                .replace(/[\/,]?\s*(P[:\.]|Piano|Int[:\.]|Interno|Scala|Sc[:\.])[\s:]*\w*/gi, '')
-                .replace(/,\s*$/, '')
-                .trim();
-            document.getElementById('del-maps-btn').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(cleanAddr)}`;
+            document.getElementById('del-maps-btn').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(buildMapsAddress(d.address))}`;
             document.getElementById('del-call-btn').href = `tel:${d.phone}`;
             checkedItems.clear();
             removedItems.clear();
@@ -820,7 +885,7 @@
                 return `
                     <div class="detail-item ${isRemoved ? 'removed' : ''}" id="item-row-${idx}">
                         <button class="trash-btn" onclick="toggleRemoveItem(${idx})">🗑️</button>
-                        <img src="${pData.img || 'https://via.placeholder.com/60?text=📦'}" onerror="this.src='https://via.placeholder.com/60?text=📦'">
+                        ${productImageHtml({...item, n: pData.name, img: pData.img})}
                         <div class="item-info">
                             <div class="item-name">${pData.name}</div>
                             <div class="item-sub">EAN: ${item.ean || '---'}</div>
