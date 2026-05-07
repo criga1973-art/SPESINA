@@ -65,6 +65,69 @@
             color: var(--primary);
         }
 
+        /* Ottimizzazioni Mobile - Modalità App Nativa */
+        @media (max-width: 480px) {
+            header { padding: 8px 12px; }
+            .header-container { height: 45px; }
+            #sticky-back { padding: 4px 10px; font-size: 12px; border-radius: 8px; }
+            
+            /* Logo più piccolo e centrato */
+            .logo-text { font-size: 28px !important; letter-spacing: -1px !important; }
+            .logo-leaf { width: 22px !important; height: 22px !important; top: -10px !important; }
+
+            /* Navigazione orizzontale a scorrimento (stile App) */
+            .top-nav { 
+                gap: 15px; 
+                margin-top: 5px; 
+                overflow-x: auto; 
+                justify-content: flex-start; 
+                padding: 5px 0;
+                scrollbar-width: none; /* Nasconde scrollbar su Firefox */
+                -ms-overflow-style: none; /* Nasconde scrollbar su IE/Edge */
+                white-space: nowrap;
+                -webkit-overflow-scrolling: touch;
+            }
+            .top-nav::-webkit-scrollbar { display: none; } /* Nasconde scrollbar su Chrome/Safari */
+            .top-nav a { font-size: 12px; flex-shrink: 0; padding: 5px 2px; }
+            
+            /* Griglia prodotti super compatta */
+            .catalog { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; padding: 8px !important; }
+            .card { padding: 12px 8px; border-radius: 14px; }
+            .product-emoji { font-size: 35px; height: 60px; }
+            .product-img { height: 90px; }
+            .price-label { font-size: 13px !important; }
+            .product-name { font-size: 11px !important; height: 32px; overflow: hidden; }
+            
+            /* Bilanciamento Header Mobile */
+            .header-spacer { width: 60px !important; }
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        #sticky-back {
+            display: none;
+            background: #f1f5f9;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            color: var(--dark);
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        #sticky-back:hover {
+            background: #e2e8f0;
+        }
+
         #cart-trigger {
             display: none;
             position: fixed;
@@ -87,11 +150,6 @@
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
         }
 
-        #cart-trigger:hover {
-            transform: translateX(-50%) translateY(-5px);
-            box-shadow: 0 15px 35px rgba(16, 185, 129, 0.5);
-        }
-
         .btn-back {
             background: none;
             border: none;
@@ -107,29 +165,19 @@
             transition: background 0.2s;
         }
 
-        .btn-back:hover {
-            background: var(--gray-dark);
-        }
-
         .sub-header {
             display: flex;
             align-items: center;
             padding: 15px 20px;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background: #f8fafc;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             margin-bottom: 20px;
             border-radius: 0 0 24px 24px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.02);
-            position: sticky;
-            top: 0;
-            z-index: 90;
         }
 
         .catalog {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
             gap: 20px;
             padding: 0 20px 20px 20px;
         }
@@ -148,7 +196,6 @@
         .card:hover {
             transform: translateY(-8px);
             box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08);
-            border-color: rgba(16, 185, 129, 0.2);
         }
 
         .product-emoji {
@@ -160,68 +207,35 @@
             background: linear-gradient(135deg, #f8fafc, #f1f5f9);
             border-radius: 16px;
             margin-bottom: 15px;
-            transition: transform 0.3s;
-        }
-
-        .card:hover .product-emoji {
-            transform: scale(1.1) rotate(5deg);
         }
 
         .product-img {
             width: 100%;
             height: 120px;
             object-fit: contain;
-            padding: 10px;
-            box-sizing: border-box;
-            background: #f8fafc;
             border-radius: 16px;
             margin-bottom: 15px;
-            transition: transform 0.3s;
         }
 
-        .card:hover .product-img {
-            transform: scale(1.05);
-        }
-
-        /* Allineamento Intelligente Card */
         .card-body {
             min-height: 85px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            margin-top: 10px;
         }
 
         .brand-label {
             font-size: 11px;
             font-weight: 800;
-            color: #64748b; /* Grigio più scuro per maggiore visibilità */
+            color: #64748b;
             text-transform: uppercase;
-            letter-spacing: 0.8px; /* Leggermente più spaziato per un look premium */
-            height: 14px;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
         }
 
         .product-name {
             font-size: 14px;
             font-weight: 800;
             margin: 2px 0;
-            line-height: 1.2;
             color: var(--dark);
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            min-height: 34px;
-        }
-
-        .weight-label {
-            font-size: 12px;
-            color: #64748b;
-            font-weight: 600;
-            height: 16px;
         }
 
         .price-label {
@@ -242,24 +256,9 @@
             height: 32px;
             border-radius: 10px;
             cursor: pointer;
-            font-weight: bold;
             font-size: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
-            transition: all 0.2s;
+            font-weight: bold;
             z-index: 10;
-        }
-
-        .add-btn:hover {
-            background: var(--primary-light);
-            transform: scale(1.1) rotate(90deg);
-            box-shadow: 0 6px 15px rgba(16, 185, 129, 0.4);
-        }
-
-        .add-btn:active {
-            transform: scale(0.9);
         }
 
         .info-btn {
@@ -273,73 +272,8 @@
             height: 28px;
             border-radius: 50%;
             cursor: pointer;
-            font-weight: 700;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            transition: all 0.2s;
+            font-weight: bold;
             z-index: 10;
-        }
-
-        .info-btn:hover {
-            background: var(--dark);
-            color: white;
-            transform: scale(1.15) rotate(5deg);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-            border-color: var(--dark);
-        }
-
-        .info-section {
-            text-align: left;
-            margin-bottom: 20px;
-            padding: 16px;
-            background: white;
-            border-radius: 18px;
-            border: 1px solid rgba(0, 0, 0, 0.04);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
-            transition: transform 0.2s;
-        }
-
-        .info-section:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
-        }
-
-        .info-section h4 {
-            margin: 0 0 10px 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--dark);
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-weight: 700;
-        }
-
-        .info-text {
-            font-size: 14px;
-            line-height: 1.6;
-            color: #475569;
-            margin: 0;
-            font-weight: 400;
-        }
-
-        .ean-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: #f1f5f9;
-            color: #475569;
-            padding: 6px 14px;
-            border-radius: 10px;
-            font-size: 12px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            letter-spacing: 1px;
         }
 
         .modal {
@@ -351,57 +285,32 @@
             height: 100%;
             background: rgba(15, 23, 42, 0.6);
             backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
             align-items: center;
             justify-content: center;
             z-index: 1000;
-            animation: fadeIn 0.3s ease;
-            cursor: pointer;
         }
 
         .modal-content {
-            cursor: default;
             background: white;
             padding: 30px;
             border-radius: 28px;
             width: 90%;
-            max-width: 380px;
+            max-width: 400px;
             text-align: center;
-            max-height: 85vh;
+            max-height: 90vh;
             overflow-y: auto;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes slideUp {
-            from {
-                transform: translateY(30px);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .cart-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            font-size: 15px;
+        .btn-confirm {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 18px;
+            width: 100%;
+            border-radius: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            margin-top: 20px;
         }
 
         .select-box {
@@ -411,2207 +320,749 @@
             border-radius: 12px;
             border: 2px solid var(--gray-dark);
             background: var(--gray);
-            font-size: 15px;
             font-family: inherit;
-            font-weight: 500;
-            transition: border-color 0.2s;
         }
 
-        .select-box:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        .btn-confirm {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            border: none;
-            padding: 18px;
-            width: 100%;
-            border-radius: 16px;
-            font-weight: 800;
-            font-size: 16px;
-            margin-top: 25px;
-            cursor: pointer;
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .btn-confirm:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 25px rgba(16, 185, 129, 0.4);
-        }
-
-        .pay-option {
-            border: 2px solid var(--gray-dark);
-            margin: 12px 0;
-            padding: 18px;
-            border-radius: 16px;
-            cursor: pointer;
-            font-weight: 700;
-            transition: all 0.2s;
-        }
-
-        .pay-option:hover {
-            border-color: var(--primary);
-            background: rgba(16, 185, 129, 0.05);
-            transform: scale(1.02);
-        }
-
-        /* Footer Styles */
         footer {
-            background: #ffffff;
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            background: white;
             padding: 40px 20px;
-            margin-top: 40px;
             text-align: center;
+            border-top: 1px solid #eee;
         }
 
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 30px;
-        }
-
-        @media (min-width: 768px) {
-            .footer-content {
-                grid-template-columns: 1.5fr 1fr;
-                text-align: left;
-            }
-        }
-
-        .footer-section h4 {
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--dark);
-            margin-bottom: 20px;
-            font-weight: 800;
-        }
-
-        .footer-info {
-            font-size: 13px;
-            color: #64748b;
-            line-height: 1.8;
-        }
-
-        .footer-links {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .footer-links a {
-            font-size: 14px;
-            color: #475569;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.2s;
-            cursor: pointer;
-        }
-
-        .footer-links a:hover {
-            color: var(--primary);
-        }
-
-        .footer-bottom {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(0, 0, 0, 0.03);
-            font-size: 12px;
-            color: #94a3b8;
-            font-weight: 500;
-        }
-
-        /* Legal Content Style */
         .legal-container {
-            background: white;
-            padding: 30px;
-            border-radius: 24px;
-            margin: 20px;
             text-align: left;
             line-height: 1.6;
-        }
-
-        .legal-container h2 {
-            color: var(--primary);
-            font-weight: 800;
-        }
-
-        .legal-container h3 {
-            margin-top: 25px;
-            font-weight: 700;
-        }
-
-        /* Form & Register Styles */
-        .form-container {
-            background: white;
-            padding: 30px;
-            border-radius: 28px;
-            margin: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            text-align: left;
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-        }
-
-        .input-group label {
-            display: block;
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--dark);
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .checkbox-group {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            margin-top: 25px;
-            padding: 15px;
-            background: var(--gray);
-            border-radius: 12px;
-        }
-
-        .checkbox-group input {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-        }
-
-        .checkbox-group label {
-            font-size: 13px;
-            color: #475569;
-            line-height: 1.4;
-            cursor: pointer;
-        }
-
-        .error-message {
-            color: var(--red);
-            font-size: 12px;
-            font-weight: 700;
-            margin-top: 6px;
-            display: none;
-        }
-
-        /* Autocomplete Results */
-        .autocomplete-container {
-            position: relative;
-            width: 100%;
-        }
-
-        .autocomplete-results {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            display: none;
-            max-height: 200px;
-            overflow-y: auto;
-            margin-top: 5px;
-            border: 1px solid #f1f5f9;
-        }
-
-        .suggestion-item {
-            padding: 12px 15px;
-            font-size: 14px;
-            color: var(--dark);
-            cursor: pointer;
-            border-bottom: 1px solid #f8fafc;
-            transition: background 0.2s;
-        }
-
-        .suggestion-item:last-child {
-            border-bottom: none;
-        }
-
-        .suggestion-item:hover {
-            background: #f1f5f9;
-            color: var(--primary);
-        }
-
-        /* Phone Prefix Style */
-        .phone-input-wrapper {
-            display: flex;
-            align-items: center;
-            background: #f8fafc;
-            border: 2px solid var(--gray-dark);
-            border-radius: 12px;
-            overflow: hidden;
-            transition: border-color 0.2s;
-        }
-
-        .phone-input-wrapper:focus-within {
-            border-color: var(--primary);
-            background: white;
-        }
-
-        .phone-prefix {
-            background: #e2e8f0;
-            padding: 0 15px;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            font-weight: 800;
-            color: var(--dark);
-            font-size: 16px;
-            border-right: 1px solid #cbd5e1;
-            user-select: none;
-            height: 54px;
-            /* Altezza standard dei nostri box */
-        }
-
-        .phone-input-field {
-            border: none !important;
-            background: transparent !important;
-            flex-grow: 1;
-            padding: 15px;
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--dark);
-            outline: none;
-            width: 100%;
-        }
-
-        /* Philosophy Page Styles */
-        .philosophy-hero {
-            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
-            padding: 40px 25px;
-            border-radius: 0 0 40px 40px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .philosophy-card {
-            background: white;
-            padding: 30px 25px;
-            border-radius: 28px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            margin-bottom: 20px;
-            border: 1px solid #f1f5f9;
-            transition: transform 0.2s;
-        }
-
-        .philosophy-icon {
-            font-size: 40px;
-            margin-bottom: 15px;
-            display: inline-block;
-        }
-
-        .philosophy-card h4 {
-            font-size: 18px;
-            font-weight: 800;
-            margin-bottom: 10px;
-            color: var(--dark);
-        }
-
-        .philosophy-card p {
-            font-size: 14px;
-            line-height: 1.6;
-            color: var(--text-muted);
+            padding: 20px;
         }
     </style>
 </head>
 
 <body>
 
-    <div id="cart-trigger" onclick="openCart()">🛒 Articoli: <span id="cart-limit-display">0 di 7</span> | <span
-            id="cart-total-top">0.00€</span></div>
-
     <header>
-        <div style="display: flex; justify-content: center; align-items: center; padding-bottom: 5px;">
-            <div style="display: flex; align-items: center; cursor: pointer; color: #2d1b4d; font-family: 'Lora', serif; font-weight: 700; font-size: 42px; letter-spacing: -1.5px;"
-                onclick="adminClick()">
-                Spes<span style="position: relative; display: inline-block;">ı<svg viewBox="0 0 24 24" fill="#42d3a5"
-                        xmlns="http://www.w3.org/2000/svg"
-                        style="position: absolute; top: -14px; left: 105%; transform: translateX(-50%); width: 28px; height: 28px;">
-                        <path
-                            d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z" />
-                    </svg></span>na
+        <div class="header-container">
+            <button id="sticky-back" onclick="handleBack()">⬅ Indietro</button>
+            
+            <div style="flex-grow: 1; display: flex; justify-content: center;">
+                <div class="logo-text" style="display: flex; align-items: center; cursor: pointer; color: #2d1b4d; font-family: 'Lora', serif; font-weight: 700; font-size: 38px; letter-spacing: -1.5px;"
+                    onclick="goHome()">
+                    Spes<span style="position: relative; display: inline-block;">ı<svg class="logo-leaf" viewBox="0 0 24 24" fill="#42d3a5"
+                            xmlns="http://www.w3.org/2000/svg"
+                            style="position: absolute; top: -14px; left: 105%; transform: translateX(-50%); width: 28px; height: 28px;">
+                            <path
+                                d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z" />
+                        </svg></span>na
+                </div>
+            </div>
+
+            <div class="header-spacer" style="width: 100px; display: flex; justify-content: flex-end;">
+                <!-- Spazio per bilanciare il tasto indietro -->
             </div>
         </div>
         <div class="top-nav">
-            <a onclick="showPhilosophy()">Perché Spesina?</a>
-            <a onclick="showHowItWorks()">Come funziona</a>
-            <a onclick="showAddress()">📍 Dove consegniamo</a>
-            <a id="nav-login" onclick="showRegister()">🔑 Accedi / Registrati</a>
+            <a onclick="showInfoModal('why')">Perché Spesina?</a>
+            <a onclick="showInfoModal('how')">Come funziona</a>
+            <a onclick="showInfoModal('where')">📍 Dove consegniamo</a>
+            <a id="nav-auth" onclick="handleAuthClick()">🔑 Accedi / Registrati</a>
         </div>
     </header>
 
-    <div id="home-view">
-        <!-- Banner Benvenuto Utente -->
-        <div id="user-welcome-banner" style="display:none; padding:15px 20px 0 20px;">
-            <div
-                style="background:linear-gradient(135deg, #f8fafc, #f1f5f9); border:1px solid #e2e8f0; border-radius:18px; padding:15px; display:flex; align-items:center; gap:12px; box-shadow:0 4px 6px rgba(0,0,0,0.02);">
-                <div
-                    style="background:var(--primary); color:white; width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px;">
-                    👤</div>
-                <div style="flex-grow:1;">
-                    <div style="font-size:14px; font-weight:800; color:var(--dark);">Ciao, <span
-                            id="welcome-name">...</span>!</div>
-                    <div style="font-size:11px; color:#64748b; font-weight:600; margin-top:2px;">ID: <span
-                            id="welcome-id">...</span> | Scade: <span id="welcome-expiry">...</span></div>
-                </div>
-            </div>
-        </div>
+    <div id="cart-trigger" onclick="showCart()">
+        🛒 Carrello (<span id="cart-count-float">0</span>)
+    </div>
 
-        <div style="padding: 15px 20px 5px 20px;">
-            <input type="text" id="search-bar" class="select-box" placeholder="🔍 Cerca prodotti (es. Acqua...)"
-                oninput="handleSearch()"
-                style="border-radius:20px; padding:15px 20px; font-size:16px; border: 2px solid var(--gray-dark); width: 100%; box-sizing:border-box; box-shadow:0 4px 10px rgba(0,0,0,0.03);">
+    <div id="home-view">
+        <div style="padding: 20px;">
+            <input type="text" id="search-bar" class="select-box" placeholder="🔍 Cerca prodotti..."
+                oninput="handleSearch()">
         </div>
-        <div id="home-categories-title"
-            style="padding:15px 20px 0 20px; font-weight:bold; color:var(--dark); font-size:18px;">Esplora Categorie
-        </div>
-        <div class="catalog" id="categories-catalog" style="display:flex; flex-wrap:wrap; justify-content:center;">
-        </div>
-        <div class="catalog" id="search-catalog" style="display:none;"></div>
+        <div class="catalog" id="categories-catalog"></div>
     </div>
 
     <div id="subcategory-view" style="display: none;">
         <div class="sub-header">
-            <button class="btn-back" onclick="handleBack()">⬅ Indietro</button>
             <h3 id="subcategory-title" style="margin: 0; flex-grow: 1; text-align: center;">Categoria</h3>
-            <div style="width: 80px;"></div> <!-- Spazio per centrare il titolo -->
         </div>
         <div class="catalog" id="sub-catalog"></div>
     </div>
 
-    <div id="philosophy-view" style="display: none;">
+    <div id="cart-view" style="display: none; padding: 20px;">
         <div class="sub-header">
-            <button class="btn-back" onclick="handleBack()">⬅ Indietro</button>
-            <h3 style="margin: 0; flex-grow: 1; text-align: center;">Filosofia</h3>
-            <div style="width: 80px;"></div>
+            <h3 style="margin: 0; flex-grow: 1; text-align: center;">Il tuo Carrello</h3>
         </div>
-
-        <div class="philosophy-hero">
-            <h2 style="font-size:26px; font-weight:800; color:var(--dark); line-height:1.2;">Spesina: La tua spesa
-                intelligente a Mestre.</h2>
-        </div>
-
-        <div style="padding:0 20px 40px 20px;">
-            <div class="philosophy-card">
-                <span class="philosophy-icon">🎟️</span>
-                <h4>Abbonamento Mensile</h4>
-                <p>Nessun costo di consegna, mai. Con 19,99€ al mese ordini quante volte vuoi. Ti basta un solo ordine a
-                    settimana per iniziare a risparmiare.</p>
+        <div id="cart-items"></div>
+        <div
+            style="margin-top:20px; padding:20px; background:white; border-radius:20px; box-shadow:0 4px 15px rgba(0,0,0,0.05);">
+            <div style="display:flex; justify-content:space-between; font-size:22px; font-weight:900;">
+                <span>Totale:</span>
+                <span id="cart-total-price">0.00€</span>
             </div>
-
-            <div class="philosophy-card">
-                <span class="philosophy-icon">⚡</span>
-                <h4>Il limite dei 7 pezzi</h4>
-                <p>Perché solo 7 pezzi? Perché vogliamo essere fulminei. Meno peso per i nostri rider significa più
-                    velocità per te e meno traffico per Mestre.</p>
-            </div>
-
-            <div class="philosophy-card">
-                <span class="philosophy-icon">💎</span>
-                <h4>Qualità Garantita</h4>
-                <p>Selezioniamo solo il meglio, dalla frutta fresca ai prodotti locali, pronti per essere consegnati a
-                    casa tua.</p>
-            </div>
-
-            <button class="btn-confirm" onclick="goHome();" style="margin-top:20px;">INIZIA LA SPESA</button>
+            <button class="btn-confirm" onclick="processCheckout()">CONFERMA ORDINE</button>
         </div>
     </div>
 
-    <div id="legal-view" style="display: none;">
+    <div id="register-view" style="display: none; padding: 20px;">
         <div class="sub-header">
-            <button class="btn-back" onclick="handleBack()">⬅ Indietro</button>
-            <h3 id="legal-title" style="margin: 0; flex-grow: 1; text-align: center;">Informazioni</h3>
-            <div style="width: 80px;"></div>
-        </div>
-        <div class="legal-container" id="legal-content"></div>
-    </div>
-
-    <div id="register-view" style="display: none;">
-        <div class="sub-header">
-            <button class="btn-back" onclick="handleBack()">⬅ Indietro</button>
             <h3 style="margin: 0; flex-grow: 1; text-align: center;">Registrazione</h3>
-            <div style="width: 80px;"></div>
         </div>
-        <div class="form-container">
-            <p
-                style="font-size:13px; color:var(--text-muted); margin-bottom:20px; line-height:1.4; border-bottom: 1px solid #eee; padding-bottom: 15px;">
-                Completa i dati per attivare il tuo account <b>Spesina</b>. Ricorda: abbonamento mensile 19,99€,
-                consegne illimitate, max 7 articoli per ordine.</p>
-            <form id="register-form" onsubmit="handleRegister(event)" autocomplete="off">
-                <div class="input-group">
-                    <label>Nome e Cognome</label>
-                    <input type="text" id="reg-name" class="select-box" placeholder="Mario Rossi"
-                        oninput="checkRegisterValidity()" autocomplete="new-password">
-                </div>
-                <div class="input-group">
-                    <label>Email (Per ricevere il riepilogo spesa)</label>
-                    <input type="email" id="reg-email" class="select-box" placeholder="mario.rossi@esempio.it"
-                        oninput="checkRegisterValidity()" autocomplete="new-password">
-                </div>
-                <div class="input-group">
-                    <label>Numero di Cellulare</label>
-                    <div class="phone-input-wrapper">
-                        <span class="phone-prefix">+39</span>
-                        <input type="tel" id="reg-phone" class="phone-input-field" placeholder="3401234567"
-                            oninput="validateRegisterPhone()" autocomplete="new-password">
-                    </div>
-                    <div id="reg-phone-error" class="error-message">Inserisci un numero di cellulare valido (9 o 10
-                        cifre).</div>
-                </div>
-                <div class="input-group">
-                    <label>CAP (Solo Mestre)</label>
-                    <select id="reg-cap" class="select-box" onchange="validateRegisterCAP()">
-                        <option value="" disabled selected>Seleziona il tuo CAP...</option>
-                        <option value="30170">30170 (Mestre)</option>
-                        <option value="30171">30171 (Mestre)</option>
-                        <option value="30172">30172 (Mestre)</option>
-                        <option value="30173">30173 (Mestre)</option>
-                        <option value="30174">30174 (Mestre)</option>
-                        <option value="30175">30175 (Mestre)</option>
-                    </select>
-                    <div id="reg-cap-error" class="error-message">Seleziona un CAP valido per continuare.</div>
+        <div style="max-width:500px; margin:auto; background:white; padding:30px; border-radius:24px; box-shadow: 0 10px 40px rgba(0,0,0,0.05);">
+            <form onsubmit="handleRegister(event)" style="display: flex; flex-direction: column; gap: 15px;">
+                <div>
+                    <label style="font-size: 11px; font-weight: 800; color: #1e293b; text-transform: uppercase;">Nome e Cognome</label>
+                    <input type="text" id="reg-name" class="select-box" placeholder="Es: Mario Rossi" required>
                 </div>
 
-                <div class="input-group">
-                    <label>Indirizzo di Consegna (Mestre)</label>
-                    <input type="text" id="reg-address" class="select-box" placeholder="es: Via Mestrina"
-                        oninput="checkRegisterValidity()">
-                </div>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px;">
-                    <div class="input-group" style="margin-bottom:0;">
-                        <label>N° civico</label>
-                        <input type="text" id="reg-civico" class="select-box" placeholder="es: 10"
-                            oninput="checkRegisterValidity()">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div>
+                        <label style="font-size: 11px; font-weight: 800; color: #1e293b; text-transform: uppercase;">Cellulare</label>
+                        <input type="tel" id="reg-phone" class="select-box" placeholder="333 1234567" required>
                     </div>
-                    <div class="input-group" style="margin-bottom:0;">
-                        <label>Piano</label>
-                        <input type="text" id="reg-piano" class="select-box" placeholder="es: 2 (o 0)"
-                            oninput="checkRegisterValidity()">
-                    </div>
-                    <div class="input-group" style="margin-bottom:0;">
-                        <label>Interno</label>
-                        <input type="text" id="reg-interno" class="select-box" placeholder="es: 5 (o 0)"
-                            oninput="checkRegisterValidity()">
+                    <div>
+                        <label style="font-size: 11px; font-weight: 800; color: #1e293b; text-transform: uppercase;">Email</label>
+                        <input type="email" id="reg-email" class="select-box" placeholder="mario@email.it" required>
                     </div>
                 </div>
 
-                <div class="input-group" style="margin-bottom: 20px;">
-                    <label>Nome sul Campanello</label>
-                    <input type="text" id="reg-campanello" class="select-box"
-                        placeholder="Se diverso dal nome registrato (es. Famiglia Rossi)"
-                        oninput="checkRegisterValidity()">
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 15px;">
+                    <div>
+                        <label style="font-size: 11px; font-weight: 800; color: #1e293b; text-transform: uppercase;">Via / Piazza</label>
+                        <input type="text" id="reg-street" class="select-box" placeholder="Es: Via Mestrina" required>
+                    </div>
+                    <div>
+                        <label style="font-size: 11px; font-weight: 800; color: #1e293b; text-transform: uppercase;">Civico</label>
+                        <input type="text" id="reg-number" class="select-box" placeholder="10" required>
+                    </div>
                 </div>
 
-                <div class="checkbox-group">
-                    <input type="checkbox" id="reg-privacy" onchange="checkRegisterValidity()">
-                    <label for="reg-privacy">Accetto la <a onclick="showLegalPage('privacy')"
-                            style="color:var(--primary); font-weight:700;">Privacy Policy</a> di Spesina.</label>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                    <div>
+                        <label style="font-size: 11px; font-weight: 800; color: #1e293b; text-transform: uppercase;">CAP</label>
+                        <select id="reg-cap" class="select-box" required>
+                            <option value="" disabled selected>CAP...</option>
+                            <option value="30171">30171</option>
+                            <option value="30172">30172</option>
+                            <option value="30173">30173</option>
+                            <option value="30174">30174</option>
+                            <option value="30175">30175</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size: 11px; font-weight: 800; color: #1e293b; text-transform: uppercase;">Piano</label>
+                        <input type="text" id="reg-floor" class="select-box" placeholder="Es: 2°">
+                    </div>
+                    <div>
+                        <label style="font-size: 11px; font-weight: 800; color: #1e293b; text-transform: uppercase;">Interno</label>
+                        <input type="text" id="reg-int" class="select-box" placeholder="Es: 4">
+                    </div>
                 </div>
 
-                <button type="submit" class="btn-confirm" id="btn-submit-reg">COMPLETA REGISTRAZIONE</button>
+                <div style="display: flex; align-items: flex-start; gap: 10px; margin-top: 10px; text-align: left;">
+                    <input type="checkbox" id="reg-privacy" required style="margin-top: 4px; transform: scale(1.2);">
+                    <label for="reg-privacy" style="font-size: 12px; color: #64748b;">
+                        Accetto la <a onclick="showLegal('privacy')" style="color: var(--primary); font-weight: 700; cursor: pointer;">Privacy Policy</a> e i termini del servizio.
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-confirm" style="margin-top: 10px; font-weight: 900; letter-spacing: 1px;">ATTIVA ACCOUNT</button>
             </form>
         </div>
     </div>
 
-    <!-- Modal Carrello -->
-    <div class="modal" id="modalCart">
+    <div id="legal-view" style="display: none; padding: 20px;">
+        <div class="sub-header">
+            <h3 id="legal-title" style="margin: 0; flex-grow: 1; text-align: center;">Legale</h3>
+        </div>
+        <div class="legal-container" id="legal-content"></div>
+    </div>
+
+    <!-- Modali -->
+    <div class="modal" id="modalProfile">
         <div class="modal-content">
-            <h3>🛒 Il tuo Carrello</h3>
-            <div id="first-order-msg"
-                style="display:none; background:var(--primary-light); border:1px solid var(--primary); color:var(--dark); padding:15px; border-radius:12px; font-size:13px; font-weight:700; margin-bottom:15px; border-left: 5px solid var(--primary);">
-                ℹ️ Stai effettuando la prima spesa del mese: l'abbonamento per l'accesso illimitato a Spesina viene
-                aggiunto a questo ordine.
+            <div style="font-size:60px;">👤</div>
+            <h2 id="profile-name">Nome Utente</h2>
+            <div id="profile-id-tag"
+                style="background:#e2fcf1; color:#10b981; padding:5px 15px; border-radius:20px; display:inline-block; font-weight:800; margin-bottom:20px;">
+                ID: SP-XXXXXX</div>
+            <div style="text-align:left; margin-bottom:20px;">
+                <p>📍 <span id="profile-address">Indirizzo...</span></p>
+                <p>📧 <span id="profile-email">Email...</span></p>
             </div>
-            <div id="cart-items-list"></div>
-
-            <div style="margin-top:20px; text-align:left; border-top:1px solid #eee; padding-top:10px;">
-                <label style="font-size:12px; font-weight:bold;">🕒 QUANDO CONSEGNIAMO?</label>
-                <select id="select-giorno" class="select-box" onchange="caricaOrari()">
-                    <!-- Popolato dinamicamente da JS -->
-                </select>
-                <select id="select-ora" class="select-box" style="margin-top:10px;"></select>
-            </div>
-
-            <h3 id="final-price" style="margin-top:20px; border-top:2px solid #eee; padding-top:10px;">Totale: 0.00€
-            </h3>
-            <p id="weight-disclaimer"
-                style="font-size:12px; color:var(--text-muted); margin-bottom:15px; font-style:italic; line-height:1.4; display:none; background: #f1f5f9; padding: 10px; border-radius: 8px; border-left: 4px solid var(--primary);">
-                ⚠️ <b>Nota Ortofrutta:</b> I prodotti sono venduti a pezzo/confezione e il peso è indicativo. L'acquisto
-                si intende perfezionato per l'unità e non per il peso esatto (Art. 4 T&C).</p>
-            <button class="btn-confirm" onclick="showPay()">PROSEGUI</button>
-            <button onclick="closeModals()"
-                style="border:none;background:none;color:gray;margin-top:10px;cursor:pointer">Chiudi</button>
+            <button class="btn-confirm" onclick="logout()" style="background:#fee2e2; color:#ef4444;">ESCI
+                DALL'ACCOUNT</button>
+            <button class="btn-confirm" onclick="closeModals()"
+                style="background:#f1f5f9; color:#64748b;">CHIUDI</button>
         </div>
     </div>
 
-    <div class="modal" id="modalPay">
+    <div class="modal" id="modalInfo">
         <div class="modal-content">
-            <h3>Metodo di Pagamento</h3>
-            <div class="pay-option" onclick="finish('Contanti')"
-                style="display: flex; align-items: center; justify-content: center; gap: 10px;">💵 Contanti alla
-                consegna</div>
-            <button onclick="closeModals()"
-                style="border:none;background:none;color:gray;margin-top:10px;cursor:pointer">Indietro</button>
+            <h3 id="info-p-name">Nome Prodotto</h3>
+            <p id="info-p-ean" style="color:#64748b;"></p>
+            <div id="info-desc" style="text-align:left; line-height:1.6; margin-top:15px;"></div>
+            <button class="btn-confirm" onclick="closeModals()">CHIUDI</button>
         </div>
     </div>
 
-    <!-- Modal Login -->
+    <div class="modal" id="modalSuccess">
+        <div class="modal-content">
+            <div style="font-size:60px;">🎉</div>
+            <h2 id="success-title">Evviva!</h2>
+            <p id="success-desc"></p>
+            <div id="id-display-box"
+                style="display:none; border:2px dashed #10b981; padding:15px; border-radius:15px; margin:20px 0;">
+                <p style="font-size:12px;">ID CLIENTE SPESINA</p>
+                <h3 id="display-client-id" style="margin:0; font-size:28px;"></h3>
+            </div>
+            <button class="btn-confirm" onclick="closeModals(); goHome();">OK, ANDIAMO!</button>
+        </div>
+    </div>
+
     <div class="modal" id="modalLogin">
         <div class="modal-content">
-            <h3 style="margin-top:0;">🔑 Accedi a Spesina</h3>
-            <p style="font-size:14px; color:var(--text-muted); margin-bottom:20px;">Inserisci il tuo ID Cliente per
-                recuperare il tuo profilo e i tuoi ordini.</p>
-
-            <div class="input-group">
-                <label>ID Cliente (es: SP-XXXXXX)</label>
-                <input type="text" id="login-id" class="select-box" placeholder="Inserisci il tuo ID..."
-                    style="text-transform:uppercase;">
+            <div style="font-size:30px; margin-bottom:10px;">🔑</div>
+            <h2 style="margin-bottom:10px;">Accedi a Spesina</h2>
+            <p style="color:#64748b; margin-bottom:20px; font-size:14px;">Inserisci il tuo ID Cliente per recuperare il tuo profilo e i tuoi ordini.</p>
+            
+            <div style="text-align:left; margin-bottom:15px;">
+                <label style="font-size:11px; font-weight:800; color:#1e293b;">ID CLIENTE (ES: SP-XXXXXX)</label>
+                <input type="text" id="login-id-input" class="select-box" placeholder="INSERISCI IL TUO ID..." style="text-transform:uppercase;">
             </div>
 
-            <button class="btn-confirm" style="margin-top:10px;" onclick="handleLogin()">ACCEDI ORA</button>
-            <p style="font-size:12px; margin-top:15px; color:var(--text-muted);">Non hai un ID? <a
-                    onclick="closeModals(); showRegister()"
-                    style="color:var(--primary); font-weight:700; cursor:pointer;">Registrati qui</a></p>
-            <button onclick="closeModals()"
-                style="border:none;background:none;color:var(--text-muted);margin-top:10px;cursor:pointer;font-weight:700;">Chiudi</button>
+            <button class="btn-confirm" onclick="handleLogin()" style="text-transform:uppercase; font-weight:900;">ACCEDI ORA</button>
+            
+            <p style="font-size:13px; margin-top:20px; color:#64748b;">
+                Non hai un ID? <a onclick="switchToRegister()" style="color:var(--primary); font-weight:800; cursor:pointer;">Registrati qui</a>
+            </p>
+            <p onclick="closeModals()" style="font-size:14px; margin-top:20px; color:var(--dark); font-weight:700; cursor:pointer;">Chiudi</p>
         </div>
     </div>
 
-    <div class="modal" id="modalAddress">
-        <div class="modal-content">
-            <h3 style="margin-top:0;">📍 Dove consegniamo?</h3>
-            <p style="font-size:14px; color:var(--text-muted); margin-bottom:20px;">Inserisci il tuo CAP per verificare
-                se la tua zona a Mestre è coperta dal servizio.</p>
-
-            <select id="cap-check" class="select-box" onchange="checkQuickArea()">
-                <option value="" disabled selected>Seleziona il CAP...</option>
-                <option value="30171">30171 (Mestre)</option>
-                <option value="30172">30172 (Mestre)</option>
-                <option value="30173">30173 (Mestre)</option>
-                <option value="30174">30174 (Mestre)</option>
-                <option value="30175">30175 (Mestre)</option>
-            </select>
-
-            <div id="quick-check-msg" style="margin-top:20px; display:none;">
-                <div
-                    style="background:rgba(16, 185, 129, 0.1); color:var(--primary-dark); padding:15px; border-radius:12px; font-weight:700; font-size:14px;">
-                    ✅ Ottime notizie! Consegniamo nella tua zona.
-                </div>
-                <button class="btn-confirm" style="margin-top:15px;" onclick="closeModals(); showRegister()">REGISTRATI
-                    PER ORDINARE</button>
+    <footer>
+        <div
+            style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left; padding: 20px;">
+            <div>
+                <h4 style="font-weight: 800;">SPESINA S.R.L.</h4>
+                <p style="font-size: 12px; color: #64748b;">Via Mestrina 1, 30171 Mestre (VE)<br>P.IVA: 01234567890</p>
             </div>
-
-            <button onclick="closeModals()"
-                style="border:none;background:none;color:var(--text-muted);margin-top:20px;cursor:pointer;font-weight:700;">Chiudi</button>
-        </div>
-    </div>
-
-    <div class="modal" id="modalHowItWorks">
-        <div class="modal-content" style="text-align:center;">
-            <h3 style="margin-top:0; font-size:24px;">ℹ️ Come funziona</h3>
-            <p style="font-size:18px; line-height:1.6; color:var(--text-muted); font-weight:500; margin: 20px 0;">Fai la
-                spesa ora.<br>Scegli data e ora e dopo il CLICK...<br><span
-                    style="color:var(--primary); font-weight:800; font-size:22px; display:inline-block; margin-top:10px;">Ci
-                    pensiamo noi! 🚀</span></p>
-            <button onclick="closeModals()"
-                style="background:var(--primary); color:white; border:none; border-radius:12px; padding:15px 30px; font-size:16px; font-weight:bold; cursor:pointer; margin-top:15px; width:100%; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);">Capito
-                👍</button>
-        </div>
-    </div>
-
-    <!-- MODAL PROFILO -->
-    <div class="modal" id="modalProfile">
-        <div class="modal-content" style="max-width:400px; text-align:center; padding:30px;">
-            <div style="font-size:60px; margin-bottom:15px;">👤</div>
-            <h2 id="profile-name" style="margin:0; font-size:26px; font-weight:900; color:var(--dark);">Nome Utente</h2>
-            <div id="profile-id-tag"
-                style="display:inline-block; background:var(--primary-light); color:var(--primary); padding:4px 12px; border-radius:20px; font-size:12px; font-weight:800; margin-top:5px; margin-bottom:20px;">
-                ID: SP-XXXXXX</div>
-
-            <div
-                style="background:#f8fafc; border-radius:15px; padding:20px; margin-bottom:20px; border:1px solid #e2e8f0; text-align:left;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                    <span style="font-weight:700; color:#64748b;">Stato Abbonamento</span>
-                    <span id="sub-status-badge"
-                        style="padding:4px 10px; border-radius:10px; font-size:12px; font-weight:800;">---</span>
-                </div>
-                <div id="sub-countdown-box" style="margin-top:10px;">
-                    <div
-                        style="font-size:11px; color:#94a3b8; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">
-                        Scadenza tra</div>
-                    <div id="sub-countdown-text" style="font-size:22px; font-weight:900; color:var(--dark);">-- giorni
-                    </div>
-                </div>
+               <div>
+                <h4 style="font-weight: 800;">LINKS</h4>
+                <p style="font-size: 14px;">
+                    <a onclick="showLegal('privacy')" style="color: #64748b; cursor: pointer; text-decoration: none; display: block; margin-bottom: 5px;">Privacy Policy</a>
+                    <a onclick="showLegal('cookie')" style="color: #64748b; cursor: pointer; text-decoration: none; display: block; margin-bottom: 5px;">Cookie Policy</a>
+                    <a onclick="showLegal('terms')" style="color: #64748b; cursor: pointer; text-decoration: none; display: block;">Termini e Condizioni</a>
+                </p>
             </div>
-
-            <div style="text-align:left; font-size:14px; color:#64748b; margin-bottom:25px; padding:0 10px;">
-                <div style="margin-bottom:8px;">📧 <span id="profile-email"
-                        style="color:var(--dark); font-weight:600;">---</span></div>
-                <div>📍 <span id="profile-address" style="color:var(--dark); font-weight:600;">---</span></div>
-            </div>
-
-            <div style="display:flex; flex-direction:column; gap:10px;">
-                <button onclick="logout()"
-                    style="width:100%; padding:14px; background:#fee2e2; color:#ef4444; border:none; border-radius:12px; font-weight:800; cursor:pointer;">Esci
-                    dall'account 🚪</button>
-                <button onclick="closeModals()"
-                    style="width:100%; padding:14px; background:#f1f5f9; color:#64748b; border:none; border-radius:12px; font-weight:700; cursor:pointer;">Chiudi</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal" id="modalAdmin">
-        <div class="modal-content" style="max-width:400px; padding:30px 20px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                <h3 style="margin:0; font-size:22px; font-weight:800;">🕵️ Admin Dashboard</h3>
-                <button onclick="loadAdminStats()"
-                    style="background:none; border:none; color:var(--primary); font-weight:800; cursor:pointer; font-size:12px;">Aggiorna
-                    🔄</button>
-            </div>
-            <div id="admin-stats-content"></div>
-        </div>
-    </div>
-
-    <!-- Modal Successo -->
-    <div class="modal" id="modalSuccess">
-        <div class="modal-content" style="text-align:center; padding: 40px 25px;">
-            <div style="font-size:70px; margin-bottom:15px; animation: bounce 1s ease;">🎉</div>
-            <h3 style="margin-top:0; color:var(--primary); font-size:26px;" id="success-title">Ordine Confermato!</h3>
-            <div id="id-display-box"
-                style="display:none; background: #f8fafc; border: 2px dashed var(--primary); padding: 20px; border-radius: 16px; margin: 20px 0;">
-                <div
-                    style="font-size: 12px; color: #64748b; font-weight: 700; text-transform: uppercase; margin-bottom: 5px;">
-                    Il tuo ID Cliente Spesina</div>
-                <div id="display-client-id"
-                    style="font-size: 28px; font-weight: 900; color: var(--dark); letter-spacing: 2px;">SP-XXXXXX</div>
-                <div style="display:flex; justify-content:center; margin-top:15px;">
-                    <button onclick="copyID()"
-                        style="background:var(--primary); color:white; border:none; padding:8px 15px; border-radius:8px; font-weight:700; cursor:pointer; font-size:12px;">📋
-                        Copia</button>
-                </div>
-            </div>
-            <p style="font-size:16px; line-height:1.5; color:var(--text-muted); font-weight:500; margin:20px 0;"
-                id="success-desc">Prepareremo la tua spesa con cura.</p>
-            <button class="btn-confirm" onclick="closeModals(); window.scrollTo(0,0);" style="margin-top:20px;">Torna
-                alla Home</button>
-        </div>
-    </div>
-
-    <!-- Modal Info Prodotto (Folder) -->
-    <div class="modal" id="modalInfo">
-        <div class="modal-content"
-            style="max-width: 420px; width: 95%; padding: 0; overflow: hidden; border-radius: 24px; border: none; max-height: 90vh;">
-            <!-- Folder Header -->
-            <div
-                style="background: linear-gradient(135deg, #1e293b, #0f172a); color: white; padding: 25px 25px; text-align: left; position: relative;">
-                <button onclick="closeModals()"
-                    style="position: absolute; top: 12px; left: 12px; background: rgba(255,255,255,0.1); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); z-index: 10;">✕</button>
-                <div
-                    style="position: absolute; top: 15px; right: 20px; background: rgba(255,255,255,0.1); padding: 5px 12px; border-radius: 10px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; backdrop-filter: blur(5px);">
-                    Scheda Tecnica</div>
-                <h3 id="info-p-name" style="margin: 15px 0 5px 0; font-size: 20px; font-weight: 800; line-height: 1.2;">
-                    Nome Prodotto</h3>
-                <div id="info-p-ean" class="ean-badge"
-                    style="background: rgba(255,255,255,0.15); color: white; border: none; margin-bottom: 0; padding: 4px 10px; font-size: 10px;">
-                    EAN: 0000000000000</div>
-            </div>
-
-            <div id="info-content-scroll"
-                style="text-align: left; padding: 20px 25px; background: #fdfdfd; max-height: 45vh; overflow-y: auto;">
-                <div class="info-section" style="border-left: 5px solid #10b981;">
-                    <h4><span style="font-size: 18px;">📝</span> Descrizione e Ingredienti</h4>
-                    <p id="info-desc" class="info-text">Dettagli del prodotto e composizione completa...</p>
-                </div>
-
-                <div class="info-section" style="border-left: 5px solid #ef4444;">
-                    <h4><span style="font-size: 18px;">⚠️</span> Allergeni</h4>
-                    <p id="info-allergens" class="info-text">Informazioni importanti sulla sicurezza alimentare...</p>
-                </div>
-
-                <div class="info-section" style="border-left: 5px solid #3b82f6;">
-                    <h4><span style="font-size: 18px;">🧊</span> Conservazione</h4>
-                    <p id="info-storage" class="info-text">Modalità di conservazione e mantenimento della qualità.</p>
-                </div>
-
-                <div class="info-section" style="border-left: 5px solid #f59e0b;">
-                    <h4><span style="font-size: 18px;">🍳</span> Istruzioni e Consigli</h4>
-                    <p id="info-prep" class="info-text">Suggerimenti per la preparazione e l'uso ottimale.</p>
-                </div>
-
-                <div style="text-align: center; margin-top: 10px; opacity: 0.5; font-size: 11px; font-weight: 600;">
-                    Dati certificati per Spesina via Barcode API
-                </div>
-            </div>
-
-            <div style="padding: 15px 25px 20px 25px; background: white; border-top: 1px solid #f1f5f9;">
-                <button class="btn-confirm" onclick="closeModals()"
-                    style="margin-top: 0; padding: 15px; border-radius: 12px;">CAPITO, GRAZIE</button>
-            </div>
-        </div>
-    </div>
-
-    <footer id="main-footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h4>Informazioni Legali</h4>
-                <div class="footer-info" id="footer-company-info">
-                    <!-- Popolato da JS -->
-                </div>
-            </div>
-            <div class="footer-section">
-                <h4>Link Obbligatori</h4>
-                <div style="font-size:12px; color:#94a3b8; line-height:1.6;">
-                    <b>Spesina S.r.l.s.</b><br>
-                    Via Mestre Centrale 12, 30171 Mestre (VE)<br>
-                    P.IVA: 01234567890 | REA: VE-123456<br>
-                    Cap. Soc: 10.000 € i.v.<br>
-                    PEC: spesina@legalmail.it
-                </div>
-                <div style="margin-top:20px; display:flex; justify-content:center; gap:20px; font-size:12px;">
-                    <a onclick="showLegalPage('privacy')"
-                        style="color:#64748b; text-decoration:none; cursor:pointer;">Privacy Policy</a>
-                    <a onclick="showLegalPage('cookie')"
-                        style="color:#64748b; text-decoration:none; cursor:pointer;">Cookie Policy</a>
-                    <a onclick="showLegalPage('termini')"
-                        style="color:#64748b; text-decoration:none; cursor:pointer;">Termini e Condizioni</a>
-                </div>
-            </div>
-        </div>
         </div>
         <div class="footer-bottom">
             &copy; <span id="footer-year"></span> Spesina - Tutti i diritti riservati.
         </div>
     </footer>
 
-
     <script>
-        const SITE_CONFIG = {
-            ragioneSociale: "SPESINA S.R.L.",
-            indirizzo: "Via Mestrina 1, 30171 Mestre (VE)",
-            partitaIva: "01234567890",
-            rea: "VE-123456",
-            capitaleSociale: "10.000,00 € i.v.",
-            emailPec: "spesina@legalmail.it",
-            annoCorrente: new Date().getFullYear()
-        };
-
-        const MAINTENANCE_MODE = true; // Cambia in false per aprire ufficialmente il sito!
-        const FREE_CLIENTS = ["SP-6DL82M", "SP-ADMIN", "SP-FREE", "SP-J5SU40", "SP-TEST"]; // ID con abbonamento gratuito/infinito
-
-        const SLOTS_LUN_SAB = {
-            "10:00-12:00": 5, "12:00-14:00": 5, "14:00-16:00": 5, "16:00-18:00": 5
-        };
-        const SLOTS_DOM = {
-            "10:00-12:00": 5
-        };
-
-        const AUTHORIZED_CAPS = ["30170", "30171", "30172", "30173", "30174", "30175"];
-        const FORMSPREE_URL = "https://formspree.io/f/mlgagarn";
-        // Le variabili userAddress e userCAP sono ora gestite dentro l'oggetto globale userData
-
-        // Sistema di aiuto per il debug: se c'è un errore, l'app lo dirà chiaramente
-        window.onerror = function (msg, url, line) {
-            alert("⚠️ Errore Tecnico:\n" + msg + "\nLinea: " + line);
-            return false;
-        };
-
-        const CATEGORIES = [
-            { id: "pasta", n: "Pasta & Riso", icon: "🍝", img: "" },
-            { id: "bevande", n: "Bevande", icon: "🥤", img: "" },
-            { id: "freschi", n: "Freschi", icon: "🧀", img: "" },
-            { id: "orto", n: "Frutta e Verdura", icon: "🍎", img: "" },
-            { id: "dispensa", n: "Dispensa", icon: "🥫", img: "" },
-            { id: "snack-salati", n: "Snack Salati", icon: "🥨", img: "" },
-            { id: "snack-dolci", n: "Snack Dolci", icon: "🍪", img: "" },
-            { id: "senza-glutine", n: "Senza Glutine", icon: "🚫🌾", img: "" },
-            { id: "parafarmacia", n: "Parafarmacia", icon: "💊", img: "" },
-            { id: "farine", n: "Farine e Preparati", icon: "🌾", img: "" },
-            { id: "condimenti", n: "Condimenti e Spezie", icon: "🧂🌶️", img: "" },
-            { id: "igiene-p", n: "Igiene Persona", icon: "🧼", img: "" },
-            { id: "igiene-c", n: "Igiene Casa e Detersivi", icon: "🧽", img: "" },
-            { id: "surgelati", n: "Surgelati", icon: "❄️", img: "" },
-            { id: "colazione", n: "Colazione", icon: "🥐", img: "" },
-            { id: "panificati", n: "Panificati", icon: "🍞", img: "" },
-            { id: "vegano", n: "Vegano", icon: "🥗", img: "" },
-            { id: "animali", n: "Amici Domestici", icon: "🐾", img: "" },
-            { id: "minestre-zuppe", n: "Minestre, Risotti e Zuppe", icon: "🥣", img: "" },
-            { id: "varie", n: "VarIE", icon: "🛍️", img: "" }
-        ];
-
-        let PRODS = [];
-
-        async function fetchProducts() {
-            try {
-                // Carichiamo tutti i prodotti dalla tabella 'products' su Supabase
-                const { data, error } = await sb.from('products').select('*').order('name');
-
-                if (error) throw error;
-
-                if (data) {
-                    PRODS = data.map(p => ({
-                        id: p.id, n: p.name, p: p.price, c: p.category, b: p.brand, m: p.marca,
-                        img: p.image_url, icon: p.icon, l: p.size, ean: p.ean, info: p.info || {}
-                    }));
-                    
-                    // Ordinamento alfabetico per Marca, poi per Nome
-                    PRODS.sort((a, b) => {
-                        const marcaA = (a.m || "").toLowerCase();
-                        const marcaB = (b.m || "").toLowerCase();
-                        if (marcaA !== marcaB) {
-                            if (!marcaA) return 1; // Prodotti senza marca in fondo
-                            if (!marcaB) return -1;
-                            return marcaA.localeCompare(marcaB);
-                        }
-                        return a.n.localeCompare(b.n);
-                    });
-                    
-                    console.log(`✅ Caricati ${PRODS.length} prodotti ordinati da Supabase.`);
-                }
-            } catch (err) {
-                console.error("❌ Errore caricamento prodotti:", err);
-            }
-        }
-
-        let cart = JSON.parse(localStorage.getItem('spesina_cart')) || [];
-
-        function renderCategories() {
-            let html = "";
-            CATEGORIES.forEach(c => {
-                let media = c.img ? `<img style="width:100%; height:130px; object-fit:cover; border-radius:12px; margin-bottom:15px; box-shadow:0 4px 10px rgba(0,0,0,0.08);" src="${c.img}" alt="${c.n}">` : `<div class="product-emoji">${c.icon}</div>`;
-                html += `<div class="card" style="cursor:pointer; flex: 1 1 140px; max-width: 180px;" onclick="openCategory('${c.id}')">${media}<div style="font-family: 'Outfit', sans-serif; font-size:14px; font-weight:800; color:var(--dark);">${c.n}</div></div>`;
-            });
-            document.getElementById('categories-catalog').innerHTML = html;
-        }
-
-        let currentCat = null;
-        let currentBrand = null;
-
-        function openCategory(catId) {
-            let catObj = CATEGORIES.find(x => x.id === catId);
-            currentCat = catId;
-            currentBrand = null;
-            document.getElementById('home-view').style.display = 'none';
-            document.getElementById('subcategory-view').style.display = 'block';
-            document.getElementById('subcategory-title').innerText = catObj ? catObj.n : "Prodotti";
-            document.querySelector('header').style.display = 'none';
-
-            if (catId === "bevande" || catId === "condimenti" || catId === "igiene-p" || catId === "freschi" || catId === "colazione" || catId === "dispensa" || catId === "igiene-c" || catId === "surgelati" || catId === "farine") {
-                renderSubFolders(catId);
-            } else {
-                renderProducts(catId);
-            }
-            window.scrollTo(0, 0);
-        }
-
-        function renderSubFolders(catId) {
-            let subcatData = [];
-
-            if (catId === "bevande") {
-                subcatData = [
-                    { id: "Acqua", icon: "💧" },
-                    { id: "Succhi di Frutta", icon: "🧃" },
-                    { id: "Birra", icon: "🍺" },
-                    { id: "Vino", icon: "🍷" },
-                    { id: "Bibite", icon: "🥤" },
-                    { id: "Latte 1L", icon: "🥛" },
-                    { id: "Latte 500ml", icon: "🥛" },
-                    { id: "Alcolici", icon: "🍸" }
-                ];
-            } else if (catId === "condimenti") {
-                subcatData = [
-                    { id: "Olio", icon: "🫒" },
-                    { id: "Aceto", icon: "🏺" },
-                    { id: "Sale", icon: "🧂" },
-                    { id: "Sughi e Pesti", icon: "🍝" },
-                    { id: "Salse", icon: "🥫" },
-                    { id: "Spezie", icon: "🌶️" }
-                ];
-            } else if (catId === "freschi") {
-                subcatData = [
-                    { id: "Salumi", icon: "🍖" },
-                    { id: "Latticini", icon: "🧀" },
-                    { id: "Yogurt", icon: "🍦" },
-                    { id: "Uova", icon: "🥚" },
-                    { id: "Piatti Pronti", icon: "🥘" },
-                    { id: "Altro", icon: "📦" }
-                ];
-            } else if (catId === "colazione") {
-                subcatData = [
-                    { id: "Biscotti", icon: "🍪" },
-                    { id: "Merendine", icon: "🧁" },
-                    { id: "Cereali", icon: "🥣" },
-                    { id: "Caffè, Tè e Tisane", icon: "☕" },
-                    { id: "Confetture e Creme", icon: "🍯" }
-                ];
-            } else if (catId === "igiene-p") {
-                subcatData = [
-                    { id: "Primo Soccorso", icon: "🩹" },
-                    { id: "Shampoo e Doccia", icon: "🧴" },
-                    { id: "Deodoranti", icon: "🌿" },
-                    { id: "Igiene Orale", icon: "🪥" },
-                    { id: "Assorbenti e Protezione", icon: "🌸" },
-                    { id: "Incontinenza Tena", icon: "🤍" },
-                    { id: "Carta e Fazzoletti", icon: "🧻" },
-                    { id: "Barba e Rasatura", icon: "🪒" }
-                ];
-            } else if (catId === "igiene-c") {
-                subcatData = [
-                    { id: "Lavatrice", icon: "🧺" },
-                    { id: "Superfici", icon: "🧽" },
-                    { id: "Piatti", icon: "🍽️" },
-                    { id: "Altro", icon: "📦" }
-                ];
-            } else if (catId === "dispensa") {
-                subcatData = [
-                    { id: "Tonno e Carne in scatola", icon: "🥫" },
-                    { id: "Verdure e Legumi", icon: "🥦" },
-                    { id: "Conserve", icon: "🫙" },
-                    { id: "Insalatissime", icon: "🥗" },
-                    { id: "Altro", icon: "📦" }
-                ];
-            } else if (catId === "surgelati") {
-                subcatData = [
-                    { id: "Pizze e Panificati", icon: "🍕" },
-                    { id: "Verdure", icon: "🥦" },
-                    { id: "Pesce", icon: "🐟" },
-                    { id: "Piatti Pronti", icon: "🥘" },
-                    { id: "Gelati", icon: "🍦" },
-                    { id: "Altro", icon: "❄️" }
-                ];
-            } else if (catId === "farine") {
-                subcatData = [
-                    { id: "Farine", icon: "🌾" },
-                    { id: "Preparati Dolci", icon: "🧁" },
-                    { id: "Preparati Salati", icon: "🍕" },
-                    { id: "Lieviti", icon: "✨" },
-                    { id: "Altro", icon: "📦" }
-                ];
-            }
-
-            let html = "";
-            subcatData.forEach(b => {
-                // Trucco: proviamo a caricare l'immagine, se fallisce (onerror) mostriamo l'emoji
-                let imgHtml = b.img ? `<img style="width:100%; height:80px; object-fit:contain; padding:10px; display:none;" src="${b.img}" onload="this.style.display='block'; this.nextElementSibling.style.display='none';" alt="${b.id}">` : "";
-                let emojiHtml = `<div class="product-emoji">${b.icon}</div>`;
-
-                html += `<div class="card" style="cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:160px;" onclick="openBrand('${b.id}')">
-                            ${imgHtml}
-                            ${emojiHtml}
-                            <div style="font-size:16px; font-weight:800; color:var(--dark); margin-top:10px;">${b.id}</div>
-                         </div>`;
-            });
-            document.getElementById('sub-catalog').innerHTML = html;
-        }
-
-        function openBrand(brand) {
-            currentBrand = brand;
-            let catObj = CATEGORIES.find(x => x.id === currentCat);
-            document.getElementById('subcategory-title').innerText = (catObj ? catObj.n : "Prodotti") + " > " + brand;
-            renderProductsByBrand(currentCat, brand);
-        }
-
-        function renderProductsByBrand(catId, brand) {
-            let html = "";
-            let items = PRODS.filter(p => p.c === catId && p.b === brand);
-            items.forEach(p => {
-                html += getProductCardHtml(p);
-            });
-            document.getElementById('sub-catalog').innerHTML = html;
-        }
-
-        // Funzione universale per generare l'HTML della Card Prodotto
-        function getProductCardHtml(p) {
-            const imgHtml = p.img ? 
-                `<img class="product-img" src="${p.img}" alt="${p.n}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                 <div class="product-emoji" style="display:none;">📦</div>` : 
-                `<div class="product-emoji">${p.icon || '📦'}</div>`;
-            
-            const brandHtml = p.m ? 
-                `<div class="brand-label">${p.m}</div>` : 
-                `<div class="brand-label"></div>`;
-
-            return `
-                <div class="card">
-                    <button class="info-btn" onclick="showInfo(${p.id})">i</button>
-                    <button class="add-btn" onclick="addToCart(${p.id})">+</button>
-                    <div style="flex-grow:1; display:flex; align-items:center; justify-content:center;">
-                        ${imgHtml}
-                    </div>
-                    <div class="card-body">
-                        ${brandHtml}
-                        <div class="product-name">${p.n}</div>
-                        <div class="weight-label">${p.l || ''}</div>
-                    </div>
-                    <div class="price-label">
-                        ${p.p.toFixed(2)}€
-                    </div>
-                </div>
-            `;
-        }
-
-        function handleBack() {
-            if (currentLegalPage && currentRegisterPage) {
-                // Se eravamo in registrazione e abbiamo aperto una pagina legale, torniamo alla registrazione
-                currentLegalPage = null;
-                document.getElementById('legal-view').style.display = 'none';
-                document.getElementById('register-view').style.display = 'block';
-            } else if (currentRegisterPage) {
-                goHome();
-            } else if (currentLegalPage) {
-                goHome();
-            } else if (currentBrand) {
-                currentBrand = null;
-                renderSubFolders(currentCat);
-            } else {
-                goHome();
-            }
-        }
-
-        function goHome() {
-            currentCat = null;
-            currentBrand = null;
-            currentLegalPage = null;
-            currentRegisterPage = false;
-            document.getElementById('subcategory-view').style.display = 'none';
-            document.getElementById('legal-view').style.display = 'none';
-            document.getElementById('register-view').style.display = 'none';
-            document.getElementById('philosophy-view').style.display = 'none';
-            document.getElementById('home-view').style.display = 'block';
-            document.getElementById('main-footer').style.display = 'block';
-            document.querySelector('header').style.display = 'block';
-            document.getElementById('search-bar').value = '';
-            handleSearch();
-            window.scrollTo(0, 0);
-        }
-
-        let currentLegalPage = null;
-
-        function showLegalPage(page) {
-            currentLegalPage = page;
-            document.getElementById('home-view').style.display = 'none';
-            document.getElementById('subcategory-view').style.display = 'none';
-            document.getElementById('register-view').style.display = 'none'; // Nasconde la registrazione se attiva
-            document.getElementById('main-footer').style.display = 'none';
-            document.getElementById('legal-view').style.display = 'block';
-
-            const content = document.getElementById('legal-content');
-            const title = document.getElementById('legal-title');
-
-            if (page === 'privacy') {
-                title.innerText = "Privacy Policy";
-                content.innerHTML = `
-                    <h2 style="color:var(--primary); font-weight:800;">Informativa Privacy</h2>
-                    <p style="margin-bottom:20px; font-size:14px; color:var(--text-muted);">Ai sensi del Regolamento UE 2016/679 (GDPR)</p>
-                    
-                    <h3 style="margin-top:25px; font-weight:700;">1. Titolare del Trattamento</h3>
-                    <p>Il Titolare del trattamento è <strong>${SITE_CONFIG.ragioneSociale}</strong>, con sede legale in ${SITE_CONFIG.indirizzo}, P.IVA ${SITE_CONFIG.partitaIva}, Email: ${SITE_CONFIG.emailPec}.</p>
-                    
-                    <h3 style="margin-top:25px; font-weight:700;">2. Finalità del Trattamento</h3>
-                    <p>I dati forniti (nome, cognome, cellulare, indirizzo) verranno utilizzati esclusivamente per:</p>
-                    <ul style="padding-left:20px; margin-top:10px; line-height:1.8;">
-                        <li>Gestire la registrazione dell'account.</li>
-                        <li>Elaborare e consegnare gli ordini a domicilio a Mestre e zone limitrofe.</li>
-                        <li>Inviare comunicazioni di servizio relative all'ordine (tramite SMS o chiamata al numero fornito).</li>
-                        <li>Adempiere agli obblighi di legge (fiscali e contabili).</li>
-                    </ul>
-
-                    <h3 style="margin-top:25px; font-weight:700;">3. Base Giuridica</h3>
-                    <p>Il trattamento è necessario per l'esecuzione di un contratto (l'acquisto della spesa) e per l'adempimento di obblighi di legge.</p>
-
-                    <h3 style="margin-top:25px; font-weight:700;">4. Destinatari dei Dati</h3>
-                    <p>I dati potranno essere comunicati a soggetti terzi strettamente necessari per il servizio (es. corrieri/fattorini per la consegna, gestori dei pagamenti, consulente fiscale). I dati non saranno venduti a terzi.</p>
-
-                    <h3 style="margin-top:25px; font-weight:700;">5. Periodo di Conservazione</h3>
-                    <p>I dati saranno conservati per il tempo necessario a gestire il rapporto commerciale e secondo i termini previsti dalla legge (solitamente 10 anni per i dati fiscali).</p>
-
-                    <h3 style="margin-top:25px; font-weight:700;">6. Diritti dell'Interessato</h3>
-                    <p>L'utente ha il diritto in qualunque momento di richiedere l'accesso, la rettifica, la cancellazione dei dati o la limitazione del trattamento scrivendo all'indirizzo email sopra indicato.</p>
-                `;
-            } else if (page === 'cookie') {
-                title.innerText = "Cookie Policy";
-                content.innerHTML = `
-                    <h2 style="color:var(--primary); font-weight:800;">Cookie Policy</h2>
-                    <p style="margin-bottom:20px; font-size:14px; color:var(--text-muted);">Informativa sull'utilizzo delle tecnologie di tracciamento</p>
-                    
-                    <h3 style="margin-top:25px; font-weight:700;">1. Cosa sono i Cookie</h3>
-                    <p>I cookie sono piccoli file di testo che i siti visitati dall'utente inviano al suo terminale, dove vengono memorizzati per essere poi ritrasmessi agli stessi siti alla visita successiva. In questa app utilizziamo anche il "Local Storage", una tecnologia simile che permette di salvare i dati (come il tuo carrello) direttamente nel tuo browser.</p>
-                    
-                    <h3 style="margin-top:25px; font-weight:700;">2. Cookie Tecnici e Funzionali (Necessari)</h3>
-                    <p>Questi cookie sono indispensabili per il corretto funzionamento di Spesina:</p>
-                    <ul style="padding-left:20px; margin-top:10px; line-height:1.8;">
-                        <li><strong>Carrello e Sessione:</strong> Utilizziamo il Local Storage per ricordare i prodotti nel tuo carrello e i tuoi dati di registrazione durante la sessione.</li>
-                        <li><strong>Sicurezza:</strong> Strumenti tecnici per prevenire frodi e garantire la sicurezza della navigazione.</li>
-                    </ul>
-
-                    <h3 style="margin-top:25px; font-weight:700;">3. Servizi di Terze Parti</h3>
-                    <p>L'app interagisce con alcuni servizi esterni per fornire funzionalità specifiche (es. trovare l'indirizzo a Mestre). L'uso di questi servizi è limitato alla fornitura della funzionalità richiesta e <strong>non</strong> per finalità di profilazione dell'utente:</p>
-                    <ul style="padding-left:20px; margin-top:10px; line-height:1.8;">
-                        <li><strong>Photon / OpenStreetMap:</strong> Per l'auto-completamento dell'indirizzo.</li>
-                        <li><strong>Google Fonts:</strong> Per la visualizzazione dei caratteri tipografici.</li>
-                        <li><strong>Formspree:</strong> Per l'invio sicuro del riepilogo dell'ordine.</li>
-                    </ul>
-
-                    <h3 style="margin-top:25px; font-weight:700;">4. Gestione dei Cookie</h3>
-                    <p>L'utente può disabilitare i cookie o pulire il Local Storage dalle impostazioni del proprio browser. Nota: disabilitando queste funzioni, il carrello della spesa non sarà più in grado di funzionare correttamente.</p>
-
-                    <h3 style="margin-top:25px; font-weight:700;">5. Cookie di Profilazione</h3>
-                    <p><strong>Spesina non utilizza cookie di profilazione o di marketing</strong> per tracciare il comportamento dell'utente a fini pubblicitari.</p>
-                `;
-            } else if (page === 'termini') {
-                title.innerText = "Termini e Condizioni";
-                content.innerHTML = `
-                    <h2 style="color:var(--primary); font-weight:800;">Termini e Condizioni</h2>
-                    <p style="margin-bottom:20px; font-size:14px; color:var(--text-muted);">Condizioni Generali di Vendita del servizio Spesina</p>
-                    
-                    <h3 style="margin-top:25px; font-weight:700;">1. Oggetto del Servizio</h3>
-                    <p>Spesina offre un servizio di spesa online con consegna a domicilio. Il servizio è attivo esclusivamente nel comune di Mestre (VE) nei CAP autorizzati (30171-30175).</p>
-                    
-                    <h3 style="margin-top:25px; font-weight:700;">2. Registrazione e Dati Utente</h3>
-                    <p>Per effettuare un ordine è necessario registrarsi fornendo dati accurati. L'utente è responsabile della veridicità dell'indirizzo di consegna e del numero di cellulare forniti, essenziali per il completamento del servizio a Mestre.</p>
-                    
-                    <h3 style="margin-top:25px; font-weight:700;">3. Ordini e Disponibilità</h3>
-                    <p>Gli ordini sono vincolati alla disponibilità dei prodotti e agli slot orari selezionati. In caso di variazioni o prodotti mancanti, Spesina contatterà l'utente tramite SMS o chiamata al numero registrato.</p>
-
-                    <h3 style="margin-top:25px; font-weight:700;">4. Prodotti del reparto Ortofrutta</h3>
-                    <p>Per i prodotti del reparto ortofrutta, la vendita avviene a pezzo o confezione. Il peso indicato è puramente indicativo e può oscillare all'interno del range dichiarato nella scheda prodotto. L'acquisto si intende perfezionato per l'unità (pezzo/confezione) e non per il peso esatto.</p>
-
-                    <h3 style="margin-top:25px; font-weight:700;">5. Modalità di Pagamento</h3>
-                    <p>Il pagamento avviene esclusivamente alla consegna per garantire la massima trasparenza. Accettiamo:</p>
-                    <ul style="padding-left:20px; margin-top:10px; line-height:1.8;">
-                        <li>Contanti direttamente al fattorino.</li>
-                        <li>Bancomat o Carta di Credito tramite POS portatile.</li>
-                    </ul>
-
-                    <h3 style="margin-top:25px; font-weight:700;">6. Diritto di Recesso</h3>
-                    <p>Ai sensi dell'art. 59 del Codice del Consumo, il diritto di recesso è escluso per la fornitura di beni alimentari deperibili che rischiano di deteriorarsi o scadere rapidamente (freschi, frutta, verdura, latticini).</p>
-
-                    <h3 style="margin-top:25px; font-weight:700;">7. Responsabilità</h3>
-                    <p>L'utente si impegna a essere presente all'indirizzo di Mestre indicato durante la fascia oraria di consegna scelta. Spesina non è responsabile per mancate consegne dovute all'assenza del destinatario o a errori nell'indirizzo fornito.</p>
-
-                    <h3 style="margin-top:25px; font-weight:700;">8. Abbonamento e Durata</h3>
-                    <p>L'accesso al servizio di consegna Spesina è subordinato alla sottoscrizione di un <strong>abbonamento mensile di 19,99€</strong>. Il servizio ha validità mensile e <strong>scade l'ultimo giorno del mese solare</strong> di sottoscrizione (es. 30 o 31 del mese corrente).</p>
-
-                    <h3 style="margin-top:25px; font-weight:700;">9. Utilizzo del Servizio e Limite Giornaliero</h3>
-                    <p>L'abbonamento Spesina permette di effettuare fino a un <strong>massimo di 2 ordini al giorno</strong>, previa disponibilità delle fasce orarie di consegna. Ogni singola consegna è inoltre limitata a un massimo di 7 articoli totali per garantire l'efficienza logistica nel territorio di Mestre.</p>
-
-                    <h3 style="margin-top:25px; font-weight:700;">10. Termine del Servizio</h3>
-                    <p>Poiché il servizio non prevede il rinnovo automatico alla scadenza, non è necessario inviare alcuna comunicazione di disdetta. L'abbonamento cesserà la sua validità automaticamente al termine del mese solare. L'utente potrà decidere in totale libertà se sottoscrivere un nuovo abbonamento per il mese successivo. Il diritto di recesso entro 14 giorni dall'attivazione rimane garantito, a condizione che non sia già stata usufruita la prima consegna del mese.</p>
-
-                    <h3 style="margin-top:25px; font-weight:700;">11. Immagini e Rappresentazioni</h3>
-                    <p>Le immagini e le rappresentazioni grafiche dei prodotti presenti sul sito sono fornite a scopo puramente illustrativo e hanno valore indicativo. Pur impegnandosi a garantire la massima fedeltà, Spesina non garantisce l'esatta corrispondenza tra l'immagine visualizzata e il prodotto reale (inclusi restyling del packaging o variazioni grafiche), in quanto tali modifiche dipendono esclusivamente dai produttori e non costituiscono vincolo contrattuale.</p>
-                `;
-            }
-            window.scrollTo(0, 0);
-        }
-
-        function renderFooter() {
-            if (typeof SITE_CONFIG !== 'undefined') {
-                const footerInfo = document.getElementById('footer-company-info');
-                if (footerInfo) {
-                    footerInfo.innerHTML = `
-                        <b>${SITE_CONFIG.ragioneSociale}</b><br>
-                        ${SITE_CONFIG.indirizzo}<br>
-                        P.IVA: ${SITE_CONFIG.partitaIva} | REA: ${SITE_CONFIG.rea}<br>
-                        Cap. Soc: ${SITE_CONFIG.capitaleSociale}<br>
-                        PEC: ${SITE_CONFIG.emailPec}
-                    `;
-                }
-                document.getElementById('footer-year').innerText = SITE_CONFIG.annoCorrente;
-            }
-        }
-
-        function handleSearch() {
-            let q = document.getElementById('search-bar').value.toLowerCase().trim();
-            let catContainer = document.getElementById('categories-catalog');
-            let searchContainer = document.getElementById('search-catalog');
-            let title = document.getElementById('home-categories-title');
-
-            if (q.length > 1) {
-                catContainer.style.display = 'none';
-                searchContainer.style.display = 'grid';
-                title.innerText = "Risultati Ricerca";
-
-                let items = PRODS.filter(p => {
-                    const nameMatch = p.n.toLowerCase().includes(q);
-                    const categoryMatch = p.c.toLowerCase().includes(q);
-                    const subcatMatch = p.b && p.b.toLowerCase().includes(q);
-                    const marcaMatch = p.m && p.m.toLowerCase().includes(q);
-                    return (nameMatch || categoryMatch || subcatMatch || marcaMatch) && p.c !== 'archivio';
-                });
-                let html = "";
-                if (items.length === 0) {
-                    html = "<div style='grid-column: 1 / -1; text-align:center; padding:20px; color:var(--text-muted); font-weight:600;'>Nessuno prodotto trovato 😔</div>";
-                } else {
-                    items.forEach(p => {
-                        html += getProductCardHtml(p);
-                    });
-                }
-                searchContainer.innerHTML = html;
-            } else {
-                catContainer.style.display = 'grid';
-                searchContainer.style.display = 'none';
-                title.innerText = "Esplora Categorie";
-            }
-        }
-
-        function renderProducts(filter) {
-            let html = "";
-            let items = PRODS.filter(p => p.c === filter);
-
-            // Ordinamento alfabetico per Marca solo per la categoria Pasta e Riso
-            if (filter === "pasta") {
-                items.sort((a, b) => (a.b || "").localeCompare(b.b || ""));
-            }
-
-            items.forEach(p => {
-                html += getProductCardHtml(p);
-            });
-            document.getElementById('sub-catalog').innerHTML = html;
-        }
-
-        function showInfo(id) {
-            let p = PRODS.find(x => x.id === id);
-            if (!p) return;
-
-            document.getElementById('info-p-name').innerText = p.n;
-            document.getElementById('info-p-ean').innerText = "EAN: " + (p.ean || "Non disponibile");
-
-            const info = p.info || {
-                d: "Informazioni dettagliate in arrivo...",
-                a: "Consultare l'etichetta fisica per allergeni.",
-                s: "Conservare in luogo fresco e asciutto.",
-                p: "Consultare le istruzioni sulla confezione."
-            };
-
-            document.getElementById('info-desc').innerText = info.fullDesc || info.d;
-            document.getElementById('info-allergens').innerText = info.a;
-            document.getElementById('info-storage').innerText = info.s;
-            document.getElementById('info-prep').innerText = info.p;
-
-            document.getElementById('modalInfo').style.display = 'flex';
-        }
-
-        function popolaGiorni() {
-            const selectGiorno = document.getElementById('select-giorno');
-            if (!selectGiorno) return;
-
-            const days = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
-            const months = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
-
-            let html = "";
-            for (let i = 0; i < 7; i++) {
-                const d = new Date();
-                d.setDate(d.getDate() + i);
-
-                const dayName = days[d.getDay()];
-                const dayNum = d.getDate();
-                const monthName = months[d.getMonth()];
-
-                const value = `${dayName} ${dayNum} ${monthName}`;
-                let label = value;
-
-                if (i === 0) label = `Oggi (${dayName} ${dayNum})`;
-                else if (i === 1) label = `Domani (${dayName} ${dayNum})`;
-
-                html += `<option value="${value}">${label}</option>`;
-            }
-            selectGiorno.innerHTML = html;
-        }
-
-        async function caricaOrari() {
-            const giornoFull = document.getElementById('select-giorno').value;
-            if (!giornoFull) return;
-
-            const selectOra = document.getElementById('select-ora');
-            selectOra.innerHTML = "<option disabled>Caricamento disponibilità...</option>";
-
-            const giornoSettimana = giornoFull.split(' ')[0];
-            const d = new Date();
-            const days = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
-            const months = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
-            const oggiString = `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]}`;
-            const isToday = (giornoFull === oggiString);
-
-            const oraAttuale = new Date().getHours();
-            let options = "";
-
-            const slotsToUse = (giornoSettimana === "Domenica") ? SLOTS_DOM : SLOTS_LUN_SAB;
-
-            let dbCounts = {};
-            if (typeof sb !== 'undefined') {
-                try {
-                    const { data, error } = await sb.from('orders')
-                        .select('order_data')
-                        .filter('order_data->>delivery', 'ilike', giornoFull + '%');
-
-                    if (data) {
-                        data.forEach(row => {
-                            if (row.order_data && row.order_data.delivery) {
-                                const fascia = row.order_data.delivery.split(' ').pop();
-                                dbCounts[fascia] = (dbCounts[fascia] || 0) + 1;
-                            }
-                        });
-                    }
-                } catch (e) {
-                    console.error("Errore fetch capacità orari:", e);
-                }
-            }
-
-            for (const [fascia, capMassima] of Object.entries(slotsToUse)) {
-                const oraInizio = parseInt(fascia.split(":")[0]);
-                const scaduto = (isToday && oraInizio <= oraAttuale);
-
-                const ordiniPresi = dbCounts[fascia] || 0;
-                const postiDisponibili = capMassima - ordiniPresi;
-
-                if (postiDisponibili <= 0 || scaduto) {
-                    options += `<option disabled>${fascia} (Esaurito)</option>`;
-                } else {
-                    options += `<option value="${fascia}">${fascia} (${postiDisponibili} posti rimasti)</option>`;
-                }
-            }
-            selectOra.innerHTML = options || "<option disabled>Nessun orario disponibile</option>";
-        }
-
-        function addToCart(id) {
-            // Controllo preventivo abbonamento e limiti
-            if (!checkSubscriptionStatus()) return;
-            if (getDailyOrderCount() >= 2) {
-                alert("Spiacenti, hai già effettuato i 2 ordini massimi consentiti per oggi.");
-                return;
-            }
-
-            const totalItems = cart.reduce((acc, item) => acc + item.q, 0);
-            if (totalItems >= 7) {
-                alert("⚠️ Limite Raggiunto: Ogni consegna a Mestre è limitata a un massimo di 7 articoli per garantire l'efficienza logistica.");
-                return;
-            }
-
-            let p = PRODS.find(x => x.id === id);
-            let exists = cart.find(x => x.id === id);
-            if (exists) exists.q++; else cart.push({ ...p, q: 1 });
-            updateUI();
-        }
-
-        let ordersInCurrentMonthFromDB = 0;
-        let ordersTodayFromDB = 0;
-        async function syncOrdersFromDB() {
-            if (!userData || !userData.id || !sb) return;
-            const now = new Date();
-            const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-
-            // Inizio giornata di oggi (ora locale mezzanotte)
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            const todayISO = today.toISOString();
-
-            try {
-                // 1. Ordini nel mese corrente (per abbonamento)
-                const { count: monthCount } = await sb.from('orders')
-                    .select('id', { count: 'exact', head: true })
-                    .eq('client_id', userData.id)
-                    .gte('created_at', firstDayOfMonth);
-
-                // 2. Ordini oggi (per limite giornaliero)
-                const { count: todayCount } = await sb.from('orders')
-                    .select('id', { count: 'exact', head: true })
-                    .eq('client_id', userData.id)
-                    .gte('created_at', todayISO);
-
-                ordersInCurrentMonthFromDB = monthCount || 0;
-                ordersTodayFromDB = todayCount || 0;
-
-                console.log(`📊 Sync Supabase: Mese=${ordersInCurrentMonthFromDB}, Oggi=${ordersTodayFromDB}`);
-                updateUI();
-            } catch (e) { console.error("Errore sincronizzazione ordini:", e); }
-        }
-
-        function updateUI() {
-            let total = 0;
-            let listHtml = "";
-            let hasOrtofrutta = false;
-
-            const isVip = (typeof FREE_CLIENTS !== 'undefined' && userData && FREE_CLIENTS.includes(userData.id));
-            const isFirstOrder = (ordersInCurrentMonthFromDB === 0 && cart.length > 0 && !isVip);
-
-            cart.forEach(i => {
-                total += (i.p * i.q);
-                if (i.c === 'orto') hasOrtofrutta = true;
-                listHtml += `
-                    <div class="cart-row">
-                        <div style="display:flex; align-items:center; gap:12px;">
-                            <img src="${i.img || 'img/placeholder.png'}" style="width:50px; height:50px; object-fit:cover; border-radius:8px; border:1px solid #eee;">
-                            <div>
-                                <div style="font-weight:700; font-size:14px;">${i.q}x ${i.n}</div>
-                                <div style="font-size:11px; color:var(--text-muted);">
-                                    ${i.l ? '<b>' + i.l + '</b> | ' : ''}EAN: ${i.ean || 'N/A'}
-                                </div>
-                            </div>
-                        </div>
-                        <div style="text-align:right;">
-                            <div style="font-weight:700;">${(i.p * i.q).toFixed(2)}€</div>
-                            <button onclick="remove(${i.id})" style="background:var(--red);color:white;border:none;border-radius:50%;width:24px;height:24px;cursor:pointer;margin-top:4px;">✕</button>
-                        </div>
-                    </div>`;
-            });
-
-            // Se è il primo ordine, aggiungiamo l'abbonamento al totale e alla lista
-            if (isFirstOrder) {
-                const subPrice = 19.99;
-                total += subPrice;
-                listHtml += `<div class="cart-row" style="color:var(--primary); font-weight:800; border-top:1px dashed var(--primary-light); margin-top:10px; padding-top:10px;"><span>🎟️ Abbonamento Mensile</span><span>${subPrice.toFixed(2)}€</span></div>`;
-            }
-
-            document.getElementById('cart-trigger').style.display = cart.length > 0 ? 'block' : 'none';
-            document.getElementById('cart-total-top').innerText = total.toFixed(2) + "€";
-            document.getElementById('final-price').innerText = "Totale: " + total.toFixed(2) + "€";
-
-            const firstOrderMsg = document.getElementById('first-order-msg');
-            if (firstOrderMsg) {
-                firstOrderMsg.style.display = isFirstOrder ? 'block' : 'none';
-            }
-
-            // Aggiornamento contatore dinamico X di 7
-            const count = cart.reduce((acc, item) => acc + item.q, 0);
-            const limitDisplay = document.getElementById('cart-limit-display');
-            if (limitDisplay) {
-                limitDisplay.innerText = `${count} di 7`;
-                limitDisplay.style.color = count >= 7 ? 'var(--red)' : 'inherit';
-            }
-
-            const weightDisclaimer = document.getElementById('weight-disclaimer');
-            if (weightDisclaimer) {
-                weightDisclaimer.style.display = hasOrtofrutta ? 'block' : 'none';
-            }
-
-            // Avviso limite articoli
-            if (count >= 7) {
-                document.getElementById('final-price').innerHTML += `<br><span style="color:var(--red); font-size:12px; display:block; margin-top:5px;">⚠️ Limite di 7 articoli raggiunto</span>`;
-            }
-
-            document.getElementById('cart-items-list').innerHTML = listHtml;
-            localStorage.setItem('spesina_cart', JSON.stringify(cart));
-        }
-
-        function remove(id) { cart = cart.filter(x => x.id !== id); updateUI(); if (cart.length === 0) closeModals(); }
-        function openCart() {
-            if (!checkSubscriptionStatus()) return;
-            if (getDailyOrderCount() >= 10) {
-                alert("Hai raggiunto il limite di 10 spese per oggi. Ci vediamo domani!");
-                return;
-            }
-            popolaGiorni();
-            caricaOrari();
-            syncOrdersFromDB(); // Sincronizza sempre con il DB all'apertura del carrello
-            document.getElementById('modalCart').style.display = 'flex';
-        }
-        function showAddress() {
-            document.getElementById('cap-check').value = "";
-            document.getElementById('quick-check-msg').style.display = 'none';
-            document.getElementById('modalAddress').style.display = 'flex';
-        }
-
-        function checkQuickArea() {
-            const cap = document.getElementById('cap-check').value;
-            const msg = document.getElementById('quick-check-msg');
-            if (AUTHORIZED_CAPS.includes(cap)) {
-                msg.style.display = 'block';
-            } else {
-                msg.style.display = 'none';
-            }
-        }
-
-        let currentRegisterPage = false;
-        let currentPhilosophyPage = false;
-        let userData = JSON.parse(localStorage.getItem('spesina_user')) || null;
-
-        function showPhilosophy() {
-            currentPhilosophyPage = true;
-            document.getElementById('home-view').style.display = 'none';
-            document.getElementById('subcategory-view').style.display = 'none';
-            document.getElementById('register-view').style.display = 'none';
-            document.getElementById('legal-view').style.display = 'none';
-            document.getElementById('main-footer').style.display = 'none';
-            document.getElementById('philosophy-view').style.display = 'block';
-            window.scrollTo(0, 0);
-        }
-
-        function showRegister() {
-            // Se l'utente è loggato, chiediamo se vuole uscire prima di registrarne uno nuovo
-            if (userData && userData.id) {
-                if (confirm(`Sei già loggato come ${userData.n}. Vuoi uscire per creare un nuovo account?`)) {
-                    localStorage.removeItem('spesina_user');
-                    userData = null;
-                    updateAuthUI();
-                } else {
-                    return;
-                }
-            }
-
-            closeModals();
-            currentRegisterPage = true;
-            document.getElementById('home-view').style.display = 'none';
-            document.getElementById('subcategory-view').style.display = 'none';
-            document.getElementById('register-view').style.display = 'block';
-            document.getElementById('main-footer').style.display = 'none';
-            window.scrollTo(0, 0);
-        }
-
-        function openLogin() {
-            document.getElementById('login-id').value = "";
-            document.getElementById('modalLogin').style.display = 'flex';
-        }
-
-        async function handleLogin() {
-            const id = document.getElementById('login-id').value.trim().toUpperCase();
-            if (!id) return alert("Inserisci un ID valido!");
-
-            try {
-                // Cerchiamo il profilo su Supabase
-                const { data, error } = await sb.from('customers').select('*').eq('client_id', id).single();
-
-                if (error || !data) {
-                    alert("ID Cliente non trovato. Verifica il codice o registrati come nuovo cliente.");
-                    return;
-                }
-
-                // Ripristiniamo l'utente
-                userData = {
-                    id: data.client_id,
-                    n: data.full_name,
-                    e: data.email,
-                    t: data.phone,
-                    a: data.address,
-                    d: data.details,
-                    c: data.cap,
-                    subExpiry: data.sub_expiry
-                };
-
-                localStorage.setItem('spesina_user', JSON.stringify(userData));
-                alert(`Bentornato, ${userData.n}! Accesso eseguito con successo.`);
-                closeModals();
-                updateAuthUI();
-                syncOrdersFromDB(); // Scarica subito il conteggio ordini
-                goHome();
-            } catch (err) {
-                console.error("Errore Login:", err);
-                alert("Errore tecnico durante l'accesso. Riprova più tardi.");
-            }
-        }
-
-        function handleLogout() {
-            if (confirm("Vuoi uscire dal tuo profilo Spesina?")) {
-                localStorage.removeItem('spesina_user');
-                userData = null;
-                alert("Logout effettuato. A presto!");
-                updateAuthUI();
-                goHome();
-            }
-        }
-
-        function validateRegisterCAP() {
-            const cap = document.getElementById('reg-cap').value;
-            const error = document.getElementById('reg-cap-error');
-            checkRegisterValidity();
-
-            if (cap.length === 5 && !AUTHORIZED_CAPS.includes(cap)) {
-                error.style.display = 'block';
-            } else {
-                error.style.display = 'none';
-            }
-        }
-
-        function validateRegisterPhone() {
-            const phone = document.getElementById('reg-phone').value.trim();
-            const error = document.getElementById('reg-phone-error');
-            const regex = /^\d{9,10}$/; // Cerchiamo solo le 9 o 10 cifre
-
-            checkRegisterValidity();
-
-            if (phone.length > 0 && !regex.test(phone)) {
-                error.style.display = 'block';
-            } else {
-                error.style.display = 'none';
-            }
-        }
-
-        function checkRegisterValidity() {
-            // Ora lasciamo il pulsante sempre attivo per dare feedback al click
-            const submitBtn = document.getElementById('btn-submit-reg');
-            submitBtn.disabled = false;
-            submitBtn.style.opacity = '1';
-            submitBtn.style.cursor = 'pointer';
-        }
-
-        async function handleRegister(e) {
-            e.preventDefault();
-            console.log("Tentativo di registrazione avviato...");
-
-            const nome = document.getElementById('reg-name').value.trim();
-            const email = document.getElementById('reg-email').value.trim();
-            const tel = document.getElementById('reg-phone').value.trim();
-            const via = document.getElementById('reg-address').value.trim();
-            const civico = document.getElementById('reg-civico').value.trim();
-            const piano = document.getElementById('reg-piano').value.trim();
-            const interno = document.getElementById('reg-interno').value.trim();
-            const campanello = document.getElementById('reg-campanello') ? document.getElementById('reg-campanello').value.trim() : "";
-
-            let dettagli = `Civico: ${civico}, Piano: ${piano}, Interno: ${interno}`;
-            if (campanello) dettagli += `, Campanello: ${campanello}`;
-
-            const cap = document.getElementById('reg-cap').value;
-            const privacy = document.getElementById('reg-privacy').checked;
-
-            // --- VALIDAZIONE ATTIVA CON FEEDBACK ---
-            if (nome.length < 3) return alert("⚠️ Inserisci Nome e Cognome completi.");
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return alert("⚠️ Inserisci un indirizzo Email valido.");
-            if (!/^\d{9,10}$/.test(tel)) return alert("⚠️ Inserisci un numero di cellulare valido (9 o 10 cifre).");
-            if (!AUTHORIZED_CAPS.includes(cap)) return alert("⚠️ Seleziona un CAP valido tra quelli di Mestre.");
-            if (via.length < 3) return alert("⚠️ Inserisci un indirizzo di consegna valido.");
-            if (civico.length < 1 || piano.length < 1 || interno.length < 1) {
-                return alert("⚠️ Inserisci Civico, Piano e Interno. Se vivi in una casa singola o al piano terra, puoi scrivere '0' o 'PT'.");
-            }
-            if (!privacy) return alert("⚠️ Devi accettare la Privacy Policy per continuare.");
-
-            // Se arriviamo qui, i dati sono perfetti!
-            let clientId = "SP-TEST";
-            if (nome.toUpperCase() === "ADMIN SPESINA") {
-                clientId = "SP-ADMIN";
-            } else if (typeof sb !== 'undefined') {
-                // Recupera il prossimo ID progressivo dal database!
-                const { data, error } = await sb.rpc('generate_customer_id');
-                if (!error && data) clientId = data;
-            }
-
-            const now = new Date();
-            const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-            const subExpiry = lastDay.getFullYear() + "-" + String(lastDay.getMonth() + 1).padStart(2, '0') + "-" + String(lastDay.getDate()).padStart(2, '0');
-
-            userData = { id: clientId, n: nome, e: email, t: tel, a: via, d: dettagli, c: cap, subExpiry: subExpiry };
-
-            // Salvataggio su Supabase
-            if (typeof sb !== 'undefined') {
-                try {
-                    await sb.from('customers').upsert({
-                        client_id: clientId,
-                        full_name: nome,
-                        email: email,
-                        phone: tel,
-                        address: via,
-                        details: dettagli,
-                        cap: cap,
-                        sub_expiry: subExpiry
-                    }, { onConflict: 'client_id' });
-                } catch (err) { console.error("Errore Supabase:", err); }
-            }
-
-            localStorage.setItem('spesina_user', JSON.stringify(userData));
-
-
-
-            // UI Successo per Registrazione
-            document.getElementById('success-title').innerText = "Benvenuto in Spesina!";
-            document.getElementById('success-desc').innerHTML = `Ciao ${nome}, la tua registrazione è attiva.<br>Controlla l'email <b>${email}</b> per i dettagli!`;
-            document.getElementById('display-client-id').innerText = clientId;
-            document.getElementById('id-display-box').style.display = 'block';
-            document.getElementById('modalSuccess').style.display = 'flex';
-
-            updateAuthUI();
-
-            // Invio automatico email al cliente via Supabase Edge Function
-            sendWelcomeEmail(userData);
-
-            goHome();
-        }
-
-        async function sendWelcomeEmail(data) {
-            console.log("Innesco invio email benvenuto...");
-            try {
-                await fetch("https://uldpnhmdjbbwwqwjsdoh.supabase.co/functions/v1/send-welcome", {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` },
-                    body: JSON.stringify({
-                        type: 'welcome',
-                        name: data.n,
-                        email: data.e,
-                        clientId: data.id,
-                        subExpiry: data.subExpiry
-                    })
-                });
-            } catch (err) { console.error("Errore invio email benvenuto:", err); }
-        }
-
-        async function sendOrderEmail(data) {
-            if (!data.e) {
-                console.error("❌ Impossibile inviare email ordine: email mancante.");
-                return;
-            }
-            console.log(`📧 Innesco invio email conferma ordine #${data.orderId} a:`, data.e);
-            try {
-                const res = await fetch("https://uldpnhmdjbbwwqwjsdoh.supabase.co/functions/v1/send-welcome", {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` },
-                    body: JSON.stringify({
-                        type: 'order',
-                        orderId: data.orderId,
-                        name: data.n,
-                        email: data.e,
-                        delivery: data.delivery,
-                        address: data.address,
-                        phone: data.phone,
-                        orderItems: data.itemsString,
-                        items: data.items,
-                        total: data.total
-                    })
-                });
-                const result = await res.json();
-                console.log("✅ Risposta server email ordine:", result);
-            } catch (err) { console.error("❌ Errore invio email ordine:", err); }
-        }
-
-        function checkSubscriptionStatus() {
-            if (!userData) return true;
-
-            // Bypass per clienti VIP/Test (Case insensitive)
-            const currentId = (userData.id || "").toUpperCase().trim();
-            if (typeof FREE_CLIENTS !== 'undefined' && FREE_CLIENTS.some(id => id.toUpperCase().trim() === currentId)) {
-                console.log("Accesso VIP autorizzato per: " + currentId);
-                return true;
-            }
-
-            const now = new Date().toISOString().split('T')[0];
-            if (now > userData.subExpiry) {
-                alert("Il tuo abbonamento Spesina è scaduto. Rinnovalo ora per continuare a ordinare!");
-                showPhilosophy();
-                return false;
-            }
-            return true;
-        }
-
-        function getDailyOrderCount() {
-            if (!userData || !userData.id) return 0;
-            const isVip = (typeof FREE_CLIENTS !== 'undefined' && FREE_CLIENTS.includes(userData.id));
-            if (isVip) return 0; // I VIP non hanno limiti
-            return ordersTodayFromDB;
-        }
-
-        function showHowItWorks() { document.getElementById('modalHowItWorks').style.display = 'flex'; }
-        function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
-
-        // --- ADDRESS AUTOCOMPLETE (PHOTON FREE) ---
-        let debounceTimer;
-
-        // Chiusura suggerimenti al click esterno
-        window.addEventListener('click', function (e) {
-            const container = document.getElementById('address-suggestions');
-            const input = document.getElementById('reg-address');
-            if (container && e.target !== input && !container.contains(e.target)) {
-                container.style.display = 'none';
-            }
-        });
-
-        // --- FINE AUTOCOMPLETE ---
-
-        async function showPay() {
-            console.log("Pulsante PROSEGUI cliccato...");
-            if (!checkSubscriptionStatus()) {
-                console.log("Validazione abbonamento fallita.");
-                return;
-            }
-            if (getDailyOrderCount() >= 2) {
-                console.log("Limite ordini giornalieri raggiunto.");
-                alert("Hai raggiunto il limite di 2 spese per oggi. Ci vediamo domani!");
-                return;
-            }
-
-            const giorno = document.getElementById('select-giorno').value;
-            const ora = document.getElementById('select-ora').value;
-            console.log(`Orario selezionato: ${giorno} ${ora}`);
-
-            if (!ora || ora === "" || ora.includes("Esaurito") || ora.includes("Nessun orario")) {
-                console.log("Orario non valido o non selezionato.");
-                return alert("Per favore, seleziona un orario di consegna valido prima di proseguire.");
-            }
-
-            // Controllo se l'orario è già scaduto (nel caso l'utente abbia lasciato la pagina aperta)
-            const d = new Date();
-            const days = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
-            const months = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
-            const oggiString = `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]}`;
-            if (giorno === oggiString) {
-                const oraInizio = parseInt(ora.split(":")[0]);
-                if (oraInizio <= d.getHours()) {
-                    caricaOrari(); // Ricarica le opzioni aggiornate
-                    return alert("⚠️ Attenzione: questa fascia oraria è appena scaduta. Seleziona un nuovo orario.");
-                }
-            }
-
-            // NUOVA REGOLA SERVER-SIDE: Massimo 2 spese dello stesso ID in un'ora (slot)
-            try {
-                const { data: ordiniSlot, error } = await sb.from('orders')
-                    .select('id')
-                    .eq('client_id', userData.id)
-                    .filter('order_data->>delivery', 'eq', giorno + " " + ora);
-
-                const countInSlot = ordiniSlot ? ordiniSlot.length : 0;
-
-                if (countInSlot >= 2) {
-                    console.log("Limite ordini in questa fascia oraria raggiunto (da DB).");
-                    alert("⚠️ Hai già prenotato 2 consegne per questa fascia oraria. Seleziona un altro orario per i prossimi articoli!");
-                    return;
-                }
-            } catch (e) { console.error("Errore verifica slot:", e); }
-
-            console.log("Passaggio al metodo di pagamento...");
-            closeModals();
-            document.getElementById('modalPay').style.display = 'flex';
-        }
-
-        async function finish(m) {
-            // Re-verify subscription and cap just before sending
-            if (!checkSubscriptionStatus()) return;
-            if (getDailyOrderCount() >= 2) return;
-
-            const isVip = (typeof FREE_CLIENTS !== 'undefined' && userData && FREE_CLIENTS.includes(userData.id));
-            let elencoProdotti = cart.map(i => `${i.q}x ${i.n} (${(i.p * i.q).toFixed(2)}€)`).join("\n");
-
-            // ✅ Usa il dato certo dal Database sincronizzato in updateUI
-            const isFirstOrder = (ordersInCurrentMonthFromDB === 0 && cart.length > 0 && !isVip);
-
-            if (isFirstOrder) {
-                elencoProdotti += "\n+ 🎟️ Abbonamento Mensile Spesina (19.99€)";
-            }
-
-            // Pulisce il totale per evitare doppioni "Totale: Totale:"
-            let totaleValore = document.getElementById('final-price').innerText.replace("Totale: ", "").trim();
-            let giorno = document.getElementById('select-giorno').value;
-            let ora = document.getElementById('select-ora').value;
-
-            // Validazione "Server-side" (last gate)
-            const currentCAP = userData ? userData.c : "";
-            if (!AUTHORIZED_CAPS.includes(currentCAP)) {
-                alert("Errore: Zona di consegna non valida (" + currentCAP + "). Spesina non può procedere con l'invio.");
-                return;
-            }
-
-
-            // Registra ordine su Supabase e recupera l'ID
-            if (typeof sb !== 'undefined' && userData && userData.id) {
-                console.log("Salvataggio ordine su Supabase...");
-                // Pulizia stringa totale per ottenere solo il numero
-                const totalClean = parseFloat(totaleValore.replace(/[^\d.,]/g, '').replace(',', '.'));
-
-                const itemsToSave = [...cart];
-                if (isFirstOrder) {
-                    itemsToSave.push({
-                        id: 'SUB-' + Date.now(),
-                        n: '🎟️ Abbonamento Mensile',
-                        p: 19.99,
-                        q: 1,
-                        img: 'https://uldpnhmdjbbwwqwjsdoh.supabase.co/storage/v1/object/public/products/sub_icon.png', // Icona dedicata
-                        c: 'servizio'
-                    });
-                }
-
-                sb.from('orders').insert({
-                    client_id: userData.id,
-                    order_data: {
-                        name: userData.n,
-                        phone: userData.t,
-                        address: userData.a + " | " + (userData.d || "") + " | " + userData.c + " Mestre",
-                        address_full: userData.a + " | " + (userData.d || "") + " | " + userData.c + " Mestre",
-                        email: userData.e,
-                        items: itemsToSave,
-                        total: totaleValore,
-                        delivery: giorno + " " + ora,
-                        status: 'nuovo',
-                        total_amount: totalClean
-                    }
-                }).select().then(({ data, error }) => {
-                    if (error) {
-                        console.error("Errore Supabase dettagliato:", error);
-                        alert("⚠️ Errore Database:\n" + error.message + "\nCodice: " + error.code);
-                    } else if (data && data[0]) {
-                        const orderIdFull = data[0].id;
-                        const orderIdShort = orderIdFull.toString().slice(0, 8).toUpperCase();
-                        console.log(`✅ Ordine #${orderIdShort} salvato correttamente.`);
-
-                        // Aggiorna UI successo con l'ID ordine
-                        document.getElementById('success-title').innerText = `Ordine #${orderIdShort} Ricevuto!`;
-
-                        // Invio Email Conferma con ID Ordine e lista prodotti completa
-                        sendOrderEmail({
-                            orderId: orderIdShort,
-                            n: userData.n,
-                            e: userData.e,
-                            phone: userData.t,
-                            delivery: giorno + " " + ora,
-                            address: userData.a + " " + userData.d,
-                            items: itemsToSave,
-                            itemsString: elencoProdotti,
-                            total: totaleValore
-                        });
-                    }
-                });
-            } else {
-                console.error("Impossibile salvare: sb, userData o userData.id mancanti.");
-                alert("⚠️ Errore critico: Sessione utente non valida. Prova a ricaricare la pagina.");
-            }
-
-            // ✅ Salva l'ordine in history per evitare doppio addebito abbonamento
-            const historyToSave = JSON.parse(localStorage.getItem('spesina_history') || "[]");
-            historyToSave.push({ id: userData ? userData.id : 'unknown', date: new Date().toISOString(), slot: giorno + " " + ora });
-            localStorage.setItem('spesina_history', JSON.stringify(historyToSave));
-
-            // ✅ Sincronizza subito i contatori da DB
-            syncOrdersFromDB();
-
-            cart = [];
-            updateUI();
-            closeModals();
-            document.getElementById('success-title').innerText = "Ordine Confermato!";
-            document.getElementById('id-display-box').style.display = 'none';
-            document.getElementById('success-desc').innerHTML = "La consegna è in programma per<br><b style='color:var(--dark);'>" + giorno + " alle " + ora + "</b><br><br>Ti abbiamo inviato il riepilogo via Email!";
-            document.getElementById('modalSuccess').style.display = 'flex';
-        }
-
-        function updateAuthUI() {
-            const loginLink = document.getElementById('nav-login');
-            const welcomeBanner = document.getElementById('user-welcome-banner');
-
-            if (userData && userData.id) {
-                if (loginLink) {
-                    loginLink.innerHTML = `👤 Profilo`;
-                    loginLink.onclick = () => {
-                        updateProfile();
-                        document.getElementById('modalProfile').style.display = 'flex';
-                    };
-                }
-                if (welcomeBanner) {
-                    welcomeBanner.style.display = 'block';
-                    document.getElementById('welcome-name').innerText = userData.n.split(' ')[0];
-                    document.getElementById('welcome-id').innerText = userData.id;
-
-                    // Calcolo scadenza (fine mese corrente)
-                    const now = new Date();
-                    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-                    document.getElementById('welcome-expiry').innerText = lastDay.toLocaleDateString('it-IT');
-                }
-            } else {
-                if (loginLink) {
-                    loginLink.innerHTML = `🔑 Accedi / Registrati`;
-                    loginLink.onclick = openLogin;
-                }
-                if (welcomeBanner) welcomeBanner.style.display = 'none';
-            }
-        }
-
-        function updateProfile() {
-            if (!userData) return;
-
-            document.getElementById('profile-name').innerText = userData.n;
-            document.getElementById('profile-email').innerText = userData.e;
-            document.getElementById('profile-address').innerText = userData.a + ", " + userData.c;
-            document.getElementById('profile-id-tag').innerText = "ID: " + userData.id;
-
-            // Logica Abbonamento
-            const badge = document.getElementById('sub-status-badge');
-            const countdownText = document.getElementById('sub-countdown-text');
-            const isVip = (typeof FREE_CLIENTS !== 'undefined' && FREE_CLIENTS.includes(userData.id));
-
-            if (isVip) {
-                badge.innerText = "⭐ VIP UNLIMITED";
-                badge.style.background = "#fef3c7";
-                badge.style.color = "#d97706";
-                countdownText.innerText = "Sempre Attivo";
-            } else {
-                const now = new Date();
-                const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-                const diff = lastDay.getDate() - now.getDate();
-
-                // Verifichiamo se ha già ordini questo mese (per lo stato Attivo)
-                // Usiamo il contatore ordini sincronizzato dal DB invece della cronologia locale
-                const ordersThisMonth = ordersInCurrentMonthFromDB;
-
-                if (ordersThisMonth > 0) {
-                    badge.innerText = "✅ ATTIVO";
-                    badge.style.background = "#dcfce7";
-                    badge.style.color = "#16a34a";
-                } else {
-                    badge.innerText = "⏳ DA RINNOVARE";
-                    badge.style.background = "#f1f5f9";
-                    badge.style.color = "#64748b";
-                }
-
-                countdownText.innerText = diff === 0 ? "Scade OGGI" : diff + (diff === 1 ? " giorno" : " giorni");
-            }
-        }
-
-        function logout() {
-            localStorage.removeItem('spesina_user');
-            localStorage.removeItem('spesina_history');
-            location.reload();
-        }
-
-        // Funzione per gestire la modalità manutenzione
-        function checkMaintenance() {
-            try {
-                const urlParams = new URLSearchParams(window.location.search);
-                if (urlParams.get('preview') === 'true') {
-                    sessionStorage.setItem('spesina_preview', 'true');
-                }
-            } catch (e) { }
-
-            let isPreview = false;
-            try { isPreview = sessionStorage.getItem('spesina_preview') === 'true'; } catch (e) { }
-            if (isPreview) return;
-
-            if (typeof MAINTENANCE_MODE !== 'undefined' && MAINTENANCE_MODE) {
-                const overlay = document.createElement('div');
-                overlay.id = 'maintenance-overlay';
-                overlay.style = `
-                    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-                    background: white; z-index: 9999; display: flex; flex-direction: column;
-                    align-items: center; justify-content: center; text-align: center; padding: 20px;
-                    font-family: 'Outfit', sans-serif;
-                `;
-                overlay.innerHTML = `
-                    <div style="font-size: 60px; margin-bottom: 20px;">🛒🚀</div>
-                    <h1 style="color: var(--primary); font-weight: 800; font-size: 32px; margin-bottom: 10px;">Spesina sta arrivando!</h1>
-                    <p style="color: #64748b; font-size: 18px; max-width: 400px; line-height: 1.6; font-weight: 500;">
-                        Stiamo scaldando i motori per garantirti la migliore spesa a domicilio di Mestre.<br>
-                        <b>Saremo online tra pochissimo.</b>
-                    </p>
-                    <div style="margin-top: 30px; font-size: 14px; color: var(--primary); font-weight: 700; letter-spacing: 1px; text-transform: uppercase;">🔜 Lancio Imminente</div>
-                `;
-                document.body.appendChild(overlay);
-                document.body.style.overflow = 'hidden';
-            }
-        }
-
-        function copyID() {
-            const id = document.getElementById('display-client-id').innerText;
-            navigator.clipboard.writeText(id).then(() => {
-                alert("ID Cliente copiato negli appunti! 📋");
-            });
-        }
-
-
-        // Avvio protetto dell'applicazione
+        // Inizializzazione Supabase con protezione errori
         const SUPABASE_URL = "https://uldpnhmdjbbwwqwjsdoh.supabase.co";
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsZHBuaG1kamJid3dxd2pzZG9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4NDE5ODQsImV4cCI6MjA5MjQxNzk4NH0.yXcJBcZtiaDbPl2IyDUBK-Ndoyu0unmEzfY8xZrogzM";
         let sb;
         try {
-            if (typeof supabase !== 'undefined') {
-                sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-            }
-        } catch (e) { console.error("Database connection error:", e); }
-
-        // Forza il rendering delle categorie prima di tutto
-        renderCategories();
-
-        // Esegue il resto delle operazioni dopo un brevissimo delay
-        // --- ADMIN DASHBOARD SECRET ---
-        let adminClicks = 0;
-        function adminClick() {
-            adminClicks++;
-            if (adminClicks >= 5) {
-                adminClicks = 0;
-                showAdminDashboard();
-            } else {
-                goHome();
-            }
+            sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        } catch (e) {
+            console.error("Errore init Supabase:", e);
         }
 
-        async function showAdminDashboard() {
-            closeModals();
-            document.getElementById('modalAdmin').style.display = 'flex';
-            loadAdminStats();
-        }
+        const urlParams = new URLSearchParams(window.location.search);
+        const MAINTENANCE_MODE = urlParams.get('preview') === 'true' ? false : true;
 
-        async function loadAdminStats() {
-            const statsContent = document.getElementById('admin-stats-content');
-            statsContent.innerHTML = '<div style="padding:40px; text-align:center;"><div class="loading-spinner" style="margin:auto;"></div><p style="margin-top:15px; font-size:14px; color:#64748b;">Interrogazione Supabase...</p></div>';
+        const CATEGORIES = [
+            { id: "pasta", n: "Pasta & Riso", icon: "🍝" },
+            { id: "bevande", n: "Bevande", icon: "🥤" },
+            { id: "freschi", n: "Freschi", icon: "🧀" },
+            { id: "dispensa", n: "Dispensa", icon: "🥫" },
+            { id: "panificati", n: "Pane e Sostituti", icon: "🥖" },
+            { id: "condimenti", n: "Olio e Condimenti", icon: "🧂" },
+            { id: "snack-salati", n: "Snack Salati", icon: "🥨" },
+            { id: "snack-dolci", n: "Snack Dolci", icon: "🍪" },
+            { id: "surgelati", n: "Surgelati", icon: "❄️" },
+            { id: "colazione", n: "Colazione", icon: "🥐" },
+            { id: "orto", n: "Frutta e Verdura", icon: "🍎" },
+            { id: "farine", n: "Farine e Preparati", icon: "🌾" },
+            { id: "senza-glutine", n: "Senza Glutine", icon: "🌾🚫" },
+            { id: "minestre-zuppe", n: "Minestre e Zuppe", icon: "🥣" },
+            { id: "vegano", n: "Mondo Vegano", icon: "🌱" },
+            { id: "parafarmacia", n: "Parafarmacia", icon: "💊" },
+            { id: "igiene-p", n: "Igiene Persona", icon: "🧼" },
+            { id: "igiene-c", n: "Igiene Casa", icon: "🧽" },
+            { id: "animali", n: "Amici Domestici", icon: "🐾" },
+            { id: "varie", n: "Varie", icon: "🛍️" }
+        ];
 
-            try {
-                // 1. Clienti
-                const { count: customersCount } = await sb.from('customers').select('*', { count: 'exact', head: true });
+        const EMOJI_MAP = {
+            "birra": "🍺", "acqua": "💧", "vino": "🍷", "bibite": "🥤", "succhi di frutta": "🧃", "latte 1l": "🥛",
+            "salumi": "🍖", "latticini": "🧀", "yogurt": "🍦", "uova": "🥚", "piatti pronti": "🥘",
+            "biscotti": "🍪", "merendine": "🧁", "cereali": "🥣", "caffè, tè e tisane": "☕", "patate surgelate": "🍟",
+            "farine": "🌾", "preparati": "🥨", "lieviti": "🥯", "frutta e verdura": "🥗", "vegano": "🥬", "amici domestici": "🐶",
+            "shampoo e doccia": "🧴", "deodoranti": "🌬️", "igiene orale": "🪥", "carta e fazzoletti": "🧻", "barba e rasatura": "🪒"
+        };
 
-                // 2. Ordini e Incasso
-                const { data: orders, error } = await sb.from('orders').select('*');
+        const LEGAL_TEXTS = {
+            privacy: "<h2>Privacy Policy</h2><p>Spesina rispetta la tua privacy. I tuoi dati vengono utilizzati esclusivamente per la consegna della spesa e non vengono ceduti a terzi. Utilizziamo Supabase per la gestione sicura dei profili utenti.</p>",
+            terms: "<h2>Termini e Condizioni</h2><p>Benvenuti su Spesina. Ordinando accetti i nostri termini. La consegna è garantita in 30 minuti. Limite di 7 pezzi per ordine per garantire la velocità dei rider.</p>",
+            cookie: "<h2>Cookie Policy</h2><p>Spesina utilizza cookie tecnici per gestire la tua sessione di spesa e ricordare il tuo carrello. Non utilizziamo cookie di profilazione di terze parti per scopi pubblicitari.</p>"
+        };
 
-                let totalRevenue = 0;
-                let ordersCount = orders ? orders.length : 0;
+        let PRODS = [];
+        let CART = JSON.parse(localStorage.getItem('cart_spesina')) || [];
+        let userData = JSON.parse(localStorage.getItem('user_spesina')) || null;
+        let currentCat = null;
+        let currentSub = null;
 
-                if (orders) {
-                    orders.forEach(o => {
-                        if (o.order_data && o.order_data.total) {
-                            // Estrae solo i numeri dal totale (es. "7.30€" -> 7.30)
-                            const val = parseFloat(o.order_data.total.replace(/[^0-9.]/g, ''));
-                            if (!isNaN(val)) totalRevenue += val;
-                        }
-                    });
-                }
-
-                let recentOrdersHtml = "";
-                if (orders && orders.length > 0) {
-                    orders.slice(-5).reverse().forEach(o => {
-                        const date = new Date(o.created_at).toLocaleString('it-IT', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
-                        recentOrdersHtml += `
-                            <div style="background:#f8fafc; padding:12px; border-radius:12px; margin-bottom:8px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center;">
-                                <div>
-                                    <div style="font-weight:800; font-size:12px; color:var(--primary);">${o.client_id}</div>
-                                    <div style="font-size:10px; color:#64748b;">${date}</div>
-                                </div>
-                                <div style="font-size:14px; font-weight:800; color:var(--dark);">${o.order_data ? o.order_data.total : 'N/D'}</div>
-                            </div>
-                        `;
-                    });
-                }
-
-                statsContent.innerHTML = `
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:20px;">
-                        <div style="background:linear-gradient(135deg, var(--primary), var(--primary-dark)); color:white; padding:15px; border-radius:18px; text-align:center; box-shadow:0 8px 15px rgba(16, 185, 129, 0.2);">
-                            <div style="font-size:10px; opacity:0.9; font-weight:700; letter-spacing:1px; text-transform:uppercase;">INCASSO</div>
-                            <div style="font-size:22px; font-weight:800; margin-top:5px;">${totalRevenue.toFixed(2)}€</div>
-                        </div>
-                        <div style="background:var(--dark); color:white; padding:15px; border-radius:18px; text-align:center; box-shadow:0 8px 15px rgba(15, 23, 42, 0.2);">
-                            <div style="font-size:10px; opacity:0.9; font-weight:700; letter-spacing:1px; text-transform:uppercase;">ORDINI</div>
-                            <div style="font-size:22px; font-weight:800; margin-top:5px;">${ordersCount}</div>
-                        </div>
-                    </div>
-                    <div style="background:#f1f5f9; padding:12px; border-radius:15px; text-align:center; margin-bottom:25px; border:1px solid #e2e8f0;">
-                         <div style="font-size:10px; color:#64748b; font-weight:700; letter-spacing:1px; text-transform:uppercase;">CLIENTI ISCRITTI</div>
-                         <div style="font-size:20px; font-weight:800; color:var(--dark); margin-top:2px;">${customersCount}</div>
-                    </div>
-                    <h4 style="font-size:14px; margin-bottom:12px; font-weight:800; display:flex; align-items:center; gap:8px;">📦 Ultimi 5 Ordini</h4>
-                    ${recentOrdersHtml || '<p style="font-size:12px; color:#64748b; text-align:center; padding:20px;">Nessun ordine trovato.</p>'}
-                    <button class="btn-confirm" onclick="closeModals()" style="margin-top:20px; background:#e2e8f0; color:var(--dark); font-size:14px;">CHIUDI PANNELLO</button>
-                `;
-            } catch (err) {
-                console.error(err);
-                statsContent.innerHTML = '<div style="padding:40px; text-align:center; color:var(--red); font-weight:700;">❌ Errore nel recupero dati.</div>';
+        window.onload = function() {
+            if (MAINTENANCE_MODE) {
+                document.body.innerHTML = '<div style="height:100vh; display:flex; align-items:center; justify-content:center; text-align:center; font-family:sans-serif;"><h1>🚚 SPESINA IN MANUTENZIONE</h1></div>';
+                return;
             }
-        }
-
-        setTimeout(() => {
-            checkMaintenance();
-            fetchProducts();
-            renderFooter();
-            updateUI();
+            
+            const yearEl = document.getElementById('footer-year');
+            if (yearEl) yearEl.innerText = new Date().getFullYear();
+            
+            // Rendering immediato
+            renderCategories();
+            updateCartCount();
             updateAuthUI();
-            checkSubscriptionStatus();
-            syncOrdersFromDB();
-        }, 100);
+            
+            // Caricamento asincrono sicuro
+            fetchProducts().then(() => {
+                renderCategories();
+            }).catch(err => console.error("Errore init:", err));
+        };
+
+        async function fetchProducts() {
+            if (!sb) return;
+            try {
+                const { data, error } = await sb.from('products').select('*').order('name');
+                if (error) throw error;
+                PRODS = (data || []).map(p => ({
+                    id: p.id, n: p.name, p: parseFloat(p.price) || 0,
+                    c: (p.category || "").toLowerCase().trim(),
+                    b: (p.subcategory || "").toLowerCase().trim(),
+                    m: (p.marca || "").trim(),
+                    img: p.image_url ? p.image_url.replace(/ /g, '%20') : null,
+                    icon: p.icon || "📦", l: p.size || "", ean: p.ean || "", info: p.info || {}
+                }));
+            } catch (err) { 
+                console.error("Errore fetchProducts:", err); 
+            }
+        }
+
+        function renderCategories() {
+            const container = document.getElementById('categories-catalog');
+            if (!container) return;
+            
+            let html = "";
+            CATEGORIES.forEach(c => {
+                try {
+                    // Filtro ultra-robusto per il conteggio
+                    const count = PRODS.filter(p => {
+                        const pCat = String(p.c || "").toLowerCase();
+                        const cId = String(c.id || "").toLowerCase();
+                        return pCat.includes(cId) || cId.includes(pCat);
+                    }).length;
+                    
+                    html += `
+                        <div class="card" onclick="openCategory('${c.id}')">
+                            <div class="product-emoji">${c.icon}</div>
+                            <div style="font-weight:800;">${c.n}</div>
+                            <div style="font-size:10px; color:#94a3b8;">${count} prodotti</div>
+                        </div>
+                    `;
+                } catch (e) {
+                    console.error("Errore render categoria:", c.id, e);
+                }
+            });
+            container.innerHTML = html;
+        }
+
+        function openCategory(catId) {
+            currentCat = catId.toLowerCase().trim();
+            currentSub = null;
+            document.getElementById('home-view').style.display = 'none';
+            document.getElementById('subcategory-view').style.display = 'block';
+            document.getElementById('sticky-back').style.display = 'block';
+            window.scrollTo(0,0);
+            const catObj = CATEGORIES.find(x => x.id === currentCat);
+            document.getElementById('subcategory-title').innerText = catObj ? catObj.n : catId;
+
+            // Filtro flessibile per trovare le sottocategorie
+            let subs = [...new Set(PRODS.filter(p => p.c.includes(currentCat) || currentCat.includes(p.c)).map(p => p.b))].filter(Boolean);
+
+            // Logica Speciale per Patate Surgelate: raggruppiamo marche Pizzoli, Pata, McCain
+            if (currentCat.includes("surgelati")) {
+                const specialBrands = ["mccain", "pizzoli", "pata"];
+                const hasSpecial = PRODS.some(p => (p.c.includes("surgelati") || "surgelati".includes(p.c)) && specialBrands.some(b => p.m.toLowerCase().includes(b)));
+                if (hasSpecial && !subs.includes("patate surgelate")) subs.push("patate surgelate");
+
+                // Rimuoviamo eventuali doppioni o vecchie cartelle McCain se presenti
+                subs = subs.filter(s => s !== "mccain");
+            }
+
+            if (subs.length > 0) renderSubFolders(currentCat, subs);
+            else renderItems(currentCat, null);
+        }
+
+        function renderSubFolders(catId, subs) {
+            let html = "";
+            subs.sort().forEach(s => {
+                const emoji = EMOJI_MAP[s.toLowerCase().trim()] || "📦";
+                html += `<div class="card" onclick="openSubCategory('${s.replace(/'/g, "\\'")}')"><div class="product-emoji">${emoji}</div><div style="font-weight:800; text-transform:capitalize;">${s}</div></div>`;
+            });
+            document.getElementById('sub-catalog').innerHTML = html;
+        }
+
+        function openSubCategory(subName) {
+            currentSub = subName.toLowerCase().trim();
+            const catObj = CATEGORIES.find(x => x.id === currentCat);
+            document.getElementById('subcategory-title').innerText = (catObj ? catObj.n : currentCat) + " > " + subName;
+            renderItems(currentCat, currentSub);
+        }
+
+        function renderItems(catId, sub) {
+            // FILTRO FLESSIBILE: gestisce singolare/plurale, inclusioni e raggruppamento Patate
+            let items = [];
+            const specialBrands = ["mccain", "pizzoli", "pata"];
+
+            if (sub === "patate surgelate") {
+                // Prende tutte le marche speciali nei surgelati
+                items = PRODS.filter(p => (p.c.includes(catId) || catId.includes(p.c)) && specialBrands.some(b => p.m.toLowerCase().includes(b)));
+            } else if (sub) {
+                // Prende i prodotti della sottocategoria, ESCLUDENDO le marche speciali (che sono in Patate surgelate)
+                items = PRODS.filter(p => {
+                    const matchCat = p.c.includes(catId) || catId.includes(p.c);
+                    const matchSub = p.b.includes(sub) || sub.includes(p.b);
+                    const isSpecialBrand = specialBrands.some(b => p.m.toLowerCase().includes(b));
+                    return matchCat && matchSub && !isSpecialBrand;
+                });
+            } else {
+                items = PRODS.filter(p => p.c.includes(catId) || catId.includes(p.c));
+            }
+
+            let html = "";
+            items.forEach(p => {
+                const img = p.img ? `<img class="product-img" src="${p.img}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"><div class="product-emoji" style="display:none;">${p.icon}</div>` : `<div class="product-emoji">${p.icon}</div>`;
+                html += `
+                    <div class="card">
+                        <button class="info-btn" onclick="showInfo('${p.id}')">i</button>
+                        <button class="add-btn" onclick="addToCart('${p.id}')">+</button>
+                        <div style="height:120px; display:flex; align-items:center; justify-content:center;">${img}</div>
+                        <div class="card-body">
+                            <div class="brand-label">${p.m}</div>
+                            <div class="product-name" style="font-size:13px; line-height:1.2; height:32px; overflow:hidden; font-weight:800;">${p.n}</div>
+                            <div class="price-label" style="font-size:16px;">${p.p.toFixed(2)}€</div>
+                        </div>
+                    </div>`;
+            });
+            document.getElementById('sub-catalog').innerHTML = html || "<p style='grid-column:1/-1; padding:40px; color:#94a3b8;'>Nessun prodotto trovato in questa sezione.</p>";
+        }
+
+        function addToCart(id) {
+            const p = PRODS.find(x => x.id == id);
+            if (!p) return;
+            const ex = CART.find(x => x.id == id);
+            if (ex) ex.q++; else CART.push({ ...p, q: 1 });
+            updateCartCount(); localStorage.setItem('cart_spesina', JSON.stringify(CART));
+        }
+
+        function updateCartCount() {
+            const count = CART.reduce((a, b) => a + b.q, 0);
+            const trigger = document.getElementById('cart-trigger');
+            if (count > 0) {
+                trigger.style.display = 'block';
+                document.getElementById('cart-count-float').innerText = count;
+            } else {
+                trigger.style.display = 'none';
+            }
+        }
+
+        function showCart() {
+            if (!userData) { showRegister(); return; }
+            document.getElementById('home-view').style.display = 'none';
+            document.getElementById('subcategory-view').style.display = 'none';
+            document.getElementById('legal-view').style.display = 'none';
+            document.getElementById('cart-view').style.display = 'block';
+            document.getElementById('sticky-back').style.display = 'block';
+            window.scrollTo(0,0);
+            renderCartItems();
+        }
+
+        function renderCartItems() {
+            let html = ""; let total = 0;
+            CART.forEach((item, idx) => {
+                total += item.p * item.q;
+                html += `<div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #eee;">
+                    <div><b>${item.n}</b><br>${item.p.toFixed(2)}€</div>
+                    <div><button onclick="changeQty(${idx},-1)">-</button> ${item.q} <button onclick="changeQty(${idx},1)">+</button></div>
+                </div>`;
+            });
+            document.getElementById('cart-items').innerHTML = html || "Vuoto.";
+            document.getElementById('cart-total-price').innerText = total.toFixed(2) + "€";
+        }
+
+        function changeQty(i, d) {
+            CART[i].q += d; if (CART[i].q <= 0) CART.splice(i, 1);
+            localStorage.setItem('cart_spesina', JSON.stringify(CART)); renderCartItems(); updateCartCount();
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            const user = {
+                id: "SP-" + Math.random().toString(36).substr(2, 6).toUpperCase(),
+                name: document.getElementById('reg-name').value,
+                phone: document.getElementById('reg-phone').value,
+                email: document.getElementById('reg-email').value,
+                address: {
+                    street: document.getElementById('reg-street').value,
+                    number: document.getElementById('reg-number').value,
+                    cap: document.getElementById('reg-cap').value,
+                    floor: document.getElementById('reg-floor').value,
+                    int: document.getElementById('reg-int').value
+                }
+            };
+            // Salvataggio locale
+            localStorage.setItem('user_spesina', JSON.stringify(user));
+            userData = user;
+            updateAuthUI();
+
+            // Invio Mail di Benvenuto via Resend (Supabase Function)
+            try {
+                const { data, error } = await sb.functions.invoke('send-welcome', {
+                    body: {
+                        type: 'welcome',
+                        email: user.email,
+                        name: user.name,
+                        clientId: user.id
+                    }
+                });
+            } catch (err) { console.error("Errore invio mail benvenuto:", err); }
+
+            // Mostra successo
+            document.getElementById('display-client-id').innerText = user.id;
+            document.getElementById('id-display-box').style.display = 'block';
+            document.getElementById('success-desc').innerText = "Benvenuto, " + user.name + "! Il tuo account è attivo.";
+            document.getElementById('modalSuccess').style.display = 'flex';
+            
+            document.getElementById('register-view').style.display = 'none';
+        }
+
+        function updateAuthUI() {
+            const navAuth = document.getElementById('nav-auth');
+            if (userData) {
+                navAuth.innerHTML = `👤 ${userData.name.split(' ')[0]}`;
+            } else {
+                navAuth.innerHTML = `🔑 Accedi / Registrati`;
+            }
+        }
+
+        function handleAuthClick() {
+            if (userData) showProfile();
+            else document.getElementById('modalLogin').style.display = 'flex';
+        }
+
+        function showProfile() {
+            if (!userData) return;
+            document.getElementById('profile-name').innerText = userData.name;
+            document.getElementById('profile-id-tag').innerText = "ID: " + userData.id;
+            document.getElementById('profile-email').innerText = userData.email;
+            
+            // Gestione indirizzo strutturato
+            const a = userData.address;
+            let fullAddr = "";
+            if (typeof a === 'string') {
+                fullAddr = a;
+            } else {
+                fullAddr = `${a.street} ${a.number}, ${a.cap}`;
+                if (a.floor) fullAddr += ` - Piano: ${a.floor}`;
+                if (a.int) fullAddr += ` - Int: ${a.int}`;
+            }
+            document.getElementById('profile-address').innerText = fullAddr;
+            document.getElementById('modalProfile').style.display = 'flex';
+        }
+
+        function switchToRegister() {
+            closeModals();
+            showRegister();
+        }
+
+        async function handleLogin() {
+            const id = document.getElementById('login-id-input').value.toUpperCase().trim();
+            if (!id) return;
+            
+            // Per ora simuliamo il recupero (in futuro cercheremo nella tabella 'users' di Supabase)
+            // Se l'ID è valido, lo salviamo
+            const user = { id: id, name: "Cliente Spesina", email: "", address: "Mestre" };
+            localStorage.setItem('user_spesina', JSON.stringify(user));
+            userData = user;
+            updateAuthUI();
+            closeModals();
+            goHome();
+        }
+
+        function showInfoModal(type) {
+            const infoDesc = document.getElementById('info-desc');
+            const infoTitle = document.getElementById('info-p-name');
+            infoTitle.innerHTML = "";
+            document.getElementById('info-p-ean').innerText = "";
+
+            if (type === 'where') {
+                infoDesc.innerHTML = `
+                    <div style="text-align:center;">
+                        <div style="font-size:50px; margin-bottom:10px;">📍</div>
+                        <h2 style="margin-bottom:10px;">Dove consegniamo?</h2>
+                        <p style="color:#64748b; margin-bottom:20px;">Inserisci il tuo CAP per verificare se la tua zona a Mestre è coperta dal servizio.</p>
+                        <select id="delivery-cap-select" class="select-box" onchange="checkDeliveryCoverage(this.value)" style="border-color:var(--primary); font-size:16px;">
+                            <option value="" disabled selected>Seleziona il CAP...</option>
+                            <option value="30171">30171 (Mestre)</option>
+                            <option value="30172">30172 (Mestre)</option>
+                            <option value="30173">30173 (Mestre)</option>
+                            <option value="30174">30174 (Mestre)</option>
+                            <option value="30175">30175 (Mestre)</option>
+                        </select>
+                        <div id="coverage-result" style="margin-top:20px; font-weight:800; color:var(--primary); min-height:24px;"></div>
+                        <button class="btn-confirm" onclick="closeModals()">Capito 👍</button>
+                    </div>
+                `;
+            } else if (type === 'how') {
+                infoDesc.innerHTML = `
+                    <div style="text-align:center; padding: 10px;">
+                        <div style="font-size:50px; margin-bottom:10px;">ℹ️</div>
+                        <h2 style="margin-bottom:15px;">Come funziona</h2>
+                        <p style="font-size:18px; margin-bottom:10px;">Fai la spesa ora.</p>
+                        <p style="font-size:18px; margin-bottom:20px;">Scegli data e ora e dopo il CLICK...</p>
+                        <h2 style="color:var(--primary); font-size:28px; font-weight:900; margin-bottom:25px;">Ci pensiamo noi! 🚀</h2>
+                        <button class="btn-confirm" onclick="closeModals()">Capito 👍</button>
+                    </div>
+                `;
+            } else if (type === 'why') {
+                infoDesc.innerHTML = `
+                    <div style="text-align:left;">
+                        <div style="background:#eefdf6; padding:30px 20px; border-radius:24px; text-align:center; margin-bottom:20px;">
+                            <h2 style="margin:0; font-size:22px; font-weight:900;">Spesina: La tua spesa intelligente a Mestre.</h2>
+                        </div>
+                        
+                        <div style="background:white; padding:25px; border-radius:24px; box-shadow:0 8px 30px rgba(0,0,0,0.04); margin-bottom:15px; border:1px solid #f1f5f9;">
+                            <div style="font-size:30px; margin-bottom:15px;">🎟️</div>
+                            <h3 style="margin:0 0 10px 0; font-size:18px; font-weight:900;">Abbonamento Mensile</h3>
+                            <p style="color:#64748b; font-size:14px; line-height:1.6; margin:0;">Nessun costo di consegna, mai. Con 19,99€ al mese ordini quante volte vuoi. Ti basta un solo ordine a settimana per iniziare a risparmiare.</p>
+                        </div>
+
+                        <div style="background:white; padding:25px; border-radius:24px; box-shadow:0 8px 30px rgba(0,0,0,0.04); margin-bottom:20px; border:1px solid #f1f5f9;">
+                            <div style="font-size:30px; margin-bottom:15px;">⚡</div>
+                            <h3 style="margin:0 0 10px 0; font-size:18px; font-weight:900;">Il limite dei 7 pezzi</h3>
+                            <p style="color:#64748b; font-size:14px; line-height:1.6; margin:0;">Perché solo 7 pezzi? Perché vogliamo essere fulminei. Meno peso per i nostri rider significa più velocità per te e meno traffico per Mestre.</p>
+                        </div>
+                        
+                        <button class="btn-confirm" onclick="closeModals()">Capito 👍</button>
+                    </div>
+                `;
+            }
+            // Nascondiamo il pulsante CHIUDI standard se presente per usare quelli interni
+            const standardBtn = document.querySelector('#modalInfo .modal-content > .btn-confirm:last-child');
+            if (standardBtn) standardBtn.style.display = 'none';
+            
+            document.getElementById('modalInfo').style.display = 'flex';
+        }
+
+        function checkDeliveryCoverage(cap) {
+            const result = document.getElementById('coverage-result');
+            result.innerHTML = "✨ Ottimo! Il CAP " + cap + " è coperto dal servizio!";
+            result.style.color = "var(--primary)";
+        }
+
+        function showLegal(type) {
+            document.getElementById('home-view').style.display = 'none';
+            document.getElementById('subcategory-view').style.display = 'none';
+            document.getElementById('cart-view').style.display = 'none';
+            document.getElementById('register-view').style.display = 'none';
+            document.getElementById('legal-view').style.display = 'block';
+            document.getElementById('sticky-back').style.display = 'block';
+            const titles = { privacy: 'Privacy Policy', terms: 'Termini e Condizioni', cookie: 'Cookie Policy' };
+            document.getElementById('legal-title').innerText = titles[type] || 'Legale';
+            document.getElementById('legal-content').innerHTML = LEGAL_TEXTS[type];
+            window.scrollTo(0, 0);
+        }
+
+        function logout() { localStorage.removeItem('user_spesina'); location.reload(); }
+        function goHome() {
+            document.getElementById('home-view').style.display = 'block';
+            document.getElementById('subcategory-view').style.display = 'none';
+            document.getElementById('cart-view').style.display = 'none';
+            document.getElementById('register-view').style.display = 'none';
+            document.getElementById('legal-view').style.display = 'none';
+            document.getElementById('sticky-back').style.display = 'none';
+            window.scrollTo(0,0);
+        }
+        function handleBack() { 
+            if (currentSub) { currentSub = null; openCategory(currentCat); } 
+            else goHome(); 
+        }
+        function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
+        function showInfo(id) {
+            const p = PRODS.find(x => x.id == id); if (!p) return;
+            document.getElementById('info-p-name').innerText = p.n;
+            document.getElementById('info-desc').innerText = p.info.fullDesc || "Info in arrivo.";
+            document.getElementById('modalInfo').style.display = 'flex';
+        }
+        function showRegister() { 
+            document.getElementById('home-view').style.display = 'none'; 
+            document.getElementById('register-view').style.display = 'block'; 
+            document.getElementById('sticky-back').style.display = 'block';
+            window.scrollTo(0,0);
+        }
+        async function processCheckout() {
+            if (!userData) { showRegister(); return; }
+            const total = CART.reduce((a, b) => a + (b.p * b.q), 0);
+            const orderId = Math.floor(1000 + Math.random() * 9000);
+            
+            try {
+                // Invio Ordine via Resend (Supabase Function)
+                // Questa funzione invia la mail al cliente e in BCC a ordini@spesina.it (Master Picking)
+                const { data, error } = await sb.functions.invoke('send-welcome', {
+                    body: {
+                        type: 'order',
+                        email: userData.email,
+                        name: userData.name,
+                        orderId: orderId,
+                        total: total.toFixed(2),
+                        address: `${userData.address.street} ${userData.address.number}, ${userData.address.cap} (P:${userData.address.floor} I:${userData.address.int})`,
+                        delivery: "Mestre - Consegna in 30 min",
+                        items: CART
+                    }
+                });
+
+                if (error) throw error;
+
+                CART = []; 
+                localStorage.setItem('cart_spesina', JSON.stringify(CART)); 
+                updateCartCount();
+                document.getElementById('success-title').innerText = "Ordine Inviato!";
+                document.getElementById('success-desc').innerText = "Abbiamo ricevuto il tuo ordine #" + orderId + ". Riceverai una mail di conferma a breve.";
+                document.getElementById('id-display-box').style.display = 'none';
+                document.getElementById('modalSuccess').style.display = 'flex';
+                goHome();
+            } catch (e) { 
+                console.error(e);
+                alert("Errore durante l'invio dell'ordine. Riprova tra poco."); 
+            }
+        }
+        function handleSearch() {
+            const q = document.getElementById('search-bar').value.toLowerCase();
+            if (!q) { renderCategories(); return; }
+            const res = PRODS.filter(p => p.n.toLowerCase().includes(q) || (p.m && p.m.toLowerCase().includes(q)));
+            let html = "";
+            res.forEach(p => {
+                const img = p.img ? `<img class="product-img" src="${p.img}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"><div class="product-emoji" style="display:none;">${p.icon}</div>` : `<div class="product-emoji">${p.icon}</div>`;
+                html += `<div class="card" style="flex: 1 1 150px;"><button class="add-btn" onclick="addToCart('${p.id}')">+</button>${img}<div class="product-name" style="font-size:12px;">${p.n}</div><div class="price-label" style="font-size:14px;">${p.p.toFixed(2)}€</div></div>`;
+            });
+            document.getElementById('categories-catalog').innerHTML = html || "<p>Nessun risultato.</p>";
+        }
     </script>
 </body>
 

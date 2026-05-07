@@ -89,10 +89,10 @@ def upload_to_supabase(image_bytes, ean, folder_name="", sub_name=""):
         logging.error(f"Errore Upload Cloud: {e}")
     return None
 
-def avvisa_github_per_foto(ean, categoria, brand):
+def avvisa_github_per_foto(ean, categoria, sottocategoria):
     url = f"https://api.github.com/repos/{GH_OWNER}/{GH_REPO}/dispatches"
     headers = {"Authorization": f"token {GH_TOKEN}", "Accept": "application/vnd.github.v3+json"}
-    payload = {"event_type": "nuovo_prodotto", "client_payload": {"ean": ean, "category": categoria, "brand": brand}}
+    payload = {"event_type": "nuovo_prodotto", "client_payload": {"ean": ean, "category": categoria, "subcategory": sottocategoria}}
     try:
         r = requests.post(url, json=payload, headers=headers, timeout=10)
         logging.info(f"GitHub signaled: {r.status_code}")
@@ -210,9 +210,8 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             cat_obj = CAT_MAP.get(cat_id, {})
             folder_name = cat_obj.get('f', cat_obj.get('n', ""))
             subfolders = cat_obj.get('sub', [])
-            
             if not subfolders:
-                state['brand'] = ""
+                state['subcategory'] = ""
                 
                 # Se abbiamo una foto in attesa, carichiamola ora nella cartella corretta
                 if state.get('photo_bytes'):
@@ -221,11 +220,11 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
                 new_prod = {
                     "ean": state['ean'], "name": state['name'], "price": state['price'],
-                    "category": state['category'], "brand": state['brand'],
+                    "category": state['category'], "subcategory": state['subcategory'],
                     "image_url": state['image_url'], "size": state.get('size', ''), "info": state.get('info', {})
                 }
                 supabase.table('products').upsert(new_prod).execute()
-                asyncio.create_task(asyncio.to_thread(avvisa_github_per_foto, state['ean'], state['category'], state['brand']))
+                asyncio.create_task(asyncio.to_thread(avvisa_github_per_foto, state['ean'], state['category'], state['subcategory']))
                 await query.edit_message_text(f"✅ **SALVATO!**\n📦 {state['name']}\n📂 {folder_name}\n💰 {state['price']}€\n\nImmagine salvata in: {folder_name} 🚀")
                 if chat_id in user_states: del user_states[chat_id]
             else:
@@ -235,7 +234,7 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         
         elif data.startswith("sub_"):
             sub_name = data.replace("sub_", "")
-            state['brand'] = sub_name
+            state['subcategory'] = sub_name
             cat_id = state['category']
             cat_obj = CAT_MAP.get(cat_id, {})
             folder_name = cat_obj.get('f', cat_obj.get('n', ""))
@@ -249,11 +248,11 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
             new_prod = {
                 "ean": state['ean'], "name": state['name'], "price": state['price'],
-                "category": state['category'], "brand": state['brand'],
+                "category": state['category'], "subcategory": state['subcategory'],
                 "image_url": state['image_url'], "size": state.get('size', ''), "info": state.get('info', {})
             }
             supabase.table('products').upsert(new_prod).execute()
-            asyncio.create_task(asyncio.to_thread(avvisa_github_per_foto, state['ean'], state['category'], state['brand']))
+            asyncio.create_task(asyncio.to_thread(avvisa_github_per_foto, state['ean'], state['category'], state['subcategory']))
             
             await query.edit_message_text(f"✅ **SALVATO!**\n📦 {state['name']}\n📂 {folder_name} > {sub_name}\n💰 {state['price']}€\n\nImmagine salvata in: {folder_name}/{sub_name} 🚀")
             if chat_id in user_states: del user_states[chat_id]
@@ -272,7 +271,7 @@ async def process_ean(ean, update):
             'existing_id': p['id'], 
             'existing_name': p['name'],
             'existing_cat': p.get('category'),
-            'existing_brand': p.get('brand'),
+            'existing_subcategory': p.get('subcategory'),
             'step': 'waiting_choice_update'
         }
         msg = (f"🔄 **PRODOTTO GESTITO**\n🏷️ {p['name']}\n💰 Prezzo: {p['price']}€\n\n"
@@ -302,7 +301,7 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
             if state['step'] == 'waiting_image_update':
                 # Per aggiornamenti, conosciamo gia' categoria e sotto-categoria (brand)
                 cat_id = state.get('existing_cat')
-                sub_name = state.get('existing_brand', "")
+                sub_name = state.get('existing_subcategory', "")
                 cat_obj = CAT_MAP.get(cat_id, {})
                 folder_name = cat_obj.get('f', cat_obj.get('n', ""))
                 
