@@ -67,39 +67,93 @@
 
         /* Ottimizzazioni Mobile - Modalità App Nativa */
         @media (max-width: 480px) {
-            header { padding: 8px 12px; }
-            .header-container { height: 45px; }
-            #sticky-back { padding: 4px 10px; font-size: 12px; border-radius: 8px; }
-            
+            header {
+                padding: 8px 12px;
+            }
+
+            .header-container {
+                height: 45px;
+            }
+
+            #sticky-back {
+                padding: 4px 10px;
+                font-size: 12px;
+                border-radius: 8px;
+            }
+
             /* Logo più piccolo e centrato */
-            .logo-text { font-size: 28px !important; letter-spacing: -1px !important; }
-            .logo-leaf { width: 22px !important; height: 22px !important; top: -10px !important; }
+            .logo-text {
+                font-size: 28px !important;
+                letter-spacing: -1px !important;
+            }
+
+            .logo-leaf {
+                width: 22px !important;
+                height: 22px !important;
+                top: -10px !important;
+            }
 
             /* Navigazione orizzontale a scorrimento (stile App) */
-            .top-nav { 
-                gap: 15px; 
-                margin-top: 5px; 
-                overflow-x: auto; 
-                justify-content: flex-start; 
+            .top-nav {
+                gap: 15px;
+                margin-top: 5px;
+                overflow-x: auto;
+                justify-content: flex-start;
                 padding: 5px 0;
-                scrollbar-width: none; /* Nasconde scrollbar su Firefox */
-                -ms-overflow-style: none; /* Nasconde scrollbar su IE/Edge */
+                scrollbar-width: none;
+                /* Nasconde scrollbar su Firefox */
+                -ms-overflow-style: none;
+                /* Nasconde scrollbar su IE/Edge */
                 white-space: nowrap;
                 -webkit-overflow-scrolling: touch;
             }
-            .top-nav::-webkit-scrollbar { display: none; } /* Nasconde scrollbar su Chrome/Safari */
-            .top-nav a { font-size: 12px; flex-shrink: 0; padding: 5px 2px; }
-            
+
+            .top-nav::-webkit-scrollbar {
+                display: none;
+            }
+
+            /* Nasconde scrollbar su Chrome/Safari */
+            .top-nav a {
+                font-size: 12px;
+                flex-shrink: 0;
+                padding: 5px 2px;
+            }
+
             /* Griglia prodotti super compatta */
-            .catalog { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; padding: 8px !important; }
-            .card { padding: 12px 8px; border-radius: 14px; }
-            .product-emoji { font-size: 35px; height: 60px; }
-            .product-img { height: 90px; }
-            .price-label { font-size: 13px !important; }
-            .product-name { font-size: 11px !important; height: 32px; overflow: hidden; }
-            
+            .catalog {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 8px !important;
+                padding: 8px !important;
+            }
+
+            .card {
+                padding: 12px 8px;
+                border-radius: 14px;
+            }
+
+            .product-emoji {
+                font-size: 35px;
+                height: 60px;
+            }
+
+            .product-img {
+                height: 90px;
+            }
+
+            .price-label {
+                font-size: 13px !important;
+            }
+
+            .product-name {
+                font-size: 11px !important;
+                height: 32px;
+                overflow: hidden;
+            }
+
             /* Bilanciamento Header Mobile */
-            .header-spacer { width: 60px !important; }
+            .header-spacer {
+                width: 60px !important;
+            }
         }
 
         .header-container {
@@ -323,7 +377,8 @@
             border: 2px solid var(--gray-dark);
             background: var(--gray);
             font-family: inherit;
-            box-sizing: border-box; /* Cruciale per evitare conflitti di celle */
+            box-sizing: border-box;
+            /* Cruciale per evitare conflitti di celle */
             transition: all 0.2s;
         }
 
@@ -344,7 +399,7 @@
             padding: 15px 20px;
             border-radius: 24px;
             font-size: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
             transition: border-color 0.2s;
         }
 
@@ -363,7 +418,8 @@
             background: white;
             padding: 60px 20px;
             margin-top: 50px;
-            text-align: center; /* Centra tutto il footer */
+            text-align: center;
+            /* Centra tutto il footer */
             border-top: 1px solid #eee;
         }
 
@@ -380,12 +436,13 @@
     <header>
         <div class="header-container">
             <button id="sticky-back" onclick="handleBack()">⬅ Indietro</button>
-            
+
             <div style="flex-grow: 1; display: flex; justify-content: center;">
-                <div class="logo-text" style="display: flex; align-items: center; cursor: pointer; color: #2d1b4d; font-family: 'Lora', serif; font-weight: 700; font-size: 38px; letter-spacing: -1.5px;"
+                <div class="logo-text"
+                    style="display: flex; align-items: center; cursor: pointer; color: #2d1b4d; font-family: 'Lora', serif; font-weight: 700; font-size: 38px; letter-spacing: -1.5px;"
                     onclick="goHome()">
-                    Spes<span style="position: relative; display: inline-block;">ı<svg class="logo-leaf" viewBox="0 0 24 24" fill="#42d3a5"
-                            xmlns="http://www.w3.org/2000/svg"
+                    Spes<span style="position: relative; display: inline-block;">ı<svg class="logo-leaf"
+                            viewBox="0 0 24 24" fill="#42d3a5" xmlns="http://www.w3.org/2000/svg"
                             style="position: absolute; top: -14px; left: 105%; transform: translateX(-50%); width: 28px; height: 28px;">
                             <path
                                 d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z" />
@@ -429,20 +486,25 @@
         <div class="modal-content" style="max-width: 500px;">
             <div style="font-size:30px; margin-bottom:10px;">🛒</div>
             <h2 style="font-weight: 900; margin-bottom: 20px;">Il tuo Carrello</h2>
-            
+
             <div id="cart-items" style="max-height: 400px; overflow-y: auto; text-align: left; margin-bottom: 20px;">
                 <!-- Gli articoli verranno inseriti qui -->
             </div>
 
-            <div style="padding: 20px; background: #f8fafc; border-radius: 25px; margin-bottom: 20px; border: 1px solid #e2e8f0;">
+            <div
+                style="padding: 20px; background: #f8fafc; border-radius: 25px; margin-bottom: 20px; border: 1px solid #e2e8f0;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <span style="font-weight: 800; color: #64748b;">Totale Spesa:</span>
-                    <span id="cart-total-price" style="font-size: 24px; font-weight: 900; color: var(--primary);">0.00€</span>
+                    <span id="cart-total-price"
+                        style="font-size: 24px; font-weight: 900; color: var(--primary);">0.00€</span>
                 </div>
             </div>
 
-            <button class="btn-confirm" onclick="processCheckout()" style="font-weight: 900; letter-spacing: 1px;">CONFERMA ORDINE 🚀</button>
-            <button class="btn-confirm" onclick="closeModals()" style="background: none; color: #94a3b8; margin-top: 10px; font-weight: 700; border: none;">Continua la spesa</button>
+            <button class="btn-confirm" onclick="processCheckout()"
+                style="font-weight: 900; letter-spacing: 1px;">CONFERMA ORDINE 🚀</button>
+            <button class="btn-confirm" onclick="closeModals()"
+                style="background: none; color: #94a3b8; margin-top: 10px; font-weight: 700; border: none;">Continua la
+                spesa</button>
         </div>
     </div>
 
@@ -450,38 +512,45 @@
         <div class="sub-header">
             <h3 style="margin: 0; flex-grow: 1; text-align: center;">Registrazione</h3>
         </div>
-        <div style="max-width:500px; margin:auto; background:white; padding:30px; border-radius:24px; box-shadow: 0 10px 40px rgba(0,0,0,0.05);">
+        <div
+            style="max-width:500px; margin:auto; background:white; padding:30px; border-radius:24px; box-shadow: 0 10px 40px rgba(0,0,0,0.05);">
             <form onsubmit="handleRegister(event)" style="display: flex; flex-direction: column; gap: 15px;">
                 <div>
-                    <label style="font-size: 11px; font-weight: 800; color: #1e293b; text-transform: uppercase;">Nome e Cognome</label>
+                    <label style="font-size: 11px; font-weight: 800; color: #1e293b; text-transform: uppercase;">Nome e
+                        Cognome</label>
                     <input type="text" id="reg-name" class="select-box" placeholder="Es: Mario Rossi" required>
                 </div>
 
                 <div class="form-row">
                     <div>
-                        <label style="font-size: 11px; font-weight: 800; color: #1e293b; text-transform: uppercase;">Cellulare</label>
+                        <label
+                            style="font-size: 11px; font-weight: 800; color: #1e293b; text-transform: uppercase;">Cellulare</label>
                         <input type="tel" id="reg-phone" class="select-box" placeholder="333 1234567" required>
                     </div>
                     <div>
-                        <label style="font-size: 11px; font-weight: 800; color: #1e293b; text-transform: uppercase;">Email</label>
+                        <label
+                            style="font-size: 11px; font-weight: 800; color: #1e293b; text-transform: uppercase;">Email</label>
                         <input type="email" id="reg-email" class="select-box" placeholder="mario@email.it" required>
                     </div>
                 </div>
 
                 <div class="form-row" style="grid-template-columns: 2fr 1fr;">
                     <div>
-                        <label style="font-size: 11px; font-weight: 800; color: #1e293b; text-transform: uppercase;">Via / Piazza</label>
+                        <label style="font-size: 11px; font-weight: 800; color: #1e293b; text-transform: uppercase;">Via
+                            / Piazza</label>
                         <input type="text" id="reg-street" class="select-box" placeholder="Es: Via Mestrina" required>
                     </div>
                     <div>
-                        <label style="font-size: 11px; font-weight: 800; color: #1e293b; text-transform: uppercase;">Civico</label>
+                        <label
+                            style="font-size: 11px; font-weight: 800; color: #1e293b; text-transform: uppercase;">Civico</label>
                         <input type="text" id="reg-number" class="select-box" placeholder="10" required>
                     </div>
                 </div>
 
                 <div class="form-row" style="grid-template-columns: 1.2fr 1fr 1fr;">
                     <div>
-                        <label style="font-size: 11px; font-weight: 800; color: #1e293b; text-transform: uppercase;">CAP</label>
+                        <label
+                            style="font-size: 11px; font-weight: 800; color: #1e293b; text-transform: uppercase;">CAP</label>
                         <select id="reg-cap" class="select-box" required>
                             <option value="" disabled selected>CAP...</option>
                             <option value="30171">30171</option>
@@ -492,11 +561,13 @@
                         </select>
                     </div>
                     <div>
-                        <label style="font-size: 11px; font-weight: 800; color: #1e293b; text-transform: uppercase;">Piano</label>
+                        <label
+                            style="font-size: 11px; font-weight: 800; color: #1e293b; text-transform: uppercase;">Piano</label>
                         <input type="text" id="reg-floor" class="select-box" placeholder="Es: 2°">
                     </div>
                     <div>
-                        <label style="font-size: 11px; font-weight: 800; color: #1e293b; text-transform: uppercase;">Interno</label>
+                        <label
+                            style="font-size: 11px; font-weight: 800; color: #1e293b; text-transform: uppercase;">Interno</label>
                         <input type="text" id="reg-int" class="select-box" placeholder="Es: 4">
                     </div>
                 </div>
@@ -504,11 +575,14 @@
                 <div style="display: flex; align-items: flex-start; gap: 10px; margin-top: 10px; text-align: left;">
                     <input type="checkbox" id="reg-privacy" required style="margin-top: 4px; transform: scale(1.2);">
                     <label for="reg-privacy" style="font-size: 12px; color: #64748b;">
-                        Accetto la <a onclick="showLegal('privacy')" style="color: var(--primary); font-weight: 700; cursor: pointer;">Privacy Policy</a> e i termini del servizio.
+                        Accetto la <a onclick="showLegal('privacy')"
+                            style="color: var(--primary); font-weight: 700; cursor: pointer;">Privacy Policy</a> e i
+                        termini del servizio.
                     </label>
                 </div>
 
-                <button type="submit" class="btn-confirm" style="margin-top: 10px; font-weight: 900; letter-spacing: 1px;">ATTIVA ACCOUNT</button>
+                <button type="submit" class="btn-confirm"
+                    style="margin-top: 10px; font-weight: 900; letter-spacing: 1px;">ATTIVA ACCOUNT</button>
             </form>
         </div>
     </div>
@@ -566,19 +640,24 @@
         <div class="modal-content">
             <div style="font-size:30px; margin-bottom:10px;">🔑</div>
             <h2 style="margin-bottom:10px;">Accedi a Spesina</h2>
-            <p style="color:#64748b; margin-bottom:20px; font-size:14px;">Inserisci il tuo ID Cliente per recuperare il tuo profilo e i tuoi ordini.</p>
-            
+            <p style="color:#64748b; margin-bottom:20px; font-size:14px;">Inserisci il tuo ID Cliente per recuperare il
+                tuo profilo e i tuoi ordini.</p>
+
             <div style="text-align:left; margin-bottom:15px;">
                 <label style="font-size:11px; font-weight:800; color:#1e293b;">ID CLIENTE (ES: SP-XXXXXX)</label>
-                <input type="text" id="login-id-input" class="select-box" placeholder="INSERISCI IL TUO ID..." style="text-transform:uppercase;">
+                <input type="text" id="login-id-input" class="select-box" placeholder="INSERISCI IL TUO ID..."
+                    style="text-transform:uppercase;">
             </div>
 
-            <button class="btn-confirm" onclick="handleLogin()" style="text-transform:uppercase; font-weight:900;">ACCEDI ORA</button>
-            
+            <button class="btn-confirm" onclick="handleLogin()"
+                style="text-transform:uppercase; font-weight:900;">ACCEDI ORA</button>
+
             <p style="font-size:13px; margin-top:20px; color:#64748b;">
-                Non hai un ID? <a onclick="switchToRegister()" style="color:var(--primary); font-weight:800; cursor:pointer;">Registrati qui</a>
+                Non hai un ID? <a onclick="switchToRegister()"
+                    style="color:var(--primary); font-weight:800; cursor:pointer;">Registrati qui</a>
             </p>
-            <p onclick="closeModals()" style="font-size:14px; margin-top:20px; color:var(--dark); font-weight:700; cursor:pointer;">Chiudi</p>
+            <p onclick="closeModals()"
+                style="font-size:14px; margin-top:20px; color:var(--dark); font-weight:700; cursor:pointer;">Chiudi</p>
         </div>
     </div>
 
@@ -586,14 +665,21 @@
         <div style="max-width: 800px; margin: 0 auto; padding: 20px;">
             <div style="margin-bottom: 30px;">
                 <h4 style="font-weight: 800; margin-bottom: 10px;">SPESINA S.R.L.</h4>
-                <p style="font-size: 13px; color: #64748b; line-height: 1.6;">Via Mestrina 1, 30171 Mestre (VE)<br>P.IVA: 01234567890</p>
+                <p style="font-size: 13px; color: #64748b; line-height: 1.6;">Via Mestrina 1, 30171 Mestre
+                    (VE)<br>P.IVA: 01234567890</p>
             </div>
             <div style="margin-bottom: 30px;">
                 <h4 style="font-weight: 800; margin-bottom: 15px;">LINK UTILI</h4>
                 <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-                    <a onclick="showLegal('privacy')" style="color: #64748b; cursor: pointer; text-decoration: none; font-size: 14px;">Privacy Policy</a>
-                    <a onclick="showLegal('cookie')" style="color: #64748b; cursor: pointer; text-decoration: none; font-size: 14px;">Cookie Policy</a>
-                    <a onclick="showLegal('terms')" style="color: #64748b; cursor: pointer; text-decoration: none; font-size: 14px;">Termini e Condizioni</a>
+                    <a onclick="showLegal('privacy')"
+                        style="color: #64748b; cursor: pointer; text-decoration: none; font-size: 14px;">Privacy
+                        Policy</a>
+                    <a onclick="showLegal('cookie')"
+                        style="color: #64748b; cursor: pointer; text-decoration: none; font-size: 14px;">Cookie
+                        Policy</a>
+                    <a onclick="showLegal('terms')"
+                        style="color: #64748b; cursor: pointer; text-decoration: none; font-size: 14px;">Termini e
+                        Condizioni</a>
                 </div>
             </div>
         </div>
@@ -675,19 +761,19 @@
         let currentCatName = null;
         let currentSub = null;
 
-        window.onload = function() {
+        window.onload = function () {
             if (MAINTENANCE_MODE) {
                 document.body.innerHTML = '<div style="height:100vh; display:flex; align-items:center; justify-content:center; text-align:center; font-family:sans-serif;"><h1>🚚 SPESINA IN MANUTENZIONE</h1></div>';
                 return;
             }
-            
+
             const yearEl = document.getElementById('footer-year');
             if (yearEl) yearEl.innerText = new Date().getFullYear();
-            
+
             renderCategories();
             updateCartCount();
             updateAuthUI();
-            
+
             fetchProducts().then(() => {
                 renderCategories();
                 if (PRODS.length === 0) {
@@ -708,31 +794,31 @@
             try {
                 const { data, error } = await sb.from('products').select('*').order('name');
                 if (error) throw error;
-                
+
                 console.log("DATI RICEVUTI DA SUPABASE:", data.length, "prodotti");
-                
+
                 PRODS = (data || []).map(p => {
                     // Pulizia estrema dei dati
                     const cat = (p.category || "Varie").trim();
                     const sub = (p.subcategory || "Altro").trim();
                     return {
-                        id: p.id, 
-                        n: p.name || "Senza Nome", 
+                        id: p.id,
+                        n: p.name || "Senza Nome",
                         p: parseFloat(p.price) || 0,
                         c: cat,
                         b: sub,
                         m: (p.marca || "").trim(),
                         img: p.image_url ? p.image_url.replace(/ /g, '%20') : null,
-                        icon: p.icon || "📦", 
-                        l: p.size || "", 
-                        ean: p.ean || "", 
+                        icon: p.icon || "📦",
+                        l: p.size || "",
+                        ean: p.ean || "",
                         info: p.info || {}
                     };
                 });
-                
+
                 console.log("PRODS mappati correttamente:", PRODS.length);
-            } catch (err) { 
-                console.error("Errore fetchProducts:", err); 
+            } catch (err) {
+                console.error("Errore fetchProducts:", err);
             }
         }
 
@@ -747,7 +833,7 @@
                     const cName = c.n.toLowerCase();
                     return pCat === cId || pCat === cName;
                 }).length;
-                
+
                 html += `
                     <div class="card" onclick="openCategory('${c.id}')">
                         <div class="product-emoji">${c.icon}</div>
@@ -765,11 +851,11 @@
             currentCatId = id;
             currentCatName = catObj.n;
             currentSub = null;
-            
+
             document.getElementById('home-view').style.display = 'none';
             document.getElementById('subcategory-view').style.display = 'block';
             document.getElementById('sticky-back').style.display = 'block';
-            window.scrollTo(0,0);
+            window.scrollTo(0, 0);
             document.getElementById('subcategory-title').innerText = catObj.n;
 
             const subs = (catObj.sub && catObj.sub.length > 0) ? catObj.sub : [];
@@ -816,14 +902,14 @@
             document.getElementById('sticky-back').style.display = 'none';
             document.getElementById('register-view').style.display = 'none';
             document.getElementById('legal-view').style.display = 'none';
-            window.scrollTo(0,0);
+            window.scrollTo(0, 0);
         }
 
         function renderItems(id, name, sub) {
             const idLower = id.toLowerCase();
             const nameLower = name.toLowerCase();
             const subLower = sub ? sub.toLowerCase() : null;
-            
+
             let items = PRODS.filter(p => {
                 if (id === 'all') return true;
                 const pCat = p.c.toLowerCase();
@@ -888,7 +974,7 @@
             CART.forEach((item, idx) => {
                 total += item.p * item.q;
                 const imgHtml = item.img ? `<img src="${item.img}" style="width:100%; height:100%; object-fit:contain; border-radius:8px;">` : `<span style="font-size:24px;">${item.icon}</span>`;
-                
+
                 html += `
                 <div style="display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid #f1f5f9;">
                     <div style="width:60px; height:60px; background:#f8fafc; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden;">${imgHtml}</div>
@@ -950,7 +1036,7 @@
             document.getElementById('id-display-box').style.display = 'block';
             document.getElementById('success-desc').innerText = "Benvenuto, " + user.name + "! Il tuo account è attivo.";
             document.getElementById('modalSuccess').style.display = 'flex';
-            
+
             document.getElementById('register-view').style.display = 'none';
         }
 
@@ -973,7 +1059,7 @@
             document.getElementById('profile-name').innerText = userData.name;
             document.getElementById('profile-id-tag').innerText = "ID: " + userData.id;
             document.getElementById('profile-email').innerText = userData.email;
-            
+
             // Gestione indirizzo strutturato
             const a = userData.address;
             let fullAddr = "";
@@ -996,7 +1082,7 @@
         async function handleLogin() {
             const id = document.getElementById('login-id-input').value.toUpperCase().trim();
             if (!id) return;
-            
+
             // Per ora simuliamo il recupero (in futuro cercheremo nella tabella 'users' di Supabase)
             // Se l'ID è valido, lo salviamo
             const user = { id: id, name: "Cliente Spesina", email: "", address: "Mestre" };
@@ -1068,7 +1154,7 @@
             // Nascondiamo il pulsante CHIUDI standard se presente per usare quelli interni
             const standardBtn = document.querySelector('#modalInfo .modal-content > .btn-confirm:last-child');
             if (standardBtn) standardBtn.style.display = 'none';
-            
+
             document.getElementById('modalInfo').style.display = 'flex';
         }
 
@@ -1099,63 +1185,64 @@
             document.getElementById('register-view').style.display = 'none';
             document.getElementById('legal-view').style.display = 'none';
             document.getElementById('sticky-back').style.display = 'none';
-        function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
-        function showInfo(id) {
-            const p = PRODS.find(x => x.id == id); if (!p) return;
-            document.getElementById('info-p-name').innerText = p.n;
-            document.getElementById('info-desc').innerText = p.info.fullDesc || "Info in arrivo.";
-            document.getElementById('modalInfo').style.display = 'flex';
-        }
-        function showRegister() { 
-            document.getElementById('home-view').style.display = 'none'; 
-            document.getElementById('register-view').style.display = 'block'; 
-            document.getElementById('sticky-back').style.display = 'block';
-            window.scrollTo(0,0);
-        }
-        async function processCheckout() {
-            if (!userData) { showRegister(); return; }
-            const total = CART.reduce((a, b) => a + (b.p * b.q), 0);
-            const orderId = Math.floor(1000 + Math.random() * 9000);
-            
-            try {
-                // Invio Ordine via Resend (Supabase Function)
-                // Questa funzione invia la mail al cliente e in BCC a ordini@spesina.it (Master Picking)
-                const { data, error } = await sb.functions.invoke('send-welcome', {
-                    body: {
-                        type: 'order',
-                        email: userData.email,
-                        name: userData.name,
-                        orderId: orderId,
-                        total: total.toFixed(2),
-                        address: `${userData.address.street} ${userData.address.number}, ${userData.address.cap} (P:${userData.address.floor} I:${userData.address.int})`,
-                        delivery: "Mestre - Consegna in 30 min",
-                        items: CART
-                    }
-                });
 
-                if (error) throw error;
-
-                CART = []; 
-                localStorage.setItem('cart_spesina', JSON.stringify(CART)); 
-                updateCartCount();
-                document.getElementById('success-title').innerText = "Ordine Inviato!";
-                document.getElementById('success-desc').innerText = "Abbiamo ricevuto il tuo ordine #" + orderId + ". Riceverai una mail di conferma a breve.";
-                document.getElementById('id-display-box').style.display = 'none';
-                document.getElementById('modalSuccess').style.display = 'flex';
-                goHome();
-            } catch (e) { 
-                console.error(e);
-                alert("Errore durante l'invio dell'ordine. Riprova tra poco."); 
+            function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
+            function showInfo(id) {
+                const p = PRODS.find(x => x.id == id); if (!p) return;
+                document.getElementById('info-p-name').innerText = p.n;
+                document.getElementById('info-desc').innerText = p.info.fullDesc || "Info in arrivo.";
+                document.getElementById('modalInfo').style.display = 'flex';
             }
-        }
-        function handleSearch() {
-            const q = document.getElementById('search-bar').value.toLowerCase();
-            if (!q) { renderCategories(); return; }
-            const res = PRODS.filter(p => p.n.toLowerCase().includes(q) || (p.m && p.m.toLowerCase().includes(q)));
-            let html = "";
-            res.forEach(p => {
-                const img = p.img ? `<img class="product-img" src="${p.img}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"><div class="product-emoji" style="display:none;">${p.icon}</div>` : `<div class="product-emoji">${p.icon}</div>`;
-                html += `
+            function showRegister() {
+                document.getElementById('home-view').style.display = 'none';
+                document.getElementById('register-view').style.display = 'block';
+                document.getElementById('sticky-back').style.display = 'block';
+                window.scrollTo(0, 0);
+            }
+            async function processCheckout() {
+                if (!userData) { showRegister(); return; }
+                const total = CART.reduce((a, b) => a + (b.p * b.q), 0);
+                const orderId = Math.floor(1000 + Math.random() * 9000);
+
+                try {
+                    // Invio Ordine via Resend (Supabase Function)
+                    // Questa funzione invia la mail al cliente e in BCC a ordini@spesina.it (Master Picking)
+                    const { data, error } = await sb.functions.invoke('send-welcome', {
+                        body: {
+                            type: 'order',
+                            email: userData.email,
+                            name: userData.name,
+                            orderId: orderId,
+                            total: total.toFixed(2),
+                            address: `${userData.address.street} ${userData.address.number}, ${userData.address.cap} (P:${userData.address.floor} I:${userData.address.int})`,
+                            delivery: "Mestre - Consegna in 30 min",
+                            items: CART
+                        }
+                    });
+
+                    if (error) throw error;
+
+                    CART = [];
+                    localStorage.setItem('cart_spesina', JSON.stringify(CART));
+                    updateCartCount();
+                    document.getElementById('success-title').innerText = "Ordine Inviato!";
+                    document.getElementById('success-desc').innerText = "Abbiamo ricevuto il tuo ordine #" + orderId + ". Riceverai una mail di conferma a breve.";
+                    document.getElementById('id-display-box').style.display = 'none';
+                    document.getElementById('modalSuccess').style.display = 'flex';
+                    goHome();
+                } catch (e) {
+                    console.error(e);
+                    alert("Errore durante l'invio dell'ordine. Riprova tra poco.");
+                }
+            }
+            function handleSearch() {
+                const q = document.getElementById('search-bar').value.toLowerCase();
+                if (!q) { renderCategories(); return; }
+                const res = PRODS.filter(p => p.n.toLowerCase().includes(q) || (p.m && p.m.toLowerCase().includes(q)));
+                let html = "";
+                res.forEach(p => {
+                    const img = p.img ? `<img class="product-img" src="${p.img}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"><div class="product-emoji" style="display:none;">${p.icon}</div>` : `<div class="product-emoji">${p.icon}</div>`;
+                    html += `
                     <div class="card">
                         <button class="info-btn" onclick="showInfo('${p.id}')">i</button>
                         <button class="add-btn" onclick="addToCart('${p.id}')">+</button>
@@ -1166,9 +1253,9 @@
                             <div class="price-label" style="font-size:16px; font-weight:900;">${p.p.toFixed(2)}€</div>
                         </div>
                     </div>`;
-            });
-            document.getElementById('categories-catalog').innerHTML = html || "<p style='padding:40px; color:#94a3b8; text-align:center;'>Nessun risultato trovato.</p>";
-        }
+                });
+                document.getElementById('categories-catalog').innerHTML = html || "<p style='padding:40px; color:#94a3b8; text-align:center;'>Nessun risultato trovato.</p>";
+            }
     </script>
 </body>
 
