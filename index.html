@@ -184,7 +184,7 @@
 
         .card {
             background: var(--card-bg);
-            border-radius: 20px;
+            border-radius: 30px;
             padding: 20px 16px;
             text-align: center;
             border: 1px solid rgba(0, 0, 0, 0.03);
@@ -293,12 +293,14 @@
         .modal-content {
             background: white;
             padding: 30px;
-            border-radius: 28px;
+            border-radius: 40px;
             width: 90%;
             max-width: 400px;
             text-align: center;
             max-height: 90vh;
             overflow-y: auto;
+            overflow-x: hidden;
+            box-sizing: border-box;
         }
 
         .btn-confirm {
@@ -321,6 +323,15 @@
             border: 2px solid var(--gray-dark);
             background: var(--gray);
             font-family: inherit;
+            box-sizing: border-box; /* Cruciale per evitare conflitti di celle */
+            transition: all 0.2s;
+        }
+
+        .select-box:focus {
+            border-color: var(--primary);
+            background: white;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
         }
 
         #search-bar {
@@ -328,10 +339,10 @@
             max-width: 800px;
             display: block;
             margin: 0 auto;
-            border: 1px solid #cbd5e1; /* Bordo grigio sottile permanente */
+            border: 1px solid #cbd5e1;
             background: white;
             padding: 15px 20px;
-            border-radius: 15px;
+            border-radius: 24px;
             font-size: 16px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.03);
             transition: border-color 0.2s;
@@ -340,6 +351,12 @@
         #search-bar:focus {
             border-color: var(--primary);
             outline: none;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
         }
 
         footer {
@@ -407,18 +424,25 @@
         <div class="catalog" id="sub-catalog"></div>
     </div>
 
-    <div id="cart-view" style="display: none; padding: 20px;">
-        <div class="sub-header">
-            <h3 style="margin: 0; flex-grow: 1; text-align: center;">Il tuo Carrello</h3>
-        </div>
-        <div id="cart-items"></div>
-        <div
-            style="margin-top:20px; padding:20px; background:white; border-radius:20px; box-shadow:0 4px 15px rgba(0,0,0,0.05);">
-            <div style="display:flex; justify-content:space-between; font-size:22px; font-weight:900;">
-                <span>Totale:</span>
-                <span id="cart-total-price">0.00€</span>
+    <!-- Modale Carrello -->
+    <div class="modal" id="modalCart">
+        <div class="modal-content" style="max-width: 500px;">
+            <div style="font-size:30px; margin-bottom:10px;">🛒</div>
+            <h2 style="font-weight: 900; margin-bottom: 20px;">Il tuo Carrello</h2>
+            
+            <div id="cart-items" style="max-height: 400px; overflow-y: auto; text-align: left; margin-bottom: 20px;">
+                <!-- Gli articoli verranno inseriti qui -->
             </div>
-            <button class="btn-confirm" onclick="processCheckout()">CONFERMA ORDINE</button>
+
+            <div style="padding: 20px; background: #f8fafc; border-radius: 25px; margin-bottom: 20px; border: 1px solid #e2e8f0;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight: 800; color: #64748b;">Totale Spesa:</span>
+                    <span id="cart-total-price" style="font-size: 24px; font-weight: 900; color: var(--primary);">0.00€</span>
+                </div>
+            </div>
+
+            <button class="btn-confirm" onclick="processCheckout()" style="font-weight: 900; letter-spacing: 1px;">CONFERMA ORDINE 🚀</button>
+            <button class="btn-confirm" onclick="closeModals()" style="background: none; color: #94a3b8; margin-top: 10px; font-weight: 700; border: none;">Continua la spesa</button>
         </div>
     </div>
 
@@ -433,7 +457,7 @@
                     <input type="text" id="reg-name" class="select-box" placeholder="Es: Mario Rossi" required>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-row">
                     <div>
                         <label style="font-size: 11px; font-weight: 800; color: #1e293b; text-transform: uppercase;">Cellulare</label>
                         <input type="tel" id="reg-phone" class="select-box" placeholder="333 1234567" required>
@@ -444,7 +468,7 @@
                     </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 15px;">
+                <div class="form-row" style="grid-template-columns: 2fr 1fr;">
                     <div>
                         <label style="font-size: 11px; font-weight: 800; color: #1e293b; text-transform: uppercase;">Via / Piazza</label>
                         <input type="text" id="reg-street" class="select-box" placeholder="Es: Via Mestrina" required>
@@ -455,7 +479,7 @@
                     </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                <div class="form-row" style="grid-template-columns: 1.2fr 1fr 1fr;">
                     <div>
                         <label style="font-size: 11px; font-weight: 800; color: #1e293b; text-transform: uppercase;">CAP</label>
                         <select id="reg-cap" class="select-box" required>
@@ -593,26 +617,26 @@
         const MAINTENANCE_MODE = urlParams.get('preview') === 'true' ? false : true;
 
         const CATEGORIES = [
-            { id: "pasta", n: "Pasta & Riso", icon: "🍝" },
-            { id: "bevande", n: "Bevande", icon: "🥤" },
-            { id: "freschi", n: "Freschi", icon: "🧀" },
-            { id: "dispensa", n: "Dispensa", icon: "🥫" },
-            { id: "panificati", n: "Pane e Sostituti", icon: "🥖" },
-            { id: "condimenti", n: "Olio e Condimenti", icon: "🧂" },
-            { id: "snack-salati", n: "Snack Salati", icon: "🥨" },
-            { id: "snack-dolci", n: "Snack Dolci", icon: "🍪" },
-            { id: "surgelati", n: "Surgelati", icon: "❄️" },
-            { id: "colazione", n: "Colazione", icon: "🥐" },
-            { id: "orto", n: "Frutta e Verdura", icon: "🍎" },
-            { id: "farine", n: "Farine e Preparati", icon: "🌾" },
-            { id: "senza-glutine", n: "Senza Glutine", icon: "🌾🚫" },
-            { id: "minestre-zuppe", n: "Minestre e Zuppe", icon: "🥣" },
-            { id: "vegano", n: "Mondo Vegano", icon: "🌱" },
-            { id: "parafarmacia", n: "Parafarmacia", icon: "💊" },
-            { id: "igiene-p", n: "Igiene Persona", icon: "🧼" },
-            { id: "igiene-c", n: "Igiene Casa", icon: "🧽" },
-            { id: "animali", n: "Amici Domestici", icon: "🐾" },
-            { id: "varie", n: "Varie", icon: "🛍️" }
+            { id: "Pasta e Riso", n: "Pasta e Riso", icon: "🍝" },
+            { id: "Bevande", n: "Bevande", icon: "🥤" },
+            { id: "Freschi", n: "Freschi", icon: "🧀" },
+            { id: "Dispensa", n: "Dispensa", icon: "🥫" },
+            { id: "Pane e Sostituti", n: "Pane e Sostituti", icon: "🥖" },
+            { id: "Olio e Condimenti", n: "Olio e Condimenti", icon: "🧂" },
+            { id: "Snack Salati", n: "Snack Salati", icon: "🥨" },
+            { id: "Snack Dolci", n: "Snack Dolci", icon: "🍪" },
+            { id: "Surgelati", n: "Surgelati", icon: "❄️" },
+            { id: "Colazione", n: "Colazione", icon: "🥐" },
+            { id: "Frutta e Verdura", n: "Frutta e Verdura", icon: "🍎" },
+            { id: "Farine e Preparati", n: "Farine e Preparati", icon: "🌾" },
+            { id: "Senza Glutine", n: "Senza Glutine", icon: "🌾🚫" },
+            { id: "Minestre e Zuppe", n: "Minestre e Zuppe", icon: "🥣" },
+            { id: "Mondo Vegano", n: "Mondo Vegano", icon: "🌱" },
+            { id: "Parafarmacia", n: "Parafarmacia", icon: "💊" },
+            { id: "Igiene Persona", n: "Igiene Persona", icon: "🧼" },
+            { id: "Igiene Casa e Detersivi", n: "Igiene Casa e Detersivi", icon: "🧽" },
+            { id: "Animali", n: "Animali", icon: "🐾" },
+            { id: "Varie", n: "Varie", icon: "🛍️" }
         ];
 
         const EMOJI_MAP = {
@@ -803,12 +827,7 @@
 
         function showCart() {
             if (!userData) { showRegister(); return; }
-            document.getElementById('home-view').style.display = 'none';
-            document.getElementById('subcategory-view').style.display = 'none';
-            document.getElementById('legal-view').style.display = 'none';
-            document.getElementById('cart-view').style.display = 'block';
-            document.getElementById('sticky-back').style.display = 'block';
-            window.scrollTo(0,0);
+            document.getElementById('modalCart').style.display = 'flex';
             renderCartItems();
         }
 
@@ -816,12 +835,24 @@
             let html = ""; let total = 0;
             CART.forEach((item, idx) => {
                 total += item.p * item.q;
-                html += `<div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #eee;">
-                    <div><b>${item.n}</b><br>${item.p.toFixed(2)}€</div>
-                    <div><button onclick="changeQty(${idx},-1)">-</button> ${item.q} <button onclick="changeQty(${idx},1)">+</button></div>
+                const imgHtml = item.img ? `<img src="${item.img}" style="width:100%; height:100%; object-fit:contain; border-radius:8px;">` : `<span style="font-size:24px;">${item.icon}</span>`;
+                
+                html += `
+                <div style="display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid #f1f5f9;">
+                    <div style="width:60px; height:60px; background:#f8fafc; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden;">${imgHtml}</div>
+                    <div style="flex-grow:1;">
+                        <div style="font-weight:800; font-size:13px; color:var(--dark); line-height:1.2; margin-bottom:4px;">${item.n}</div>
+                        <div style="font-size:12px; color:var(--primary); font-weight:700;">${item.p.toFixed(2)}€</div>
+                    </div>
+                    <div style="display:flex; align-items:center; background:#f1f5f9; border-radius:10px; padding:3px;">
+                        <button onclick="changeQty(${idx},-1)" style="width:26px; height:26px; border:none; background:white; border-radius:7px; font-weight:900; cursor:pointer;">-</button>
+                        <span style="padding:0 8px; font-weight:800; min-width:18px; text-align:center; font-size:13px;">${item.q}</span>
+                        <button onclick="changeQty(${idx},1)" style="width:26px; height:26px; border:none; background:white; border-radius:7px; font-weight:900; cursor:pointer;">+</button>
+                    </div>
+                    <button onclick="changeQty(${idx}, -${item.q})" style="background:#fee2e2; border:none; color:#ef4444; width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; cursor:pointer; transition:all 0.2s; flex-shrink:0;" onmouseover="this.style.background='#fecaca'" onmouseout="this.style.background='#fee2e2'">✕</button>
                 </div>`;
             });
-            document.getElementById('cart-items').innerHTML = html || "Vuoto.";
+            document.getElementById('cart-items').innerHTML = html || "<div style='text-align:center; padding:40px; color:#94a3b8;'>Il carrello è vuoto.</div>";
             document.getElementById('cart-total-price').innerText = total.toFixed(2) + "€";
         }
 
