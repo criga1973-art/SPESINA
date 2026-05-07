@@ -617,34 +617,49 @@
         const MAINTENANCE_MODE = urlParams.get('preview') === 'true' ? false : true;
 
         const CATEGORIES = [
-            { id: "Pasta e Riso", n: "Pasta e Riso", icon: "🍝" },
-            { id: "Bevande", n: "Bevande", icon: "🥤" },
-            { id: "Freschi", n: "Freschi", icon: "🧀" },
-            { id: "Dispensa", n: "Dispensa", icon: "🥫" },
-            { id: "Pane e Sostituti", n: "Pane e Sostituti", icon: "🥖" },
-            { id: "Olio e Condimenti", n: "Olio e Condimenti", icon: "🧂" },
-            { id: "Snack Salati", n: "Snack Salati", icon: "🥨" },
-            { id: "Snack Dolci", n: "Snack Dolci", icon: "🍪" },
-            { id: "Surgelati", n: "Surgelati", icon: "❄️" },
-            { id: "Colazione", n: "Colazione", icon: "🥐" },
-            { id: "Frutta e Verdura", n: "Frutta e Verdura", icon: "🍎" },
-            { id: "Farine e Preparati", n: "Farine e Preparati", icon: "🌾" },
-            { id: "Senza Glutine", n: "Senza Glutine", icon: "🌾🚫" },
-            { id: "Minestre e Zuppe", n: "Minestre e Zuppe", icon: "🥣" },
-            { id: "Mondo Vegano", n: "Mondo Vegano", icon: "🌱" },
-            { id: "Parafarmacia", n: "Parafarmacia", icon: "💊" },
-            { id: "Igiene Persona", n: "Igiene Persona", icon: "🧼" },
-            { id: "Igiene Casa e Detersivi", n: "Igiene Casa e Detersivi", icon: "🧽" },
-            { id: "Animali", n: "Animali", icon: "🐾" },
-            { id: "Varie", n: "Varie", icon: "🛍️" }
+            { id: "pasta", n: "Pasta e Riso", icon: "🍝", sub: [] },
+            { id: "bevande", n: "Bevande", icon: "🥤", sub: ["Acqua", "Succhi di Frutta", "Birra", "Vino", "Bibite", "Latte 1L", "Latte 500ml", "Alcolici", "Altro"] },
+            { id: "freschi", n: "Freschi", icon: "🧀", sub: ["Salumi", "Latticini", "Yogurt", "Uova", "Piatti Pronti", "Altro"] },
+            { id: "dispensa", n: "Dispensa", icon: "🥫", sub: ["Tonno e Carne in scatola", "Verdure e Legumi", "Conserve", "Insalatissime", "Altro"] },
+            { id: "snack-salati", n: "Snack Salati", icon: "🥨", sub: [] },
+            { id: "snack-dolci", n: "Snack Dolci", icon: "🍪", sub: [] },
+            { id: "senza-glutine", n: "Senza Glutine", icon: "🌾🚫", sub: [] },
+            { id: "parafarmacia", n: "Parafarmacia", icon: "💊", sub: [] },
+            { id: "farine", n: "Farine e Preparati", icon: "🌾", sub: ["Farine", "Preparati", "Lieviti", "Altro"] },
+            { id: "condimenti", n: "Condimenti e Spezie", icon: "🧂", sub: ["Olio", "Aceto", "Sale", "Sughi e Pesti", "Salse", "Spezie", "Altro"] },
+            { id: "igiene-p", n: "Igiene Persona", icon: "🧼", sub: ["Primo Soccorso", "Shampoo e Doccia", "Deodoranti", "Igiene Orale", "Assorbenti e Protezione", "Incontinenza Tena", "Carta e Fazzoletti", "Barba e Rasatura", "Altro"] },
+            { id: "igiene-c", n: "Igiene Casa e Detersivi", icon: "🧽", sub: ["Lavatrice", "Superfici", "Piatti", "Altro"] },
+            { id: "surgelati", n: "Surgelati", icon: "❄️", sub: ["Pizze e Panificati", "Verdure", "Pesce", "Piatti Pronti", "Gelati", "Altro"] },
+            { id: "colazione", n: "Colazione", icon: "🥐", sub: ["Biscotti", "Merendine", "Cereali", "Caffè, Tè e Tisane", "Confetture e Creme", "Altro"] },
+            { id: "panificati", n: "Panificati", icon: "🥖", sub: ["Panificati", "Altro"] },
+            { id: "orto", n: "Frutta e Verdura", icon: "🍎", sub: ["Frutta e Verdura", "Altro"] },
+            { id: "vegano", n: "Vegano", icon: "🌱", sub: ["Vegano", "Altro"] },
+            { id: "animali", n: "Amici Domestici", icon: "🐾", sub: ["Amici Domestici", "Altro"] },
+            { id: "minestre-zuppe", n: "Minestre, Risotti e Zuppe", icon: "🥣", sub: [] },
+            { id: "varie", n: "VarIE", icon: "🛍️", sub: [] }
         ];
 
         const EMOJI_MAP = {
-            "birra": "🍺", "acqua": "💧", "vino": "🍷", "bibite": "🥤", "succhi di frutta": "🧃", "latte 1l": "🥛",
+            // Bevande
+            "acqua": "💧", "succhi di frutta": "🧃", "birra": "🍺", "vino": "🍷", "bibite": "🥤", "latte 1l": "🥛", "latte 500ml": "🥛", "alcolici": "🍸",
+            // Freschi
             "salumi": "🍖", "latticini": "🧀", "yogurt": "🍦", "uova": "🥚", "piatti pronti": "🥘",
-            "biscotti": "🍪", "merendine": "🧁", "cereali": "🥣", "caffè, tè e tisane": "☕", "patate surgelate": "🍟",
-            "farine": "🌾", "preparati": "🥨", "lieviti": "🥯", "frutta e verdura": "🥗", "vegano": "🥬", "amici domestici": "🐶",
-            "shampoo e doccia": "🧴", "deodoranti": "🌬️", "igiene orale": "🪥", "carta e fazzoletti": "🧻", "barba e rasatura": "🪒"
+            // Dispensa
+            "tonno e carne in scatola": "🥫", "verdure e legumi": "🥗", "conserve": "🍅", "insalatissime": "🥗",
+            // Farine
+            "farine": "🌾", "preparati": "🥨", "lieviti": "🥯",
+            // Condimenti
+            "olio": "🏺", "aceto": "🧴", "sale": "🧂", "sughi e pesti": "🍝", "salse": "🍶", "spezie": "🌶️",
+            // Igiene Persona
+            "primo soccorso": "🩹", "shampoo e doccia": "🧴", "deodoranti": "🌬️", "igiene orale": "🪥", "assorbenti e protezione": "🩸", "incontinenza tena": "🩲", "carta e fazzoletti": "🧻", "barba e rasatura": "🪒",
+            // Igiene Casa
+            "lavatrice": "🧺", "superfici": "🧹", "piatti": "🍽️",
+            // Surgelati
+            "pizze e panificati": "🍕", "verdure": "🥦", "pesce": "🐟", "gelati": "🍦",
+            // Colazione
+            "biscotti": "🍪", "merendine": "🧁", "cereali": "🥣", "caffè, tè e tisane": "☕", "confetture e creme": "🍯",
+            // Generici
+            "altro": "📦", "frutta e verdura": "🍎", "vegano": "🌱", "amici domestici": "🐾", "panificati": "🥖"
         };
 
         const LEGAL_TEXTS = {
@@ -656,7 +671,8 @@
         let PRODS = [];
         let CART = JSON.parse(localStorage.getItem('cart_spesina')) || [];
         let userData = JSON.parse(localStorage.getItem('user_spesina')) || null;
-        let currentCat = null;
+        let currentCatId = null;
+        let currentCatName = null;
         let currentSub = null;
 
         window.onload = function() {
@@ -668,30 +684,53 @@
             const yearEl = document.getElementById('footer-year');
             if (yearEl) yearEl.innerText = new Date().getFullYear();
             
-            // Rendering immediato
             renderCategories();
             updateCartCount();
             updateAuthUI();
             
-            // Caricamento asincrono sicuro
             fetchProducts().then(() => {
                 renderCategories();
+                if (PRODS.length === 0) {
+                    const debugDiv = document.createElement('div');
+                    debugDiv.style.padding = '20px';
+                    debugDiv.style.background = '#fee2e2';
+                    debugDiv.style.color = '#ef4444';
+                    debugDiv.style.textAlign = 'center';
+                    debugDiv.style.fontWeight = 'bold';
+                    debugDiv.innerHTML = '⚠️ ATTENZIONE: 0 PRODOTTI SCARICATI DA SUPABASE. Controlla la connessione o i permessi della tabella.';
+                    document.body.prepend(debugDiv);
+                }
             }).catch(err => console.error("Errore init:", err));
         };
 
         async function fetchProducts() {
-            if (!sb) return;
+            if (!sb) { console.error("Supabase non inizializzato"); return; }
             try {
                 const { data, error } = await sb.from('products').select('*').order('name');
                 if (error) throw error;
-                PRODS = (data || []).map(p => ({
-                    id: p.id, n: p.name, p: parseFloat(p.price) || 0,
-                    c: (p.category || "").toLowerCase().trim(),
-                    b: (p.subcategory || "").toLowerCase().trim(),
-                    m: (p.marca || "").trim(),
-                    img: p.image_url ? p.image_url.replace(/ /g, '%20') : null,
-                    icon: p.icon || "📦", l: p.size || "", ean: p.ean || "", info: p.info || {}
-                }));
+                
+                console.log("DATI RICEVUTI DA SUPABASE:", data.length, "prodotti");
+                
+                PRODS = (data || []).map(p => {
+                    // Pulizia estrema dei dati
+                    const cat = (p.category || "Varie").trim();
+                    const sub = (p.subcategory || "Altro").trim();
+                    return {
+                        id: p.id, 
+                        n: p.name || "Senza Nome", 
+                        p: parseFloat(p.price) || 0,
+                        c: cat,
+                        b: sub,
+                        m: (p.marca || "").trim(),
+                        img: p.image_url ? p.image_url.replace(/ /g, '%20') : null,
+                        icon: p.icon || "📦", 
+                        l: p.size || "", 
+                        ean: p.ean || "", 
+                        info: p.info || {}
+                    };
+                });
+                
+                console.log("PRODS mappati correttamente:", PRODS.length);
             } catch (err) { 
                 console.error("Errore fetchProducts:", err); 
             }
@@ -700,59 +739,46 @@
         function renderCategories() {
             const container = document.getElementById('categories-catalog');
             if (!container) return;
-            
             let html = "";
             CATEGORIES.forEach(c => {
-                try {
-                    // Filtro ultra-robusto per il conteggio
-                    const count = PRODS.filter(p => {
-                        const pCat = String(p.c || "").toLowerCase();
-                        const cId = String(c.id || "").toLowerCase();
-                        return pCat.includes(cId) || cId.includes(pCat);
-                    }).length;
-                    
-                    html += `
-                        <div class="card" onclick="openCategory('${c.id}')">
-                            <div class="product-emoji">${c.icon}</div>
-                            <div style="font-weight:800;">${c.n}</div>
-                            <div style="font-size:10px; color:#94a3b8;">${count} prodotti</div>
-                        </div>
-                    `;
-                } catch (e) {
-                    console.error("Errore render categoria:", c.id, e);
-                }
+                const count = PRODS.filter(p => {
+                    const pCat = p.c.toLowerCase();
+                    const cId = c.id.toLowerCase();
+                    const cName = c.n.toLowerCase();
+                    return pCat === cId || pCat === cName;
+                }).length;
+                
+                html += `
+                    <div class="card" onclick="openCategory('${c.id}')">
+                        <div class="product-emoji">${c.icon}</div>
+                        <div style="font-weight:800;">${c.n}</div>
+                        <div style="font-size:10px; color:#94a3b8;">${count} prodotti</div>
+                    </div>`;
             });
             container.innerHTML = html;
         }
 
-        function openCategory(catId) {
-            currentCat = catId.toLowerCase().trim();
+        function openCategory(id) {
+            const catObj = CATEGORIES.find(c => c.id === id);
+            if (!catObj) return;
+
+            currentCatId = id;
+            currentCatName = catObj.n;
             currentSub = null;
+            
             document.getElementById('home-view').style.display = 'none';
             document.getElementById('subcategory-view').style.display = 'block';
             document.getElementById('sticky-back').style.display = 'block';
             window.scrollTo(0,0);
-            const catObj = CATEGORIES.find(x => x.id === currentCat);
-            document.getElementById('subcategory-title').innerText = catObj ? catObj.n : catId;
+            document.getElementById('subcategory-title').innerText = catObj.n;
 
-            // Filtro flessibile per trovare le sottocategorie
-            let subs = [...new Set(PRODS.filter(p => p.c.includes(currentCat) || currentCat.includes(p.c)).map(p => p.b))].filter(Boolean);
+            const subs = (catObj.sub && catObj.sub.length > 0) ? catObj.sub : [];
 
-            // Logica Speciale per Patate Surgelate: raggruppiamo marche Pizzoli, Pata, McCain
-            if (currentCat.includes("surgelati")) {
-                const specialBrands = ["mccain", "pizzoli", "pata"];
-                const hasSpecial = PRODS.some(p => (p.c.includes("surgelati") || "surgelati".includes(p.c)) && specialBrands.some(b => p.m.toLowerCase().includes(b)));
-                if (hasSpecial && !subs.includes("patate surgelate")) subs.push("patate surgelate");
-
-                // Rimuoviamo eventuali doppioni o vecchie cartelle McCain se presenti
-                subs = subs.filter(s => s !== "mccain");
-            }
-
-            if (subs.length > 0) renderSubFolders(currentCat, subs);
-            else renderItems(currentCat, null);
+            if (subs.length > 0) renderSubFolders(subs);
+            else renderItems(id, catObj.n, null);
         }
 
-        function renderSubFolders(catId, subs) {
+        function renderSubFolders(subs) {
             let html = "";
             subs.sort().forEach(s => {
                 const emoji = EMOJI_MAP[s.toLowerCase().trim()] || "📦";
@@ -762,31 +788,50 @@
         }
 
         function openSubCategory(subName) {
-            currentSub = subName.toLowerCase().trim();
-            const catObj = CATEGORIES.find(x => x.id === currentCat);
-            document.getElementById('subcategory-title').innerText = (catObj ? catObj.n : currentCat) + " > " + subName;
-            renderItems(currentCat, currentSub);
+            currentSub = subName;
+            document.getElementById('subcategory-title').innerText = currentCatName + " > " + subName;
+            renderItems(currentCatId, currentCatName, currentSub);
         }
 
-        function renderItems(catId, sub) {
-            // FILTRO FLESSIBILE: gestisce singolare/plurale, inclusioni e raggruppamento Patate
-            let items = [];
-            const specialBrands = ["mccain", "pizzoli", "pata"];
-
-            if (sub === "patate surgelate") {
-                // Prende tutte le marche speciali nei surgelati
-                items = PRODS.filter(p => (p.c.includes(catId) || catId.includes(p.c)) && specialBrands.some(b => p.m.toLowerCase().includes(b)));
-            } else if (sub) {
-                // Prende i prodotti della sottocategoria, ESCLUDENDO le marche speciali (che sono in Patate surgelate)
-                items = PRODS.filter(p => {
-                    const matchCat = p.c.includes(catId) || catId.includes(p.c);
-                    const matchSub = p.b.includes(sub) || sub.includes(p.b);
-                    const isSpecialBrand = specialBrands.some(b => p.m.toLowerCase().includes(b));
-                    return matchCat && matchSub && !isSpecialBrand;
-                });
+        function handleBack() {
+            if (currentSub) {
+                // Se sono nei prodotti di una sottocategoria, torno alle cartelle della categoria
+                const catObj = CATEGORIES.find(c => c.id === currentCatId);
+                const subs = (catObj && catObj.sub) ? catObj.sub : [];
+                currentSub = null;
+                document.getElementById('subcategory-title').innerText = currentCatName;
+                renderSubFolders(currentCatId, currentCatName, subs);
             } else {
-                items = PRODS.filter(p => p.c.includes(catId) || catId.includes(p.c));
+                // Se sono già nelle cartelle o in una categoria senza sottocartelle, torno alla Home
+                goHome();
             }
+        }
+
+        function goHome() {
+            currentCatId = null;
+            currentCatName = null;
+            currentSub = null;
+            document.getElementById('home-view').style.display = 'block';
+            document.getElementById('subcategory-view').style.display = 'none';
+            document.getElementById('sticky-back').style.display = 'none';
+            document.getElementById('register-view').style.display = 'none';
+            document.getElementById('legal-view').style.display = 'none';
+            window.scrollTo(0,0);
+        }
+
+        function renderItems(id, name, sub) {
+            const idLower = id.toLowerCase();
+            const nameLower = name.toLowerCase();
+            const subLower = sub ? sub.toLowerCase() : null;
+            
+            let items = PRODS.filter(p => {
+                if (id === 'all') return true;
+                const pCat = p.c.toLowerCase();
+                const matchCat = pCat === idLower || pCat === nameLower;
+                if (!subLower) return matchCat;
+                const matchSub = p.b.toLowerCase() === subLower;
+                return matchCat && matchSub;
+            });
 
             let html = "";
             items.forEach(p => {
@@ -798,12 +843,19 @@
                         <div style="height:120px; display:flex; align-items:center; justify-content:center;">${img}</div>
                         <div class="card-body">
                             <div class="brand-label">${p.m}</div>
-                            <div class="product-name" style="font-size:13px; line-height:1.2; height:32px; overflow:hidden; font-weight:800;">${p.n}</div>
-                            <div class="price-label" style="font-size:16px;">${p.p.toFixed(2)}€</div>
+                            <div class="product-name" style="font-size:13px; font-weight:800; line-height:1.2; height:32px; overflow:hidden;">${p.n}</div>
+                            <div class="price-label" style="font-size:16px; font-weight:900;">${p.p.toFixed(2)}€</div>
                         </div>
                     </div>`;
             });
-            document.getElementById('sub-catalog').innerHTML = html || "<p style='grid-column:1/-1; padding:40px; color:#94a3b8;'>Nessun prodotto trovato in questa sezione.</p>";
+            document.getElementById('sub-catalog').innerHTML = html || `
+                <div style='grid-column:1/-1; padding:40px; text-align:center;'>
+                    <p style='color:#94a3b8; margin-bottom:20px;'>Nessun prodotto trovato in questa sezione.</p>
+                </div>`;
+        }
+
+        function renderAllItems() {
+            renderItems('all', null);
         }
 
         function addToCart(id) {
@@ -1047,12 +1099,6 @@
             document.getElementById('register-view').style.display = 'none';
             document.getElementById('legal-view').style.display = 'none';
             document.getElementById('sticky-back').style.display = 'none';
-            window.scrollTo(0,0);
-        }
-        function handleBack() { 
-            if (currentSub) { currentSub = null; openCategory(currentCat); } 
-            else goHome(); 
-        }
         function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
         function showInfo(id) {
             const p = PRODS.find(x => x.id == id); if (!p) return;
@@ -1109,9 +1155,19 @@
             let html = "";
             res.forEach(p => {
                 const img = p.img ? `<img class="product-img" src="${p.img}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"><div class="product-emoji" style="display:none;">${p.icon}</div>` : `<div class="product-emoji">${p.icon}</div>`;
-                html += `<div class="card" style="flex: 1 1 150px;"><button class="add-btn" onclick="addToCart('${p.id}')">+</button>${img}<div class="product-name" style="font-size:12px;">${p.n}</div><div class="price-label" style="font-size:14px;">${p.p.toFixed(2)}€</div></div>`;
+                html += `
+                    <div class="card">
+                        <button class="info-btn" onclick="showInfo('${p.id}')">i</button>
+                        <button class="add-btn" onclick="addToCart('${p.id}')">+</button>
+                        <div style="height:120px; display:flex; align-items:center; justify-content:center;">${img}</div>
+                        <div class="card-body">
+                            <div class="brand-label">${p.m}</div>
+                            <div class="product-name" style="font-size:13px; font-weight:800; line-height:1.2; height:32px; overflow:hidden;">${p.n}</div>
+                            <div class="price-label" style="font-size:16px; font-weight:900;">${p.p.toFixed(2)}€</div>
+                        </div>
+                    </div>`;
             });
-            document.getElementById('categories-catalog').innerHTML = html || "<p>Nessun risultato.</p>";
+            document.getElementById('categories-catalog').innerHTML = html || "<p style='padding:40px; color:#94a3b8; text-align:center;'>Nessun risultato trovato.</p>";
         }
     </script>
 </body>
