@@ -323,10 +323,30 @@
             font-family: inherit;
         }
 
+        #search-bar {
+            width: 100%;
+            max-width: 800px;
+            display: block;
+            margin: 0 auto;
+            border: 1px solid #cbd5e1; /* Bordo grigio sottile permanente */
+            background: white;
+            padding: 15px 20px;
+            border-radius: 15px;
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            transition: border-color 0.2s;
+        }
+
+        #search-bar:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
         footer {
             background: white;
-            padding: 40px 20px;
-            text-align: center;
+            padding: 60px 20px;
+            margin-top: 50px;
+            text-align: center; /* Centra tutto il footer */
             border-top: 1px solid #eee;
         }
 
@@ -539,19 +559,18 @@
     </div>
 
     <footer>
-        <div
-            style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left; padding: 20px;">
-            <div>
-                <h4 style="font-weight: 800;">SPESINA S.R.L.</h4>
-                <p style="font-size: 12px; color: #64748b;">Via Mestrina 1, 30171 Mestre (VE)<br>P.IVA: 01234567890</p>
+        <div style="max-width: 800px; margin: 0 auto; padding: 20px;">
+            <div style="margin-bottom: 30px;">
+                <h4 style="font-weight: 800; margin-bottom: 10px;">SPESINA S.R.L.</h4>
+                <p style="font-size: 13px; color: #64748b; line-height: 1.6;">Via Mestrina 1, 30171 Mestre (VE)<br>P.IVA: 01234567890</p>
             </div>
-               <div>
-                <h4 style="font-weight: 800;">LINKS</h4>
-                <p style="font-size: 14px;">
-                    <a onclick="showLegal('privacy')" style="color: #64748b; cursor: pointer; text-decoration: none; display: block; margin-bottom: 5px;">Privacy Policy</a>
-                    <a onclick="showLegal('cookie')" style="color: #64748b; cursor: pointer; text-decoration: none; display: block; margin-bottom: 5px;">Cookie Policy</a>
-                    <a onclick="showLegal('terms')" style="color: #64748b; cursor: pointer; text-decoration: none; display: block;">Termini e Condizioni</a>
-                </p>
+            <div style="margin-bottom: 30px;">
+                <h4 style="font-weight: 800; margin-bottom: 15px;">LINK UTILI</h4>
+                <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                    <a onclick="showLegal('privacy')" style="color: #64748b; cursor: pointer; text-decoration: none; font-size: 14px;">Privacy Policy</a>
+                    <a onclick="showLegal('cookie')" style="color: #64748b; cursor: pointer; text-decoration: none; font-size: 14px;">Cookie Policy</a>
+                    <a onclick="showLegal('terms')" style="color: #64748b; cursor: pointer; text-decoration: none; font-size: 14px;">Termini e Condizioni</a>
+                </div>
             </div>
         </div>
         <div class="footer-bottom">
