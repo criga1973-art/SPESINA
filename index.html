@@ -486,6 +486,26 @@
                 <!-- Gli articoli verranno inseriti qui -->
             </div>
 
+            <div style="padding: 20px; background: #f8fafc; border-radius: 25px; margin-bottom: 20px; border: 1px solid #e2e8f0; text-align: left;">
+                <h3 style="font-weight: 800; margin-bottom: 10px; color: #2d1b4d;">📅 Quando vuoi ricevere la spesa?</h3>
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="font-weight: 600; display: block; margin-bottom: 5px; color: #64748b;">Data di consegna:</label>
+                    <input type="date" id="delivery-date" onchange="updateSlotsForDate()" style="width: 100%; padding: 12px; border-radius: 14px; border: 1px solid #cbd5e1; font-family: inherit;" required>
+                </div>
+
+                <div>
+                    <label style="font-weight: 600; display: block; margin-bottom: 5px; color: #64748b;">Fascia oraria:</label>
+                    <select id="delivery-slot" style="width: 100%; padding: 12px; border-radius: 14px; border: 1px solid #cbd5e1; font-family: inherit;" required>
+                        <option value="">Seleziona un orario...</option>
+                        <option value="10:00-12:00">10:00 - 12:00</option>
+                        <option value="12:00-14:00">12:00 - 14:00</option>
+                        <option value="14:00-16:00">14:00 - 16:00</option>
+                        <option value="16:00-18:00">16:00 - 18:00</option>
+                    </select>
+                </div>
+            </div>
+
             <div
                 style="padding: 20px; background: #f8fafc; border-radius: 25px; margin-bottom: 20px; border: 1px solid #e2e8f0;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -942,6 +962,13 @@
         function addToCart(id) {
             const p = PRODS.find(x => x.id == id);
             if (!p) return;
+            
+            const totalQty = CART.reduce((a, b) => a + b.q, 0);
+            if (totalQty >= 7) {
+                alert("Limite raggiunto! Non puoi inserire più di 7 prodotti nel carrello.");
+                return;
+            }
+
             const ex = CART.find(x => x.id == id);
             if (ex) ex.q++; else CART.push({ ...p, q: 1 });
             updateCartCount(); localStorage.setItem('cart_spesina', JSON.stringify(CART));
@@ -962,6 +989,35 @@
             if (!userData) { showRegister(); return; }
             document.getElementById('modalCart').style.display = 'flex';
             renderCartItems();
+        }
+
+        function updateSlotsForDate() {
+            const dateInput = document.getElementById('delivery-date').value;
+            const slotSelect = document.getElementById('delivery-slot');
+            if (!dateInput) return;
+            
+            const date = new Date(dateInput);
+            const dayOfWeek = date.getDay(); // 0 è Domenica
+            
+            // Reset opzioni
+            slotSelect.innerHTML = '<option value="">Seleziona un orario...</option>';
+            
+            const allSlots = [
+                { value: "10:00-12:00", label: "10:00 - 12:00" },
+                { value: "12:00-14:00", label: "12:00 - 14:00" },
+                { value: "14:00-16:00", label: "14:00 - 16:00" },
+                { value: "16:00-18:00", label: "16:00 - 18:00" }
+            ];
+            
+            allSlots.forEach(slot => {
+                if (dayOfWeek === 0) { // Domenica
+                    if (slot.value === "10:00-12:00") {
+                        slotSelect.innerHTML += `<option value="${slot.value}">${slot.label}</option>`;
+                    }
+                } else {
+                    slotSelect.innerHTML += `<option value="${slot.value}">${slot.label}</option>`;
+                }
+            });
         }
 
         function renderCartItems() {
@@ -990,6 +1046,13 @@
         }
 
         function changeQty(i, d) {
+            if (d > 0) {
+                const totalQty = CART.reduce((a, b) => a + b.q, 0);
+                if (totalQty >= 7) {
+                    alert("Limite raggiunto! Non puoi inserire più di 7 prodotti nel carrello.");
+                    return;
+                }
+            }
             CART[i].q += d; if (CART[i].q <= 0) CART.splice(i, 1);
             localStorage.setItem('cart_spesina', JSON.stringify(CART)); renderCartItems(); updateCartCount();
         }
@@ -1013,6 +1076,12 @@
             localStorage.setItem('user_spesina', JSON.stringify(user));
             userData = user;
             updateAuthUI();
+
+            // Salvataggio su Supabase
+            try {
+                const { error } = await sb.from('users').insert([user]);
+                if (error) console.error("Errore salvataggio Supabase:", error);
+            } catch (err) { console.error("Errore Supabase:", err); }
 
             // Invio Mail di Benvenuto via Resend (Supabase Function)
             try {
@@ -1078,14 +1147,33 @@
             const id = document.getElementById('login-id-input').value.toUpperCase().trim();
             if (!id) return;
 
-            // Per ora simuliamo il recupero (in futuro cercheremo nella tabella 'users' di Supabase)
-            // Se l'ID è valido, lo salviamo
-            const user = { id: id, name: "Cliente Spesina", email: "", address: "Mestre" };
-            localStorage.setItem('user_spesina', JSON.stringify(user));
-            userData = user;
-            updateAuthUI();
-            closeModals();
-            goHome();
+            try {
+                // Recupero i dati da Supabase (tabella customers)
+                const { data: dbUser, error } = await sb.from('customers').select('*').eq('client_id', id).single();
+                
+                if (error || !dbUser) {
+                    alert("ID non trovato o non valido. Verifica il tuo codice.");
+                    return;
+                }
+
+                // Mappiamo i campi del DB con quelli usati dall'app
+                const user = {
+                    id: dbUser.client_id,
+                    name: dbUser.full_name,
+                    email: dbUser.email || "",
+                    phone: dbUser.phone || "",
+                    address: dbUser.address || ""
+                };
+
+                localStorage.setItem('user_spesina', JSON.stringify(user));
+                userData = user;
+                updateAuthUI();
+                closeModals();
+                goHome();
+            } catch (err) {
+                console.error("Errore durante il login:", err);
+                alert("Errore di connessione a Supabase.");
+            }
         }
 
         function showInfoModal(type) {
@@ -1193,6 +1281,15 @@
             }
             async function processCheckout() {
                 if (!userData) { showRegister(); return; }
+                
+                const date = document.getElementById('delivery-date').value;
+                const slot = document.getElementById('delivery-slot').value;
+                
+                if (!date || !slot) {
+                    alert("Per favore, seleziona una data e una fascia oraria per la consegna.");
+                    return;
+                }
+
                 const total = CART.reduce((a, b) => a + (b.p * b.q), 0);
                 const orderId = Math.floor(1000 + Math.random() * 9000);
 
@@ -1206,8 +1303,8 @@
                             name: userData.name,
                             orderId: orderId,
                             total: total.toFixed(2),
-                            address: `${userData.address.street} ${userData.address.number}, ${userData.address.cap} (P:${userData.address.floor} I:${userData.address.int})`,
-                            delivery: "Mestre - Consegna in 30 min",
+                            address: typeof userData.address === 'string' ? userData.address : `${userData.address.street} ${userData.address.number}, ${userData.address.cap} (P:${userData.address.floor} I:${userData.address.int})`,
+                            delivery: `Data: ${date} - Fascia: ${slot}`,
                             items: CART
                         }
                     });
