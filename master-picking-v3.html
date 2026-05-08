@@ -624,6 +624,9 @@
 
         function buildMapsAddress(addr) {
             if (!addr) return '';
+            if (typeof addr === 'object') {
+                return `${addr.street || ''} ${addr.number || ''}, ${addr.cap || ''}`;
+            }
             // Converte i | in virgole poi rimuove Piano/Interno/Scala
             // che rompono la geolocalizzazione di Google Maps
             return addr
