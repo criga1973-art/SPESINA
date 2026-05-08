@@ -1323,7 +1323,7 @@
                 const deliveryStr = `${dayName} ${dayNum} ${monthName} ${slot}`;
 
                 // Formattazione indirizzo per Master Picking (vuole una stringa, non un oggetto)
-                const addrStr = `${userData.address.street} | Civico: ${userData.address.number}, Piano: ${userData.address.floor}, Interno: ${userData.address.int} | ${userData.address.cap}`;
+                const addrStr = `${userData.address.street} | Civico: ${userData.address.number}, Piano: ${userData.address.floor}, Interno: ${userData.address.int} | ${userData.address.cap} Mestre`;
 
                 const total = CART.reduce((a, b) => a + (b.p * b.q), 0);
                 const orderId = Math.floor(1000 + Math.random() * 9000);
