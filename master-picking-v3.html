@@ -613,6 +613,9 @@
 
         function formatAddressDisplay(addr) {
             if (!addr) return 'Indirizzo non specificato';
+            if (typeof addr === 'object') {
+                return `${addr.street || ''} ${addr.number || ''}, ${addr.cap || ''} (Piano: ${addr.floor || ''}, Int: ${addr.int || ''})`;
+            }
             return addr
                 .replace(/\s*\|\s*/g, ',  ')   // | → virgola con spazio
                 .replace(/Civico:\s*/gi, '')    // rimuove solo la label "Civico:"

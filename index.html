@@ -1032,6 +1032,7 @@
                     <div style="flex-grow:1;">
                         <div style="font-weight:800; font-size:13px; color:var(--dark); line-height:1.2; margin-bottom:4px;">${item.n}</div>
                         <div style="font-size:12px; color:var(--primary); font-weight:700;">${item.p.toFixed(2)}€</div>
+                        <div style="font-size:11px; color:#64748b; font-weight:600; margin-top:2px;">EAN: ${item.ean || 'N/D'}</div>
                     </div>
                     <div style="display:flex; align-items:center; background:#f1f5f9; border-radius:10px; padding:3px;">
                         <button onclick="changeQty(${idx},-1)" style="width:26px; height:26px; border:none; background:white; border-radius:7px; font-weight:900; cursor:pointer;">-</button>
@@ -1059,8 +1060,17 @@
 
         async function handleRegister(e) {
             e.preventDefault();
+            
+            let id = "SP-" + Math.random().toString(36).substr(2, 6).toUpperCase();
+            try {
+                // Generazione ID sequenziale da Supabase
+                const { data: nextId, error: rpcError } = await sb.rpc('generate_customer_id');
+                if (!rpcError && nextId) id = nextId;
+                else console.warn("Fallback a ID casuale:", rpcError);
+            } catch (err) { console.warn("Fallback a ID casuale:", err); }
+
             const user = {
-                id: "SP-" + Math.random().toString(36).substr(2, 6).toUpperCase(),
+                id: id,
                 name: document.getElementById('reg-name').value,
                 phone: document.getElementById('reg-phone').value,
                 email: document.getElementById('reg-email').value,
@@ -1079,9 +1089,22 @@
 
             // Salvataggio su Supabase
             try {
-                const { error } = await sb.from('users').insert([user]);
-                if (error) console.error("Errore salvataggio Supabase:", error);
-            } catch (err) { console.error("Errore Supabase:", err); }
+                const dbUser = {
+                    client_id: user.id,
+                    full_name: user.name,
+                    email: user.email,
+                    phone: user.phone,
+                    address: `${user.address.street} ${user.address.number}, ${user.address.cap}`
+                };
+                const { error } = await sb.from('customers').insert([dbUser]);
+                if (error) {
+                    console.error("Errore salvataggio Supabase:", error);
+                    alert("Errore Supabase: " + error.message);
+                }
+            } catch (err) { 
+                console.error("Errore Supabase:", err); 
+                alert("Errore di connessione a Supabase.");
+            }
 
             // Invio Mail di Benvenuto via Resend (Supabase Function)
             try {
@@ -1290,10 +1313,49 @@
                     return;
                 }
 
+                // Generazione stringa delivery per Master Picking (es: "Sabato 9 Maggio 12:00-14:00")
+                const dateObj = new Date(date);
+                const days = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
+                const months = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
+                const dayName = days[dateObj.getDay()];
+                const dayNum = dateObj.getDate();
+                const monthName = months[dateObj.getMonth()];
+                const deliveryStr = `${dayName} ${dayNum} ${monthName} ${slot}`;
+
+                // Formattazione indirizzo per Master Picking (vuole una stringa, non un oggetto)
+                const addrStr = `${userData.address.street} | Civico: ${userData.address.number}, Piano: ${userData.address.floor}, Interno: ${userData.address.int} | ${userData.address.cap}`;
+
                 const total = CART.reduce((a, b) => a + (b.p * b.q), 0);
                 const orderId = Math.floor(1000 + Math.random() * 9000);
 
                 try {
+                    // Salvataggio Ordine su Supabase (per Master Picking)
+                    const { error: dbError } = await sb.from('orders').insert([{
+                        client_id: userData.id,
+                        order_date: new Date().toISOString().split('T')[0],
+                        order_data: {
+                            order_id: orderId,
+                            name: userData.name,
+                            phone: userData.phone,
+                            email: userData.email,
+                            items: CART,
+                            total: total.toFixed(2),
+                            delivery_date: date,
+                            delivery_slot: slot,
+                            delivery: deliveryStr,
+                            address: addrStr,
+                            status: 'ricevuto'
+                        }
+                    }]);
+                    if (dbError) {
+                        console.error("Errore salvataggio ordine su Supabase:", dbError);
+                        alert("Errore salvataggio ordine: " + dbError.message);
+                        return; // Blocca l'esecuzione se il salvataggio fallisce
+                    } else {
+                        console.log("Salvataggio riuscito su Supabase!");
+                        alert("Ordine #" + orderId + " registrato su Supabase! Clicca sulla freccia circolare (Refresh) nella tabella di Supabase per vederlo apparire.");
+                    }
+
                     // Invio Ordine via Resend (Supabase Function)
                     // Questa funzione invia la mail al cliente e in BCC a ordini@spesina.it (Master Picking)
                     const { data, error } = await sb.functions.invoke('send-welcome', {
