@@ -25,9 +25,9 @@ GH_REPO = "SPESINA"
 
 # --- STRUTTURA CATEGORIE ---
 CAT_MAP = {
-    "pasta": {"n": "Pasta e Riso", "sub": []},
+    "pasta": {"n": "Pasta e Riso", "sub": ["Pasta", "Riso"]},
     "bevande": {"n": "Bevande", "sub": ["Acqua", "Succhi di Frutta", "Birra", "Vino", "Bibite", "Latte 1L", "Latte 500ml", "Alcolici", "Altro"]},
-    "freschi": {"n": "Freschi", "sub": ["Salumi", "Latticini", "Yogurt", "Uova", "Piatti Pronti", "Altro"]},
+    "freschi": {"n": "Freschi", "sub": ["Salumi", "Latticini", "Yogurt", "Uova", "Piatti Pronti", "Pasta Sfoglia"]},
     "dispensa": {"n": "Dispensa", "sub": ["Tonno e Carne in scatola", "Verdure e Legumi", "Conserve", "Insalatissime", "Sotto olio Sotto aceto"]},
     "snack-salati": {"n": "Snack Salati", "sub": []},
     "snack-dolci": {"n": "Snack Dolci", "sub": []},
@@ -37,7 +37,7 @@ CAT_MAP = {
     "condimenti": {"n": "Condimenti e Spezie", "sub": ["Olio", "Aceto", "Sale", "Sughi e Pesti", "Salse", "Spezie", "Altro"]},
     "igiene-p": {"n": "Igiene Persona", "sub": ["Primo Soccorso", "Shampoo e Doccia", "Deodoranti", "Igiene Orale", "Assorbenti e Protezione", "Incontinenza Tena", "Carta e Fazzoletti", "Barba e Rasatura", "Altro"]},
     "igiene-c": {"n": "Igiene Casa e Detersivi", "sub": ["Lavatrice", "Superfici", "Piatti", "Altro"]},
-    "surgelati": {"n": "Surgelati", "sub": ["Pizze e Panificati", "Verdure", "Pesce", "Piatti Pronti", "Gelati", "Altro"]},
+    "surgelati": {"n": "Surgelati", "sub": ["Pizze e Panificati", "Verdure", "Pesce", "Piatti Pronti", "Gelati", "Patatine fritte"]},
     "colazione": {"n": "Colazione", "sub": ["Biscotti", "Merendine", "Cereali", "Caffè, Tè e Tisane", "Confetture e Creme", "Altro"]},
     "panificati": {"n": "Panificati", "sub": ["Panificati", "Altro"]},
     "orto": {"n": "Frutta e Verdura", "sub": ["Frutta e Verdura", "Altro"]},

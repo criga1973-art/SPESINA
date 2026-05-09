@@ -767,9 +767,9 @@
         const MAINTENANCE_MODE = urlParams.get('preview') === 'true' ? false : true;
 
         const CATEGORIES = [
-            { id: "pasta", n: "Pasta e Riso", icon: "🍝", sub: [] },
+            { id: "pasta", n: "Pasta e Riso", icon: "🍝", sub: ["Pasta", "Riso"] },
             { id: "bevande", n: "Bevande", icon: "🥤", sub: ["Acqua", "Succhi di Frutta", "Birra", "Vino", "Bibite", "Latte 1L", "Latte 500ml", "Alcolici", "Altro"] },
-            { id: "freschi", n: "Freschi", icon: "🧀", sub: ["Salumi", "Latticini", "Yogurt", "Uova", "Piatti Pronti", "Altro"] },
+            { id: "freschi", n: "Freschi", icon: "🧀", sub: ["Salumi", "Latticini", "Yogurt", "Uova", "Piatti Pronti", "Pasta Sfoglia"] },
             { id: "dispensa", n: "Dispensa", icon: "🥫", sub: ["Tonno e Carne in scatola", "Verdure e Legumi", "Conserve", "Insalatissime", "Sotto olio Sotto aceto"] },
             { id: "snack-salati", n: "Snack Salati", icon: "🥨", sub: [] },
             { id: "snack-dolci", n: "Snack Dolci", icon: "🍪", sub: [] },
@@ -779,7 +779,7 @@
             { id: "condimenti", n: "Condimenti e Spezie", icon: "🧂", sub: ["Olio", "Aceto", "Sale", "Sughi e Pesti", "Salse", "Spezie", "Altro"] },
             { id: "igiene-p", n: "Igiene Persona", icon: "🧼", sub: ["Primo Soccorso", "Shampoo e Doccia", "Deodoranti", "Igiene Orale", "Assorbenti e Protezione", "Incontinenza Tena", "Carta e Fazzoletti", "Barba e Rasatura", "Altro"] },
             { id: "igiene-c", n: "Igiene Casa e Detersivi", icon: "🧽", sub: ["Lavatrice", "Superfici", "Piatti", "Altro"] },
-            { id: "surgelati", n: "Surgelati", icon: "❄️", sub: ["Pizze e Panificati", "Verdure", "Pesce", "Piatti Pronti", "Gelati", "Altro"] },
+            { id: "surgelati", n: "Surgelati", icon: "❄️", sub: ["Pizze e Panificati", "Verdure", "Pesce", "Piatti Pronti", "Gelati", "Patatine fritte"] },
             { id: "colazione", n: "Colazione", icon: "🥐", sub: ["Biscotti", "Merendine", "Cereali", "Caffè, Tè e Tisane", "Confetture e Creme", "Altro"] },
             { id: "panificati", n: "Panificati", icon: "🥖", sub: ["Panificati", "Altro"] },
             { id: "orto", n: "Frutta e Verdura", icon: "🍎", sub: ["Frutta e Verdura", "Altro"] },
@@ -790,6 +790,8 @@
         ];
 
         const EMOJI_MAP = {
+            // Pasta e Riso
+            "pasta": "🍝", "riso": "🍚",
             // Bevande
             "acqua": "💧", "succhi di frutta": "🧃", "birra": "🍺", "vino": "🍷", "bibite": "🥤", "latte 1l": "🥛", "latte 500ml": "🥛", "alcolici": "🍸",
             // Freschi
@@ -805,7 +807,7 @@
             // Igiene Casa
             "lavatrice": "🧺", "superfici": "🧹", "piatti": "🍽️",
             // Surgelati
-            "pizze e panificati": "🍕", "verdure": "🥦", "pesce": "🐟", "gelati": "🍦",
+            "pizze e panificati": "🍕", "verdure": "🥦", "pesce": "🐟", "gelati": "🍦", "patatine fritte": "🍟",
             // Colazione
             "biscotti": "🍪", "merendine": "🧁", "cereali": "🥣", "caffè, tè e tisane": "☕", "confetture e creme": "🍯",
             // Generici
@@ -934,8 +936,7 @@
             let html = "";
             subs.sort().forEach(s => {
                 const emoji = EMOJI_MAP[s.toLowerCase().trim()] || "";
-                const emojiHtml = emoji ? `<div class="product-emoji">${emoji}</div>` : '';
-                html += `<div class="card" onclick="openSubCategory('${s.replace(/'/g, "\\'")}')">${emojiHtml}<div style="font-weight:800; text-transform:capitalize;">${s}</div></div>`;
+                html += `<div class="card" onclick="openSubCategory('${s.replace(/'/g, "\\'")}')"><div class="product-emoji">${emoji}</div><div style="font-weight:800; text-transform:capitalize;">${s}</div></div>`;
             });
             document.getElementById('sub-catalog').innerHTML = html;
         }
