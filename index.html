@@ -736,6 +736,33 @@
             console.error("Errore init Supabase:", e);
         }
 
+        let APP_CONFIG = {
+            cartLimit: 7,
+            orderLimit: 5,
+            blockedSlots: [],
+            lockedDays: []
+        };
+
+        async function loadAppConfig() {
+            try {
+                const { data, error } = await sb
+                    .from('telecomando_setting')
+                    .select('*')
+                    .eq('id', 1)
+                    .single();
+
+                if (!error && data) {
+                    APP_CONFIG.cartLimit = data.cart_limit;
+                    APP_CONFIG.orderLimit = data.order_limit;
+                    APP_CONFIG.blockedSlots = data.blocked_slots || [];
+                    APP_CONFIG.lockedDays = data.locked_days || [];
+                    console.log("Configurazione caricata:", APP_CONFIG);
+                }
+            } catch (err) {
+                console.error("Errore caricamento config:", err);
+            }
+        }
+
         const urlParams = new URLSearchParams(window.location.search);
         const MAINTENANCE_MODE = urlParams.get('preview') === 'true' ? false : true;
 
@@ -798,7 +825,9 @@
         let currentCatName = null;
         let currentSub = null;
 
-        window.onload = function () {
+        window.onload = async function () {
+            await loadAppConfig();
+            
             if (MAINTENANCE_MODE) {
                 document.body.innerHTML = '<div style="height:100vh; display:flex; align-items:center; justify-content:center; text-align:center; font-family:sans-serif;"><h1>🚚 SPESINA IN MANUTENZIONE</h1></div>';
                 return;
@@ -986,8 +1015,8 @@
             if (!p) return;
             
             const totalQty = CART.reduce((a, b) => a + b.q, 0);
-            if (totalQty >= 7) {
-                alert("Limite raggiunto! Non puoi inserire più di 7 prodotti nel carrello.");
+            if (totalQty >= APP_CONFIG.cartLimit) {
+                alert(`Limite raggiunto! Non puoi inserire più di ${APP_CONFIG.cartLimit} prodotti nel carrello.`);
                 return;
             }
 
@@ -1058,11 +1087,26 @@
                 { value: "16:00-18:00", label: "16:00 - 18:00" }
             ];
             
+            // Controllo inibizione giorno
+            if (APP_CONFIG.lockedDays && APP_CONFIG.lockedDays.includes(dayOfWeek)) {
+                slotSelect.innerHTML = '<option value="">Giorno non disponibile</option>';
+                return;
+            }
+
             allSlots.forEach(slot => {
+                // Controllo inibizione fascia
+                const isBlocked = APP_CONFIG.blockedSlots && APP_CONFIG.blockedSlots.includes(slot.value);
+                
                 const count = ordersForDay.filter(o => o.order_data && o.order_data.delivery_slot === slot.value).length;
-                const available = 5 - count;
-                const label = available > 0 ? `${slot.label} (Disponibili: ${available})` : `${slot.label} (Completo)`;
-                const disabled = available > 0 ? '' : 'disabled';
+                const available = APP_CONFIG.orderLimit - count;
+                
+                let label = available > 0 ? `${slot.label} (Disponibili: ${available})` : `${slot.label} (Completo)`;
+                let disabled = available > 0 ? '' : 'disabled';
+
+                if (isBlocked) {
+                    label = `${slot.label} (Non disponibile)`;
+                    disabled = 'disabled';
+                }
 
                 if (dayOfWeek === 0) { // Domenica
                     if (slot.value === "10:00-12:00") {
@@ -1459,7 +1503,7 @@
                             o.order_data.delivery_slot === slot
                         ).length;
 
-                        if (count >= 5) {
+                        if (count >= APP_CONFIG.orderLimit) {
                             alert("Spiacenti, questa fascia oraria è appena diventata al completo. Scegli un altro orario.");
                             return;
                         }
