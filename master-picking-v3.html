@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Master PIcking - Dashboard Operativa</title>
+    <title>Master Picking - Dashboard Operativa</title>
 
     <!-- PWA Meta -->
     <link rel="manifest" href="manifest.json">
@@ -516,7 +516,7 @@
 <body>
 
     <header>
-        <div class="logo">SPESINA <span>Master PIcking</span></div>
+        <div class="logo">SPESINA <span>Master Picking</span></div>
         <button id="btn-refresh" onclick="loadData()"
             style="background:none; border:none; color:var(--primary); font-size:14px; font-weight:800; cursor:pointer; transition: opacity 0.2s;">AGGIORNA</button>
     </header>
@@ -836,7 +836,7 @@
                 allOrders.map(o => {
                     const d = o.order_data;
                     const status = d.status || 'nuovo';
-                    const shortId = o.id.toString().slice(0, 8).toUpperCase();
+                    const shortId = d.order_id || o.id.toString().slice(0, 8).toUpperCase();
                     const totalPezzi = d.items ? d.items.reduce((acc, curr) => acc + (parseInt(curr.q) || 0), 0) : 0;
                     const deliveryParts = d.delivery.split(' ');
                     const timeStr = deliveryParts.pop(); // Prende l'ultimo elemento (l'ora)
@@ -863,7 +863,7 @@
             selectedOrder = allOrders.find(o => o.id == orderId);
             if (!selectedOrder) return;
             const d = selectedOrder.order_data;
-            const shortId = selectedOrder.id.toString().slice(0, 8).toUpperCase();
+            const shortId = d.order_id || selectedOrder.id.toString().slice(0, 8).toUpperCase();
             document.getElementById('det-order-id').innerText = `DETTAGLIO ORDINE #${shortId}`;
             document.getElementById('det-customer').innerText = d.name;
             document.getElementById('det-address').innerText = formatAddressDisplay(d.address);
@@ -978,7 +978,7 @@
                         },
                         body: JSON.stringify({
                             type: 'RECEIPT',
-                            orderId: selectedOrder.id.toString().slice(0, 8).toUpperCase(),
+                            orderId: updatedData.order_id || selectedOrder.id.toString().slice(0, 8).toUpperCase(),
                             name: updatedData.name,
                             email: updatedData.email,
                             address: updatedData.address,

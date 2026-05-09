@@ -32,6 +32,26 @@
             color: var(--dark);
         }
 
+        /* Barra di scorrimento personalizzata (Gesto Stilistico) - Solo su Desktop */
+        @media (min-width: 768px) {
+            ::-webkit-scrollbar {
+                width: 10px;
+                height: 10px;
+            }
+            ::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            ::-webkit-scrollbar-thumb {
+                background-color: #cbd5e1;
+                border-radius: 10px;
+                border: 3px solid transparent;
+                background-clip: content-box;
+            }
+            ::-webkit-scrollbar-thumb:hover {
+                background-color: var(--primary);
+            }
+        }
+
         header {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(12px);
@@ -481,6 +501,7 @@
         <div class="modal-content" style="max-width: 500px;">
             <div style="font-size:30px; margin-bottom:10px;">🛒</div>
             <h2 style="font-weight: 900; margin-bottom: 20px;">Il tuo Carrello</h2>
+            <div id="cart-expiry-info" style="font-size: 14px; color: #64748b; margin-top: -15px; margin-bottom: 15px; font-weight: 600;"></div>
 
             <div id="cart-items" style="max-height: 400px; overflow-y: auto; text-align: left; margin-bottom: 20px;">
                 <!-- Gli articoli verranno inseriti qui -->
@@ -620,6 +641,7 @@
             <div style="text-align:left; margin-bottom:20px;">
                 <p>📍 <span id="profile-address">Indirizzo...</span></p>
                 <p>📧 <span id="profile-email">Email...</span></p>
+                <p>🎟️ <span id="profile-sub-expiry">Scadenza Abbonamento: --</span></p>
             </div>
             <button class="btn-confirm" onclick="logout()" style="background:#fee2e2; color:#ef4444;">ESCI
                 DALL'ACCOUNT</button>
@@ -985,13 +1007,25 @@
             }
         }
 
-        function showCart() {
+        async function showCart() {
             if (!userData) { showRegister(); return; }
             document.getElementById('modalCart').style.display = 'flex';
+            
+            // Interroga sub_expiry
+            try {
+                const { data, error } = await sb.from('customers').select('sub_expiry').eq('client_id', userData.id).single();
+                if (!error && data) {
+                    userData.sub_expiry = data.sub_expiry;
+                    localStorage.setItem('user_spesina', JSON.stringify(userData));
+                }
+            } catch (err) {
+                console.error("Errore recupero sub_expiry:", err);
+            }
+            
             renderCartItems();
         }
 
-        function updateSlotsForDate() {
+        async function updateSlotsForDate() {
             const dateInput = document.getElementById('delivery-date').value;
             const slotSelect = document.getElementById('delivery-slot');
             if (!dateInput) return;
@@ -1000,6 +1034,21 @@
             const dayOfWeek = date.getDay(); // 0 è Domenica
             
             // Reset opzioni
+            slotSelect.innerHTML = '<option value="">Caricamento disponibilità...</option>';
+            
+            let ordersForDay = [];
+            try {
+                const { data: dayOrders, error } = await sb
+                    .from('orders')
+                    .select('order_data');
+                
+                if (!error && dayOrders) {
+                    ordersForDay = dayOrders.filter(o => o.order_data && o.order_data.delivery_date === dateInput);
+                }
+            } catch (err) {
+                console.error("Errore caricamento ordini per data:", err);
+            }
+
             slotSelect.innerHTML = '<option value="">Seleziona un orario...</option>';
             
             const allSlots = [
@@ -1010,12 +1059,17 @@
             ];
             
             allSlots.forEach(slot => {
+                const count = ordersForDay.filter(o => o.order_data && o.order_data.delivery_slot === slot.value).length;
+                const available = 5 - count;
+                const label = available > 0 ? `${slot.label} (Disponibili: ${available})` : `${slot.label} (Completo)`;
+                const disabled = available > 0 ? '' : 'disabled';
+
                 if (dayOfWeek === 0) { // Domenica
                     if (slot.value === "10:00-12:00") {
-                        slotSelect.innerHTML += `<option value="${slot.value}">${slot.label}</option>`;
+                        slotSelect.innerHTML += `<option value="${slot.value}" ${disabled}>${label}</option>`;
                     }
                 } else {
-                    slotSelect.innerHTML += `<option value="${slot.value}">${slot.label}</option>`;
+                    slotSelect.innerHTML += `<option value="${slot.value}" ${disabled}>${label}</option>`;
                 }
             });
         }
@@ -1042,6 +1096,38 @@
                     <button onclick="changeQty(${idx}, -${item.q})" style="background:#fee2e2; border:none; color:#ef4444; width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; cursor:pointer; transition:all 0.2s; flex-shrink:0;" onmouseover="this.style.background='#fecaca'" onmouseout="this.style.background='#fee2e2'">✕</button>
                 </div>`;
             });
+
+            // Controllo Abbonamento
+            let subNeeded = false;
+            let subExpiryStr = "";
+            if (userData) {
+                const now = new Date();
+                const expiry = userData.sub_expiry ? new Date(userData.sub_expiry) : null;
+                
+                if (!expiry || expiry < now) {
+                    subNeeded = true;
+                    total += 19.99;
+                    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+                    subExpiryStr = `Scadenza: ${lastDay.getDate()}/${lastDay.getMonth()+1}/${lastDay.getFullYear()}`;
+                    document.getElementById('cart-expiry-info').innerText = "Abbonamento in scadenza il " + lastDay.getDate() + "/" + (lastDay.getMonth()+1) + "/" + lastDay.getFullYear();
+                } else {
+                    document.getElementById('cart-expiry-info').innerText = "Abbonamento valido fino al " + expiry.getDate() + "/" + (expiry.getMonth()+1) + "/" + expiry.getFullYear();
+                }
+            }
+
+            if (subNeeded) {
+                html += `
+                <div style="display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid #f1f5f9; background: #eefdf6; border-radius: 12px; margin-top: 10px;">
+                    <div style="width:60px; height:60px; background:white; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden;"><span style="font-size:24px;">🎟️</span></div>
+                    <div style="flex-grow:1;">
+                        <div style="font-weight:800; font-size:13px; color:var(--dark); line-height:1.2; margin-bottom:4px;">Abbonamento Mensile Spesina</div>
+                        <div style="font-size:12px; color:var(--primary); font-weight:700;">19.99€</div>
+                        <div style="font-size:11px; color:#64748b; font-weight:600; margin-top:2px;">${subExpiryStr}</div>
+                    </div>
+                    <div style="font-size:11px; color:var(--primary); font-weight:700; margin-right: 10px;">Incluso</div>
+                </div>`;
+            }
+
             document.getElementById('cart-items').innerHTML = html || "<div style='text-align:center; padding:40px; color:#94a3b8;'>Il carrello è vuoto.</div>";
             document.getElementById('cart-total-price').innerText = total.toFixed(2) + "€";
         }
@@ -1080,7 +1166,8 @@
                     cap: document.getElementById('reg-cap').value,
                     floor: document.getElementById('reg-floor').value,
                     int: document.getElementById('reg-int').value
-                }
+                },
+                sub_expiry: null
             };
             // Salvataggio locale
             localStorage.setItem('user_spesina', JSON.stringify(user));
@@ -1094,7 +1181,9 @@
                     full_name: user.name,
                     email: user.email,
                     phone: user.phone,
-                    address: `${user.address.street} ${user.address.number}, ${user.address.cap}`
+                    address: `${user.address.street} ${user.address.number}`,
+                    details: `Piano: ${user.address.floor || ''}, Interno: ${user.address.int || ''}`,
+                    cap: user.address.cap
                 };
                 const { error } = await sb.from('customers').insert([dbUser]);
                 if (error) {
@@ -1146,6 +1235,16 @@
             document.getElementById('profile-name').innerText = userData.name;
             document.getElementById('profile-id-tag').innerText = "ID: " + userData.id;
             document.getElementById('profile-email').innerText = userData.email;
+            
+            const subExpiryEl = document.getElementById('profile-sub-expiry');
+            if (subExpiryEl) {
+                if (userData.sub_expiry) {
+                    const expiry = new Date(userData.sub_expiry);
+                    subExpiryEl.innerText = `${expiry.getDate()}/${expiry.getMonth()+1}/${expiry.getFullYear()}`;
+                } else {
+                    subExpiryEl.innerText = "Nessuno attivo";
+                }
+            }
 
             // Gestione indirizzo strutturato
             const a = userData.address;
@@ -1153,7 +1252,7 @@
             if (typeof a === 'string') {
                 fullAddr = a;
             } else {
-                fullAddr = `${a.street} ${a.number}, ${a.cap}`;
+                fullAddr = `${a.street}${a.number ? ' ' + a.number : ''}, ${a.cap}`;
                 if (a.floor) fullAddr += ` - Piano: ${a.floor}`;
                 if (a.int) fullAddr += ` - Int: ${a.int}`;
             }
@@ -1185,7 +1284,14 @@
                     name: dbUser.full_name,
                     email: dbUser.email || "",
                     phone: dbUser.phone || "",
-                    address: dbUser.address || ""
+                    address: {
+                        street: dbUser.address || "",
+                        number: "",
+                        cap: dbUser.cap || "",
+                        floor: dbUser.details ? dbUser.details.split('Piano: ')[1]?.split(',')[0]?.trim() : "",
+                        int: dbUser.details ? dbUser.details.split('Interno: ')[1]?.trim() : ""
+                    },
+                    sub_expiry: dbUser.sub_expiry || null
                 };
 
                 localStorage.setItem('user_spesina', JSON.stringify(user));
@@ -1313,6 +1419,55 @@
                     return;
                 }
 
+                // Controllo limite 2 ordini per fascia oraria per lo stesso cliente
+                try {
+                    const { data: existingOrders, error: checkError } = await sb
+                        .from('orders')
+                        .select('order_data')
+                        .eq('client_id', userData.id);
+
+                    if (checkError) {
+                        console.error("Errore controllo ordini esistenti:", checkError);
+                    } else if (existingOrders) {
+                        const count = existingOrders.filter(o => 
+                            o.order_data && 
+                            o.order_data.delivery_date === date && 
+                            o.order_data.delivery_slot === slot
+                        ).length;
+
+                        if (count >= 2) {
+                            alert("Hai già raggiunto il limite di 2 spese in questa fascia oraria. Scegli un altro orario.");
+                            return;
+                        }
+                    }
+                } catch (err) {
+                    console.error("Errore durante il controllo dei limiti:", err);
+                }
+
+                // Controllo limite globale 5 ordini per fascia oraria
+                try {
+                    const { data: allOrders, error: checkError } = await sb
+                        .from('orders')
+                        .select('order_data');
+
+                    if (checkError) {
+                        console.error("Errore controllo ordini totali:", checkError);
+                    } else if (allOrders) {
+                        const count = allOrders.filter(o => 
+                            o.order_data && 
+                            o.order_data.delivery_date === date && 
+                            o.order_data.delivery_slot === slot
+                        ).length;
+
+                        if (count >= 5) {
+                            alert("Spiacenti, questa fascia oraria è appena diventata al completo. Scegli un altro orario.");
+                            return;
+                        }
+                    }
+                } catch (err) {
+                    console.error("Errore durante il controllo dei limiti globali:", err);
+                }
+
                 // Generazione stringa delivery per Master Picking (es: "Sabato 9 Maggio 12:00-14:00")
                 const dateObj = new Date(date);
                 const days = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
@@ -1333,6 +1488,7 @@
                     const { error: dbError } = await sb.from('orders').insert([{
                         client_id: userData.id,
                         order_date: new Date().toISOString().split('T')[0],
+                        order_number: orderId.toString(),
                         order_data: {
                             order_id: orderId,
                             name: userData.name,
@@ -1353,7 +1509,24 @@
                         return; // Blocca l'esecuzione se il salvataggio fallisce
                     } else {
                         console.log("Salvataggio riuscito su Supabase!");
-                        alert("Ordine #" + orderId + " registrato su Supabase! Clicca sulla freccia circolare (Refresh) nella tabella di Supabase per vederlo apparire.");
+                        
+                        // Aggiornamento sub_expiry se necessario
+                        const now = new Date();
+                        const expiry = userData.sub_expiry ? new Date(userData.sub_expiry) : null;
+                        if (!expiry || expiry < now) {
+                            const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+                            const lastDayIso = lastDay.toISOString().split('T')[0];
+                            
+                            const { error: subError } = await sb.from('customers').update({ sub_expiry: lastDayIso }).eq('client_id', userData.id);
+                            if (subError) {
+                                console.error("Errore aggiornamento sub_expiry:", subError);
+                            } else {
+                                userData.sub_expiry = lastDayIso;
+                                localStorage.setItem('user_spesina', JSON.stringify(userData));
+                            }
+                        }
+
+                        alert("Ordine #" + orderId + " registrato su Spesina!");
                     }
 
                     // Invio Ordine via Resend (Supabase Function)
