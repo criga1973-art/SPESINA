@@ -472,6 +472,7 @@
 
     <script>
         const CORRECT_PIN = "1234"; // Modifica questo PIN con quello che vuoi tu!
+        localStorage.removeItem('telecomando_unlocked'); // Rimuove eventuali vecchi sblocchi
 
         function checkPin() {
             const entered = document.getElementById('pin-field').value;
