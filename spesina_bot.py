@@ -28,7 +28,7 @@ CAT_MAP = {
     "pasta": {"n": "Pasta e Riso", "sub": []},
     "bevande": {"n": "Bevande", "sub": ["Acqua", "Succhi di Frutta", "Birra", "Vino", "Bibite", "Latte 1L", "Latte 500ml", "Alcolici", "Altro"]},
     "freschi": {"n": "Freschi", "sub": ["Salumi", "Latticini", "Yogurt", "Uova", "Piatti Pronti", "Altro"]},
-    "dispensa": {"n": "Dispensa", "sub": ["Tonno e Carne in scatola", "Verdure e Legumi", "Conserve", "Insalatissime", "Altro"]},
+    "dispensa": {"n": "Dispensa", "sub": ["Tonno e Carne in scatola", "Verdure e Legumi", "Conserve", "Insalatissime", "Sotto olio Sotto aceto"]},
     "snack-salati": {"n": "Snack Salati", "sub": []},
     "snack-dolci": {"n": "Snack Dolci", "sub": []},
     "senza-glutine": {"n": "Senza Glutine", "sub": []},

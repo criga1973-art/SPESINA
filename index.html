@@ -770,7 +770,7 @@
             { id: "pasta", n: "Pasta e Riso", icon: "🍝", sub: [] },
             { id: "bevande", n: "Bevande", icon: "🥤", sub: ["Acqua", "Succhi di Frutta", "Birra", "Vino", "Bibite", "Latte 1L", "Latte 500ml", "Alcolici", "Altro"] },
             { id: "freschi", n: "Freschi", icon: "🧀", sub: ["Salumi", "Latticini", "Yogurt", "Uova", "Piatti Pronti", "Altro"] },
-            { id: "dispensa", n: "Dispensa", icon: "🥫", sub: ["Tonno e Carne in scatola", "Verdure e Legumi", "Conserve", "Insalatissime", "Altro"] },
+            { id: "dispensa", n: "Dispensa", icon: "🥫", sub: ["Tonno e Carne in scatola", "Verdure e Legumi", "Conserve", "Insalatissime", "Sotto olio Sotto aceto"] },
             { id: "snack-salati", n: "Snack Salati", icon: "🥨", sub: [] },
             { id: "snack-dolci", n: "Snack Dolci", icon: "🍪", sub: [] },
             { id: "senza-glutine", n: "Senza Glutine", icon: "🌾🚫", sub: [] },
@@ -858,7 +858,7 @@
         async function fetchProducts() {
             if (!sb) { console.error("Supabase non inizializzato"); return; }
             try {
-                const { data, error } = await sb.from('products').select('*').order('name');
+                const { data, error } = await sb.from('products').select('*').order('marca', { ascending: true }).order('name', { ascending: true });
                 if (error) throw error;
 
                 console.log("DATI RICEVUTI DA SUPABASE:", data.length, "prodotti");
@@ -933,8 +933,9 @@
         function renderSubFolders(subs) {
             let html = "";
             subs.sort().forEach(s => {
-                const emoji = EMOJI_MAP[s.toLowerCase().trim()] || "📦";
-                html += `<div class="card" onclick="openSubCategory('${s.replace(/'/g, "\\'")}')"><div class="product-emoji">${emoji}</div><div style="font-weight:800; text-transform:capitalize;">${s}</div></div>`;
+                const emoji = EMOJI_MAP[s.toLowerCase().trim()] || "";
+                const emojiHtml = emoji ? `<div class="product-emoji">${emoji}</div>` : '';
+                html += `<div class="card" onclick="openSubCategory('${s.replace(/'/g, "\\'")}')">${emojiHtml}<div style="font-weight:800; text-transform:capitalize;">${s}</div></div>`;
             });
             document.getElementById('sub-catalog').innerHTML = html;
         }
