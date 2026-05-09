@@ -477,19 +477,10 @@
             const entered = document.getElementById('pin-field').value;
             if (entered === CORRECT_PIN) {
                 document.getElementById('pin-overlay').style.display = 'none';
-                localStorage.setItem('telecomando_unlocked', 'true');
             } else {
                 document.getElementById('pin-error').style.display = 'block';
                 document.getElementById('pin-field').value = '';
             }
-        }
-
-        // Se è già stato sbloccato in questa sessione, non chiederlo di nuovo
-        if (localStorage.getItem('telecomando_unlocked') === 'true') {
-            setTimeout(() => {
-                const overlay = document.getElementById('pin-overlay');
-                if (overlay) overlay.style.display = 'none';
-            }, 10);
         }
 
         function switchTab(tab) {
