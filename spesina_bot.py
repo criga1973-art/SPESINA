@@ -178,8 +178,23 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
                 state['price'] = price
                 if state['step'] == 'waiting_price_update':
-                    supabase.table('products').update({'price': price}).eq('id', state['existing_id']).execute()
-                    await update.message.reply_text(f"✅ **PREZZO AGGIORNATO!** ({price}€)")
+                    # Recupera la categoria del prodotto per l'IVA
+                    prod_res = supabase.table('products').select('category').eq('id', state['existing_id']).single().execute()
+                    prod_cat = prod_res.data.get('category') if prod_res.data else 'varie'
+                    
+                    cat_obj = CAT_MAP.get(prod_cat, {})
+                    vat_rate = cat_obj.get('iva', 22)
+                    prices = calculate_prices(price, vat_rate)
+                    
+                    upd_data = {
+                        'price': prices["price_to_save"],
+                        'prezzo_supermercato_netto': prices["super_net"],
+                        'ricarico_netto': prices["ricarico_netto"],
+                        'aliquota_iva': prices["vat_rate"],
+                        'prezzo_finale_al_cliente_cents': prices["final_price_cents"]
+                    }
+                    supabase.table('products').update(upd_data).eq('id', state['existing_id']).execute()
+                    await update.message.reply_text(f"✅ **PREZZO AGGIORNATO!** ({prices['price_to_save']}€)")
                     del user_states[chat_id]
                 elif state['step'] == 'waiting_price_both':
                     state['step'] = 'waiting_image_update'
@@ -356,7 +371,23 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 if cloud_url: state['image_url'] = cloud_url
                 
                 upd = {"image_url": state['image_url']}
-                if state.get('price'): upd['price'] = state['price']
+                if state.get('price'): 
+                    # Recupera la categoria del prodotto per l'IVA
+                    prod_res = supabase.table('products').select('category').eq('id', state['existing_id']).single().execute()
+                    prod_cat = prod_res.data.get('category') if prod_res.data else 'varie'
+                    
+                    cat_obj = CAT_MAP.get(prod_cat, {})
+                    vat_rate = cat_obj.get('iva', 22)
+                    prices = calculate_prices(state['price'], vat_rate)
+                    
+                    upd.update({
+                        'price': prices["price_to_save"],
+                        'prezzo_supermercato_netto': prices["super_net"],
+                        'ricarico_netto': prices["ricarico_netto"],
+                        'aliquota_iva': prices["vat_rate"],
+                        'prezzo_finale_al_cliente_cents': prices["final_price_cents"]
+                    })
+                
                 supabase.table('products').update(upd).eq('id', state['existing_id']).execute()
                 await update.message.reply_text(f"✅ **FOTO AGGIORNATA!**\nSalvata in: {folder_name}/{sub_name}")
                 if chat_id in user_states: del user_states[chat_id]
