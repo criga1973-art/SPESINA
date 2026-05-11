@@ -1077,7 +1077,11 @@
                     .select('order_data');
                 
                 if (!error && dayOrders) {
-                    ordersForDay = dayOrders.filter(o => o.order_data && o.order_data.delivery_date === dateInput);
+                    ordersForDay = dayOrders.filter(o => 
+                        o.order_data && 
+                        o.order_data.delivery_date === dateInput && 
+                        o.order_data.status !== 'completato'
+                    );
                 }
             } catch (err) {
                 console.error("Errore caricamento ordini per data:", err);
@@ -1098,6 +1102,10 @@
                 return;
             }
 
+            const now = new Date();
+            const currentHour = now.getHours();
+            const isToday = dateInput === now.toISOString().slice(0, 10);
+
             allSlots.forEach(slot => {
                 // Controllo inibizione fascia
                 const isBlocked = APP_CONFIG.blockedSlots && APP_CONFIG.blockedSlots.includes(slot.value);
@@ -1105,11 +1113,25 @@
                 const count = ordersForDay.filter(o => o.order_data && o.order_data.delivery_slot === slot.value).length;
                 const available = APP_CONFIG.orderLimit - count;
                 
+                // Controllo scadenza tempo per oggi
+                let timeDisabled = false;
+                if (isToday) {
+                    if (slot.value === "10:00-12:00" && currentHour >= 11) timeDisabled = true;
+                    if (slot.value === "12:00-14:00" && currentHour >= 13) timeDisabled = true;
+                    if (slot.value === "14:00-16:00" && currentHour >= 15) timeDisabled = true;
+                    if (slot.value === "16:00-18:00" && currentHour >= 17) timeDisabled = true;
+                }
+
                 let label = available > 0 ? `${slot.label} (Disponibili: ${available})` : `${slot.label} (Completo)`;
                 let disabled = available > 0 ? '' : 'disabled';
 
                 if (isBlocked) {
                     label = `${slot.label} (Non disponibile)`;
+                    disabled = 'disabled';
+                }
+
+                if (timeDisabled) {
+                    label = `${slot.label} (Tempo scaduto)`;
                     disabled = 'disabled';
                 }
 
