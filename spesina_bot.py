@@ -31,6 +31,7 @@ CAT_MAP = {
     "dispensa": {"n": "Dispensa", "sub": ["Tonno e Carne in scatola", "Verdure e Legumi", "Conserve", "Insalatissime", "Sotto olio Sotto aceto"]},
     "snack-salati": {"n": "Snack Salati", "sub": []},
     "snack-dolci": {"n": "Snack Dolci", "sub": []},
+    "caramelle-dolciumi": {"n": "Caramelle e Dolciumi", "sub": []},
     "senza-glutine": {"n": "Senza Glutine", "sub": []},
     "parafarmacia": {"n": "Parafarmacia", "sub": []},
     "farine": {"n": "Farine e Preparati", "sub": ["Farine", "Preparati", "Lieviti", "Altro"]},
@@ -44,6 +45,7 @@ CAT_MAP = {
     "vegano": {"n": "Vegano", "sub": ["Vegano", "Altro"]},
     "animali": {"n": "Amici Domestici", "sub": ["Amici Domestici", "Altro"]},
     "minestre-zuppe": {"n": "Minestre, Risotti e Zuppe", "f": "Minestre Risotti e Zuppe", "sub": []},
+    "prima-infanzia": {"n": "Prima Infanzia", "sub": []},
     "varie": {"n": "VarIE", "sub": []}
 }
 
