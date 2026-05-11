@@ -25,29 +25,45 @@ GH_REPO = "SPESINA"
 
 # --- STRUTTURA CATEGORIE ---
 CAT_MAP = {
-    "pasta": {"n": "Pasta e Riso", "sub": ["Pasta", "Riso"]},
-    "bevande": {"n": "Bevande", "sub": ["Acqua", "Succhi di Frutta", "Birra", "Vino", "Bibite", "Latte 1L", "Latte 500ml", "Alcolici", "Altro"]},
-    "freschi": {"n": "Freschi", "sub": ["Salumi", "Latticini", "Yogurt", "Uova", "Piatti Pronti", "Pasta Sfoglia"]},
-    "dispensa": {"n": "Dispensa", "sub": ["Tonno e Carne in scatola", "Verdure e Legumi", "Conserve", "Insalatissime", "Sotto olio Sotto aceto"]},
-    "snack-salati": {"n": "Snack Salati", "sub": []},
-    "snack-dolci": {"n": "Snack Dolci", "sub": []},
-    "caramelle-dolciumi": {"n": "Caramelle e Dolciumi", "sub": []},
-    "senza-glutine": {"n": "Senza Glutine", "sub": []},
-    "parafarmacia": {"n": "Parafarmacia", "sub": []},
-    "farine": {"n": "Farine e Preparati", "sub": ["Farine", "Preparati", "Lieviti", "Altro"]},
-    "condimenti": {"n": "Condimenti e Spezie", "sub": ["Olio", "Aceto", "Sale", "Sughi e Pesti", "Salse", "Spezie", "Altro"]},
-    "igiene-p": {"n": "Igiene Persona", "sub": ["Primo Soccorso", "Shampoo e Doccia", "Deodoranti", "Igiene Orale", "Assorbenti e Protezione", "Incontinenza Tena", "Carta e Fazzoletti", "Barba e Rasatura", "Altro"]},
-    "igiene-c": {"n": "Igiene Casa e Detersivi", "sub": ["Lavatrice", "Superfici", "Piatti", "Altro"]},
-    "surgelati": {"n": "Surgelati", "sub": ["Pizze e Panificati", "Verdure", "Pesce", "Piatti Pronti", "Gelati", "Patatine fritte"]},
-    "colazione": {"n": "Colazione", "sub": ["Biscotti", "Merendine", "Cereali", "Caffè, Tè e Tisane", "Confetture e Creme", "Altro"]},
-    "panificati": {"n": "Panificati", "sub": ["Panificati", "Altro"]},
-    "orto": {"n": "Frutta e Verdura", "sub": ["Frutta e Verdura", "Altro"]},
-    "vegano": {"n": "Vegano", "sub": ["Vegano", "Altro"]},
-    "animali": {"n": "Amici Domestici", "sub": ["Amici Domestici", "Altro"]},
-    "minestre-zuppe": {"n": "Minestre, Risotti e Zuppe", "f": "Minestre Risotti e Zuppe", "sub": []},
-    "prima-infanzia": {"n": "Prima Infanzia", "sub": []},
-    "varie": {"n": "VarIE", "sub": []}
+    "pasta": {"n": "Pasta e Riso", "sub": ["Pasta", "Riso"], "iva": 4},
+    "bevande": {"n": "Bevande", "sub": ["Acqua", "Succhi di Frutta", "Birra", "Vino", "Bibite", "Latte 1L", "Latte 500ml", "Alcolici", "Altro"], "iva": 22},
+    "freschi": {"n": "Freschi", "sub": ["Salumi", "Latticini", "Yogurt", "Uova", "Piatti Pronti", "Pasta Sfoglia"], "iva": 10},
+    "dispensa": {"n": "Dispensa", "sub": ["Tonno e Carne in scatola", "Verdure e Legumi", "Conserve", "Insalatissime", "Sotto olio Sotto aceto"], "iva": 10},
+    "snack-salati": {"n": "Snack Salati", "sub": [], "iva": 10},
+    "snack-dolci": {"n": "Snack Dolci", "sub": [], "iva": 10},
+    "caramelle-dolciumi": {"n": "Caramelle e Dolciumi", "sub": [], "iva": 22},
+    "senza-glutine": {"n": "Senza Glutine", "sub": [], "iva": 10},
+    "parafarmacia": {"n": "Parafarmacia", "sub": [], "iva": 10},
+    "farine": {"n": "Farine e Preparati", "sub": ["Farine", "Preparati", "Lieviti", "Altro"], "iva": 4},
+    "condimenti": {"n": "Condimenti e Spezie", "sub": ["Olio", "Aceto", "Sale", "Sughi e Pesti", "Salse", "Spezie", "Altro"], "iva": 10},
+    "igiene-p": {"n": "Igiene Persona", "sub": ["Primo Soccorso", "Shampoo e Doccia", "Deodoranti", "Igiene Orale", "Assorbenti e Protezione", "Incontinenza Tena", "Carta e Fazzoletti", "Barba e Rasatura", "Altro"], "iva": 22},
+    "igiene-c": {"n": "Igiene Casa e Detersivi", "sub": ["Lavatrice", "Superfici", "Piatti", "Altro"], "iva": 22},
+    "surgelati": {"n": "Surgelati", "sub": ["Pizze e Panificati", "Verdure", "Pesce", "Piatti Pronti", "Gelati", "Patatine fritte"], "iva": 10},
+    "colazione": {"n": "Colazione", "sub": ["Biscotti", "Merendine", "Cereali", "Caffè, Tè e Tisane", "Confetture e Creme", "Altro"], "iva": 10},
+    "panificati": {"n": "Panificati", "sub": ["Panificati", "Altro"], "iva": 4},
+    "orto": {"n": "Frutta e Verdura", "sub": ["Frutta e Verdura", "Altro"], "iva": 4},
+    "vegano": {"n": "Vegano", "sub": ["Vegano", "Altro"], "iva": 10},
+    "animali": {"n": "Amici Domestici", "sub": ["Amici Domestici", "Altro"], "iva": 22},
+    "minestre-zuppe": {"n": "Minestre, Risotti e Zuppe", "f": "Minestre Risotti e Zuppe", "sub": [], "iva": 10},
+    "prima-infanzia": {"n": "Prima Infanzia", "sub": [], "iva": 5},
+    "varie": {"n": "VarIE", "sub": [], "iva": 22}
 }
+
+def calculate_prices(super_price, vat_rate, markup_percentage=14):
+    """Calcola i prezzi scorporati, ricaricati e l'IVA."""
+    super_net = super_price / (1 + vat_rate / 100)
+    final_net = super_net * (1 + markup_percentage / 100)
+    ricarico_netto = final_net - super_net
+    final_price = final_net * (1 + vat_rate / 100)
+    final_price_cents = int(round(final_price * 100))
+    price_to_save = final_price_cents / 100.0
+    return {
+        "price_to_save": price_to_save,
+        "super_net": round(super_net, 2),
+        "ricarico_netto": round(ricarico_netto, 2),
+        "vat_rate": vat_rate,
+        "final_price_cents": final_price_cents
+    }
 
 
 if not SUPABASE_KEY:
@@ -220,10 +236,18 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     cloud_url = upload_to_supabase(state['photo_bytes'], state['ean'], folder_name)
                     if cloud_url: state['image_url'] = cloud_url
 
+                # Calcoli prezzi
+                vat_rate = cat_obj.get('iva', 22)
+                prices = calculate_prices(state['price'], vat_rate)
+
                 new_prod = {
-                    "ean": state['ean'], "name": state['name'], "price": state['price'],
+                    "ean": state['ean'], "name": state['name'], "price": prices["price_to_save"],
                     "category": state['category'], "subcategory": state['subcategory'],
-                    "image_url": state['image_url'], "size": state.get('size', ''), "info": state.get('info', {})
+                    "image_url": state['image_url'], "size": state.get('size', ''), "info": state.get('info', {}),
+                    "prezzo_supermercato_netto": prices["super_net"],
+                    "ricarico_netto": prices["ricarico_netto"],
+                    "aliquota_iva": prices["vat_rate"],
+                    "prezzo_finale_al_cliente_cents": prices["final_price_cents"]
                 }
                 supabase.table('products').upsert(new_prod).execute()
                 asyncio.create_task(asyncio.to_thread(avvisa_github_per_foto, state['ean'], state['category'], state['subcategory']))
@@ -248,10 +272,18 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 cloud_url = upload_to_supabase(state['photo_bytes'], state['ean'], folder_name, safe_sub)
                 if cloud_url: state['image_url'] = cloud_url
 
+            # Calcoli prezzi
+            vat_rate = cat_obj.get('iva', 22)
+            prices = calculate_prices(state['price'], vat_rate)
+
             new_prod = {
-                "ean": state['ean'], "name": state['name'], "price": state['price'],
+                "ean": state['ean'], "name": state['name'], "price": prices["price_to_save"],
                 "category": state['category'], "subcategory": state['subcategory'],
-                "image_url": state['image_url'], "size": state.get('size', ''), "info": state.get('info', {})
+                "image_url": state['image_url'], "size": state.get('size', ''), "info": state.get('info', {}),
+                "prezzo_supermercato_netto": prices["super_net"],
+                "ricarico_netto": prices["ricarico_netto"],
+                "aliquota_iva": prices["vat_rate"],
+                "prezzo_finale_al_cliente_cents": prices["final_price_cents"]
             }
             supabase.table('products').upsert(new_prod).execute()
             asyncio.create_task(asyncio.to_thread(avvisa_github_per_foto, state['ean'], state['category'], state['subcategory']))
