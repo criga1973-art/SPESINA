@@ -554,6 +554,7 @@
             <div class="consegna-label">📍 Dati Consegna</div>
             <div class="consegna-name" id="det-customer">NOME CLIENTE</div>
             <div class="consegna-addr" id="det-address">Indirizzo non specificato</div>
+            <div class="consegna-addr" id="det-payment" style="color: white; font-weight: bold; margin-top: 5px;"></div>
         </div>
 
         <div class="action-grid">
@@ -853,6 +854,7 @@
                             <div class="info-row">Cliente: <b>${d.name}</b></div>
                             <div class="info-row info-address">📍 ${formatAddressDisplay(d.address)}</div>
                             <div class="info-row">Articoli: ${d.items ? d.items.length : 0} (${totalPezzi} pezzi) &nbsp;&nbsp; Totale: ${parseFloat(d.total || 0).toFixed(2)}€</div>
+                            <div class="info-row">Pagamento: <b>${d.payment_method === 'stripe' ? '💳 Già Pagato (Stripe)' : '💵 Contanti alla Consegna'}</b></div>
                         </div>
                         <button class="btn-avvia" onclick="openDetail('${o.id}')">AVVIA ORDINE</button>
                     </div>
@@ -868,6 +870,7 @@
             document.getElementById('det-order-id').innerText = `DETTAGLIO ORDINE #${shortId}`;
             document.getElementById('det-customer').innerText = d.name;
             document.getElementById('det-address').innerText = formatAddressDisplay(d.address);
+            document.getElementById('det-payment').innerHTML = d.payment_method === 'stripe' ? '💳 Pagamento: STRIPE (Già Pagato)' : '💵 Pagamento: CONTANTI alla consegna';
             document.getElementById('del-total').innerText = `${parseFloat(d.total || 0).toFixed(2)} €`;
             document.getElementById('del-maps-btn').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(buildMapsAddress(d.address))}`;
             document.getElementById('del-call-btn').href = `tel:${d.phone}`;

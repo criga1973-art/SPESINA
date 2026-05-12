@@ -38,15 +38,18 @@
                 width: 10px;
                 height: 10px;
             }
+
             ::-webkit-scrollbar-track {
                 background: transparent;
             }
+
             ::-webkit-scrollbar-thumb {
                 background-color: #cbd5e1;
                 border-radius: 10px;
                 border: 3px solid transparent;
                 background-clip: content-box;
             }
+
             ::-webkit-scrollbar-thumb:hover {
                 background-color: var(--primary);
             }
@@ -460,8 +463,8 @@
             <div class="logo-text"
                 style="display: flex; align-items: center; cursor: pointer; color: #2d1b4d; font-family: 'Lora', serif; font-weight: 700; font-size: 38px; letter-spacing: -1.5px;"
                 onclick="goHome()">
-                Spes<span style="position: relative; display: inline-block;">ı<svg class="logo-leaf"
-                        viewBox="0 0 24 24" fill="#42d3a5" xmlns="http://www.w3.org/2000/svg"
+                Spes<span style="position: relative; display: inline-block;">ı<svg class="logo-leaf" viewBox="0 0 24 24"
+                        fill="#42d3a5" xmlns="http://www.w3.org/2000/svg"
                         style="position: absolute; top: -14px; left: 105%; transform: translateX(-50%); width: 28px; height: 28px;">
                         <path
                             d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z" />
@@ -469,7 +472,9 @@
             </div>
         </div>
         <div class="top-nav">
-            <button id="sticky-back" onclick="handleBack()" style="display: none; position: absolute; left: 0; top: 50%; transform: translateY(-50%); background-color: #eefdf6; color: #10b981; border: 1px solid #e2fcf1; border-radius: 20px; padding: 8px 16px; font-weight: bold; cursor: pointer; align-items: center; gap: 5px;">⬅ Indietro</button>
+            <button id="sticky-back" onclick="handleBack()"
+                style="display: none; position: absolute; left: 0; top: 50%; transform: translateY(-50%); background-color: #eefdf6; color: #10b981; border: 1px solid #e2fcf1; border-radius: 20px; padding: 8px 16px; font-weight: bold; cursor: pointer; align-items: center; gap: 5px;">⬅
+                Indietro</button>
             <a onclick="showInfoModal('why')">Perché Spesina?</a>
             <a onclick="showInfoModal('how')">Come funziona</a>
             <a onclick="showInfoModal('where')">📍 Dove consegniamo</a>
@@ -501,28 +506,51 @@
         <div class="modal-content" style="max-width: 500px;">
             <div style="font-size:30px; margin-bottom:10px;">🛒</div>
             <h2 style="font-weight: 900; margin-bottom: 20px;">Il tuo Carrello</h2>
-            <div id="cart-expiry-info" style="font-size: 14px; color: #64748b; margin-top: -15px; margin-bottom: 15px; font-weight: 600;"></div>
+            <div id="cart-expiry-info"
+                style="font-size: 14px; color: #64748b; margin-top: -15px; margin-bottom: 15px; font-weight: 600;">
+            </div>
 
             <div id="cart-items" style="max-height: 400px; overflow-y: auto; text-align: left; margin-bottom: 20px;">
                 <!-- Gli articoli verranno inseriti qui -->
             </div>
 
-            <div style="padding: 20px; background: #f8fafc; border-radius: 25px; margin-bottom: 20px; border: 1px solid #e2e8f0; text-align: left;">
-                <h3 style="font-weight: 800; margin-bottom: 10px; color: #2d1b4d;">📅 Quando vuoi ricevere la spesa?</h3>
-                
+            <div
+                style="padding: 20px; background: #f8fafc; border-radius: 25px; margin-bottom: 20px; border: 1px solid #e2e8f0; text-align: left;">
+                <h3 style="font-weight: 800; margin-bottom: 10px; color: #2d1b4d;">📅 Quando vuoi ricevere la spesa?
+                </h3>
+
                 <div style="margin-bottom: 15px;">
-                    <label style="font-weight: 600; display: block; margin-bottom: 5px; color: #64748b;">Data di consegna:</label>
-                    <input type="date" id="delivery-date" onchange="updateSlotsForDate()" style="display: block; width: 100%; padding: 12px; border-radius: 14px; border: 1px solid #cbd5e1; font-family: inherit; box-sizing: border-box;" required>
+                    <label style="font-weight: 600; display: block; margin-bottom: 5px; color: #64748b;">Data di
+                        consegna:</label>
+                    <input type="date" id="delivery-date" onchange="updateSlotsForDate()"
+                        style="display: block; width: 100%; padding: 12px; border-radius: 14px; border: 1px solid #cbd5e1; font-family: inherit; box-sizing: border-box;"
+                        required>
                 </div>
 
                 <div>
-                    <label style="font-weight: 600; display: block; margin-bottom: 5px; color: #64748b;">Fascia oraria:</label>
-                    <select id="delivery-slot" style="display: block; width: 100%; padding: 12px; border-radius: 14px; border: 1px solid #cbd5e1; font-family: inherit; box-sizing: border-box;" required>
+                    <label style="font-weight: 600; display: block; margin-bottom: 5px; color: #64748b;">Fascia
+                        oraria:</label>
+                    <select id="delivery-slot"
+                        style="display: block; width: 100%; padding: 12px; border-radius: 14px; border: 1px solid #cbd5e1; font-family: inherit; box-sizing: border-box;"
+                        required>
                         <option value="">Seleziona un orario...</option>
                         <option value="10:00-12:00">10:00 - 12:00</option>
                         <option value="12:00-14:00">12:00 - 14:00</option>
                         <option value="14:00-16:00">14:00 - 16:00</option>
                         <option value="16:00-18:00">16:00 - 18:00</option>
+                    </select>
+                </div>
+            </div>
+
+            <div
+                style="padding: 20px; background: #f8fafc; border-radius: 25px; margin-bottom: 20px; border: 1px solid #e2e8f0; text-align: left;">
+                <h3 style="font-weight: 800; margin-bottom: 10px; color: #2d1b4d;">Scegli il Metodo di Pagamento</h3>
+                <div>
+                    <select id="payment-method"
+                        style="display: block; width: 100%; padding: 12px; border-radius: 14px; border: 1px solid #cbd5e1; font-family: inherit; box-sizing: border-box;"
+                        required>
+                        <option value="stripe">Carta di Credito (Stripe)</option>
+                        <option value="contanti">Contanti alla consegna</option>
                     </select>
                 </div>
             </div>
@@ -831,7 +859,7 @@
 
         window.onload = async function () {
             await loadAppConfig();
-            
+
             if (MAINTENANCE_MODE) {
                 document.body.innerHTML = '<div style="height:100vh; display:flex; align-items:center; justify-content:center; text-align:center; font-family:sans-serif;"><h1>🚚 SPESINA IN MANUTENZIONE</h1></div>';
                 return;
@@ -843,6 +871,19 @@
             renderCategories();
             updateCartCount();
             updateAuthUI();
+
+            // Gestione ritorno da Stripe
+            const isSuccess = urlParams.get('success') === 'true';
+            const returnedOrderId = urlParams.get('order_id');
+
+            if (isSuccess && returnedOrderId) {
+                document.getElementById('success-title').innerText = "Pagamento Riuscito! 🎉";
+                document.getElementById('success-desc').innerText = "Abbiamo ricevuto il tuo pagamento per l'ordine #" + returnedOrderId + ". Riceverai una mail di conferma a breve.";
+                document.getElementById('modalSuccess').style.display = 'flex';
+
+                // Rimuoviamo i parametri dall'URL per pulizia
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
 
             fetchProducts().then(() => {
                 renderCategories();
@@ -1018,7 +1059,7 @@
         function addToCart(id) {
             const p = PRODS.find(x => x.id == id);
             if (!p) return;
-            
+
             const totalQty = CART.reduce((a, b) => a + b.q, 0);
             if (totalQty >= APP_CONFIG.cartLimit) {
                 alert(`Limite raggiunto! Non puoi inserire più di ${APP_CONFIG.cartLimit} prodotti nel carrello.`);
@@ -1044,7 +1085,7 @@
         async function showCart() {
             if (!userData) { showRegister(); return; }
             document.getElementById('modalCart').style.display = 'flex';
-            
+
             // Interroga sub_expiry
             try {
                 const { data, error } = await sb.from('customers').select('sub_expiry').eq('client_id', userData.id).single();
@@ -1055,7 +1096,7 @@
             } catch (err) {
                 console.error("Errore recupero sub_expiry:", err);
             }
-            
+
             renderCartItems();
         }
 
@@ -1063,23 +1104,23 @@
             const dateInput = document.getElementById('delivery-date').value;
             const slotSelect = document.getElementById('delivery-slot');
             if (!dateInput) return;
-            
+
             const date = new Date(dateInput);
             const dayOfWeek = date.getDay(); // 0 è Domenica
-            
+
             // Reset opzioni
             slotSelect.innerHTML = '<option value="">Caricamento disponibilità...</option>';
-            
+
             let ordersForDay = [];
             try {
                 const { data: dayOrders, error } = await sb
                     .from('orders')
                     .select('order_data');
-                
+
                 if (!error && dayOrders) {
-                    ordersForDay = dayOrders.filter(o => 
-                        o.order_data && 
-                        o.order_data.delivery_date === dateInput && 
+                    ordersForDay = dayOrders.filter(o =>
+                        o.order_data &&
+                        o.order_data.delivery_date === dateInput &&
                         o.order_data.status !== 'completato'
                     );
                 }
@@ -1088,14 +1129,14 @@
             }
 
             slotSelect.innerHTML = '<option value="">Seleziona un orario...</option>';
-            
+
             const allSlots = [
                 { value: "10:00-12:00", label: "10:00 - 12:00" },
                 { value: "12:00-14:00", label: "12:00 - 14:00" },
                 { value: "14:00-16:00", label: "14:00 - 16:00" },
                 { value: "16:00-18:00", label: "16:00 - 18:00" }
             ];
-            
+
             // Controllo inibizione giorno
             if (APP_CONFIG.lockedDays && APP_CONFIG.lockedDays.includes(dayOfWeek)) {
                 slotSelect.innerHTML = '<option value="">Giorno non disponibile</option>';
@@ -1109,10 +1150,10 @@
             allSlots.forEach(slot => {
                 // Controllo inibizione fascia
                 const isBlocked = APP_CONFIG.blockedSlots && APP_CONFIG.blockedSlots.includes(slot.value);
-                
+
                 const count = ordersForDay.filter(o => o.order_data && o.order_data.delivery_slot === slot.value).length;
                 const available = APP_CONFIG.orderLimit - count;
-                
+
                 // Controllo scadenza tempo per oggi
                 let timeDisabled = false;
                 if (isToday) {
@@ -1174,15 +1215,15 @@
             if (userData) {
                 const now = new Date();
                 const expiry = userData.sub_expiry ? new Date(userData.sub_expiry) : null;
-                
+
                 if (!expiry || expiry < now) {
                     subNeeded = true;
                     total += 19.99;
                     const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-                    subExpiryStr = `Scadenza: ${lastDay.getDate()}/${lastDay.getMonth()+1}/${lastDay.getFullYear()}`;
-                    document.getElementById('cart-expiry-info').innerText = "Abbonamento in scadenza il " + lastDay.getDate() + "/" + (lastDay.getMonth()+1) + "/" + lastDay.getFullYear();
+                    subExpiryStr = `Scadenza: ${lastDay.getDate()}/${lastDay.getMonth() + 1}/${lastDay.getFullYear()}`;
+                    document.getElementById('cart-expiry-info').innerText = "Abbonamento in scadenza il " + lastDay.getDate() + "/" + (lastDay.getMonth() + 1) + "/" + lastDay.getFullYear();
                 } else {
-                    document.getElementById('cart-expiry-info').innerText = "Abbonamento valido fino al " + expiry.getDate() + "/" + (expiry.getMonth()+1) + "/" + expiry.getFullYear();
+                    document.getElementById('cart-expiry-info').innerText = "Abbonamento valido fino al " + expiry.getDate() + "/" + (expiry.getMonth() + 1) + "/" + expiry.getFullYear();
                 }
             }
 
@@ -1217,7 +1258,7 @@
 
         async function handleRegister(e) {
             e.preventDefault();
-            
+
             let id = "SP-" + Math.random().toString(36).substr(2, 6).toUpperCase();
             try {
                 // Generazione ID sequenziale da Supabase
@@ -1261,8 +1302,8 @@
                     console.error("Errore salvataggio Supabase:", error);
                     alert("Errore Supabase: " + error.message);
                 }
-            } catch (err) { 
-                console.error("Errore Supabase:", err); 
+            } catch (err) {
+                console.error("Errore Supabase:", err);
                 alert("Errore di connessione a Supabase.");
             }
 
@@ -1306,12 +1347,12 @@
             document.getElementById('profile-name').innerText = userData.name;
             document.getElementById('profile-id-tag').innerText = "ID: " + userData.id;
             document.getElementById('profile-email').innerText = userData.email;
-            
+
             const subExpiryEl = document.getElementById('profile-sub-expiry');
             if (subExpiryEl) {
                 if (userData.sub_expiry) {
                     const expiry = new Date(userData.sub_expiry);
-                    subExpiryEl.innerText = `${expiry.getDate()}/${expiry.getMonth()+1}/${expiry.getFullYear()}`;
+                    subExpiryEl.innerText = `${expiry.getDate()}/${expiry.getMonth() + 1}/${expiry.getFullYear()}`;
                 } else {
                     subExpiryEl.innerText = "Nessuno attivo";
                 }
@@ -1343,7 +1384,7 @@
             try {
                 // Recupero i dati da Supabase (tabella customers)
                 const { data: dbUser, error } = await sb.from('customers').select('*').eq('client_id', id).single();
-                
+
                 if (error || !dbUser) {
                     alert("ID non trovato o non valido. Verifica il tuo codice.");
                     return;
@@ -1467,177 +1508,209 @@
         function logout() { localStorage.removeItem('user_spesina'); location.reload(); }
 
         function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
-            function showInfo(id) {
-                const p = PRODS.find(x => x.id == id); if (!p) return;
-                document.getElementById('info-p-name').innerText = p.n;
-                document.getElementById('info-desc').innerText = (p.l ? `Formato: ${p.l}\n\n` : '') + (p.info.fullDesc || "Info in arrivo.");
-                document.getElementById('modalInfo').style.display = 'flex';
+        function showInfo(id) {
+            const p = PRODS.find(x => x.id == id); if (!p) return;
+            document.getElementById('info-p-name').innerText = p.n;
+            document.getElementById('info-desc').innerText = (p.l ? `Formato: ${p.l}\n\n` : '') + (p.info.fullDesc || "Info in arrivo.");
+            document.getElementById('modalInfo').style.display = 'flex';
+        }
+        function showRegister() {
+            document.getElementById('home-view').style.display = 'none';
+            document.getElementById('register-view').style.display = 'block';
+            document.getElementById('sticky-back').style.display = 'flex';
+            window.scrollTo(0, 0);
+        }
+
+        async function processCheckout() {
+            if (!userData) { showRegister(); return; }
+
+            const date = document.getElementById('delivery-date').value;
+            const slot = document.getElementById('delivery-slot').value;
+            const paymentMethod = document.getElementById('payment-method').value;
+
+            if (!date || !slot) {
+                alert("Per favore, seleziona una data e una fascia oraria per la consegna.");
+                return;
             }
-            function showRegister() {
-                document.getElementById('home-view').style.display = 'none';
-                document.getElementById('register-view').style.display = 'block';
-                document.getElementById('sticky-back').style.display = 'flex';
-                window.scrollTo(0, 0);
+
+            // Controllo limite 2 ordini per fascia oraria per lo stesso cliente
+            try {
+                const { data: existingOrders, error: checkError } = await sb
+                    .from('orders')
+                    .select('order_data')
+                    .eq('client_id', userData.id);
+
+                if (checkError) {
+                    console.error("Errore controllo ordini esistenti:", checkError);
+                } else if (existingOrders) {
+                    const count = existingOrders.filter(o =>
+                        o.order_data &&
+                        o.order_data.delivery_date === date &&
+                        o.order_data.delivery_slot === slot
+                    ).length;
+
+                    if (count >= 2) {
+                        alert("Hai già raggiunto il limite di 2 spese in questa fascia oraria. Scegli un altro orario.");
+                        return;
+                    }
+                }
+            } catch (err) {
+                console.error("Errore durante il controllo dei limiti:", err);
             }
-            async function processCheckout() {
-                if (!userData) { showRegister(); return; }
-                
-                const date = document.getElementById('delivery-date').value;
-                const slot = document.getElementById('delivery-slot').value;
-                
-                if (!date || !slot) {
-                    alert("Per favore, seleziona una data e una fascia oraria per la consegna.");
-                    return;
+
+            // Controllo limite globale 5 ordini per fascia oraria
+            try {
+                const { data: allOrders, error: checkError } = await sb
+                    .from('orders')
+                    .select('order_data');
+
+                if (checkError) {
+                    console.error("Errore controllo ordini totali:", checkError);
+                } else if (allOrders) {
+                    const count = allOrders.filter(o =>
+                        o.order_data &&
+                        o.order_data.delivery_date === date &&
+                        o.order_data.delivery_slot === slot
+                    ).length;
+
+                    if (count >= APP_CONFIG.orderLimit) {
+                        alert("Spiacenti, questa fascia oraria è appena diventata al completo. Scegli un altro orario.");
+                        return;
+                    }
                 }
+            } catch (err) {
+                console.error("Errore durante il controllo dei limiti globali:", err);
+            }
 
-                // Controllo limite 2 ordini per fascia oraria per lo stesso cliente
-                try {
-                    const { data: existingOrders, error: checkError } = await sb
-                        .from('orders')
-                        .select('order_data')
-                        .eq('client_id', userData.id);
+            // Generazione stringa delivery per Master Picking (es: "Sabato 9 Maggio 12:00-14:00")
+            const dateObj = new Date(date);
+            const days = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
+            const months = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
+            const dayName = days[dateObj.getDay()];
+            const dayNum = dateObj.getDate();
+            const monthName = months[dateObj.getMonth()];
+            const deliveryStr = `${dayName} ${dayNum} ${monthName} ${slot}`;
 
-                    if (checkError) {
-                        console.error("Errore controllo ordini esistenti:", checkError);
-                    } else if (existingOrders) {
-                        const count = existingOrders.filter(o => 
-                            o.order_data && 
-                            o.order_data.delivery_date === date && 
-                            o.order_data.delivery_slot === slot
-                        ).length;
+            // Formattazione indirizzo per Master Picking (vuole una stringa, non un oggetto)
+            const addrStr = `${userData.address.street} | Civico: ${userData.address.number}, Piano: ${userData.address.floor}, Interno: ${userData.address.int} | ${userData.address.cap} Mestre`;
 
-                        if (count >= 2) {
-                            alert("Hai già raggiunto il limite di 2 spese in questa fascia oraria. Scegli un altro orario.");
-                            return;
+            const total = CART.reduce((a, b) => a + (b.p * b.q), 0);
+            const orderId = Math.floor(1000 + Math.random() * 9000);
+
+            try {
+                // Salvataggio Ordine su Supabase (per Master Picking)
+                const { error: dbError } = await sb.from('orders').insert([{
+                    client_id: userData.id,
+                    order_date: new Date().toISOString().split('T')[0],
+                    order_number: orderId.toString(),
+                    order_data: {
+                        order_id: orderId,
+                        name: userData.name,
+                        phone: userData.phone,
+                        email: userData.email,
+                        items: CART,
+                        total: total.toFixed(2),
+                        delivery_date: date,
+                        delivery_slot: slot,
+                        delivery: deliveryStr,
+                        address: addrStr,
+                        status: paymentMethod === 'stripe' ? 'in_attesa_pagamento' : 'ricevuto',
+                        payment_method: paymentMethod
+                    }
+                }]);
+                if (dbError) {
+                    console.error("Errore salvataggio ordine su Supabase:", dbError);
+                    alert("Errore salvataggio ordine: " + dbError.message);
+                    return; // Blocca l'esecuzione se il salvataggio fallisce
+                } else {
+                    console.log("Salvataggio riuscito su Supabase!");
+
+                    // Aggiornamento sub_expiry se necessario
+                    const now = new Date();
+                    const expiry = userData.sub_expiry ? new Date(userData.sub_expiry) : null;
+                    if (!expiry || expiry < now) {
+                        const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+                        const lastDayIso = lastDay.toISOString().split('T')[0];
+
+                        const { error: subError } = await sb.from('customers').update({ sub_expiry: lastDayIso }).eq('client_id', userData.id);
+                        if (subError) {
+                            console.error("Errore aggiornamento sub_expiry:", subError);
+                        } else {
+                            userData.sub_expiry = lastDayIso;
+                            localStorage.setItem('user_spesina', JSON.stringify(userData));
                         }
                     }
-                } catch (err) {
-                    console.error("Errore durante il controllo dei limiti:", err);
+
+                    if (paymentMethod === 'contanti') {
+                        alert("Ordine #" + orderId + " registrato su Spesina! Pagamento alla consegna.");
+                    }
                 }
 
-                // Controllo limite globale 5 ordini per fascia oraria
-                try {
-                    const { data: allOrders, error: checkError } = await sb
-                        .from('orders')
-                        .select('order_data');
-
-                    if (checkError) {
-                        console.error("Errore controllo ordini totali:", checkError);
-                    } else if (allOrders) {
-                        const count = allOrders.filter(o => 
-                            o.order_data && 
-                            o.order_data.delivery_date === date && 
-                            o.order_data.delivery_slot === slot
-                        ).length;
-
-                        if (count >= APP_CONFIG.orderLimit) {
-                            alert("Spiacenti, questa fascia oraria è appena diventata al completo. Scegli un altro orario.");
-                            return;
-                        }
+                // Invio Ordine via Resend (Supabase Function)
+                // Questa funzione invia la mail al cliente e in BCC a ordini@spesina.it (Master Picking)
+                const { data, error } = await sb.functions.invoke('send-welcome', {
+                    body: {
+                        type: 'order',
+                        email: userData.email,
+                        name: userData.name,
+                        orderId: orderId,
+                        total: total.toFixed(2),
+                        address: typeof userData.address === 'string' ? userData.address : `${userData.address.street} ${userData.address.number}, ${userData.address.cap} (P:${userData.address.floor} I:${userData.address.int})`,
+                        delivery: `Data: ${date} - Fascia: ${slot}`,
+                        items: CART
                     }
-                } catch (err) {
-                    console.error("Errore durante il controllo dei limiti globali:", err);
-                }
+                });
 
-                // Generazione stringa delivery per Master Picking (es: "Sabato 9 Maggio 12:00-14:00")
-                const dateObj = new Date(date);
-                const days = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
-                const months = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
-                const dayName = days[dateObj.getDay()];
-                const dayNum = dateObj.getDate();
-                const monthName = months[dateObj.getMonth()];
-                const deliveryStr = `${dayName} ${dayNum} ${monthName} ${slot}`;
+                if (error) throw error;
 
-                // Formattazione indirizzo per Master Picking (vuole una stringa, non un oggetto)
-                const addrStr = `${userData.address.street} | Civico: ${userData.address.number}, Piano: ${userData.address.floor}, Interno: ${userData.address.int} | ${userData.address.cap} Mestre`;
-
-                const total = CART.reduce((a, b) => a + (b.p * b.q), 0);
-                const orderId = Math.floor(1000 + Math.random() * 9000);
-
-                try {
-                    // Salvataggio Ordine su Supabase (per Master Picking)
-                    const { error: dbError } = await sb.from('orders').insert([{
-                        client_id: userData.id,
-                        order_date: new Date().toISOString().split('T')[0],
-                        order_number: orderId.toString(),
-                        order_data: {
-                            order_id: orderId,
-                            name: userData.name,
-                            phone: userData.phone,
-                            email: userData.email,
-                            items: CART,
-                            total: total.toFixed(2),
-                            delivery_date: date,
-                            delivery_slot: slot,
-                            delivery: deliveryStr,
-                            address: addrStr,
-                            status: 'ricevuto'
-                        }
-                    }]);
-                    if (dbError) {
-                        console.error("Errore salvataggio ordine su Supabase:", dbError);
-                        alert("Errore salvataggio ordine: " + dbError.message);
-                        return; // Blocca l'esecuzione se il salvataggio fallisce
-                    } else {
-                        console.log("Salvataggio riuscito su Supabase!");
-                        
-                        // Aggiornamento sub_expiry se necessario
-                        const now = new Date();
-                        const expiry = userData.sub_expiry ? new Date(userData.sub_expiry) : null;
-                        if (!expiry || expiry < now) {
-                            const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-                            const lastDayIso = lastDay.toISOString().split('T')[0];
-                            
-                            const { error: subError } = await sb.from('customers').update({ sub_expiry: lastDayIso }).eq('client_id', userData.id);
-                            if (subError) {
-                                console.error("Errore aggiornamento sub_expiry:", subError);
-                            } else {
-                                userData.sub_expiry = lastDayIso;
-                                localStorage.setItem('user_spesina', JSON.stringify(userData));
-                            }
-                        }
-
-                        alert("Ordine #" + orderId + " registrato su Spesina!");
-                    }
-
-                    // Invio Ordine via Resend (Supabase Function)
-                    // Questa funzione invia la mail al cliente e in BCC a ordini@spesina.it (Master Picking)
-                    const { data, error } = await sb.functions.invoke('send-welcome', {
+                // Se pagamento con Stripe, reindirizziamo
+                if (paymentMethod === 'stripe') {
+                    const { data: stripeData, error: stripeError } = await sb.functions.invoke('stripe-checkout', {
                         body: {
-                            type: 'order',
-                            email: userData.email,
-                            name: userData.name,
-                            orderId: orderId,
+                            orderId: orderId.toString(),
                             total: total.toFixed(2),
-                            address: typeof userData.address === 'string' ? userData.address : `${userData.address.street} ${userData.address.number}, ${userData.address.cap} (P:${userData.address.floor} I:${userData.address.int})`,
-                            delivery: `Data: ${date} - Fascia: ${slot}`,
-                            items: CART
+                            email: userData.email,
+                            successUrl: `${window.location.origin}${window.location.pathname}?success=true&order_id=${orderId}${urlParams.get('preview') === 'true' ? '&preview=true' : ''}`,
+                            cancelUrl: `${window.location.origin}${window.location.pathname}?canceled=true${urlParams.get('preview') === 'true' ? '&preview=true' : ''}`
                         }
                     });
 
-                    if (error) throw error;
+                    if (stripeError) {
+                        console.error("Errore Stripe:", stripeError);
+                        alert("Errore nella creazione del pagamento. L'ordine è comunque registrato.");
+                    } else if (stripeData && stripeData.url) {
+                        // Svuota carrello prima di andare via
+                        CART = [];
+                        localStorage.setItem('cart_spesina', JSON.stringify(CART));
+                        updateCartCount();
 
-                    CART = [];
-                    localStorage.setItem('cart_spesina', JSON.stringify(CART));
-                    updateCartCount();
-                    document.getElementById('success-title').innerText = "Ordine Inviato!";
-                    document.getElementById('success-desc').innerText = "Abbiamo ricevuto il tuo ordine #" + orderId + ". Riceverai una mail di conferma a breve.";
-                    document.getElementById('id-display-box').style.display = 'none';
-                    document.getElementById('modalSuccess').style.display = 'flex';
-                    goHome();
-                } catch (e) {
-                    console.error(e);
-                    alert("Errore durante l'invio dell'ordine. Riprova tra poco.");
+                        // Reindirizza a Stripe
+                        window.location.href = stripeData.url;
+                        return;
+                    }
                 }
+
+                CART = [];
+                localStorage.setItem('cart_spesina', JSON.stringify(CART));
+                updateCartCount();
+                document.getElementById('success-title').innerText = "Ordine Inviato!";
+                document.getElementById('success-desc').innerText = "Abbiamo ricevuto il tuo ordine #" + orderId + ". Riceverai una mail di conferma a breve.";
+                document.getElementById('id-display-box').style.display = 'none';
+                document.getElementById('modalSuccess').style.display = 'flex';
+                goHome();
+            } catch (e) {
+                console.error(e);
+                alert("Errore durante l'invio dell'ordine. Riprova tra poco.");
             }
-            function handleSearch() {
-                const q = document.getElementById('search-bar').value.toLowerCase();
-                if (!q) { renderCategories(); return; }
-                const res = PRODS.filter(p => p.n.toLowerCase().includes(q) || (p.m && p.m.toLowerCase().includes(q)));
-                let html = "";
-                res.forEach(p => {
-                    const img = p.img ? `<img class="product-img" src="${p.img}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"><div class="product-emoji" style="display:none;">${p.icon}</div>` : `<div class="product-emoji">${p.icon}</div>`;
-                    html += `
+        }
+        function handleSearch() {
+            const q = document.getElementById('search-bar').value.toLowerCase();
+            if (!q) { renderCategories(); return; }
+            const res = PRODS.filter(p => p.n.toLowerCase().includes(q) || (p.m && p.m.toLowerCase().includes(q)));
+            let html = "";
+            res.forEach(p => {
+                const img = p.img ? `<img class="product-img" src="${p.img}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"><div class="product-emoji" style="display:none;">${p.icon}</div>` : `<div class="product-emoji">${p.icon}</div>`;
+                html += `
                     <div class="card">
                         <button class="info-btn" onclick="showInfo('${p.id}')">i</button>
                         <button class="add-btn" onclick="addToCart('${p.id}')">+</button>
@@ -1648,10 +1721,10 @@
                             <div class="price-label" style="font-size:16px; font-weight:900;">${p.p.toFixed(2)}€</div>
                         </div>
                     </div>`;
-                });
-                document.getElementById('categories-catalog').innerHTML = html || "<p style='padding:40px; color:#94a3b8; text-align:center;'>Nessun risultato trovato.</p>";
+            });
+            document.getElementById('categories-catalog').innerHTML = html || "<p style='padding:40px; color:#94a3b8; text-align:center;'>Nessun risultato trovato.</p>";
 
-            }
+        }
     </script>
 </body>
 
