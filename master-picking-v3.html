@@ -711,7 +711,7 @@
 
             try {
                 const [ordersRes, prodsRes] = await Promise.all([
-                    sb.from('orders').select('*').neq('order_data->>status', 'completato').order('created_at', { ascending: false }),
+                    sb.from('orders').select('*').neq('order_data->>status', 'completato').neq('order_data->>status', 'in_attesa_pagamento').order('created_at', { ascending: false }),
                     sb.from('products').select('*')
                 ]);
 

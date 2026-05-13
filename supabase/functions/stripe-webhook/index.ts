@@ -52,35 +52,73 @@ serve(async (req) => {
       
       const supabase = createClient(supabaseUrl, supabaseServiceRoleKey)
 
-      // 1. Recupera l'ordine corrente
-      const { data: order, error: fetchError } = await supabase
+      const metadata = session.metadata
+      const clientId = metadata?.client_id
+      const name = metadata?.name
+      const phone = metadata?.phone
+      const delivery = metadata?.delivery
+      const address = metadata?.address
+      const itemsStr = metadata?.items
+      
+      let items = []
+      if (itemsStr) {
+        try {
+          items = JSON.parse(itemsStr)
+        } catch (e) {
+          console.error("Errore parsing items da metadata:", e)
+        }
+      }
+
+      // Ricostruiamo l'oggetto order_data
+      const orderData = {
+        order_id: parseInt(orderId),
+        name: name,
+        phone: phone,
+        email: session.customer_email || '',
+        items: items,
+        total: (session.amount_total / 100).toFixed(2),
+        delivery_date: delivery ? delivery.split(' ').slice(1, 4).join(' ') : '',
+        delivery_slot: delivery ? delivery.split(' ').pop() : '',
+        delivery: delivery,
+        address: address,
+        status: 'ricevuto',
+        payment_method: 'stripe'
+      }
+
+      const { error: insertError } = await supabase
         .from('orders')
-        .select('order_data')
-        .eq('order_number', orderId)
-        .single()
+        .insert([{
+          client_id: clientId,
+          order_date: new Date().toISOString().split('T')[0],
+          order_number: orderId,
+          order_data: orderData
+        }])
 
-      if (fetchError || !order) {
-        console.error(`Ordine non trovato su Supabase: ${orderId}`, fetchError);
-        return new Response("Order not found", { status: 404 })
+      if (insertError) {
+        console.error(`Errore inserimento ordine ${orderId}:`, insertError);
+        return new Response("Failed to insert order", { status: 500 })
       }
 
-      // 2. Aggiorna lo stato nel JSONB
-      const updatedData = {
-        ...order.order_data,
-        status: 'ricevuto'
+      console.log(`Ordine ${orderId} inserito con successo`);
+
+      // Invio email via send-welcome
+      try {
+        await supabase.functions.invoke('send-welcome', {
+          body: {
+            type: 'order',
+            email: session.customer_email || '',
+            name: name,
+            orderId: parseInt(orderId),
+            total: (session.amount_total / 100).toFixed(2),
+            address: address,
+            delivery: delivery,
+            items: items
+          }
+        })
+        console.log("Mail inviata con successo da webhook")
+      } catch (e) {
+        console.error("Errore chiamata send-welcome da webhook:", e)
       }
-
-      const { error: updateError } = await supabase
-        .from('orders')
-        .update({ order_data: updatedData })
-        .eq('order_number', orderId)
-
-      if (updateError) {
-        console.error(`Errore aggiornamento ordine ${orderId}:`, updateError);
-        return new Response("Failed to update order", { status: 500 })
-      }
-
-      console.log(`Ordine ${orderId} aggiornato con successo a 'ricevuto'`);
     }
   }
 

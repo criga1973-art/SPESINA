@@ -1598,70 +1598,71 @@
             const orderId = Math.floor(1000 + Math.random() * 9000);
 
             try {
-                // Salvataggio Ordine su Supabase (per Master Picking)
-                const { error: dbError } = await sb.from('orders').insert([{
-                    client_id: userData.id,
-                    order_date: new Date().toISOString().split('T')[0],
-                    order_number: orderId.toString(),
-                    order_data: {
-                        order_id: orderId,
-                        name: userData.name,
-                        phone: userData.phone,
-                        email: userData.email,
-                        items: CART,
-                        total: total.toFixed(2),
-                        delivery_date: date,
-                        delivery_slot: slot,
-                        delivery: deliveryStr,
-                        address: addrStr,
-                        status: paymentMethod === 'stripe' ? 'in_attesa_pagamento' : 'ricevuto',
-                        payment_method: paymentMethod
-                    }
-                }]);
-                if (dbError) {
-                    console.error("Errore salvataggio ordine su Supabase:", dbError);
-                    alert("Errore salvataggio ordine: " + dbError.message);
-                    return; // Blocca l'esecuzione se il salvataggio fallisce
-                } else {
-                    console.log("Salvataggio riuscito su Supabase!");
+                const orderData = {
+                    order_id: orderId,
+                    name: userData.name,
+                    phone: userData.phone,
+                    email: userData.email,
+                    items: CART,
+                    total: total.toFixed(2),
+                    delivery_date: date,
+                    delivery_slot: slot,
+                    delivery: deliveryStr,
+                    address: addrStr,
+                    status: paymentMethod === 'stripe' ? 'in_attesa_pagamento' : 'ricevuto',
+                    payment_method: paymentMethod
+                };
 
-                    // Aggiornamento sub_expiry se necessario
-                    const now = new Date();
-                    const expiry = userData.sub_expiry ? new Date(userData.sub_expiry) : null;
-                    if (!expiry || expiry < now) {
-                        const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-                        const lastDayIso = lastDay.toISOString().split('T')[0];
+                if (paymentMethod === 'contanti') {
+                    // Salvataggio Ordine su Supabase (per Master Picking)
+                    const { error: dbError } = await sb.from('orders').insert([{
+                        client_id: userData.id,
+                        order_date: new Date().toISOString().split('T')[0],
+                        order_number: orderId.toString(),
+                        order_data: orderData
+                    }]);
+                    if (dbError) {
+                        console.error("Errore salvataggio ordine su Supabase:", dbError);
+                        alert("Errore salvataggio ordine: " + dbError.message);
+                        return; // Blocca l'esecuzione se il salvataggio fallisce
+                    } else {
+                        console.log("Salvataggio riuscito su Supabase!");
 
-                        const { error: subError } = await sb.from('customers').update({ sub_expiry: lastDayIso }).eq('client_id', userData.id);
-                        if (subError) {
-                            console.error("Errore aggiornamento sub_expiry:", subError);
-                        } else {
-                            userData.sub_expiry = lastDayIso;
-                            localStorage.setItem('user_spesina', JSON.stringify(userData));
+                        // Aggiornamento sub_expiry se necessario
+                        const now = new Date();
+                        const expiry = userData.sub_expiry ? new Date(userData.sub_expiry) : null;
+                        if (!expiry || expiry < now) {
+                            const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+                            const lastDayIso = lastDay.toISOString().split('T')[0];
+
+                            const { error: subError } = await sb.from('customers').update({ sub_expiry: lastDayIso }).eq('client_id', userData.id);
+                            if (subError) {
+                                console.error("Errore aggiornamento sub_expiry:", subError);
+                            } else {
+                                userData.sub_expiry = lastDayIso;
+                                localStorage.setItem('user_spesina', JSON.stringify(userData));
+                            }
                         }
-                    }
 
-                    if (paymentMethod === 'contanti') {
                         alert("Ordine #" + orderId + " registrato su Spesina! Pagamento alla consegna.");
                     }
+
+                    // Invio Ordine via Resend (Supabase Function)
+                    const { data, error } = await sb.functions.invoke('send-welcome', {
+                        body: {
+                            type: 'order',
+                            email: userData.email,
+                            name: userData.name,
+                            orderId: orderId,
+                            total: total.toFixed(2),
+                            address: typeof userData.address === 'string' ? userData.address : `${userData.address.street} ${userData.address.number}, ${userData.address.cap} (P:${userData.address.floor} I:${userData.address.int})`,
+                            delivery: `Data: ${date} - Fascia: ${slot}`,
+                            items: CART
+                        }
+                    });
+
+                    if (error) throw error;
                 }
-
-                // Invio Ordine via Resend (Supabase Function)
-                // Questa funzione invia la mail al cliente e in BCC a ordini@spesina.it (Master Picking)
-                const { data, error } = await sb.functions.invoke('send-welcome', {
-                    body: {
-                        type: 'order',
-                        email: userData.email,
-                        name: userData.name,
-                        orderId: orderId,
-                        total: total.toFixed(2),
-                        address: typeof userData.address === 'string' ? userData.address : `${userData.address.street} ${userData.address.number}, ${userData.address.cap} (P:${userData.address.floor} I:${userData.address.int})`,
-                        delivery: `Data: ${date} - Fascia: ${slot}`,
-                        items: CART
-                    }
-                });
-
-                if (error) throw error;
 
                 // Se pagamento con Stripe, reindirizziamo
                 if (paymentMethod === 'stripe') {
@@ -1671,13 +1672,15 @@
                             total: total.toFixed(2),
                             email: userData.email,
                             successUrl: `${window.location.origin}${window.location.pathname}?success=true&order_id=${orderId}${urlParams.get('preview') === 'true' ? '&preview=true' : ''}`,
-                            cancelUrl: `${window.location.origin}${window.location.pathname}?canceled=true${urlParams.get('preview') === 'true' ? '&preview=true' : ''}`
+                            cancelUrl: `${window.location.origin}${window.location.pathname}?canceled=true${urlParams.get('preview') === 'true' ? '&preview=true' : ''}`,
+                            orderData: orderData
                         }
                     });
 
                     if (stripeError) {
                         console.error("Errore Stripe:", stripeError);
-                        alert("Errore nella creazione del pagamento. L'ordine è comunque registrato.");
+                        alert("Errore nella creazione del pagamento. Riprova.");
+                        return;
                     } else if (stripeData && stripeData.url) {
                         // Svuota carrello prima di andare via
                         CART = [];

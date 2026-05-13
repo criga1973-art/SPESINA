@@ -13,7 +13,7 @@ serve(async (req) => {
 
   try {
     const body = await req.json()
-    const { orderId, total, email, successUrl, cancelUrl } = body
+    const { orderId, total, email, successUrl, cancelUrl, orderData } = body
 
     // Recupera la chiave segreta di Stripe dalle variabili d'ambiente di Supabase
     const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY')
@@ -40,6 +40,23 @@ serve(async (req) => {
     
     if (email) {
       params.append('customer_email', email)
+    }
+
+    // Aggiungiamo i dati dell'ordine nei metadati se presenti
+    if (orderData) {
+      params.append('metadata[client_id]', orderData.client_id || '')
+      params.append('metadata[name]', orderData.name || '')
+      params.append('metadata[phone]', orderData.phone || '')
+      params.append('metadata[delivery]', orderData.delivery || '')
+      params.append('metadata[address]', orderData.address || '')
+      
+      const simplifiedItems = orderData.items.map((i: any) => ({
+        ean: i.ean,
+        n: i.n,
+        q: i.q,
+        p: i.p
+      }))
+      params.append('metadata[items]', JSON.stringify(simplifiedItems))
     }
 
     // Creiamo un singolo elemento che rappresenta l'intera spesa
