@@ -49,7 +49,7 @@ CAT_MAP = {
     "varie": {"n": "VarIE", "sub": [], "iva": 22}
 }
 
-def calculate_prices(super_price, vat_rate, markup_percentage=14):
+def calculate_prices(super_price, vat_rate, markup_percentage=0):
     """Calcola i prezzi scorporati, ricaricati e l'IVA."""
     super_net = super_price / (1 + vat_rate / 100)
     final_net = super_net * (1 + markup_percentage / 100)
