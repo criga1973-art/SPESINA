@@ -58,14 +58,17 @@ serve(async (req) => {
       const phone = metadata?.phone
       const delivery = metadata?.delivery
       const address = metadata?.address
-      const itemsStr = metadata?.items
       
+      const itemsCount = parseInt(metadata?.items_count || '0')
       let items = []
-      if (itemsStr) {
-        try {
-          items = JSON.parse(itemsStr)
-        } catch (e) {
-          console.error("Errore parsing items da metadata:", e)
+      for (let i = 0; i < itemsCount; i++) {
+        const itemStr = metadata?.[`item_${i}`]
+        if (itemStr) {
+          try {
+            items.push(JSON.parse(itemStr))
+          } catch (e) {
+            console.error(`Errore parsing item_${i}:`, e)
+          }
         }
       }
 

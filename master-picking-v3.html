@@ -854,7 +854,7 @@
                             <div class="info-row">Cliente: <b>${d.name}</b></div>
                             <div class="info-row info-address">📍 ${formatAddressDisplay(d.address)}</div>
                             <div class="info-row">Articoli: ${d.items ? d.items.length : 0} (${totalPezzi} pezzi) &nbsp;&nbsp; Totale: ${parseFloat(d.total || 0).toFixed(2)}€</div>
-                            <div class="info-row">Pagamento: <b>${d.payment_method === 'stripe' ? '💳 Già Pagato (Stripe)' : '💵 Contanti alla Consegna'}</b></div>
+                            <div class="info-row" style="font-size: 14px; margin-top: 5px;">Metodo di Pagamento: <b style="color: ${d.payment_method === 'stripe' ? '#10b981' : '#f59e0b'}">${d.payment_method === 'stripe' ? '💳 GIÀ PAGATO (Stripe)' : '💵 RISCUOTERE CONTANTI'}</b></div>
                         </div>
                         <button class="btn-avvia" onclick="openDetail('${o.id}')">AVVIA ORDINE</button>
                     </div>

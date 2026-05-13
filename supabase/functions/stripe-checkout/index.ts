@@ -50,13 +50,18 @@ serve(async (req) => {
       params.append('metadata[delivery]', orderData.delivery || '')
       params.append('metadata[address]', orderData.address || '')
       
-      const simplifiedItems = orderData.items.map((i: any) => ({
-        ean: i.ean,
-        n: i.n,
-        q: i.q,
-        p: i.p
-      }))
-      params.append('metadata[items]', JSON.stringify(simplifiedItems))
+      // Passiamo i prodotti singolarmente per evitare il limite di 500 caratteri
+      orderData.items.forEach((item: any, index: number) => {
+        const itemData = {
+          ean: item.ean,
+          n: item.n,
+          q: item.q,
+          p: item.p,
+          img: item.img // Ora includiamo anche l'immagine!
+        }
+        params.append(`metadata[item_${index}]`, JSON.stringify(itemData))
+      })
+      params.append('metadata[items_count]', orderData.items.length.toString())
     }
 
     // Creiamo un singolo elemento che rappresenta l'intera spesa
