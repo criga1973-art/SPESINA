@@ -27,7 +27,7 @@ GH_REPO = "SPESINA"
 CAT_MAP = {
     "pasta": {"n": "Pasta e Riso", "sub": ["Pasta", "Riso"], "iva": 4},
     "bevande": {"n": "Bevande", "sub": ["Acqua", "Succhi di Frutta", "Birra", "Vino", "Bibite", "Latte 1L", "Latte 500ml", "Alcolici", "Altro"], "iva": 22},
-    "freschi": {"n": "Freschi", "sub": ["Salumi", "Latticini", "Yogurt", "Uova", "Piatti Pronti", "Pasta Sfoglia"], "iva": 10},
+    "freschi": {"n": "Freschi", "sub": ["Salumi", "Latticini", "Yogurt", "Uova", "Piatti Pronti", "Pasta Fresca e Sfoglie"], "iva": 10},
     "dispensa": {"n": "Dispensa", "sub": ["Tonno e Carne in scatola", "Verdure e Legumi", "Conserve", "Insalatissime", "Sotto olio Sotto aceto"], "iva": 10},
     "snack-salati": {"n": "Snack Salati", "sub": [], "iva": 10},
     "snack-dolci": {"n": "Snack Dolci", "sub": [], "iva": 10},
